@@ -52,7 +52,7 @@
     })
 </script>
 
-<div class="viewport" bind:this={viewport}>
+<div class="viewport" bind:this={viewport} data-viewport>
     <div class="scroller" bind:this={scroller} on:scroll={handleScroll} data-scroller>
         <slot />
     </div>

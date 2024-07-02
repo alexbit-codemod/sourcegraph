@@ -154,6 +154,8 @@
         debugOccurrences as debugOccurrencesFacet,
     } from '$lib/web'
 
+    import { getReferencesContext } from '../routes/[...repo=reporev]/(validrev)/(code)/ReferencesPanel.svelte'
+
     import BlameDecoration from './blame/BlameDecoration.svelte'
     import { ReblameMarker } from './blame/reblame'
     import { SearchPanel, keyboardShortcut } from './codemirror/inline-search'
@@ -165,8 +167,9 @@
         type ScrollSnapshot,
         getScrollSnapshot as getScrollSnapshot_internal,
     } from './codemirror/utils'
+    import { SymbolUsageKind } from './graphql-types'
     import { registerHotkey } from './Hotkey'
-    import { goToDefinition, openImplementations, openReferences } from './repo/blob'
+    import { goToDefinition, openImplementations } from './repo/blob'
     import { createLocalWritable } from './stores'
 
     export let blobInfo: BlobInfo
@@ -229,6 +232,7 @@
         filePath: blobInfo.filePath,
         languages: blobInfo.languages,
     }
+    const referencesContext = getReferencesContext()
     $: codeIntelExtension = codeIntelAPI
         ? createCodeIntelExtension({
               api: {
@@ -236,7 +240,11 @@
                   documentInfo: documentInfo,
                   goToDefinition: (view, definition, options) =>
                       goToDefinition(documentInfo, view, definition, options),
-                  openReferences,
+                  openReferences: (_view, documentInfo, occurrence) =>
+                      referencesContext.set({
+                          activeOccurrence: { documentInfo, occurrence },
+                          usageKindFilter: SymbolUsageKind.REFERENCE,
+                      }),
                   openImplementations,
                   createTooltipView: options => new HovercardView(options.view, options.token, options.hovercardData),
               },

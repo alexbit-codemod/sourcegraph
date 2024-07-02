@@ -3,11 +3,6 @@
     import type { Capture as HistoryCapture } from '$lib/repo/HistoryPanel.svelte'
     import { TELEMETRY_RECORDER } from '$lib/telemetry'
 
-    enum TabPanels {
-        History,
-        References,
-    }
-
     interface Capture {
         selectedTab: number | null
         historyPanel: HistoryCapture
@@ -38,13 +33,15 @@
 
 <script lang="ts">
     import { tick } from 'svelte'
+    import { writable } from 'svelte/store'
 
-    import { afterNavigate, goto } from '$app/navigation'
+    import { goto } from '$app/navigation'
     import { page } from '$app/stores'
     import CodySidebar from '$lib/cody/CodySidebar.svelte'
-    import { isErrorLike, SourcegraphURL } from '$lib/common'
+    import { isErrorLike } from '$lib/common'
     import { openFuzzyFinder } from '$lib/fuzzyfinder/FuzzyFinderContainer.svelte'
     import { filesHotkey } from '$lib/fuzzyfinder/keys'
+    import { getGraphQLClient } from '$lib/graphql'
     import Icon from '$lib/Icon.svelte'
     import KeyboardShortcut from '$lib/KeyboardShortcut.svelte'
     import LoadingSpinner from '$lib/LoadingSpinner.svelte'
@@ -63,8 +60,12 @@
     import type { LayoutData, Snapshot } from './$types'
     import FileTree from './FileTree.svelte'
     import { createFileTreeStore } from './fileTreeStore'
-    import type { GitHistory_HistoryConnection, RepoPage_ReferencesLocationConnection } from './layout.gql'
-    import ReferencePanel from './ReferencePanel.svelte'
+    import type { GitHistory_HistoryConnection } from './layout.gql'
+    import ReferencesPanel, {
+        setReferencesContext,
+        type ReferencesContext,
+        getUsagesStore,
+    } from './ReferencesPanel.svelte'
 
     export let data: LayoutData
 
@@ -92,7 +93,6 @@
     let historyPanel: HistoryPanel
     let selectedTab: number | null = null
     let commitHistory: GitHistory_HistoryConnection | null
-    let references: RepoPage_ReferencesLocationConnection | null
     const fileTreeStore = createFileTreeStore({ fetchFileTreeData: fetchSidebarFileTree })
 
     $: ({ revision = '', parentPath, repoName, resolvedRevision, isCodyAvailable } = data)
@@ -107,28 +107,15 @@
 
     $: commitHistory = $commitHistoryQuery?.data?.repository?.commit?.ancestors ?? null
 
-    // The observable query to fetch references (due to infinite scrolling)
-    $: sgURL = SourcegraphURL.from($page.url)
-    $: selectedLine = sgURL.lineRange
-    $: referenceQuery =
-        sgURL.viewState === 'references' && selectedLine?.line ? data.getReferenceStore(selectedLine) : null
-    $: references = $referenceQuery?.data?.repository?.commit?.blob?.lsif?.references ?? null
-
-    afterNavigate(async () => {
-        // We need to wait for referenceQuery to be updated before checking its state
-        await tick()
-
-        // todo(fkling): Figure out a proper way to represent bottom panel state
-        if (sgURL.viewState === 'references') {
-            selectedTab = TabPanels.References
-        } else if ($page.url.searchParams.has('rev')) {
-            // The file view/history panel use the 'rev' parameter to specify the commit to load
-            selectedTab = TabPanels.History
-        } else if (selectedTab === TabPanels.References) {
-            // Close references panel when navigating to a URL that doesn't have the 'references' view state
-            selectedTab = null
-        }
-    })
+    const referencesContext = writable<ReferencesContext>({})
+    setReferencesContext(referencesContext)
+    $: referencesConnection = $referencesContext.activeOccurrence
+        ? getUsagesStore(
+              getGraphQLClient(),
+              $referencesContext.activeOccurrence.documentInfo,
+              $referencesContext.activeOccurrence.occurrence
+          )
+        : undefined
 
     function selectTab(event: { detail: number | null }) {
         trackHistoryPanelTabAction(selectedTab, event.detail)
@@ -271,61 +258,52 @@
                 onCollapse={handleBottomPanelCollapse}
                 let:isCollapsed
             >
-                <div class="bottom-panel" class:collapsed={isCollapsed}>
-                    <Tabs selected={selectedTab} toggable on:select={selectTab}>
-                        <svelte:fragment slot="header-actions">
-                            {#if !isCollapsed}
-                                <Button
-                                    variant="text"
-                                    size="sm"
-                                    aria-label="Hide bottom panel"
-                                    on:click={handleBottomPanelCollapse}
-                                >
-                                    <Icon icon={ILucideArrowDownFromLine} inline aria-hidden /> Hide
-                                </Button>
-                            {/if}
-                        </svelte:fragment>
-                        <TabPanel title="History" shortcut={historyHotkey}>
-                            {#key data.filePath}
-                                <HistoryPanel
-                                    bind:this={historyPanel}
-                                    history={commitHistory}
-                                    loading={$commitHistoryQuery?.fetching ?? true}
-                                    fetchMore={commitHistoryQuery.fetchMore}
-                                    enableInlineDiff={$page.data.enableInlineDiff}
-                                    enableViewAtCommit={$page.data.enableViewAtCommit}
-                                />
-                            {/key}
-                        </TabPanel>
-                        <TabPanel title="References" shortcut={referenceHotkey}>
-                            {#if !referenceQuery}
-                                <div class="info">
-                                    <Alert variant="info"
-                                        >Hover over a symbol and click "Find references" to find references to the
-                                        symbol.</Alert
-                                    >
-                                </div>
-                            {:else if $referenceQuery && !$referenceQuery.fetching && (!references || references.nodes.length === 0)}
-                                <div class="info">
-                                    <Alert variant="info">No references found.</Alert>
-                                </div>
-                            {:else}
-                                <ReferencePanel
-                                    connection={references}
-                                    loading={$referenceQuery?.fetching ?? false}
-                                    on:more={referenceQuery?.fetchMore}
-                                />
-                            {/if}
-                        </TabPanel>
-                    </Tabs>
-                    {#await data.lastCommit then lastCommit}
-                        {#if lastCommit && isCollapsed}
-                            <div class="last-commit">
-                                <LastCommit {lastCommit} />
-                            </div>
+                <Tabs selected={selectedTab} toggable on:select={selectTab}>
+                    <svelte:fragment slot="header-actions">
+                        {#if !isCollapsed}
+                            <Button
+                                variant="text"
+                                size="sm"
+                                aria-label="Hide bottom panel"
+                                on:click={handleBottomPanelCollapse}
+                            >
+                                <Icon icon={ILucideArrowDownFromLine} inline aria-hidden /> Hide
+                            </Button>
+                        {:else}
+                            {#await data.lastCommit then lastCommit}
+                                {#if lastCommit && isCollapsed}
+                                    <div class="last-commit">
+                                        <LastCommit {lastCommit} />
+                                    </div>
+                                {/if}
+                            {/await}
                         {/if}
-                    {/await}
-                </div>
+                    </svelte:fragment>
+                    <TabPanel title="History" shortcut={historyHotkey}>
+                        {#key data.filePath}
+                            <HistoryPanel
+                                bind:this={historyPanel}
+                                history={commitHistory}
+                                loading={$commitHistoryQuery?.fetching ?? true}
+                                fetchMore={commitHistoryQuery.fetchMore}
+                                enableInlineDiff={$page.data.enableInlineDiff}
+                                enableViewAtCommit={$page.data.enableViewAtCommit}
+                            />
+                        {/key}
+                    </TabPanel>
+                    <TabPanel title="References" shortcut={referenceHotkey}>
+                        <ReferencesPanel
+                            connection={referencesConnection}
+                            activeOccurrence={$referencesContext.activeOccurrence}
+                            usageKindFilter={$referencesContext.usageKindFilter}
+                            treeFilter={$referencesContext.treeFilter}
+                            setUsageKindFilter={filter =>
+                                referencesContext.update(before => ({ ...before, usageKindFilter: filter }))}
+                            setTreeFilter={filter =>
+                                referencesContext.update(before => ({ ...before, treeFilter: filter }))}
+                        />
+                    </TabPanel>
+                </Tabs>
             </Panel>
         </PanelGroup>
     </Panel>
@@ -470,12 +448,6 @@
             // Reset min-width otherwise very long commit messages will overflow
             // the tabs.
             min-width: initial;
-        }
-
-        .last-commit {
-            min-width: 0;
-            max-width: min-content;
-            margin-right: 0.5rem;
         }
     }
 
