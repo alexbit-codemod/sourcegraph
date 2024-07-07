@@ -12,8 +12,10 @@ import type {
     TestShowMorePaginationQueryResult,
     TestShowMorePaginationQueryVariables,
 } from '../../../graphql-operations'
+import type { Filter } from '../FilterControl'
 
 import { useShowMorePagination } from './useShowMorePagination'
+import { useUrlSearchParamsForConnectionState } from './useUrlSearchParamsForConnectionState'
 
 const TEST_SHOW_MORE_PAGINATION_QUERY = gql`
     query TestShowMorePaginationQuery($first: Int) {
@@ -36,24 +38,27 @@ const TEST_SHOW_MORE_PAGINATION_QUERY = gql`
     }
 `
 
+const FILTERS: Filter[] = []
+
 const TestComponent = ({ skip = false }) => {
+    const pageSize = 1
+    const connectionState = useUrlSearchParamsForConnectionState(FILTERS, pageSize)
     const { connection, fetchMore, hasNextPage } = useShowMorePagination<
         TestShowMorePaginationQueryResult,
         TestShowMorePaginationQueryVariables,
         TestShowMorePaginationQueryFields
     >({
         query: TEST_SHOW_MORE_PAGINATION_QUERY,
-        variables: {
-            first: 1,
-        },
+        variables: {},
         getConnection: result => {
             const data = dataOrThrowErrors(result)
             return data.repositories
         },
         options: {
-            useURL: true,
             skip,
+            pageSize,
         },
+        state: connectionState,
     })
 
     return (
@@ -288,6 +293,15 @@ describe('useShowMorePagination', () => {
                 }),
             },
             {
+                request: generateMockRequest({ first: 3 }),
+                result: generateMockResult({
+                    nodes: [mockResultNodes[0], mockResultNodes[1], mockResultNodes[2]],
+                    endCursor: null,
+                    hasNextPage: true,
+                    totalCount: 4,
+                }),
+            },
+            {
                 request: generateMockRequest({ first: 4 }),
                 result: generateMockResult({
                     nodes: mockResultNodes,
@@ -297,6 +311,8 @@ describe('useShowMorePagination', () => {
                 }),
             },
         ]
+
+        // TODO!(sqs): remove .only, .skip
 
         it('renders correct result', async () => {
             const queries = await renderWithMocks(batchedMocks)
@@ -330,6 +346,7 @@ describe('useShowMorePagination', () => {
             // Fetch both pages
             await fetchNextPage(queries)
             await fetchNextPage(queries)
+            await fetchNextPage(queries)
 
             // All pages of results are displayed
             expect(queries.getAllByRole('listitem').length).toBe(4)
@@ -354,16 +371,16 @@ describe('useShowMorePagination', () => {
             expect(queries.getByText('repo-A')).toBeVisible()
             expect(queries.getByText('repo-B')).toBeVisible()
             expect(queries.getByText('Total count: 4')).toBeVisible()
+            expect(queries.locationRef.current?.search).toBe('?first=2')
 
             // Fetching next page should work as usual
             await fetchNextPage(queries)
-            expect(queries.getAllByRole('listitem').length).toBe(4)
+            expect(queries.getAllByRole('listitem').length).toBe(3)
             expect(queries.getByText('repo-C')).toBeVisible()
-            expect(queries.getByText('repo-D')).toBeVisible()
             expect(queries.getByText('Total count: 4')).toBeVisible()
 
             // URL should be overidden
-            expect(queries.locationRef.current?.search).toBe('?first=4')
+            expect(queries.locationRef.current?.search).toBe('?first=3')
         })
     })
 })

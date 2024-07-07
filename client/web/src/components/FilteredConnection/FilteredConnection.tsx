@@ -28,12 +28,12 @@ import {
     type ConnectionNodesState,
     type ConnectionProps,
 } from './ConnectionNodes'
-import type { Connection, ConnectionQueryArguments } from './ConnectionType'
+import type { Connection } from './ConnectionType'
 import { QUERY_KEY } from './constants'
-import type { Filter, FilterOption, FilterValues } from './FilterControl'
+import type { BasicFilterArgs, Filter, FilterOption, FilterValues } from './FilterControl'
 import { ConnectionContainer, ConnectionError, ConnectionForm, ConnectionLoading } from './ui'
 import type { ConnectionFormProps } from './ui/ConnectionForm'
-import { getFilterFromURL, getUrlQuery, hasID, parseQueryInt } from './utils'
+import { getFilterFromURL, hasID, parseQueryInt, urlSearchParamsForFilteredConnection } from './utils'
 
 /**
  * Fields that belong in FilteredConnectionProps and that don't depend on the type parameters. These are the fields
@@ -113,11 +113,7 @@ interface FilteredConnectionProps<C extends Connection<N>, N, NP = {}, HP = {}>
     queryConnection: (args: FilteredConnectionQueryArguments) => Observable<C>
 
     /** Called when the queryConnection Observable emits. */
-    onUpdate?: (
-        value: C | ErrorLike | undefined,
-        query: string,
-        activeValues: Record<string, string | number | boolean | null>
-    ) => void
+    onUpdate?: (value: C | ErrorLike | undefined, query: string, activeValues: Partial<BasicFilterArgs>) => void
 
     /**
      * Set to true when the GraphQL response is expected to emit an `PageInfo.endCursor` value when
@@ -131,7 +127,11 @@ interface FilteredConnectionProps<C extends Connection<N>, N, NP = {}, HP = {}>
 /**
  * The arguments for the Props.queryConnection function.
  */
-export interface FilteredConnectionQueryArguments extends ConnectionQueryArguments {}
+export interface FilteredConnectionQueryArguments {
+    query?: string
+    first?: number | null
+    after?: string | null
+}
 
 interface FilteredConnectionState<C extends Connection<N>, N> extends ConnectionNodesState {
     activeFilterValues: FilterValues
@@ -384,17 +384,16 @@ class InnerFilteredConnection<N, NP = {}, HP = {}, C extends Connection<N> = Con
                     ({ connectionOrError, previousPage, ...rest }) => {
                         if (this.props.useURLQuery) {
                             const { location, navigate } = this.props
-                            const searchFragment = this.urlQuery({ first: previousPage.length })
-                            const searchFragmentParams = new URLSearchParams(searchFragment)
-                            searchFragmentParams.sort()
+                            const newParams = this.urlQuery({ first: previousPage.length })
+                            newParams.sort()
 
                             const oldParams = new URLSearchParams(location.search)
                             oldParams.sort()
 
-                            if (!isEqual(Array.from(searchFragmentParams), Array.from(oldParams))) {
+                            if (!isEqual(Array.from(newParams), Array.from(oldParams))) {
                                 navigate(
                                     {
-                                        search: searchFragment,
+                                        search: newParams.toString(),
                                         hash: location.hash,
                                     },
                                     {
@@ -514,7 +513,7 @@ class InnerFilteredConnection<N, NP = {}, HP = {}, C extends Connection<N> = Con
         first?: number
         query?: string
         filterValues?: FilterValues
-    }): string {
+    }): URLSearchParams {
         if (!first) {
             first = this.state.first
         }
@@ -525,13 +524,11 @@ class InnerFilteredConnection<N, NP = {}, HP = {}, C extends Connection<N> = Con
             filterValues = this.state.activeFilterValues
         }
 
-        return getUrlQuery({
+        return urlSearchParamsForFilteredConnection({
             query,
-            first: {
-                actual: first,
-                // Always set through `defaultProps`
-                default: this.props.defaultFirst!,
-            },
+            pagination: { first },
+            // Always set through `defaultProps`
+            pageSize: this.props.defaultFirst!,
             filterValues,
             search: this.props.location.search,
             filters: this.props.filters,
@@ -647,7 +644,7 @@ class InnerFilteredConnection<N, NP = {}, HP = {}, C extends Connection<N> = Con
         this.queryInputChanges.next(event.currentTarget.value)
     }
 
-    private onDidSelectFilterValue = (filter: Filter, value: FilterOption['value'] | null): void => {
+    private onDidSelectFilterValue = (filter: Filter, value: FilterOption['value'] | undefined): void => {
         if (this.props.filters === undefined) {
             return
         }
@@ -662,14 +659,14 @@ class InnerFilteredConnection<N, NP = {}, HP = {}, C extends Connection<N> = Con
 }
 
 /**
- * @template K The IDs of all filters ({@link Filter.id} values).
- * @template A The type of option args ({@link Filter.options} {@link FilterOption.args} values).
+ * @template TFilterKeys The IDs of all filters ({@link Filter.id} values).
+ * @template TFilterArgs The type of option args ({@link Filter.options} {@link FilterOption.args} values).
  */
 export function buildFilterArgs<
-    K extends string = string,
-    A extends Record<string, string | number | boolean | null> = Record<string, string | number | boolean | null>
->(filters: Filter<K, A>[], filterValues: FilterValues<K>): A {
-    let args = {} as unknown as A
+    TFilterKeys extends string = string,
+    TFilterArgs extends BasicFilterArgs = BasicFilterArgs
+>(filters: Filter<TFilterKeys, TFilterArgs>[], filterValues: FilterValues<TFilterKeys>): Partial<TFilterArgs> {
+    let args = {} as TFilterArgs
     for (const [filterID, value] of Object.entries(filterValues)) {
         if (value === undefined) {
             continue
