@@ -52,6 +52,7 @@
     import TabPanel from '$lib/TabPanel.svelte'
     import Tabs from '$lib/Tabs.svelte'
     import Tooltip from '$lib/Tooltip.svelte'
+    import { createEmptySingleSelectTreeState, type SingleSelectTreeState } from '$lib/TreeView'
     import { Alert, PanelGroup, Panel, PanelResizeHandle, Button } from '$lib/wildcard'
     import { getButtonClassName } from '$lib/wildcard/Button'
 
@@ -63,8 +64,9 @@
     import type { GitHistory_HistoryConnection } from './layout.gql'
     import ReferencesPanel, {
         setReferencesContext,
-        type ReferencesContext,
         getUsagesStore,
+        entryIDForFilter,
+        type ReferencePanelInputs,
     } from './ReferencesPanel.svelte'
 
     export let data: LayoutData
@@ -107,15 +109,23 @@
 
     $: commitHistory = $commitHistoryQuery?.data?.repository?.commit?.ancestors ?? null
 
-    const referencesContext = writable<ReferencesContext>({})
-    setReferencesContext(referencesContext)
-    $: referencesConnection = $referencesContext.activeOccurrence
+    const referencesTreeState = writable<SingleSelectTreeState>({
+        ...createEmptySingleSelectTreeState(),
+        disableScope: true,
+    })
+    const referencesInputs = writable<ReferencePanelInputs>({})
+    setReferencesContext(referencesInputs)
+    $: referencesConnection = $referencesInputs.activeOccurrence
         ? getUsagesStore(
               getGraphQLClient(),
-              $referencesContext.activeOccurrence.documentInfo,
-              $referencesContext.activeOccurrence.occurrence
+              $referencesInputs.activeOccurrence.documentInfo,
+              $referencesInputs.activeOccurrence.occurrence
           )
         : undefined
+    $: referencesTreeState.update(old => ({
+        ...old,
+        selected: $referencesInputs.treeFilter ? entryIDForFilter($referencesInputs.treeFilter) : '',
+    }))
 
     function selectTab(event: { detail: number | null }) {
         trackHistoryPanelTabAction(selectedTab, event.detail)
@@ -293,14 +303,9 @@
                     </TabPanel>
                     <TabPanel title="References" shortcut={referenceHotkey}>
                         <ReferencesPanel
+                            inputs={referencesInputs}
                             connection={referencesConnection}
-                            activeOccurrence={$referencesContext.activeOccurrence}
-                            usageKindFilter={$referencesContext.usageKindFilter}
-                            treeFilter={$referencesContext.treeFilter}
-                            setUsageKindFilter={filter =>
-                                referencesContext.update(before => ({ ...before, usageKindFilter: filter }))}
-                            setTreeFilter={filter =>
-                                referencesContext.update(before => ({ ...before, treeFilter: filter }))}
+                            treeState={referencesTreeState}
                         />
                     </TabPanel>
                 </Tabs>

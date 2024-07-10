@@ -4,25 +4,24 @@
         occurrence: Occurrence
     }
 
-    export interface ReferencesContext {
+    export interface ReferencePanelInputs {
         activeOccurrence?: ActiveOccurrence
         usageKindFilter?: SymbolUsageKind
         treeFilter?: TreeFilter
     }
 
     const referencesKey = {}
-    export function getReferencesContext(): Writable<ReferencesContext> {
+    export function getReferencesContext(): Writable<ReferencePanelInputs> {
         return getContext(referencesKey)
     }
 
-    export function setReferencesContext(ctx: Writable<ReferencesContext>) {
+    export function setReferencesContext(ctx: Writable<ReferencePanelInputs>) {
         setContext(referencesKey, ctx)
     }
 
     interface RepoTreeEntry {
         type: 'repo'
         name: string
-        id: string
         entries: PathTreeEntry[]
     }
 
@@ -30,7 +29,6 @@
         type: 'path'
         repo: string
         name: string
-        id: string
     }
 
     type TreeEntry = RepoTreeEntry | PathTreeEntry
@@ -74,7 +72,7 @@
     function treeProviderForEntries(entries: TreeEntry[]): TreeProvider<TreeEntry> {
         return {
             getNodeID(entry) {
-                return entry.id
+                return `${entry.type}-${entry.name}`
             },
             getEntries(): TreeEntry[] {
                 return entries
@@ -96,15 +94,13 @@
     }
 
     function generateOutlineTree(repoGroups: RepoGroup[]): TreeProvider<TreeEntry> {
-        const repoEntries: RepoTreeEntry[] = repoGroups.map((repoGroup, repoGroupIndex) => ({
+        const repoEntries: RepoTreeEntry[] = repoGroups.map(repoGroup => ({
             type: 'repo',
             name: repoGroup.repo,
-            id: `repo-${repoGroupIndex}`,
-            entries: repoGroup.pathGroups.map((pathGroup, pathGroupIndex) => ({
+            entries: repoGroup.pathGroups.map(pathGroup => ({
                 type: 'path',
                 name: pathGroup.path,
                 repo: repoGroup.repo,
-                id: `path-${repoGroupIndex}-${pathGroupIndex}`,
             })),
         }))
         return treeProviderForEntries(repoEntries)
@@ -166,11 +162,18 @@
         repository: string
         path?: string
     }
+
+    export function entryIDForFilter(filter: TreeFilter): string {
+        if (filter.path) {
+            return `path-${filter.repository}-${filter.path}`
+        }
+        return `repo-${filter.repository}`
+    }
 </script>
 
 <script lang="ts">
     import { getContext, setContext } from 'svelte'
-    import { writable, type Writable } from 'svelte/store'
+    import { type Writable } from 'svelte/store'
 
     import { infinityQuery, type GraphQLClient, type InfinityQueryStore } from '$lib/graphql'
     import { SymbolUsageKind } from '$lib/graphql-types'
@@ -178,7 +181,7 @@
     import Scroller from '$lib/Scroller.svelte'
     import LoadingSkeleton from '$lib/search/dynamicFilters/LoadingSkeleton.svelte'
     import type { Occurrence } from '$lib/shared'
-    import { createEmptySingleSelectTreeState, type TreeProvider } from '$lib/TreeView'
+    import { type SingleSelectTreeState, type TreeProvider } from '$lib/TreeView'
     import TreeView, { setTreeContext } from '$lib/TreeView.svelte'
     import type { DocumentInfo } from '$lib/web'
     import { Alert, PanelGroup } from '$lib/wildcard'
@@ -193,50 +196,37 @@
     import { ReferencesPanel_Usages } from './ReferencesPanel.gql'
     import ReferencesPanelFileUsages from './ReferencesPanelFileUsages.svelte'
 
+    export let inputs: Writable<ReferencePanelInputs>
     export let connection: InfinityQueryStore<ReferencesPanel_UsagesResult, ReferencesPanel_UsagesVariables> | undefined
-    export let activeOccurrence: ActiveOccurrence | undefined
-    export let usageKindFilter: SymbolUsageKind | undefined
-    export let treeFilter: TreeFilter | undefined
-    // TODO: actually use these filters
+    export let treeState: Writable<SingleSelectTreeState>
 
-    export let setUsageKindFilter: (usageKind: SymbolUsageKind | undefined) => void
-    export let setTreeFilter: (treeFilter: TreeFilter | undefined) => void
-
-    const treeStateStore = writable({ ...createEmptySingleSelectTreeState(), disableScope: true })
-    setTreeContext(treeStateStore)
+    $: setTreeContext(treeState)
 
     // TODO: it would be really nice if the tree API emitted select events with tree elements, not HTML elements
     function handleSelect(target: HTMLElement) {
         const selected = target.querySelector('[data-repo-name]') as HTMLElement
-        const repository = selected.dataset.repoName ?? ''
-        const path = selected.dataset.path
-        if (treeFilter?.repository === repository && treeFilter?.path === path) {
-            setTreeFilter(undefined)
-            treeStateStore.update(old => ({ ...old, selected: '' }))
-        } else {
-            setTreeFilter({ repository, path })
-            treeStateStore.update(old => ({ ...old, selected: selected.dataset.nodeId ?? '' }))
-        }
+        const newFilter: TreeFilter = { repository: selected.dataset.repoName ?? '', path: selected.dataset.path }
+        inputs.update(old => ({ ...old, treeFilter: old.treeFilter === newFilter ? undefined : newFilter }))
     }
 
     $: loading = $connection?.fetching
     $: usages = $connection?.data?.usagesForSymbol?.nodes
-    $: kindFilteredUsages = usages?.filter(matchesUsageKind(usageKindFilter))
+    $: kindFilteredUsages = usages?.filter(matchesUsageKind($inputs.usageKindFilter))
     $: repoGroups = groupUsages(kindFilteredUsages ?? [])
     $: outlineTree = generateOutlineTree(repoGroups)
     $: displayGroups = repoGroups
         .flatMap(repoGroup => repoGroup.pathGroups.map(pathGroup => ({ repo: repoGroup.repo, ...pathGroup })))
         .filter(displayGroup => {
-            if (treeFilter === undefined) {
+            if ($inputs.treeFilter === undefined) {
                 return true
-            } else if (treeFilter.repository !== displayGroup.repo) {
+            } else if ($inputs.treeFilter.repository !== displayGroup.repo) {
                 return false
             }
-            return treeFilter.path === undefined || treeFilter.path === displayGroup.path
+            return $inputs.treeFilter.path === undefined || $inputs.treeFilter.path === displayGroup.path
         })
 </script>
 
-{#if activeOccurrence === undefined}
+{#if $inputs.activeOccurrence === undefined}
     <!-- TODO: style this -->
     <div><p>Select a symbol in the code panel to view references.</p></div>
 {:else}
@@ -245,11 +235,12 @@
             <div class="sidebar">
                 <div role="radiogroup" aria-label="Select usage kind">
                     {#each Object.values(SymbolUsageKind) as usageKind}
-                        {@const checked = usageKind === usageKindFilter}
+                        {@const checked = usageKind === $inputs.usageKindFilter}
                         <button
                             role="radio"
                             aria-checked={checked}
-                            on:click={() => setUsageKindFilter(checked ? undefined : usageKind)}
+                            on:click={() =>
+                                inputs.update(old => ({ ...old, usageKindFilter: checked ? undefined : usageKind }))}
                         >
                             {usageKind.toLowerCase()}s
                         </button>
@@ -259,16 +250,11 @@
                     <TreeView treeProvider={outlineTree} on:select={event => handleSelect(event.detail)}>
                         <svelte:fragment let:entry>
                             {#if entry.type === 'repo'}
-                                <span class="repo-entry" data-node-id={entry.id} data-repo-name={entry.name}
-                                    >{entry.name}</span
-                                >
+                                <span class="repo-entry" data-repo-name={entry.name}>{entry.name}</span>
                             {:else}
-                                <span
-                                    class="path-entry"
-                                    data-node-id={entry.id}
-                                    data-repo-name={entry.repo}
-                                    data-path={entry.name}>{entry.name}</span
-                                >
+                                <span class="path-entry" data-repo-name={entry.repo} data-path={entry.name}>
+                                    {entry.name}
+                                </span>
                             {/if}
                         </svelte:fragment>
                         <Alert slot="error" let:error variant="danger">
