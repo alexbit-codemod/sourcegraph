@@ -1131,7 +1131,7 @@ func (s *Service) getSyntacticSymbolsAtRange(
 	var parseFail *scip.Occurrence = nil
 
 	// FIXME(issue: GRAPH-674): Properly handle different text encodings here.
-	for _, occurrence := range findOccurrencesWithEqualRange(doc.Occurrences, targetRange) {
+	for _, occurrence := range FindOccurrencesWithEqualRange(doc.Occurrences, targetRange) {
 		parsedSymbol, err := scip.ParseSymbol(occurrence.Symbol)
 		if err != nil {
 			parseFail = occurrence
@@ -1209,7 +1209,7 @@ func (s *Service) findSyntacticMatchesForCandidateFile(
 		}
 
 		foundSyntacticMatch := false
-		for _, occ := range findOccurrencesWithEqualRange(document.Occurrences, targetCandidateRange) {
+		for _, occ := range FindOccurrencesWithEqualRange(document.Occurrences, targetCandidateRange) {
 			if !scip.IsLocalSymbol(occ.Symbol) {
 				foundSyntacticMatch = true
 				// Return results at the commit the match was found at, not at the commit
