@@ -71234,6 +71234,12 @@ type MockSubRepoPermsStore struct {
 	// GetByUserAndServiceFunc is an instance of a mock function object
 	// controlling the behavior of the method GetByUserAndService.
 	GetByUserAndServiceFunc *SubRepoPermsStoreGetByUserAndServiceFunc
+	// GetByUserWithIPsFunc is an instance of a mock function object
+	// controlling the behavior of the method GetByUserWithIPs.
+	GetByUserWithIPsFunc *SubRepoPermsStoreGetByUserWithIPsFunc
+	// GetWithIPsFunc is an instance of a mock function object controlling
+	// the behavior of the method GetWithIPs.
+	GetWithIPsFunc *SubRepoPermsStoreGetWithIPsFunc
 	// HandleFunc is an instance of a mock function object controlling the
 	// behavior of the method Handle.
 	HandleFunc *SubRepoPermsStoreHandleFunc
@@ -71249,6 +71255,9 @@ type MockSubRepoPermsStore struct {
 	// UpsertFunc is an instance of a mock function object controlling the
 	// behavior of the method Upsert.
 	UpsertFunc *SubRepoPermsStoreUpsertFunc
+	// UpsertWithIPsFunc is an instance of a mock function object
+	// controlling the behavior of the method UpsertWithIPs.
+	UpsertWithIPsFunc *SubRepoPermsStoreUpsertWithIPsFunc
 	// UpsertWithSpecFunc is an instance of a mock function object
 	// controlling the behavior of the method UpsertWithSpec.
 	UpsertWithSpecFunc *SubRepoPermsStoreUpsertWithSpecFunc
@@ -71287,6 +71296,16 @@ func NewMockSubRepoPermsStore() *MockSubRepoPermsStore {
 				return
 			},
 		},
+		GetByUserWithIPsFunc: &SubRepoPermsStoreGetByUserWithIPsFunc{
+			defaultHook: func(context.Context, int32, bool) (r0 map[api.RepoName]authz.SubRepoPermissionsWithIPs, r1 error) {
+				return
+			},
+		},
+		GetWithIPsFunc: &SubRepoPermsStoreGetWithIPsFunc{
+			defaultHook: func(context.Context, int32, api.RepoID, bool) (r0 *authz.SubRepoPermissionsWithIPs, r1 error) {
+				return
+			},
+		},
 		HandleFunc: &SubRepoPermsStoreHandleFunc{
 			defaultHook: func() (r0 basestore.TransactableHandle) {
 				return
@@ -71309,6 +71328,11 @@ func NewMockSubRepoPermsStore() *MockSubRepoPermsStore {
 		},
 		UpsertFunc: &SubRepoPermsStoreUpsertFunc{
 			defaultHook: func(context.Context, int32, api.RepoID, authz.SubRepoPermissions) (r0 error) {
+				return
+			},
+		},
+		UpsertWithIPsFunc: &SubRepoPermsStoreUpsertWithIPsFunc{
+			defaultHook: func(context.Context, int32, api.RepoID, authz.SubRepoPermissionsWithIPs) (r0 error) {
 				return
 			},
 		},
@@ -71355,6 +71379,16 @@ func NewStrictMockSubRepoPermsStore() *MockSubRepoPermsStore {
 				panic("unexpected invocation of MockSubRepoPermsStore.GetByUserAndService")
 			},
 		},
+		GetByUserWithIPsFunc: &SubRepoPermsStoreGetByUserWithIPsFunc{
+			defaultHook: func(context.Context, int32, bool) (map[api.RepoName]authz.SubRepoPermissionsWithIPs, error) {
+				panic("unexpected invocation of MockSubRepoPermsStore.GetByUserWithIPs")
+			},
+		},
+		GetWithIPsFunc: &SubRepoPermsStoreGetWithIPsFunc{
+			defaultHook: func(context.Context, int32, api.RepoID, bool) (*authz.SubRepoPermissionsWithIPs, error) {
+				panic("unexpected invocation of MockSubRepoPermsStore.GetWithIPs")
+			},
+		},
 		HandleFunc: &SubRepoPermsStoreHandleFunc{
 			defaultHook: func() basestore.TransactableHandle {
 				panic("unexpected invocation of MockSubRepoPermsStore.Handle")
@@ -71378,6 +71412,11 @@ func NewStrictMockSubRepoPermsStore() *MockSubRepoPermsStore {
 		UpsertFunc: &SubRepoPermsStoreUpsertFunc{
 			defaultHook: func(context.Context, int32, api.RepoID, authz.SubRepoPermissions) error {
 				panic("unexpected invocation of MockSubRepoPermsStore.Upsert")
+			},
+		},
+		UpsertWithIPsFunc: &SubRepoPermsStoreUpsertWithIPsFunc{
+			defaultHook: func(context.Context, int32, api.RepoID, authz.SubRepoPermissionsWithIPs) error {
+				panic("unexpected invocation of MockSubRepoPermsStore.UpsertWithIPs")
 			},
 		},
 		UpsertWithSpecFunc: &SubRepoPermsStoreUpsertWithSpecFunc{
@@ -71413,6 +71452,12 @@ func NewMockSubRepoPermsStoreFrom(i database.SubRepoPermsStore) *MockSubRepoPerm
 		GetByUserAndServiceFunc: &SubRepoPermsStoreGetByUserAndServiceFunc{
 			defaultHook: i.GetByUserAndService,
 		},
+		GetByUserWithIPsFunc: &SubRepoPermsStoreGetByUserWithIPsFunc{
+			defaultHook: i.GetByUserWithIPs,
+		},
+		GetWithIPsFunc: &SubRepoPermsStoreGetWithIPsFunc{
+			defaultHook: i.GetWithIPs,
+		},
 		HandleFunc: &SubRepoPermsStoreHandleFunc{
 			defaultHook: i.Handle,
 		},
@@ -71427,6 +71472,9 @@ func NewMockSubRepoPermsStoreFrom(i database.SubRepoPermsStore) *MockSubRepoPerm
 		},
 		UpsertFunc: &SubRepoPermsStoreUpsertFunc{
 			defaultHook: i.Upsert,
+		},
+		UpsertWithIPsFunc: &SubRepoPermsStoreUpsertWithIPsFunc{
+			defaultHook: i.UpsertWithIPs,
 		},
 		UpsertWithSpecFunc: &SubRepoPermsStoreUpsertWithSpecFunc{
 			defaultHook: i.UpsertWithSpec,
@@ -71983,6 +72031,235 @@ func (c SubRepoPermsStoreGetByUserAndServiceFuncCall) Results() []interface{} {
 	return []interface{}{c.Result0, c.Result1}
 }
 
+// SubRepoPermsStoreGetByUserWithIPsFunc describes the behavior when the
+// GetByUserWithIPs method of the parent MockSubRepoPermsStore instance is
+// invoked.
+type SubRepoPermsStoreGetByUserWithIPsFunc struct {
+	defaultHook func(context.Context, int32, bool) (map[api.RepoName]authz.SubRepoPermissionsWithIPs, error)
+	hooks       []func(context.Context, int32, bool) (map[api.RepoName]authz.SubRepoPermissionsWithIPs, error)
+	history     []SubRepoPermsStoreGetByUserWithIPsFuncCall
+	mutex       sync.Mutex
+}
+
+// GetByUserWithIPs delegates to the next hook function in the queue and
+// stores the parameter and result values of this invocation.
+func (m *MockSubRepoPermsStore) GetByUserWithIPs(v0 context.Context, v1 int32, v2 bool) (map[api.RepoName]authz.SubRepoPermissionsWithIPs, error) {
+	r0, r1 := m.GetByUserWithIPsFunc.nextHook()(v0, v1, v2)
+	m.GetByUserWithIPsFunc.appendCall(SubRepoPermsStoreGetByUserWithIPsFuncCall{v0, v1, v2, r0, r1})
+	return r0, r1
+}
+
+// SetDefaultHook sets function that is called when the GetByUserWithIPs
+// method of the parent MockSubRepoPermsStore instance is invoked and the
+// hook queue is empty.
+func (f *SubRepoPermsStoreGetByUserWithIPsFunc) SetDefaultHook(hook func(context.Context, int32, bool) (map[api.RepoName]authz.SubRepoPermissionsWithIPs, error)) {
+	f.defaultHook = hook
+}
+
+// PushHook adds a function to the end of hook queue. Each invocation of the
+// GetByUserWithIPs method of the parent MockSubRepoPermsStore instance
+// invokes the hook at the front of the queue and discards it. After the
+// queue is empty, the default hook function is invoked for any future
+// action.
+func (f *SubRepoPermsStoreGetByUserWithIPsFunc) PushHook(hook func(context.Context, int32, bool) (map[api.RepoName]authz.SubRepoPermissionsWithIPs, error)) {
+	f.mutex.Lock()
+	f.hooks = append(f.hooks, hook)
+	f.mutex.Unlock()
+}
+
+// SetDefaultReturn calls SetDefaultHook with a function that returns the
+// given values.
+func (f *SubRepoPermsStoreGetByUserWithIPsFunc) SetDefaultReturn(r0 map[api.RepoName]authz.SubRepoPermissionsWithIPs, r1 error) {
+	f.SetDefaultHook(func(context.Context, int32, bool) (map[api.RepoName]authz.SubRepoPermissionsWithIPs, error) {
+		return r0, r1
+	})
+}
+
+// PushReturn calls PushHook with a function that returns the given values.
+func (f *SubRepoPermsStoreGetByUserWithIPsFunc) PushReturn(r0 map[api.RepoName]authz.SubRepoPermissionsWithIPs, r1 error) {
+	f.PushHook(func(context.Context, int32, bool) (map[api.RepoName]authz.SubRepoPermissionsWithIPs, error) {
+		return r0, r1
+	})
+}
+
+func (f *SubRepoPermsStoreGetByUserWithIPsFunc) nextHook() func(context.Context, int32, bool) (map[api.RepoName]authz.SubRepoPermissionsWithIPs, error) {
+	f.mutex.Lock()
+	defer f.mutex.Unlock()
+
+	if len(f.hooks) == 0 {
+		return f.defaultHook
+	}
+
+	hook := f.hooks[0]
+	f.hooks = f.hooks[1:]
+	return hook
+}
+
+func (f *SubRepoPermsStoreGetByUserWithIPsFunc) appendCall(r0 SubRepoPermsStoreGetByUserWithIPsFuncCall) {
+	f.mutex.Lock()
+	f.history = append(f.history, r0)
+	f.mutex.Unlock()
+}
+
+// History returns a sequence of SubRepoPermsStoreGetByUserWithIPsFuncCall
+// objects describing the invocations of this function.
+func (f *SubRepoPermsStoreGetByUserWithIPsFunc) History() []SubRepoPermsStoreGetByUserWithIPsFuncCall {
+	f.mutex.Lock()
+	history := make([]SubRepoPermsStoreGetByUserWithIPsFuncCall, len(f.history))
+	copy(history, f.history)
+	f.mutex.Unlock()
+
+	return history
+}
+
+// SubRepoPermsStoreGetByUserWithIPsFuncCall is an object that describes an
+// invocation of method GetByUserWithIPs on an instance of
+// MockSubRepoPermsStore.
+type SubRepoPermsStoreGetByUserWithIPsFuncCall struct {
+	// Arg0 is the value of the 1st argument passed to this method
+	// invocation.
+	Arg0 context.Context
+	// Arg1 is the value of the 2nd argument passed to this method
+	// invocation.
+	Arg1 int32
+	// Arg2 is the value of the 3rd argument passed to this method
+	// invocation.
+	Arg2 bool
+	// Result0 is the value of the 1st result returned from this method
+	// invocation.
+	Result0 map[api.RepoName]authz.SubRepoPermissionsWithIPs
+	// Result1 is the value of the 2nd result returned from this method
+	// invocation.
+	Result1 error
+}
+
+// Args returns an interface slice containing the arguments of this
+// invocation.
+func (c SubRepoPermsStoreGetByUserWithIPsFuncCall) Args() []interface{} {
+	return []interface{}{c.Arg0, c.Arg1, c.Arg2}
+}
+
+// Results returns an interface slice containing the results of this
+// invocation.
+func (c SubRepoPermsStoreGetByUserWithIPsFuncCall) Results() []interface{} {
+	return []interface{}{c.Result0, c.Result1}
+}
+
+// SubRepoPermsStoreGetWithIPsFunc describes the behavior when the
+// GetWithIPs method of the parent MockSubRepoPermsStore instance is
+// invoked.
+type SubRepoPermsStoreGetWithIPsFunc struct {
+	defaultHook func(context.Context, int32, api.RepoID, bool) (*authz.SubRepoPermissionsWithIPs, error)
+	hooks       []func(context.Context, int32, api.RepoID, bool) (*authz.SubRepoPermissionsWithIPs, error)
+	history     []SubRepoPermsStoreGetWithIPsFuncCall
+	mutex       sync.Mutex
+}
+
+// GetWithIPs delegates to the next hook function in the queue and stores
+// the parameter and result values of this invocation.
+func (m *MockSubRepoPermsStore) GetWithIPs(v0 context.Context, v1 int32, v2 api.RepoID, v3 bool) (*authz.SubRepoPermissionsWithIPs, error) {
+	r0, r1 := m.GetWithIPsFunc.nextHook()(v0, v1, v2, v3)
+	m.GetWithIPsFunc.appendCall(SubRepoPermsStoreGetWithIPsFuncCall{v0, v1, v2, v3, r0, r1})
+	return r0, r1
+}
+
+// SetDefaultHook sets function that is called when the GetWithIPs method of
+// the parent MockSubRepoPermsStore instance is invoked and the hook queue
+// is empty.
+func (f *SubRepoPermsStoreGetWithIPsFunc) SetDefaultHook(hook func(context.Context, int32, api.RepoID, bool) (*authz.SubRepoPermissionsWithIPs, error)) {
+	f.defaultHook = hook
+}
+
+// PushHook adds a function to the end of hook queue. Each invocation of the
+// GetWithIPs method of the parent MockSubRepoPermsStore instance invokes
+// the hook at the front of the queue and discards it. After the queue is
+// empty, the default hook function is invoked for any future action.
+func (f *SubRepoPermsStoreGetWithIPsFunc) PushHook(hook func(context.Context, int32, api.RepoID, bool) (*authz.SubRepoPermissionsWithIPs, error)) {
+	f.mutex.Lock()
+	f.hooks = append(f.hooks, hook)
+	f.mutex.Unlock()
+}
+
+// SetDefaultReturn calls SetDefaultHook with a function that returns the
+// given values.
+func (f *SubRepoPermsStoreGetWithIPsFunc) SetDefaultReturn(r0 *authz.SubRepoPermissionsWithIPs, r1 error) {
+	f.SetDefaultHook(func(context.Context, int32, api.RepoID, bool) (*authz.SubRepoPermissionsWithIPs, error) {
+		return r0, r1
+	})
+}
+
+// PushReturn calls PushHook with a function that returns the given values.
+func (f *SubRepoPermsStoreGetWithIPsFunc) PushReturn(r0 *authz.SubRepoPermissionsWithIPs, r1 error) {
+	f.PushHook(func(context.Context, int32, api.RepoID, bool) (*authz.SubRepoPermissionsWithIPs, error) {
+		return r0, r1
+	})
+}
+
+func (f *SubRepoPermsStoreGetWithIPsFunc) nextHook() func(context.Context, int32, api.RepoID, bool) (*authz.SubRepoPermissionsWithIPs, error) {
+	f.mutex.Lock()
+	defer f.mutex.Unlock()
+
+	if len(f.hooks) == 0 {
+		return f.defaultHook
+	}
+
+	hook := f.hooks[0]
+	f.hooks = f.hooks[1:]
+	return hook
+}
+
+func (f *SubRepoPermsStoreGetWithIPsFunc) appendCall(r0 SubRepoPermsStoreGetWithIPsFuncCall) {
+	f.mutex.Lock()
+	f.history = append(f.history, r0)
+	f.mutex.Unlock()
+}
+
+// History returns a sequence of SubRepoPermsStoreGetWithIPsFuncCall objects
+// describing the invocations of this function.
+func (f *SubRepoPermsStoreGetWithIPsFunc) History() []SubRepoPermsStoreGetWithIPsFuncCall {
+	f.mutex.Lock()
+	history := make([]SubRepoPermsStoreGetWithIPsFuncCall, len(f.history))
+	copy(history, f.history)
+	f.mutex.Unlock()
+
+	return history
+}
+
+// SubRepoPermsStoreGetWithIPsFuncCall is an object that describes an
+// invocation of method GetWithIPs on an instance of MockSubRepoPermsStore.
+type SubRepoPermsStoreGetWithIPsFuncCall struct {
+	// Arg0 is the value of the 1st argument passed to this method
+	// invocation.
+	Arg0 context.Context
+	// Arg1 is the value of the 2nd argument passed to this method
+	// invocation.
+	Arg1 int32
+	// Arg2 is the value of the 3rd argument passed to this method
+	// invocation.
+	Arg2 api.RepoID
+	// Arg3 is the value of the 4th argument passed to this method
+	// invocation.
+	Arg3 bool
+	// Result0 is the value of the 1st result returned from this method
+	// invocation.
+	Result0 *authz.SubRepoPermissionsWithIPs
+	// Result1 is the value of the 2nd result returned from this method
+	// invocation.
+	Result1 error
+}
+
+// Args returns an interface slice containing the arguments of this
+// invocation.
+func (c SubRepoPermsStoreGetWithIPsFuncCall) Args() []interface{} {
+	return []interface{}{c.Arg0, c.Arg1, c.Arg2, c.Arg3}
+}
+
+// Results returns an interface slice containing the results of this
+// invocation.
+func (c SubRepoPermsStoreGetWithIPsFuncCall) Results() []interface{} {
+	return []interface{}{c.Result0, c.Result1}
+}
+
 // SubRepoPermsStoreHandleFunc describes the behavior when the Handle method
 // of the parent MockSubRepoPermsStore instance is invoked.
 type SubRepoPermsStoreHandleFunc struct {
@@ -72516,6 +72793,119 @@ func (c SubRepoPermsStoreUpsertFuncCall) Args() []interface{} {
 // Results returns an interface slice containing the results of this
 // invocation.
 func (c SubRepoPermsStoreUpsertFuncCall) Results() []interface{} {
+	return []interface{}{c.Result0}
+}
+
+// SubRepoPermsStoreUpsertWithIPsFunc describes the behavior when the
+// UpsertWithIPs method of the parent MockSubRepoPermsStore instance is
+// invoked.
+type SubRepoPermsStoreUpsertWithIPsFunc struct {
+	defaultHook func(context.Context, int32, api.RepoID, authz.SubRepoPermissionsWithIPs) error
+	hooks       []func(context.Context, int32, api.RepoID, authz.SubRepoPermissionsWithIPs) error
+	history     []SubRepoPermsStoreUpsertWithIPsFuncCall
+	mutex       sync.Mutex
+}
+
+// UpsertWithIPs delegates to the next hook function in the queue and stores
+// the parameter and result values of this invocation.
+func (m *MockSubRepoPermsStore) UpsertWithIPs(v0 context.Context, v1 int32, v2 api.RepoID, v3 authz.SubRepoPermissionsWithIPs) error {
+	r0 := m.UpsertWithIPsFunc.nextHook()(v0, v1, v2, v3)
+	m.UpsertWithIPsFunc.appendCall(SubRepoPermsStoreUpsertWithIPsFuncCall{v0, v1, v2, v3, r0})
+	return r0
+}
+
+// SetDefaultHook sets function that is called when the UpsertWithIPs method
+// of the parent MockSubRepoPermsStore instance is invoked and the hook
+// queue is empty.
+func (f *SubRepoPermsStoreUpsertWithIPsFunc) SetDefaultHook(hook func(context.Context, int32, api.RepoID, authz.SubRepoPermissionsWithIPs) error) {
+	f.defaultHook = hook
+}
+
+// PushHook adds a function to the end of hook queue. Each invocation of the
+// UpsertWithIPs method of the parent MockSubRepoPermsStore instance invokes
+// the hook at the front of the queue and discards it. After the queue is
+// empty, the default hook function is invoked for any future action.
+func (f *SubRepoPermsStoreUpsertWithIPsFunc) PushHook(hook func(context.Context, int32, api.RepoID, authz.SubRepoPermissionsWithIPs) error) {
+	f.mutex.Lock()
+	f.hooks = append(f.hooks, hook)
+	f.mutex.Unlock()
+}
+
+// SetDefaultReturn calls SetDefaultHook with a function that returns the
+// given values.
+func (f *SubRepoPermsStoreUpsertWithIPsFunc) SetDefaultReturn(r0 error) {
+	f.SetDefaultHook(func(context.Context, int32, api.RepoID, authz.SubRepoPermissionsWithIPs) error {
+		return r0
+	})
+}
+
+// PushReturn calls PushHook with a function that returns the given values.
+func (f *SubRepoPermsStoreUpsertWithIPsFunc) PushReturn(r0 error) {
+	f.PushHook(func(context.Context, int32, api.RepoID, authz.SubRepoPermissionsWithIPs) error {
+		return r0
+	})
+}
+
+func (f *SubRepoPermsStoreUpsertWithIPsFunc) nextHook() func(context.Context, int32, api.RepoID, authz.SubRepoPermissionsWithIPs) error {
+	f.mutex.Lock()
+	defer f.mutex.Unlock()
+
+	if len(f.hooks) == 0 {
+		return f.defaultHook
+	}
+
+	hook := f.hooks[0]
+	f.hooks = f.hooks[1:]
+	return hook
+}
+
+func (f *SubRepoPermsStoreUpsertWithIPsFunc) appendCall(r0 SubRepoPermsStoreUpsertWithIPsFuncCall) {
+	f.mutex.Lock()
+	f.history = append(f.history, r0)
+	f.mutex.Unlock()
+}
+
+// History returns a sequence of SubRepoPermsStoreUpsertWithIPsFuncCall
+// objects describing the invocations of this function.
+func (f *SubRepoPermsStoreUpsertWithIPsFunc) History() []SubRepoPermsStoreUpsertWithIPsFuncCall {
+	f.mutex.Lock()
+	history := make([]SubRepoPermsStoreUpsertWithIPsFuncCall, len(f.history))
+	copy(history, f.history)
+	f.mutex.Unlock()
+
+	return history
+}
+
+// SubRepoPermsStoreUpsertWithIPsFuncCall is an object that describes an
+// invocation of method UpsertWithIPs on an instance of
+// MockSubRepoPermsStore.
+type SubRepoPermsStoreUpsertWithIPsFuncCall struct {
+	// Arg0 is the value of the 1st argument passed to this method
+	// invocation.
+	Arg0 context.Context
+	// Arg1 is the value of the 2nd argument passed to this method
+	// invocation.
+	Arg1 int32
+	// Arg2 is the value of the 3rd argument passed to this method
+	// invocation.
+	Arg2 api.RepoID
+	// Arg3 is the value of the 4th argument passed to this method
+	// invocation.
+	Arg3 authz.SubRepoPermissionsWithIPs
+	// Result0 is the value of the 1st result returned from this method
+	// invocation.
+	Result0 error
+}
+
+// Args returns an interface slice containing the arguments of this
+// invocation.
+func (c SubRepoPermsStoreUpsertWithIPsFuncCall) Args() []interface{} {
+	return []interface{}{c.Arg0, c.Arg1, c.Arg2, c.Arg3}
+}
+
+// Results returns an interface slice containing the results of this
+// invocation.
+func (c SubRepoPermsStoreUpsertWithIPsFuncCall) Results() []interface{} {
 	return []interface{}{c.Result0}
 }
 

@@ -15,6 +15,7 @@ import (
 	"github.com/sourcegraph/sourcegraph/internal/conf"
 	"github.com/sourcegraph/sourcegraph/internal/database/dbtest"
 	"github.com/sourcegraph/sourcegraph/internal/database/dbutil"
+	"github.com/sourcegraph/sourcegraph/lib/errors"
 	"github.com/sourcegraph/sourcegraph/schema"
 )
 
@@ -414,4 +415,780 @@ func prepareSubRepoTestData(ctx context.Context, t *testing.T, db dbutil.DB) {
 			t.Fatal(err)
 		}
 	}
+}
+
+func TestUpsertWithIPsDisallowsEmptyIPs(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+	t.Parallel()
+
+	logger := logtest.Scoped(t)
+	db := NewDB(logger, dbtest.NewDB(t))
+	ctx := context.Background()
+	prepareSubRepoTestData(ctx, t, db)
+
+	s := db.SubRepoPerms()
+
+	userID := int32(1)
+	repoID := api.RepoID(1)
+
+	perms := authz.SubRepoPermissionsWithIPs{
+		Paths: []authz.PathWithIP{
+			{Path: "/src/foo/*", IP: ""},
+			{Path: "-/src/bar/*", IP: ""},
+		},
+	}
+
+	if err := s.UpsertWithIPs(ctx, userID, repoID, perms); err == nil {
+		t.Fatal("UpsertWithIPs should have failed with empty IPs")
+	}
+}
+
+func TestSubRepoPermsStore_UpsertWithIps(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+	t.Parallel()
+
+	newStore := func(t *testing.T) SubRepoPermsStore {
+		t.Helper()
+
+		logger := logtest.Scoped(t)
+		db := NewDB(logger, dbtest.NewDB(t))
+
+		ctx := context.Background()
+		prepareSubRepoTestData(ctx, t, db)
+		s := db.SubRepoPerms()
+
+		return s
+	}
+
+	userID := int32(1)
+	repoID := api.RepoID(1)
+
+	ctx := context.Background()
+
+	for _, test := range []struct {
+		name      string
+		storeFunc func(t *testing.T) SubRepoPermsStore
+	}{
+		{
+			name:      "empty store",
+			storeFunc: newStore,
+		},
+		{
+			name: "store with initial normal data",
+			storeFunc: func(t *testing.T) SubRepoPermsStore {
+				t.Helper()
+
+				s := newStore(t)
+				err := s.Upsert(context.Background(), 1, 1, authz.SubRepoPermissions{
+					Paths: []string{
+						"/not/the/same/*",
+						"-/unlike/other/*",
+					},
+				})
+
+				if err != nil {
+					t.Fatal(err)
+				}
+				return s
+			},
+		},
+		{
+			name: "store with initial IP data",
+			storeFunc: func(t *testing.T) SubRepoPermsStore {
+				t.Helper()
+
+				s := newStore(t)
+				err := s.UpsertWithIPs(context.Background(), 1, 1, authz.SubRepoPermissionsWithIPs{
+					Paths: []authz.PathWithIP{
+						{Path: "/not/the/same/*", IP: "2001:db8::1"},
+						{Path: "-/unlike/other/*", IP: "2001:db8::1"},
+					},
+				})
+
+				if err != nil {
+					t.Fatal(err)
+				}
+				return s
+			},
+		},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+
+			t.Run("UpsertWithIP", func(t *testing.T) {
+				t.Run("Get (normal)", func(t *testing.T) {
+					t.Parallel()
+
+					inputPerms := authz.SubRepoPermissionsWithIPs{
+						Paths: []authz.PathWithIP{
+							{Path: "/src/foo/*", IP: "192.168.1.1"},
+							{Path: "-/src/bar/*", IP: "192.168.1.2"},
+						},
+					}
+
+					s := test.storeFunc(t)
+
+					if err := s.UpsertWithIPs(ctx, userID, repoID, inputPerms); err != nil {
+						t.Fatal(err)
+					}
+
+					actualPerms, err := s.Get(ctx, userID, repoID)
+					if err != nil {
+						t.Fatal(err)
+					}
+
+					var expectedPerms authz.SubRepoPermissions
+					for _, p := range inputPerms.Paths {
+						expectedPerms.Paths = append(expectedPerms.Paths, p.Path)
+					}
+
+					if diff := cmp.Diff(&expectedPerms, actualPerms); diff != "" {
+						t.Fatalf("unexpected permissions (-want +got):\n%s", diff)
+					}
+				})
+
+				t.Run("GetWithIP", func(t *testing.T) {
+					for _, backfill := range []bool{true, false} {
+						t.Run(fmt.Sprintf("backfill=%t", backfill), func(t *testing.T) {
+							t.Parallel()
+
+							inputPerms := authz.SubRepoPermissionsWithIPs{
+								Paths: []authz.PathWithIP{
+									{Path: "/src/foo/*", IP: "192.168.1.1"},
+									{Path: "-/src/bar/*", IP: "192.168.1.2"},
+								},
+							}
+
+							s := test.storeFunc(t)
+
+							if err := s.UpsertWithIPs(ctx, userID, repoID, inputPerms); err != nil {
+								t.Fatal(err)
+							}
+
+							actualPerms, err := s.GetWithIPs(ctx, userID, repoID, backfill)
+							if err != nil {
+								t.Fatal(err)
+							}
+
+							expectedPerms := inputPerms
+
+							if diff := cmp.Diff(&expectedPerms, actualPerms); diff != "" {
+								t.Fatalf("unexpected permissions (-want +got):\n%s", diff)
+							}
+						})
+					}
+				})
+
+			})
+
+			t.Run("Upsert (normal)", func(t *testing.T) {
+				t.Run("Get (normal)", func(t *testing.T) {
+					t.Parallel()
+
+					inputPerms := authz.SubRepoPermissions{
+						Paths: []string{
+							"/src/foo/*",
+							"-/src/bar/*",
+						},
+					}
+
+					s := test.storeFunc(t)
+
+					if err := s.Upsert(ctx, userID, repoID, inputPerms); err != nil {
+						t.Fatal(err)
+					}
+
+					actualPerms, err := s.Get(ctx, userID, repoID)
+					if err != nil {
+						t.Fatal(err)
+					}
+
+					expectedPerms := inputPerms
+					if diff := cmp.Diff(&expectedPerms, actualPerms); diff != "" {
+						t.Fatalf("unexpected permissions (-want +got):\n%s", diff)
+					}
+				})
+
+				t.Run("GetWithIP", func(t *testing.T) {
+
+					t.Run("backfill=true", func(t *testing.T) {
+						t.Parallel()
+
+						inputPerms := authz.SubRepoPermissions{
+							Paths: []string{
+								"/src/foo/*",
+								"-/src/bar/*",
+							},
+						}
+
+						s := test.storeFunc(t)
+						err := s.Upsert(ctx, userID, repoID, inputPerms)
+
+						if err != nil {
+							t.Fatal(err)
+						}
+
+						actualPerms, err := s.GetWithIPs(ctx, userID, repoID, true)
+						if err != nil {
+							t.Fatalf("unexpected error: %s", err)
+						}
+
+						expected := authz.SubRepoPermissionsWithIPs{
+							Paths: []authz.PathWithIP{
+								{Path: "/src/foo/*", IP: "*"},
+								{Path: "-/src/bar/*", IP: "*"},
+							},
+						}
+
+						if diff := cmp.Diff(&expected, actualPerms); diff != "" {
+							t.Fatalf("unexpected permissions (-want +got):\n%s", diff)
+						}
+					})
+
+					t.Run("backfill=false", func(t *testing.T) {
+						t.Parallel()
+
+						inputPerms := authz.SubRepoPermissions{
+							Paths: []string{
+								"/src/foo/*",
+								"-/src/bar/*",
+							},
+						}
+
+						s := test.storeFunc(t)
+						err := s.Upsert(ctx, userID, repoID, inputPerms)
+
+						if err != nil {
+							t.Fatal(err)
+						}
+
+						_, err = s.GetWithIPs(ctx, userID, repoID, false)
+						if !errors.Is(err, IPsNotSyncedError) {
+							t.Fatalf("unexpected error: %s", err)
+						}
+					})
+
+				})
+			})
+		})
+	}
+}
+
+func TestSubRepoPermsStore_GetByUserWithIPs(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+	t.Parallel()
+
+	newStore := func(t *testing.T) (SubRepoPermsStore, DB) {
+		t.Helper()
+
+		logger := logtest.Scoped(t)
+		db := NewDB(logger, dbtest.NewDB(t))
+
+		ctx := context.Background()
+		prepareSubRepoTestData(ctx, t, db)
+		s := db.SubRepoPerms()
+
+		return s, db
+	}
+
+	userID := int32(1)
+
+	ctx := context.Background()
+
+	for _, test := range []struct {
+		name      string
+		storeFunc func(t *testing.T) (SubRepoPermsStore, DB)
+	}{
+		{
+			name:      "empty store",
+			storeFunc: newStore,
+		},
+		{
+			name: "store with initial normal data",
+			storeFunc: func(t *testing.T) (SubRepoPermsStore, DB) {
+				t.Helper()
+
+				s, db := newStore(t)
+				err := s.Upsert(context.Background(), 1, 1, authz.SubRepoPermissions{
+					Paths: []string{
+						"/not/the/same/*",
+						"-/unlike/other/*",
+					},
+				})
+
+				err = s.Upsert(context.Background(), 1, 2, authz.SubRepoPermissions{
+					Paths: []string{
+						"/not/the/same/*",
+						"-/unlike/other/*",
+					},
+				})
+
+				if err != nil {
+					t.Fatal(err)
+				}
+				return s, db
+			},
+		},
+		{
+			name: "store with initial IP data",
+			storeFunc: func(t *testing.T) (SubRepoPermsStore, DB) {
+				t.Helper()
+
+				s, db := newStore(t)
+				err := s.UpsertWithIPs(context.Background(), 1, 1, authz.SubRepoPermissionsWithIPs{
+					Paths: []authz.PathWithIP{
+						{Path: "/not/the/same/*", IP: "2001:db8::1"},
+						{Path: "-/unlike/other/*", IP: "2001:db8::1"},
+					},
+				})
+
+				err = s.UpsertWithIPs(context.Background(), 1, 2, authz.SubRepoPermissionsWithIPs{
+					Paths: []authz.PathWithIP{
+						{Path: "/not/the/same/*", IP: "2001:db8::1"},
+						{Path: "-/unlike/other/*", IP: "2001:db8::1"},
+					},
+				})
+
+				if err != nil {
+					t.Fatal(err)
+				}
+				return s, db
+			},
+		},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			t.Run("UpsertWithIP", func(t *testing.T) {
+
+				t.Run("GetByUser (normal)", func(t *testing.T) {
+					conf.Mock(&conf.Unified{SiteConfiguration: schema.SiteConfiguration{AuthzEnforceForSiteAdmins: true}})
+					t.Cleanup(func() { conf.Mock(nil) })
+
+					inputPermsMap := map[api.RepoID]struct {
+						name  api.RepoName
+						perms authz.SubRepoPermissionsWithIPs
+					}{
+						1: {
+							name: "github.com/foo/bar",
+							perms: authz.SubRepoPermissionsWithIPs{
+								Paths: []authz.PathWithIP{
+									{Path: "/src/foo/*", IP: "192.168.1.1"},
+									{Path: "-/src/bar/*", IP: "192.168.1.2"},
+								},
+							},
+						},
+
+						2: {
+							name: "github.com/foo/baz",
+							perms: authz.SubRepoPermissionsWithIPs{
+								Paths: []authz.PathWithIP{
+									{Path: "/src/baz/*", IP: "192.167.1.1"},
+									{Path: "-/src/quiz/*", IP: "192.167.1.2"},
+								},
+							},
+						},
+					}
+
+					s, db := test.storeFunc(t)
+
+					for repoID, inputPerms := range inputPermsMap {
+						if err := s.UpsertWithIPs(ctx, userID, repoID, inputPerms.perms); err != nil {
+							t.Fatalf("unexpected error when inserting permissions for repo %d: %s", repoID, err)
+						}
+					}
+
+					actualPerms, err := s.GetByUser(ctx, userID)
+					if err != nil {
+						t.Fatal(err)
+					}
+
+					expectedPerms := make(map[api.RepoName]authz.SubRepoPermissions)
+
+					for _, entry := range inputPermsMap {
+						var perms authz.SubRepoPermissions
+						for _, p := range entry.perms.Paths {
+							perms.Paths = append(perms.Paths, p.Path)
+						}
+						expectedPerms[entry.name] = perms
+					}
+
+					if diff := cmp.Diff(expectedPerms, actualPerms); diff != "" {
+						t.Fatalf("unexpected permissions (-want +got):\n%s", diff)
+					}
+
+					for _, tc := range []struct {
+						siteAdmin           bool
+						enforceForSiteAdmin bool
+						wantRows            bool
+					}{
+						{siteAdmin: true, enforceForSiteAdmin: true, wantRows: true},
+						{siteAdmin: false, enforceForSiteAdmin: false, wantRows: true},
+						{siteAdmin: true, enforceForSiteAdmin: false, wantRows: false},
+						{siteAdmin: false, enforceForSiteAdmin: true, wantRows: true},
+					} {
+						t.Run(fmt.Sprintf("SiteAdmin:%t-Enforce:%t", tc.siteAdmin, tc.enforceForSiteAdmin), func(t *testing.T) {
+							conf.Mock(&conf.Unified{SiteConfiguration: schema.SiteConfiguration{AuthzEnforceForSiteAdmins: tc.enforceForSiteAdmin}})
+							result, err := db.ExecContext(ctx, "UPDATE users SET site_admin = $1 WHERE id = $2", tc.siteAdmin, userID)
+							if err != nil {
+								t.Fatal(err)
+							}
+
+							affected, err := result.RowsAffected()
+							if err != nil {
+								t.Fatal(err)
+							}
+							if affected != 1 {
+								t.Fatalf("Wanted 1 row affected, got %d", affected)
+							}
+
+							have, err := s.GetByUser(ctx, userID)
+							if err != nil {
+								t.Fatal(err)
+							}
+							if tc.wantRows {
+								assert.NotEmpty(t, have)
+							} else {
+								assert.Empty(t, have)
+							}
+						})
+					}
+				})
+
+				t.Run("GetByUserWithIP", func(t *testing.T) {
+					for _, backfill := range []bool{true, false} {
+						t.Run(fmt.Sprintf("backfill=%t", backfill), func(t *testing.T) {
+							conf.Mock(&conf.Unified{SiteConfiguration: schema.SiteConfiguration{AuthzEnforceForSiteAdmins: true}})
+							t.Cleanup(func() { conf.Mock(nil) })
+
+							inputPermsMap := map[api.RepoID]struct {
+								name  api.RepoName
+								perms authz.SubRepoPermissionsWithIPs
+							}{
+								1: {
+									name: "github.com/foo/bar",
+									perms: authz.SubRepoPermissionsWithIPs{
+										Paths: []authz.PathWithIP{
+											{Path: "/src/foo/*", IP: "192.168.1.1"},
+											{Path: "-/src/bar/*", IP: "192.168.1.2"},
+										},
+									},
+								},
+
+								2: {
+									name: "github.com/foo/baz",
+									perms: authz.SubRepoPermissionsWithIPs{
+										Paths: []authz.PathWithIP{
+											{Path: "/src/baz/*", IP: "192.167.1.1"},
+											{Path: "-/src/quiz/*", IP: "192.167.1.2"},
+										},
+									},
+								},
+							}
+
+							s, db := test.storeFunc(t)
+
+							for repoID, inputPerms := range inputPermsMap {
+								if err := s.UpsertWithIPs(ctx, userID, repoID, inputPerms.perms); err != nil {
+									t.Fatalf("unexpected error when inserting permissions for repo %d: %s", repoID, err)
+								}
+							}
+
+							expectedPermsWithIPs := make(map[api.RepoName]authz.SubRepoPermissionsWithIPs)
+							for _, entry := range inputPermsMap {
+								expectedPermsWithIPs[entry.name] = entry.perms
+							}
+
+							actualPermsWithIPs, err := s.GetByUserWithIPs(ctx, userID, backfill)
+							if err != nil {
+								t.Fatal(err)
+							}
+
+							if diff := cmp.Diff(expectedPermsWithIPs, actualPermsWithIPs); diff != "" {
+								t.Fatalf("unexpected permissions (-want +got):\n%s", diff)
+							}
+
+							for _, tc := range []struct {
+								siteAdmin           bool
+								enforceForSiteAdmin bool
+								wantRows            bool
+							}{
+								{siteAdmin: true, enforceForSiteAdmin: true, wantRows: true},
+								{siteAdmin: false, enforceForSiteAdmin: false, wantRows: true},
+								{siteAdmin: true, enforceForSiteAdmin: false, wantRows: false},
+								{siteAdmin: false, enforceForSiteAdmin: true, wantRows: true},
+							} {
+								t.Run(fmt.Sprintf("SiteAdmin:%t-Enforce:%t", tc.siteAdmin, tc.enforceForSiteAdmin), func(t *testing.T) {
+									conf.Mock(&conf.Unified{SiteConfiguration: schema.SiteConfiguration{AuthzEnforceForSiteAdmins: tc.enforceForSiteAdmin}})
+									result, err := db.ExecContext(ctx, "UPDATE users SET site_admin = $1 WHERE id = $2", tc.siteAdmin, userID)
+									if err != nil {
+										t.Fatal(err)
+									}
+
+									affected, err := result.RowsAffected()
+									if err != nil {
+										t.Fatal(err)
+									}
+									if affected != 1 {
+										t.Fatalf("Wanted 1 row affected, got %d", affected)
+									}
+
+									have, err := s.GetByUser(ctx, userID)
+									if err != nil {
+										t.Fatal(err)
+									}
+									if tc.wantRows {
+										assert.NotEmpty(t, have)
+									} else {
+										assert.Empty(t, have)
+									}
+								})
+							}
+						})
+					}
+				})
+			})
+
+			t.Run("Upsert (normal)", func(t *testing.T) {
+				t.Run("GetByUser (normal)", func(t *testing.T) {
+					conf.Mock(&conf.Unified{SiteConfiguration: schema.SiteConfiguration{AuthzEnforceForSiteAdmins: true}})
+					t.Cleanup(func() { conf.Mock(nil) })
+
+					inputMap := map[api.RepoID]struct {
+						name  api.RepoName
+						perms authz.SubRepoPermissions
+					}{
+						1: {
+							name: "github.com/foo/bar",
+							perms: authz.SubRepoPermissions{
+								Paths: []string{
+									"/src/foo/*",
+									"-/src/bar/*",
+								},
+							},
+						},
+
+						2: {
+							name: "github.com/foo/baz",
+							perms: authz.SubRepoPermissions{
+								Paths: []string{
+									"/src/baz/*",
+									"-/src/quiz/*",
+								},
+							},
+						},
+					}
+
+					s, db := test.storeFunc(t)
+
+					for repoID, input := range inputMap {
+						if err := s.Upsert(ctx, userID, repoID, input.perms); err != nil {
+							t.Fatalf("unexpected error when inserting permissions for repo %d: %s", repoID, err)
+						}
+					}
+
+					actualPerms, err := s.GetByUser(ctx, userID)
+					if err != nil {
+						t.Fatal(err)
+					}
+
+					expectedPerms := make(map[api.RepoName]authz.SubRepoPermissions)
+					for _, entry := range inputMap {
+						var perms authz.SubRepoPermissions
+						for _, p := range entry.perms.Paths {
+							perms.Paths = append(perms.Paths, p)
+						}
+						expectedPerms[entry.name] = perms
+					}
+
+					if diff := cmp.Diff(expectedPerms, actualPerms); diff != "" {
+						t.Fatalf("unexpected permissions (-want +got):\n%s", diff)
+					}
+
+					for _, tc := range []struct {
+						siteAdmin           bool
+						enforceForSiteAdmin bool
+						wantRows            bool
+					}{
+						{siteAdmin: true, enforceForSiteAdmin: true, wantRows: true},
+						{siteAdmin: false, enforceForSiteAdmin: false, wantRows: true},
+						{siteAdmin: true, enforceForSiteAdmin: false, wantRows: false},
+						{siteAdmin: false, enforceForSiteAdmin: true, wantRows: true},
+					} {
+						t.Run(fmt.Sprintf("SiteAdmin:%t-Enforce:%t", tc.siteAdmin, tc.enforceForSiteAdmin), func(t *testing.T) {
+							conf.Mock(&conf.Unified{SiteConfiguration: schema.SiteConfiguration{AuthzEnforceForSiteAdmins: tc.enforceForSiteAdmin}})
+							result, err := db.ExecContext(ctx, "UPDATE users SET site_admin = $1 WHERE id = $2", tc.siteAdmin, userID)
+							if err != nil {
+								t.Fatal(err)
+							}
+
+							affected, err := result.RowsAffected()
+							if err != nil {
+								t.Fatal(err)
+							}
+							if affected != 1 {
+								t.Fatalf("Wanted 1 row affected, got %d", affected)
+							}
+
+							have, err := s.GetByUser(ctx, userID)
+							if err != nil {
+								t.Fatal(err)
+							}
+							if tc.wantRows {
+								assert.NotEmpty(t, have)
+							} else {
+								assert.Empty(t, have)
+							}
+						})
+					}
+				})
+
+				t.Run("GetByUserWithIP", func(t *testing.T) {
+					t.Run("backfill=true", func(t *testing.T) {
+						conf.Mock(&conf.Unified{SiteConfiguration: schema.SiteConfiguration{AuthzEnforceForSiteAdmins: true}})
+						t.Cleanup(func() { conf.Mock(nil) })
+
+						inputMap := map[api.RepoID]struct {
+							name  api.RepoName
+							perms authz.SubRepoPermissions
+						}{
+							1: {
+								name: "github.com/foo/bar",
+								perms: authz.SubRepoPermissions{
+									Paths: []string{
+										"/src/foo/*",
+										"-/src/bar/*",
+									},
+								},
+							},
+
+							2: {
+								name: "github.com/foo/baz",
+								perms: authz.SubRepoPermissions{
+									Paths: []string{
+										"/src/baz/*",
+										"-/src/quiz/*",
+									},
+								},
+							},
+						}
+
+						s, db := test.storeFunc(t)
+
+						for repoID, input := range inputMap {
+							if err := s.Upsert(ctx, userID, repoID, input.perms); err != nil {
+								t.Fatalf("unexpected error when inserting permissions for repo %d: %s", repoID, err)
+							}
+						}
+
+						expectedPermsWithIPs := make(map[api.RepoName]authz.SubRepoPermissionsWithIPs)
+						for _, entry := range inputMap {
+							perms := authz.SubRepoPermissionsWithIPs{}
+
+							for _, p := range entry.perms.Paths {
+								perms.Paths = append(perms.Paths, authz.PathWithIP{Path: p, IP: "*"})
+							}
+
+							expectedPermsWithIPs[entry.name] = perms
+						}
+
+						actualPermsWithIPs, err := s.GetByUserWithIPs(ctx, userID, true)
+						if err != nil {
+							t.Fatal(err)
+						}
+
+						if diff := cmp.Diff(expectedPermsWithIPs, actualPermsWithIPs); diff != "" {
+							t.Fatalf("unexpected permissions (-want +got):\n%s", diff)
+						}
+
+						for _, tc := range []struct {
+							siteAdmin           bool
+							enforceForSiteAdmin bool
+							wantRows            bool
+						}{
+							{siteAdmin: true, enforceForSiteAdmin: true, wantRows: true},
+							{siteAdmin: false, enforceForSiteAdmin: false, wantRows: true},
+							{siteAdmin: true, enforceForSiteAdmin: false, wantRows: false},
+							{siteAdmin: false, enforceForSiteAdmin: true, wantRows: true},
+						} {
+							t.Run(fmt.Sprintf("SiteAdmin:%t-Enforce:%t", tc.siteAdmin, tc.enforceForSiteAdmin), func(t *testing.T) {
+								conf.Mock(&conf.Unified{SiteConfiguration: schema.SiteConfiguration{AuthzEnforceForSiteAdmins: tc.enforceForSiteAdmin}})
+								result, err := db.ExecContext(ctx, "UPDATE users SET site_admin = $1 WHERE id = $2", tc.siteAdmin, userID)
+								if err != nil {
+									t.Fatal(err)
+								}
+
+								affected, err := result.RowsAffected()
+								if err != nil {
+									t.Fatal(err)
+								}
+								if affected != 1 {
+									t.Fatalf("Wanted 1 row affected, got %d", affected)
+								}
+
+								have, err := s.GetByUser(ctx, userID)
+								if err != nil {
+									t.Fatal(err)
+								}
+								if tc.wantRows {
+									assert.NotEmpty(t, have)
+								} else {
+									assert.Empty(t, have)
+								}
+							})
+						}
+					})
+
+					t.Run("backfill=false", func(t *testing.T) {
+						conf.Mock(&conf.Unified{SiteConfiguration: schema.SiteConfiguration{AuthzEnforceForSiteAdmins: true}})
+						t.Cleanup(func() { conf.Mock(nil) })
+
+						inputMap := map[api.RepoID]struct {
+							name  api.RepoName
+							perms authz.SubRepoPermissions
+						}{
+							1: {
+								name: "github.com/foo/bar",
+								perms: authz.SubRepoPermissions{
+									Paths: []string{
+										"/src/foo/*",
+										"-/src/bar/*",
+									},
+								},
+							},
+
+							2: {
+								name: "github.com/foo/baz",
+								perms: authz.SubRepoPermissions{
+									Paths: []string{
+										"/src/baz/*",
+										"-/src/quiz/*",
+									},
+								},
+							},
+						}
+
+						s, _ := test.storeFunc(t)
+
+						for repoID, input := range inputMap {
+							if err := s.Upsert(ctx, userID, repoID, input.perms); err != nil {
+								t.Fatalf("unexpected error when inserting permissions for repo %d: %s", repoID, err)
+							}
+						}
+
+						_, err := s.GetByUserWithIPs(ctx, userID, false)
+						if !errors.Is(err, IPsNotSyncedError) {
+							t.Fatalf("unexpected error: %s", err)
+						}
+					})
+
+				})
+			})
+		})
+	}
+
 }

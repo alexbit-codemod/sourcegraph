@@ -49,6 +49,15 @@ type SubRepoPermissions struct {
 	Paths []string
 }
 
+type SubRepoPermissionsWithIPs struct {
+	Paths []PathWithIP
+}
+
+type PathWithIP struct {
+	Path string
+	IP   string
+}
+
 // ExternalUserPermissions is a collection of accessible repository/project IDs
 // (on the code host). It contains exact IDs, as well as prefixes to both include
 // and exclude IDs.
