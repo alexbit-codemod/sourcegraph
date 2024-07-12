@@ -154,7 +154,7 @@
         debugOccurrences as debugOccurrencesFacet,
     } from '$lib/web'
 
-    import { getReferencesContext } from '../routes/[...repo=reporev]/(validrev)/(code)/ReferencesPanel.svelte'
+    import { getReferencesContext } from '../routes/[...repo=reporev]/(validrev)/(code)/ReferencePanel.svelte'
 
     import BlameDecoration from './blame/BlameDecoration.svelte'
     import { ReblameMarker } from './blame/reblame'
@@ -167,7 +167,6 @@
         type ScrollSnapshot,
         getScrollSnapshot as getScrollSnapshot_internal,
     } from './codemirror/utils'
-    import { SymbolUsageKind } from './graphql-types'
     import { registerHotkey } from './Hotkey'
     import { goToDefinition, openImplementations } from './repo/blob'
     import { createLocalWritable } from './stores'
@@ -241,10 +240,7 @@
                   goToDefinition: (view, definition, options) =>
                       goToDefinition(documentInfo, view, definition, options),
                   openReferences: (_view, documentInfo, occurrence) =>
-                      referencesContext.set({
-                          activeOccurrence: { documentInfo, occurrence },
-                          usageKindFilter: SymbolUsageKind.REFERENCE,
-                      }),
+                      referencesContext.openReferences({ documentInfo, occurrence }),
                   openImplementations,
                   createTooltipView: options => new HovercardView(options.view, options.token, options.hovercardData),
               },

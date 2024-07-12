@@ -5,11 +5,11 @@
     import { observeIntersection } from '$lib/intersection-observer'
     import { fetchFileRangeMatches } from '$lib/search/api/highlighting'
 
-    import type { ReferencesPanel_Usage } from './ReferencesPanel.gql'
+    import type { ReferencePanel_Usage } from './ReferencesPanel.gql'
 
     export let repo: string
     export let path: string
-    export let usages: ReferencesPanel_Usage[]
+    export let usages: ReferencePanel_Usage[]
 
     // TODO: ideally, we'd store this state outside the component so it doesn't
     // flash every time it loads initially from the cache. However, this will
@@ -35,7 +35,7 @@
             .catch(err => console.error('Failed to fetch highlighted usages', err))
     }
 
-    function hrefForUsage(usage: ReferencesPanel_Usage): string {
+    function hrefForUsage(usage: ReferencePanel_Usage): string {
         const { repository, revision, path, range } = usage.usageRange!
         // TODO: only include revision if it exists
         return SourcegraphURL.from(`${repository}@${revision}/-/blob/${path}`)

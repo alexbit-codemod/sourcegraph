@@ -10,12 +10,16 @@
         treeFilter?: TreeFilter
     }
 
-    const referencesKey = {}
-    export function getReferencesContext(): Writable<ReferencePanelInputs> {
+    export interface ReferencesContext {
+        openReferences(occurrence: ActiveOccurrence): void
+    }
+
+    const referencesKey = Symbol('references context key')
+    export function getReferencesContext(): ReferencesContext {
         return getContext(referencesKey)
     }
 
-    export function setReferencesContext(ctx: Writable<ReferencePanelInputs>) {
+    export function setReferencesContext(ctx: ReferencesContext) {
         setContext(referencesKey, ctx)
     }
 
@@ -35,7 +39,7 @@
 
     interface PathGroup {
         path: string
-        usages: ReferencesPanel_Usage[]
+        usages: ReferencePanel_Usage[]
     }
 
     interface RepoGroup {
@@ -43,7 +47,7 @@
         pathGroups: PathGroup[]
     }
 
-    function groupUsages(usages: ReferencesPanel_Usage[]): RepoGroup[] {
+    function groupUsages(usages: ReferencePanel_Usage[]): RepoGroup[] {
         const seenRepos: Record<string, { index: number; seenPaths: Record<string, number> }> = {}
         const repoGroups: RepoGroup[] = []
 
@@ -109,7 +113,7 @@
     export function getUsagesStore(client: GraphQLClient, documentInfo: DocumentInfo, occurrence: Occurrence) {
         return infinityQuery({
             client,
-            query: ReferencesPanel_Usages,
+            query: ReferencePanel_Usages,
             variables: {
                 repoName: documentInfo.repoName,
                 revspec: documentInfo.commitID,
@@ -154,7 +158,7 @@
         })
     }
 
-    function matchesUsageKind(usageKindFilter: SymbolUsageKind | undefined): (usage: ReferencesPanel_Usage) => boolean {
+    function matchesUsageKind(usageKindFilter: SymbolUsageKind | undefined): (usage: ReferencePanel_Usage) => boolean {
         return usage => usageKindFilter === undefined || usage.usageKind === usageKindFilter
     }
 
@@ -189,15 +193,15 @@
     import PanelResizeHandle from '$lib/wildcard/resizable-panel/PanelResizeHandle.svelte'
 
     import type {
-        ReferencesPanel_Usage,
-        ReferencesPanel_UsagesResult,
-        ReferencesPanel_UsagesVariables,
-    } from './ReferencesPanel.gql'
-    import { ReferencesPanel_Usages } from './ReferencesPanel.gql'
-    import ReferencesPanelFileUsages from './ReferencesPanelFileUsages.svelte'
+        ReferencePanel_Usage,
+        ReferencePanel_UsagesResult,
+        ReferencePanel_UsagesVariables,
+    } from './ReferencePanel.gql'
+    import { ReferencePanel_Usages } from './ReferencePanel.gql'
+    import ReferencePanelFileUsages from './ReferencePanelFileUsages.svelte'
 
     export let inputs: Writable<ReferencePanelInputs>
-    export let connection: InfinityQueryStore<ReferencesPanel_UsagesResult, ReferencesPanel_UsagesVariables> | undefined
+    export let connection: InfinityQueryStore<ReferencePanel_UsagesResult, ReferencePanel_UsagesVariables> | undefined
     export let treeState: Writable<SingleSelectTreeState>
 
     $: setTreeContext(treeState)
@@ -271,7 +275,7 @@
                     <ul>
                         {#each displayGroups as pathGroup}
                             <li>
-                                <ReferencesPanelFileUsages {...pathGroup} />
+                                <ReferencePanelFileUsages {...pathGroup} />
                             </li>
                         {/each}
                     </ul>

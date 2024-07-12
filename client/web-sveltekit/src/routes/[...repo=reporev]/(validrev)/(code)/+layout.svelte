@@ -42,6 +42,7 @@
     import { openFuzzyFinder } from '$lib/fuzzyfinder/FuzzyFinderContainer.svelte'
     import { filesHotkey } from '$lib/fuzzyfinder/keys'
     import { getGraphQLClient } from '$lib/graphql'
+    import { SymbolUsageKind } from '$lib/graphql-types'
     import Icon from '$lib/Icon.svelte'
     import KeyboardShortcut from '$lib/KeyboardShortcut.svelte'
     import LoadingSpinner from '$lib/LoadingSpinner.svelte'
@@ -62,12 +63,13 @@
     import FileTree from './FileTree.svelte'
     import { createFileTreeStore } from './fileTreeStore'
     import type { GitHistory_HistoryConnection } from './layout.gql'
-    import ReferencesPanel, {
+    import ReferencePanel, {
         setReferencesContext,
         getUsagesStore,
         entryIDForFilter,
         type ReferencePanelInputs,
-    } from './ReferencesPanel.svelte'
+        type ActiveOccurrence,
+    } from './ReferencePanel.svelte'
 
     export let data: LayoutData
 
@@ -114,7 +116,12 @@
         disableScope: true,
     })
     const referencesInputs = writable<ReferencePanelInputs>({})
-    setReferencesContext(referencesInputs)
+    setReferencesContext({
+        openReferences(occurrence: ActiveOccurrence) {
+            referencesInputs.set({ activeOccurrence: occurrence, usageKindFilter: SymbolUsageKind.REFERENCE })
+            selectedTab = 1 // TODO: create a name for this
+        },
+    })
     $: referencesConnection = $referencesInputs.activeOccurrence
         ? getUsagesStore(
               getGraphQLClient(),
@@ -302,7 +309,7 @@
                         {/key}
                     </TabPanel>
                     <TabPanel title="References" shortcut={referenceHotkey}>
-                        <ReferencesPanel
+                        <ReferencePanel
                             inputs={referencesInputs}
                             connection={referencesConnection}
                             treeState={referencesTreeState}

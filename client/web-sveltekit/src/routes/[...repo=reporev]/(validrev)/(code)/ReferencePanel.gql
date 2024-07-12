@@ -1,4 +1,4 @@
-query ReferencesPanel_Usages(
+query ReferencePanel_Usages(
     $repoName: String!,
     $revspec: String!,
     $filePath: String!,
@@ -20,7 +20,7 @@ query ReferencesPanel_Usages(
         first: $first,
         after: $afterCursor,
     ) {
-        ...ReferencesPanel_UsageConnection
+        ...ReferencePanel_UsageConnection
         pageInfo {
             hasNextPage
             endCursor
@@ -28,14 +28,14 @@ query ReferencesPanel_Usages(
     }
 }
 
-fragment ReferencesPanel_UsageConnection on UsageConnection {
+fragment ReferencePanel_UsageConnection on UsageConnection {
     nodes {
-        ...ReferencesPanel_Usage
+        ...ReferencePanel_Usage
     }
 }
 
 
-fragment ReferencesPanel_Usage on Usage {
+fragment ReferencePanel_Usage on Usage {
     provenance
     usageRange {
         repository
