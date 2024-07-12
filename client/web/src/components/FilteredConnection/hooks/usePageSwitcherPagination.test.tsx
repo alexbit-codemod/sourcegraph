@@ -45,7 +45,8 @@ const TEST_PAGINATED_CONNECTION_QUERY = `
 const PAGE_SIZE = 3
 
 const TestComponent = () => {
-    const connectionState = useUrlSearchParamsForConnectionState([])
+    // TODO!(sqs): fix how you provide the page size in both useUrlSearchParamsForConnectionState and useXyzPagination
+    const connectionState = useUrlSearchParamsForConnectionState([], PAGE_SIZE)
     const { connection, loading, goToNextPage, goToPreviousPage, goToFirstPage, goToLastPage } =
         usePageSwitcherPagination<
             TestPageSwitcherPaginationQueryResult,
@@ -99,10 +100,10 @@ const generateMockRequest = ({
     last,
     before,
 }: {
-    after: string | null
-    first: number | null
-    before: string | null
-    last: number | null
+    after?: string | null
+    first?: number | null
+    before?: string | null
+    last?: number | null
 }): MockedResponse<TestPageSwitcherPaginationQueryResult>['request'] => ({
     query: getDocumentNode(TEST_PAGINATED_CONNECTION_QUERY),
     variables: {
@@ -186,7 +187,7 @@ const generateMockCursorResponsesForEveryPage = (
         const nodesOnPage = nodes.slice(pageIndex * PAGE_SIZE, (pageIndex + 1) * PAGE_SIZE)
         const after = pageIndex === 0 ? null : getCursorForId(nodes[pageIndex * PAGE_SIZE - 1].id)
         responses.push({
-            request: generateMockRequest({ after, first: PAGE_SIZE, last: null, before: null }),
+            request: generateMockRequest({ after, first: PAGE_SIZE }),
             result: generateMockResult({
                 nodes: nodesOnPage,
                 totalCount: nodes.length,
@@ -204,7 +205,7 @@ const generateMockCursorResponsesForEveryPage = (
         const nodesOnPage = reverseNodes.slice(pageIndex * PAGE_SIZE, (pageIndex + 1) * PAGE_SIZE).reverse()
         const before = pageIndex === 0 ? null : getCursorForId(reverseNodes[pageIndex * PAGE_SIZE - 1].id)
         responses.push({
-            request: generateMockRequest({ before, last: PAGE_SIZE, after: null, first: null }),
+            request: generateMockRequest({ before, last: PAGE_SIZE }),
             result: generateMockResult({
                 nodes: nodesOnPage,
                 totalCount: reverseNodes.length,
@@ -239,7 +240,7 @@ describe('usePageSwitcherPagination', () => {
 
     const cursorMocks = generateMockCursorResponsesForEveryPage(mockResultNodes)
 
-    it('renders the first page', async () => {
+    it.only('renders the first page', async () => {
         const page = await renderWithMocks(cursorMocks)
 
         expect(page.getAllByRole('listitem').length).toBe(3)

@@ -31,6 +31,7 @@ import {
 import type { Connection } from './ConnectionType'
 import { QUERY_KEY } from './constants'
 import type { BasicFilterArgs, Filter, FilterOption, FilterValues } from './FilterControl'
+import { DEFAULT_PAGE_SIZE } from './hooks/usePageSwitcherPagination'
 import { ConnectionContainer, ConnectionError, ConnectionForm, ConnectionLoading } from './ui'
 import type { ConnectionFormProps } from './ui/ConnectionForm'
 import { getFilterFromURL, hasID, parseQueryInt, urlSearchParamsForFilteredConnection } from './utils'
@@ -183,7 +184,7 @@ class InnerFilteredConnection<N, NP = {}, HP = {}, C extends Connection<N> = Con
     FilteredConnectionState<C, N>
 > {
     public static defaultProps: Partial<FilteredConnectionProps<any, any>> = {
-        defaultFirst: 20,
+        defaultFirst: DEFAULT_PAGE_SIZE,
         useURLQuery: true,
     }
 

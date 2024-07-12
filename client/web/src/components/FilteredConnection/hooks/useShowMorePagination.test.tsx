@@ -312,8 +312,6 @@ describe('useShowMorePagination', () => {
             },
         ]
 
-        // TODO!(sqs): remove .only, .skip
-
         it('renders correct result', async () => {
             const queries = await renderWithMocks(batchedMocks)
             expect(queries.getAllByRole('listitem').length).toBe(1)
