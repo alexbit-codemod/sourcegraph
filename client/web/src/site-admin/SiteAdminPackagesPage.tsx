@@ -204,18 +204,18 @@ export const SiteAdminPackagesPage: React.FunctionComponent<React.PropsWithChild
         [ecosystemFilterValues]
     )
 
-    const connectionState = useUrlSearchParamsForConnectionState(filters)
-    const debouncedQuery = useDebounce(connectionState.connectionState.query, 300)
+    const [connectionState, setConnectionState] = useUrlSearchParamsForConnectionState(filters)
+    const debouncedQuery = useDebounce(connectionState.query, 300)
     const {
         connection,
         error: packagesError,
         loading: packagesLoading,
         fetchMore,
         hasNextPage,
-    } = useShowMorePagination<PackagesResult, PackagesVariables, SiteAdminPackageFields>({
+    } = useShowMorePagination<PackagesResult, PackagesVariables, SiteAdminPackageFields, typeof connectionState>({
         query: PACKAGES_QUERY,
         variables: {
-            ...buildFilterArgs(filters, connectionState.connectionState),
+            ...buildFilterArgs(filters, connectionState),
             query: debouncedQuery,
         },
         getConnection: result => {
@@ -225,7 +225,7 @@ export const SiteAdminPackagesPage: React.FunctionComponent<React.PropsWithChild
         options: {
             fetchPolicy: 'cache-and-network',
         },
-        state: connectionState,
+        state: [connectionState, setConnectionState],
     })
 
     const error = extSvcError || packagesError
@@ -274,10 +274,8 @@ export const SiteAdminPackagesPage: React.FunctionComponent<React.PropsWithChild
                         className="flex-1"
                         placeholder="Search packages..."
                         name="query"
-                        value={connectionState.connectionState.query}
-                        onChange={event =>
-                            connectionState.setConnectionState(prev => ({ ...prev, query: event.currentTarget.value }))
-                        }
+                        value={connectionState.query}
+                        onChange={event => setConnectionState(prev => ({ ...prev, query: event.currentTarget.value }))}
                         autoComplete="off"
                         autoCorrect="off"
                         autoCapitalize="off"
@@ -288,15 +286,15 @@ export const SiteAdminPackagesPage: React.FunctionComponent<React.PropsWithChild
                     <div className="d-flex align-items-end justify-content-between mt-3">
                         <FilterControl
                             filters={filters}
-                            values={connectionState.connectionState}
+                            values={connectionState}
                             onValueSelect={(filter, value) =>
-                                connectionState.setConnectionState(prev => ({ ...prev, [filter.id]: value }))
+                                setConnectionState(prev => ({ ...prev, [filter.id]: value }))
                             }
                         />
                         {connection && (
                             <ConnectionSummary
                                 connection={connection}
-                                connectionQuery={connectionState.connectionState.query}
+                                connectionQuery={connectionState.query}
                                 hasNextPage={hasNextPage}
                                 noun="package"
                                 pluralNoun="packages"

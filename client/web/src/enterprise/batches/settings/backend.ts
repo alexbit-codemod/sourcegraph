@@ -14,11 +14,11 @@ import type {
     DeleteBatchChangesCredentialVariables,
     GlobalBatchChangesCodeHostsResult,
     GlobalBatchChangesCodeHostsVariables,
+    RefreshGitHubAppResult,
+    RefreshGitHubAppVariables,
     Scalars,
     UserBatchChangesCodeHostsResult,
     UserBatchChangesCodeHostsVariables,
-    RefreshGitHubAppResult,
-    RefreshGitHubAppVariables,
 } from '../../../graphql-operations'
 
 export const CREDENTIAL_FIELDS_FRAGMENT = gql`
@@ -139,8 +139,6 @@ export const useUserBatchChangesCodeHostConnection = (
         query: USER_CODE_HOSTS,
         variables: {
             user,
-            after: null,
-            first: 15,
         },
         options: {
             fetchPolicy: 'network-only',

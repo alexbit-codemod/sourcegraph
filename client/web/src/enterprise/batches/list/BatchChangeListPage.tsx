@@ -124,13 +124,11 @@ export const BatchChangeListPage: React.FunctionComponent<React.PropsWithChildre
     >({
         query: namespaceID ? BATCH_CHANGES_BY_NAMESPACE : BATCH_CHANGES,
         variables: {
-            namespaceID,
+            ...(namespaceID ? { namespaceID } : undefined),
             states: selectedFilters,
-            first: BATCH_CHANGES_PER_PAGE_COUNT,
-            after: null,
             viewerCanAdminister: null,
         },
-        options: { useURL: true },
+        options: { pageSize: BATCH_CHANGES_PER_PAGE_COUNT, useURL: true },
         getConnection: result => {
             const data = dataOrThrowErrors(result)
             if (!namespaceID) {

@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom'
 import { basename, pluralize } from '@sourcegraph/common'
 import { dataOrThrowErrors, gql } from '@sourcegraph/http-client'
 import { displayRepoName } from '@sourcegraph/shared/src/components/RepoLink'
-import { type TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
+import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
 import { EVENT_LOGGER } from '@sourcegraph/shared/src/telemetry/web/eventLogger'
 import type { RevisionSpec } from '@sourcegraph/shared/src/util/url'
@@ -149,7 +149,6 @@ export const RepositoryCommitsPage: FC<RepositoryCommitsPageProps> = props => {
             repo: repo.id,
             revspec: props.revision,
             filePath: filePath ?? null,
-            afterCursor: null,
         },
         getConnection: result => {
             const { node } = dataOrThrowErrors(result)

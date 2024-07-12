@@ -7,10 +7,7 @@ import { Container, ErrorAlert, Input, LoadingSpinner, PageSwitcher, useDebounce
 
 import { EXTERNAL_SERVICE_IDS_AND_NAMES } from '../components/externalServices/backend'
 import { buildFilterArgs, FilterControl, type Filter, type FilterOption } from '../components/FilteredConnection'
-import {
-    usePageSwitcherPagination,
-    type PaginatedConnectionQueryArguments,
-} from '../components/FilteredConnection/hooks/usePageSwitcherPagination'
+import { usePageSwitcherPagination } from '../components/FilteredConnection/hooks/usePageSwitcherPagination'
 import { useUrlSearchParamsForConnectionState } from '../components/FilteredConnection/hooks/useUrlSearchParamsForConnectionState'
 import {
     RepositoryOrderBy,
@@ -191,8 +188,8 @@ export const SiteAdminRepositoriesContainer: React.FunctionComponent<{ alwaysPol
         [extSvcs, location.pathname]
     )
 
-    const connectionState = useUrlSearchParamsForConnectionState(filters)
-    const debouncedQuery = useDebounce(connectionState.connectionState.query, 300)
+    const [connectionState, setConnectionState] = useUrlSearchParamsForConnectionState(filters)
+    const debouncedQuery = useDebounce(connectionState.query, 300)
     const {
         connection,
         loading: reposLoading,
@@ -203,16 +200,16 @@ export const SiteAdminRepositoriesContainer: React.FunctionComponent<{ alwaysPol
         RepositoriesResult,
         RepositoriesVariables,
         SiteAdminRepositoryFields,
-        Record<'query' | 'orderBy' | 'status' | 'codeHost', string> & PaginatedConnectionQueryArguments
+        typeof connectionState
     >({
         query: REPOSITORIES_QUERY,
         variables: {
-            ...buildFilterArgs(filters, connectionState.connectionState),
+            ...buildFilterArgs(filters, connectionState),
             query: debouncedQuery,
         },
         getConnection: ({ data }) => data?.repositories || undefined,
         options: { pollInterval: 5000 },
-        state: connectionState,
+        state: [connectionState, setConnectionState],
     })
 
     const error = repoStatsError || extSvcError || reposError
@@ -237,8 +234,7 @@ export const SiteAdminRepositoriesContainer: React.FunctionComponent<{ alwaysPol
                 color: 'var(--body-color)',
                 position: 'right',
                 tooltip: 'The number of repositories that are queued to be cloned.',
-                onClick: () =>
-                    connectionState.setConnectionState(prev => ({ ...prev, status: STATUS_FILTERS.NotCloned.value })),
+                onClick: () => setConnectionState(prev => ({ ...prev, status: STATUS_FILTERS.NotCloned.value })),
             },
             {
                 value: data.repositoryStats.cloning,
@@ -246,8 +242,7 @@ export const SiteAdminRepositoriesContainer: React.FunctionComponent<{ alwaysPol
                 color: data.repositoryStats.cloning > 0 ? 'var(--primary)' : 'var(--body-color)',
                 position: 'right',
                 tooltip: 'The number of repositories that are currently being cloned.',
-                onClick: () =>
-                    connectionState.setConnectionState(prev => ({ ...prev, status: STATUS_FILTERS.Cloning.value })),
+                onClick: () => setConnectionState(prev => ({ ...prev, status: STATUS_FILTERS.Cloning.value })),
             },
             {
                 value: data.repositoryStats.cloned,
@@ -255,8 +250,7 @@ export const SiteAdminRepositoriesContainer: React.FunctionComponent<{ alwaysPol
                 color: 'var(--success)',
                 position: 'right',
                 tooltip: 'The number of repositories that have been cloned.',
-                onClick: () =>
-                    connectionState.setConnectionState(prev => ({ ...prev, status: STATUS_FILTERS.Cloned.value })),
+                onClick: () => setConnectionState(prev => ({ ...prev, status: STATUS_FILTERS.Cloned.value })),
             },
             {
                 value: data.repositoryStats.indexed,
@@ -264,8 +258,7 @@ export const SiteAdminRepositoriesContainer: React.FunctionComponent<{ alwaysPol
                 color: 'var(--body-color)',
                 position: 'right',
                 tooltip: 'The number of repositories that have been indexed for search.',
-                onClick: () =>
-                    connectionState.setConnectionState(prev => ({ ...prev, status: STATUS_FILTERS.Indexed.value })),
+                onClick: () => setConnectionState(prev => ({ ...prev, status: STATUS_FILTERS.Indexed.value })),
             },
             {
                 value: data.repositoryStats.failedFetch,
@@ -274,7 +267,7 @@ export const SiteAdminRepositoriesContainer: React.FunctionComponent<{ alwaysPol
                 position: 'right',
                 tooltip: 'The number of repositories where the last syncing attempt produced an error.',
                 onClick: () =>
-                    connectionState.setConnectionState(prev => ({
+                    setConnectionState(prev => ({
                         ...prev,
                         status: STATUS_FILTERS.FailedFetchOrClone.value,
                     })),
@@ -289,12 +282,11 @@ export const SiteAdminRepositoriesContainer: React.FunctionComponent<{ alwaysPol
                 position: 'right',
                 tooltip:
                     'The number of repositories where corruption has been detected. Reclone these repositories to get rid of corruption.',
-                onClick: () =>
-                    connectionState.setConnectionState(prev => ({ ...prev, status: STATUS_FILTERS.Corrupted.value })),
+                onClick: () => setConnectionState(prev => ({ ...prev, status: STATUS_FILTERS.Corrupted.value })),
             })
         }
         return items
-    }, [connectionState, data])
+    }, [setConnectionState, data])
 
     return (
         <>
@@ -307,9 +299,9 @@ export const SiteAdminRepositoriesContainer: React.FunctionComponent<{ alwaysPol
                     <div className="d-flex flex-sm-row flex-column-reverse justify-content-center">
                         <FilterControl
                             filters={filters}
-                            values={connectionState.connectionState}
+                            values={connectionState}
                             onValueSelect={(filter, value) =>
-                                connectionState.setConnectionState(prev => ({ ...prev, [filter.id]: value }))
+                                setConnectionState(prev => ({ ...prev, [filter.id]: value }))
                             }
                         />
                         <Input
@@ -317,9 +309,9 @@ export const SiteAdminRepositoriesContainer: React.FunctionComponent<{ alwaysPol
                             className="flex-1 md-ml-5 mb-1"
                             placeholder="Search repositories..."
                             name="query"
-                            value={connectionState.connectionState.query}
+                            value={connectionState.query}
                             onChange={event =>
-                                connectionState.setConnectionState(prev => ({
+                                setConnectionState(prev => ({
                                     ...prev,
                                     query: event.currentTarget.value,
                                 }))

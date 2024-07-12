@@ -38,6 +38,8 @@ interface UseShowMorePaginationConfig<TResult> {
     /** The number of items per page. Defaults to 20. */
     pageSize?: number
 
+    useURL?: true // TODO!(sqs)
+
     /** Allows modifying how the query interacts with the Apollo cache. */
     fetchPolicy?: WatchQueryFetchPolicy
 
@@ -71,7 +73,7 @@ interface UseShowMorePaginationConfig<TResult> {
 
 interface UseShowMorePaginationParameters<TResult, TVariables, TData, TState extends ShowMoreConnectionQueryArguments> {
     query: string
-    variables: Omit<TVariables, keyof ShowMoreConnectionQueryArguments>
+    variables: Omit<TVariables, keyof ShowMoreConnectionQueryArguments | 'afterCursor'>
     getConnection: (result: GraphQLResult<TResult>) => Connection<TData>
     options?: UseShowMorePaginationConfig<TResult>
 

@@ -115,20 +115,21 @@ export const usePageSwitcherPagination = <
         // stores the state in the URL), just use React hooks for storing state.
         const [connectionState, setConnectionState] = useState<TState>({} as TState)
         const defaultState = useMemo<UseConnectionStateResult<TState>>(
-            () => ({ connectionState, setConnectionState }),
+            () => [connectionState, setConnectionState],
             [connectionState, setConnectionState]
         )
         state ||= defaultState
     }
+    const [connectionState, setConnectionState] = state
 
     const queryVariables = {
         ...variables,
 
         // Pagination
-        first: state.connectionState.first,
-        last: state.connectionState.last,
-        after: state.connectionState.after,
-        before: state.connectionState.before,
+        first: connectionState.first,
+        last: connectionState.last,
+        after: connectionState.after,
+        before: connectionState.before,
     } as TVariables
 
     const {
@@ -158,10 +159,10 @@ export const usePageSwitcherPagination = <
 
     const updatePagination = useCallback(
         async (nextPageArgs: PaginatedConnectionQueryArguments): Promise<void> => {
-            state.setConnectionState(prev => ({ ...prev, ...nextPageArgs }))
+            setConnectionState(prev => ({ ...prev, ...nextPageArgs }))
             await refetch(nextPageArgs as Partial<TVariables>)
         },
-        [refetch, state]
+        [refetch, setConnectionState]
     )
 
     const goToNextPage = useCallback(async (): Promise<void> => {

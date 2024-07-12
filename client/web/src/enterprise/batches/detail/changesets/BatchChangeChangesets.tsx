@@ -135,12 +135,11 @@ const BatchChangeChangesetsImpl: React.FunctionComponent<React.PropsWithChildren
         query: CHANGESETS,
         variables: {
             ...queryArguments,
-            first: BATCH_COUNT,
-            after: null,
             onlyClosable: null,
         },
         options: {
             useURL: true,
+            pageSize: BATCH_COUNT,
             fetchPolicy: 'cache-and-network',
             pollInterval: 5000,
         },
