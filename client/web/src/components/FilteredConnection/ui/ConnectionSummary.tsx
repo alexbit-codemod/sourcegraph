@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { pluralize } from '@sourcegraph/common'
 import { Text } from '@sourcegraph/wildcard'
 
-import { type ConnectionNodesState, type ConnectionProps, getTotalCount } from '../ConnectionNodes'
+import { type ConnectionNodesState, type ConnectionProps } from '../ConnectionNodes'
 import type { Connection } from '../ConnectionType'
 
 import styles from './ConnectionSummary.module.scss'
@@ -17,7 +17,6 @@ interface ConnectionNodesSummaryProps<C extends Connection<N>, N, NP = {}, HP = 
         | 'pluralNoun'
         | 'connectionQuery'
         | 'emptyElement'
-        | 'first'
     > {
     /** The fetched connection data or an error (if an error occurred). */
     connection: C
@@ -44,7 +43,6 @@ export const ConnectionSummary = <C extends Connection<N>, N, NP = {}, HP = {}>(
     pluralNoun,
     connectionQuery,
     emptyElement,
-    first,
     compact,
     centered,
     className,
@@ -61,8 +59,7 @@ export const ConnectionSummary = <C extends Connection<N>, N, NP = {}, HP = {}>(
         return null
     }
 
-    // We cannot always rely on `connection.totalCount` to be returned, fallback to `connection.nodes.length` if possible.
-    const totalCount = getTotalCount(connection, first)
+    const totalCount = typeof connection.totalCount === 'number' ? connection.totalCount : null
 
     if (totalCount !== null && totalCount > 0 && TotalCountSummaryComponent) {
         return <TotalCountSummaryComponent totalCount={totalCount} />
