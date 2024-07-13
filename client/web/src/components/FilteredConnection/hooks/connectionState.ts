@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 
 import { useLocation, useNavigate } from 'react-router-dom'
 
@@ -23,7 +23,9 @@ export type UseConnectionStateResult<TState extends PaginatedConnectionQueryArgu
 ]
 
 /**
- * A React hook for using the URL querystring to store the state of a paginated connection.
+ * A React hook for using the URL querystring to store the state of a paginated connection,
+ * including both pagination parameters (such as `first` and `after`) and other custom filter
+ * parameters.
  */
 export function useUrlSearchParamsForConnectionState<TFilterKeys extends string>(
     filters?: Filter<TFilterKeys>[],
@@ -93,4 +95,18 @@ export function useUrlSearchParamsForConnectionState<TFilterKeys extends string>
     )
 
     return [value.current, setValue]
+}
+
+/**
+ * A React hook for using the provided connection state (usually from
+ * {@link useUrlSearchParamsForConnectionState}) if defined, or otherwise falling back to an
+ * in-memory connection state implementation that does not read from and write to the URL.
+ */
+export function useConnectionStateOrMemoryFallback<
+    TFilterKeys extends string,
+    TState extends PaginatedConnectionQueryArguments = Record<TFilterKeys | 'query', string> &
+        PaginatedConnectionQueryArguments
+>(state: UseConnectionStateResult<TState> | undefined): UseConnectionStateResult<TState> {
+    const memoryState = useState<TState>({} as TState)
+    return state ?? memoryState
 }

@@ -7,8 +7,8 @@ import { Container, ErrorAlert, Input, LoadingSpinner, PageSwitcher, useDebounce
 
 import { EXTERNAL_SERVICE_IDS_AND_NAMES } from '../components/externalServices/backend'
 import { buildFilterArgs, FilterControl, type Filter, type FilterOption } from '../components/FilteredConnection'
+import { useUrlSearchParamsForConnectionState } from '../components/FilteredConnection/hooks/connectionState'
 import { usePageSwitcherPagination } from '../components/FilteredConnection/hooks/usePageSwitcherPagination'
-import { useUrlSearchParamsForConnectionState } from '../components/FilteredConnection/hooks/useUrlSearchParamsForConnectionState'
 import {
     RepositoryOrderBy,
     type ExternalServiceIDsAndNamesResult,

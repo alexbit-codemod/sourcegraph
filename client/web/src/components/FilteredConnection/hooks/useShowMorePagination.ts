@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useRef } from 'react'
 
 import type { ApolloError, QueryResult, WatchQueryFetchPolicy } from '@apollo/client'
 
@@ -8,8 +8,8 @@ import { useInterval } from '@sourcegraph/wildcard'
 import type { Connection } from '../ConnectionType'
 import { asGraphQLResult, hasNextPage } from '../utils'
 
+import { useConnectionStateOrMemoryFallback, type UseConnectionStateResult } from './connectionState'
 import { DEFAULT_PAGE_SIZE } from './usePageSwitcherPagination'
-import type { UseConnectionStateResult } from './useUrlSearchParamsForConnectionState'
 
 export interface ShowMoreConnectionQueryArguments {
     first?: number | null
@@ -119,17 +119,7 @@ export const useShowMorePagination = <
     TResult,
     TData
 > => {
-    {
-        // If no `state` arg is supplied (such as from `useUrlSearchParamsForConnectionState` that
-        // stores the state in the URL), just use React hooks for storing state.
-        const [connectionState, setConnectionState] = useState<TState>({} as TState)
-        const defaultState = useMemo<UseConnectionStateResult<TState>>(
-            () => [connectionState, setConnectionState],
-            [connectionState, setConnectionState]
-        )
-        state ||= defaultState
-    }
-    const [connectionState, setConnectionState] = state
+    const [connectionState, setConnectionState] = useConnectionStateOrMemoryFallback(state)
 
     const pageSize = options?.pageSize ?? DEFAULT_PAGE_SIZE
     const first = connectionState.first ?? pageSize

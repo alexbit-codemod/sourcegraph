@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import type { ApolloError, WatchQueryFetchPolicy } from '@apollo/client'
 
@@ -6,7 +6,7 @@ import { useQuery, type GraphQLResult } from '@sourcegraph/http-client'
 
 import { asGraphQLResult } from '../utils'
 
-import type { UseConnectionStateResult } from './useUrlSearchParamsForConnectionState'
+import { useConnectionStateOrMemoryFallback, type UseConnectionStateResult } from './connectionState'
 
 export interface PaginatedConnectionQueryArguments {
     first?: number | null
@@ -108,28 +108,30 @@ export const usePageSwitcherPagination = <
     TVariables,
     TNode
 > => {
+    const [connectionState, setConnectionState] = useConnectionStateOrMemoryFallback(state)
+
     const pageSize = options?.pageSize ?? DEFAULT_PAGE_SIZE
 
-    {
-        // If no `state` arg is supplied (such as from `useUrlSearchParamsForConnectionState` that
-        // stores the state in the URL), just use React hooks for storing state.
-        const [connectionState, setConnectionState] = useState<TState>({} as TState)
-        const defaultState = useMemo<UseConnectionStateResult<TState>>(
-            () => [connectionState, setConnectionState],
-            [connectionState, setConnectionState]
-        )
-        state ||= defaultState
-    }
-    const [connectionState, setConnectionState] = state
+    // The `first` and `last` params implicit in the connection state if they equal the default
+    // pageSize to make the URL cleaner, so we need to resolve their actual values.
+    //
+    // TODO!(sqs): figure out how to apply defaults...should we just always show ?last=N, and always
+    // show ?first=N except when it is there by itself?
+    const first =
+        connectionState.first ??
+        (connectionState.after || (!connectionState.before && !connectionState.last) ? pageSize : null)
+    const last =
+        connectionState.last ??
+        (connectionState.before && !connectionState.after && !connectionState.first ? pageSize : null)
 
     const queryVariables = {
         ...variables,
 
         // Pagination
-        first: connectionState.first,
-        last: connectionState.last,
-        after: connectionState.after,
-        before: connectionState.before,
+        first,
+        last,
+        after: connectionState.after ?? null,
+        before: connectionState.before ?? null,
     } as TVariables
 
     const {

@@ -29,8 +29,8 @@ import {
 
 import { externalRepoIcon } from '../components/externalServices/externalServices'
 import { buildFilterArgs, FilterControl, type Filter, type FilterOption } from '../components/FilteredConnection'
+import { useUrlSearchParamsForConnectionState } from '../components/FilteredConnection/hooks/connectionState'
 import { useShowMorePagination } from '../components/FilteredConnection/hooks/useShowMorePagination'
-import { useUrlSearchParamsForConnectionState } from '../components/FilteredConnection/hooks/useUrlSearchParamsForConnectionState'
 import { ConnectionSummary } from '../components/FilteredConnection/ui'
 import { PageTitle } from '../components/PageTitle'
 import type {

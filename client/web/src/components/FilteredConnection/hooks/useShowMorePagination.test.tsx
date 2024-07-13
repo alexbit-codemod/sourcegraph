@@ -14,8 +14,8 @@ import type {
 } from '../../../graphql-operations'
 import type { Filter } from '../FilterControl'
 
+import { useUrlSearchParamsForConnectionState } from './connectionState'
 import { useShowMorePagination } from './useShowMorePagination'
-import { useUrlSearchParamsForConnectionState } from './useUrlSearchParamsForConnectionState'
 
 const TEST_SHOW_MORE_PAGINATION_QUERY = gql`
     query TestShowMorePaginationQuery($first: Int) {

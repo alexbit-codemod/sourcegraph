@@ -13,8 +13,8 @@ import type { RevisionSpec } from '@sourcegraph/shared/src/util/url'
 import { Code, ErrorAlert, Heading } from '@sourcegraph/wildcard'
 
 import type { BreadcrumbSetters } from '../../components/Breadcrumbs'
+import { useUrlSearchParamsForConnectionState } from '../../components/FilteredConnection/hooks/connectionState'
 import { useShowMorePagination } from '../../components/FilteredConnection/hooks/useShowMorePagination'
-import { useUrlSearchParamsForConnectionState } from '../../components/FilteredConnection/hooks/useUrlSearchParamsForConnectionState'
 import {
     ConnectionContainer,
     ConnectionList,
