@@ -1,7 +1,10 @@
 import React from 'react'
 
 import ReactDOM from 'react-dom/client'
+import { I18nextProvider } from 'react-i18next'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+
+import { i18n } from '.././i18n'
 
 import { Frame } from './Frame.tsx'
 import { Home } from './Home.tsx'
