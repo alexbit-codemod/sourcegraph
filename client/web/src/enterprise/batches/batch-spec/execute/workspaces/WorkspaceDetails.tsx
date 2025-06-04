@@ -15,6 +15,7 @@ import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
 import MapSearchIcon from 'mdi-react/MapSearchIcon'
 import indicator from 'ordinal/indicator'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { dataOrThrowErrors } from '@sourcegraph/http-client'
 import type { Maybe } from '@sourcegraph/shared/src/graphql-operations'
@@ -93,6 +94,8 @@ export const WorkspaceDetails: React.FunctionComponent<React.PropsWithChildren<W
     id,
     ...props
 }) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/execute/workspaces')
+
     // Fetch and poll latest workspace information.
     const { loading, error, data } = useBatchSpecWorkspace(id)
 
@@ -106,7 +109,7 @@ export const WorkspaceDetails: React.FunctionComponent<React.PropsWithChildren<W
     }
     // If there weren't any errors and we just didn't receive any data
     if (!data) {
-        return <HeroPage icon={MapSearchIcon} title="404: Not Found" />
+        return <HeroPage icon={MapSearchIcon} title={t('error-404-not-found')} />
     }
 
     const workspace = data
@@ -127,88 +130,109 @@ const WorkspaceHeader: React.FunctionComponent<React.PropsWithChildren<Workspace
     deselectWorkspace,
     toggleShowDiagnostics,
     telemetryRecorder,
-}) => (
-    <>
-        <div className="d-flex align-items-center justify-content-between mb-2">
-            <H3 className={styles.workspaceName}>
-                <WorkspaceStateIcon
-                    cachedResultFound={workspace.cachedResultFound}
-                    state={workspace.state}
-                    className="flex-shrink-0"
-                />{' '}
-                {workspace.__typename === 'VisibleBatchSpecWorkspace'
-                    ? workspace.repository.name
-                    : 'Workspace in hidden repository'}
-                {workspace.__typename === 'VisibleBatchSpecWorkspace' && (
-                    <Link to={workspace.repository.url} target="_blank" rel="noopener noreferrer">
-                        <VisuallyHidden>Go to repository</VisuallyHidden>
-                        <Icon aria-hidden={true} svgPath={mdiOpenInNew} />
-                    </Link>
+}) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/execute/workspaces')
+
+    return (
+        <>
+            <div className="d-flex align-items-center justify-content-between mb-2">
+                <H3 className={styles.workspaceName}>
+                    <WorkspaceStateIcon
+                        cachedResultFound={workspace.cachedResultFound}
+                        state={workspace.state}
+                        className="flex-shrink-0"
+                    />{' '}
+                    {workspace.__typename === 'VisibleBatchSpecWorkspace'
+                        ? workspace.repository.name
+                        : 'Workspace in hidden repository'}
+                    {workspace.__typename === 'VisibleBatchSpecWorkspace' && (
+                        <Link to={workspace.repository.url} target="_blank" rel="noopener noreferrer">
+                            <VisuallyHidden>{t('go-to-repository')}</VisuallyHidden>
+                            <Icon aria-hidden={true} svgPath={mdiOpenInNew} />
+                        </Link>
+                    )}
+                </H3>
+                <Button className="p-0 ml-2" onClick={deselectWorkspace} variant="icon">
+                    <VisuallyHidden>{t('deselect-workspace')}</VisuallyHidden>
+                    <Icon aria-hidden={true} svgPath={mdiClose} />
+                </Button>
+            </div>
+            <div className="d-flex align-items-center">
+                {typeof workspace.placeInQueue === 'number' && (
+                    <Tooltip content={`This workspace is number ${workspace.placeInGlobalQueue} in the global queue`}>
+                        <span className={classNames(styles.workspaceDetail, 'd-flex align-items-center')}>
+                            <Icon aria-hidden={true} svgPath={mdiTimelineClockOutline} />
+                            <Trans
+                                i18nKey="number-in-queue"
+                                values={{
+                                    numberInQueueNumberWorkspacePlaceInQueue: (
+                                        <>
+                                            <NumberInQueue number={workspace.placeInQueue} />
+                                        </>
+                                    ),
+                                }}
+                                components={{ '0': <strong className="ml-1 mr-1" /> }}
+                            />
+                        </span>
+                    </Tooltip>
                 )}
-            </H3>
-            <Button className="p-0 ml-2" onClick={deselectWorkspace} variant="icon">
-                <VisuallyHidden>Deselect Workspace</VisuallyHidden>
-                <Icon aria-hidden={true} svgPath={mdiClose} />
-            </Button>
-        </div>
-        <div className="d-flex align-items-center">
-            {typeof workspace.placeInQueue === 'number' && (
-                <Tooltip content={`This workspace is number ${workspace.placeInGlobalQueue} in the global queue`}>
-                    <span className={classNames(styles.workspaceDetail, 'd-flex align-items-center')}>
-                        <Icon aria-hidden={true} svgPath={mdiTimelineClockOutline} />
-                        <strong className="ml-1 mr-1">
-                            <NumberInQueue number={workspace.placeInQueue} />
-                        </strong>
-                        in queue
+                {workspace.__typename === 'VisibleBatchSpecWorkspace' && workspace.path && (
+                    <span aria-label="Batch spec executed at path:" className={styles.workspaceDetail}>
+                        {workspace.path}
                     </span>
-                </Tooltip>
-            )}
-            {workspace.__typename === 'VisibleBatchSpecWorkspace' && workspace.path && (
-                <span aria-label="Batch spec executed at path:" className={styles.workspaceDetail}>
-                    {workspace.path}
-                </span>
-            )}
-            {workspace.__typename === 'VisibleBatchSpecWorkspace' && (
-                <span
-                    aria-label="Batch spec executed on branch:"
-                    className={classNames(styles.workspaceDetail, 'text-monospace')}
-                >
-                    <Icon aria-hidden={true} svgPath={mdiSourceBranch} /> {workspace.branch.displayName}
-                </span>
-            )}
-            {workspace.startedAt && (
-                <span className={classNames(styles.workspaceDetail, 'd-flex align-items-center')}>
-                    Total time:
-                    <strong className="pl-1">
-                        <Duration
-                            start={workspace.startedAt}
-                            end={workspace.finishedAt ?? undefined}
-                            labelPrefix={`Workspace ${
-                                workspace.finishedAt ? 'finished executing in' : 'has been executing for'
-                            }`}
-                        />
-                    </strong>
-                </span>
-            )}
-            {toggleShowDiagnostics &&
-                !workspace.cachedResultFound &&
-                workspace.state !== BatchSpecWorkspaceState.SKIPPED && (
-                    <Button
-                        className={styles.workspaceDetail}
-                        onClick={() => {
-                            toggleShowDiagnostics()
-                            EVENT_LOGGER.log('batch_change_execution:workspace_timeline:clicked')
-                            telemetryRecorder.recordEvent('batchChange.execution.workspaceTimeline', 'click')
-                        }}
-                        variant="link"
-                    >
-                        Diagnostics
-                    </Button>
                 )}
-        </div>
-        <hr className="mb-3" aria-hidden={true} />
-    </>
-)
+                {workspace.__typename === 'VisibleBatchSpecWorkspace' && (
+                    <span
+                        aria-label="Batch spec executed on branch:"
+                        className={classNames(styles.workspaceDetail, 'text-monospace')}
+                    >
+                        <Icon aria-hidden={true} svgPath={mdiSourceBranch} /> {workspace.branch.displayName}
+                    </span>
+                )}
+                {workspace.startedAt && (
+                    <span className={classNames(styles.workspaceDetail, 'd-flex align-items-center')}>
+                        <Trans
+                            i18nKey="total-time-duration"
+                            values={{
+                                durationStartWorkspaceStartedAtEndWorkspaceFinishedAtUndefinedLabelPrefixWorkspaceWorkspaceFinishedAtFinishedExecutingInHasBeenExecutingFor:
+                                    (
+                                        <>
+                                            <Duration
+                                                start={workspace.startedAt}
+                                                end={workspace.finishedAt ?? undefined}
+                                                labelPrefix={`Workspace ${
+                                                    workspace.finishedAt
+                                                        ? 'finished executing in'
+                                                        : 'has been executing for'
+                                                }`}
+                                            />
+                                        </>
+                                    ),
+                            }}
+                            components={{ '0': <strong className="pl-1" /> }}
+                        />
+                    </span>
+                )}
+                {toggleShowDiagnostics &&
+                    !workspace.cachedResultFound &&
+                    workspace.state !== BatchSpecWorkspaceState.SKIPPED && (
+                        <Button
+                            className={styles.workspaceDetail}
+                            onClick={() => {
+                                toggleShowDiagnostics()
+                                EVENT_LOGGER.log('batch_change_execution:workspace_timeline:clicked')
+                                telemetryRecorder.recordEvent('batchChange.execution.workspaceTimeline', 'click')
+                            }}
+                            variant="link"
+                        >
+                            {t('diagnostics')}
+                        </Button>
+                    )}
+            </div>
+            <hr className="mb-3" aria-hidden={true} />
+        </>
+    )
+}
 
 interface HiddenWorkspaceDetailsProps extends Pick<WorkspaceDetailsProps, 'deselectWorkspace' | 'telemetryRecorder'> {
     workspace: HiddenBatchSpecWorkspaceFields
@@ -218,21 +242,25 @@ const HiddenWorkspaceDetails: React.FunctionComponent<React.PropsWithChildren<Hi
     workspace,
     deselectWorkspace,
     telemetryRecorder,
-}) => (
-    <div role="region" aria-label="workspace details">
-        <WorkspaceHeader
-            deselectWorkspace={deselectWorkspace}
-            workspace={workspace}
-            telemetryRecorder={telemetryRecorder}
-        />
-        <H1 className="text-center text-muted mt-5">
-            <Icon aria-hidden={true} svgPath={mdiEyeOffOutline} />
-            <VisuallyHidden>Hidden Workspace</VisuallyHidden>
-        </H1>
-        <Text alignment="center">This workspace is hidden due to permissions.</Text>
-        <Text alignment="center">Contact the owner of this batch change for more information.</Text>
-    </div>
-)
+}) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/execute/workspaces')
+
+    return (
+        <div role="region" aria-label="workspace details">
+            <WorkspaceHeader
+                deselectWorkspace={deselectWorkspace}
+                workspace={workspace}
+                telemetryRecorder={telemetryRecorder}
+            />
+            <H1 className="text-center text-muted mt-5">
+                <Icon aria-hidden={true} svgPath={mdiEyeOffOutline} />
+                <VisuallyHidden>{t('hidden-workspace')}</VisuallyHidden>
+            </H1>
+            <Text alignment="center">{t('workspace-hidden-permissions')}</Text>
+            <Text alignment="center">{t('contact-batch-change-owner')}</Text>
+        </div>
+    )
+}
 
 interface VisibleWorkspaceDetailsProps extends Omit<WorkspaceDetailsProps, 'id'> {
     workspace: VisibleBatchSpecWorkspaceFields
@@ -245,6 +273,8 @@ const VisibleWorkspaceDetails: React.FunctionComponent<React.PropsWithChildren<V
     queryChangesetSpecFileDiffs,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/execute/workspaces')
+
     const [retryWorkspaceExecution, { loading: retryLoading, error: retryError }] = useRetryWorkspaceExecution(
         workspace.id
     )
@@ -287,7 +317,7 @@ const VisibleWorkspaceDetails: React.FunctionComponent<React.PropsWithChildren<V
                 telemetryRecorder={telemetryRecorder}
             />
             {workspace.state === BatchSpecWorkspaceState.CANCELED && (
-                <Alert variant="warning">Execution of this workspace has been canceled.</Alert>
+                <Alert variant="warning">{t('workspace-canceled-execution')}</Alert>
             )}
             {workspace.state === BatchSpecWorkspaceState.FAILED && workspace.failureMessage && (
                 <>
@@ -300,7 +330,8 @@ const VisibleWorkspaceDetails: React.FunctionComponent<React.PropsWithChildren<V
                             outline={true}
                             variant="danger"
                         >
-                            <Icon aria-hidden={true} svgPath={mdiSync} /> Retry
+                            <Icon aria-hidden={true} svgPath={mdiSync} />
+                            {t('retry-action')}
                         </Button>
                     </div>
                     {retryError && <ErrorAlert error={retryError} />}
@@ -310,7 +341,7 @@ const VisibleWorkspaceDetails: React.FunctionComponent<React.PropsWithChildren<V
             {workspace.changesetSpecs && workspace.state === BatchSpecWorkspaceState.COMPLETED && (
                 <div className="mb-3">
                     {workspace.changesetSpecs.length === 0 && (
-                        <Text className="mb-0 text-muted">This workspace generated no changeset specs.</Text>
+                        <Text className="mb-0 text-muted">{t('no-changeset-specs')}</Text>
                     )}
                     {workspace.changesetSpecs.map((changesetSpec, index) => (
                         <React.Fragment key={changesetSpec.id}>
@@ -348,24 +379,29 @@ const IgnoredWorkspaceDetails: React.FunctionComponent<React.PropsWithChildren<I
     workspace,
     deselectWorkspace,
     telemetryRecorder,
-}) => (
-    <>
-        <WorkspaceHeader
-            deselectWorkspace={deselectWorkspace}
-            workspace={workspace}
-            telemetryRecorder={telemetryRecorder}
-        />
-        <H1 className="text-center text-muted mt-5">
-            <Icon aria-hidden={true} svgPath={mdiLinkVariantRemove} />
-            <VisuallyHidden>Ignored Workspace</VisuallyHidden>
-        </H1>
-        <Text alignment="center">
-            This workspace has been skipped because a <Code>.batchignore</Code> file is present in the workspace
-            repository.
-        </Text>
-        <Text alignment="center">Enable the execution option ignored" to override.</Text>
-    </>
-)
+}) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/execute/workspaces')
+
+    return (
+        <>
+            <WorkspaceHeader
+                deselectWorkspace={deselectWorkspace}
+                workspace={workspace}
+                telemetryRecorder={telemetryRecorder}
+            />
+            <H1 className="text-center text-muted mt-5">
+                <Icon aria-hidden={true} svgPath={mdiLinkVariantRemove} />
+                <VisuallyHidden>{t('ignored-workspace')}</VisuallyHidden>
+            </H1>
+            <Text alignment="center">
+                {t('workspace-skipped-batchignore')}
+                <Code>{t('batchignore-file-present')}</Code>
+                {t('workspace-batchignore-repo')}
+            </Text>
+            <Text alignment="center">{t('override-ignored-execution-option')}</Text>
+        </>
+    )
+}
 
 interface UnsupportedWorkspaceDetailsProps
     extends Pick<WorkspaceDetailsProps, 'deselectWorkspace' | 'telemetryRecorder'> {
@@ -374,21 +410,25 @@ interface UnsupportedWorkspaceDetailsProps
 
 const UnsupportedWorkspaceDetails: React.FunctionComponent<
     React.PropsWithChildren<UnsupportedWorkspaceDetailsProps>
-> = ({ workspace, deselectWorkspace, telemetryRecorder }) => (
-    <>
-        <WorkspaceHeader
-            deselectWorkspace={deselectWorkspace}
-            workspace={workspace}
-            telemetryRecorder={telemetryRecorder}
-        />
-        <H1 className="text-center text-muted mt-5">
-            <Icon aria-hidden={true} svgPath={mdiLinkVariantRemove} />
-            <VisuallyHidden>Unsupported Workspace</VisuallyHidden>
-        </H1>
-        <Text alignment="center">This workspace has been skipped because it is from an unsupported codehost.</Text>
-        <Text alignment="center">Enable the execution option "allow unsupported" to override.</Text>
-    </>
-)
+> = ({ workspace, deselectWorkspace, telemetryRecorder }) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/execute/workspaces')
+
+    return (
+        <>
+            <WorkspaceHeader
+                deselectWorkspace={deselectWorkspace}
+                workspace={workspace}
+                telemetryRecorder={telemetryRecorder}
+            />
+            <H1 className="text-center text-muted mt-5">
+                <Icon aria-hidden={true} svgPath={mdiLinkVariantRemove} />
+                <VisuallyHidden>{t('unsupported-workspace')}</VisuallyHidden>
+            </H1>
+            <Text alignment="center">{t('workspace-skipped-unsupported-codehost')}</Text>
+            <Text alignment="center">{t('override-allow-unsupported-option')}</Text>
+        </>
+    )
+}
 
 const NumberInQueue: React.FunctionComponent<React.PropsWithChildren<{ number: number }>> = ({ number }) => (
     <>
@@ -406,6 +446,8 @@ const ChangesetSpecNode: React.FunctionComponent<React.PropsWithChildren<Changes
     node,
     queryChangesetSpecFileDiffs = _queryChangesetSpecFileDiffs,
 }) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/execute/workspaces')
+
     // TODO: Under what conditions should this be auto-expanded?
     const [isExpanded, setIsExpanded] = useState(true)
     const [areChangesExpanded, setAreChangesExpanded] = useState(true)
@@ -415,7 +457,7 @@ const ChangesetSpecNode: React.FunctionComponent<React.PropsWithChildren<Changes
         return (
             <Card>
                 <CardBody>
-                    <H4>Changeset in a hidden repo</H4>
+                    <H4>{t('changeset-hidden-repo')}</H4>
                 </CardBody>
             </Card>
         )
@@ -435,8 +477,8 @@ const ChangesetSpecNode: React.FunctionComponent<React.PropsWithChildren<Changes
                 <Icon aria-hidden={true} svgPath={isExpanded ? mdiChevronUp : mdiChevronDown} className="mr-1" />
                 <div className={styles.collapseHeader}>
                     <Heading as="h4" styleAs="h3" className="mb-0 d-inline-block mr-2">
-                        <VisuallyHidden>Execution</VisuallyHidden>
-                        <span className={styles.result}>Result</span>
+                        <VisuallyHidden>{t('execution-status')}</VisuallyHidden>
+                        <span className={styles.result}>{t('result-status')}</span>
                         {node.description.published !== null && (
                             <Badge className="text-uppercase ml-2">
                                 {publishBadgeLabel(node.description.published)}
@@ -444,12 +486,12 @@ const ChangesetSpecNode: React.FunctionComponent<React.PropsWithChildren<Changes
                         )}
                     </Heading>
                     <Icon aria-hidden={true} className="text-muted mr-1 flex-shrink-0" svgPath={mdiSourceBranch} />
-                    <VisuallyHidden>on branch</VisuallyHidden>
+                    <VisuallyHidden>{t('on-branch')}</VisuallyHidden>
                     <span className={classNames('text-monospace text-muted', styles.changesetSpecBranch)}>
                         {node.description.headRef}
                     </span>
                 </div>
-                <VisuallyHidden>, generated changeset with</VisuallyHidden>
+                <VisuallyHidden>{t('generated-changeset')}</VisuallyHidden>
                 <DiffStat
                     {...node.description.diffStat}
                     expandedCounts={true}
@@ -460,7 +502,7 @@ const ChangesetSpecNode: React.FunctionComponent<React.PropsWithChildren<Changes
                 <Card className={classNames('mt-2', styles.resultCard)}>
                     <CardBody>
                         <Heading as="h5" styleAs="h3" className={styles.changesetTemplateHeader}>
-                            Changeset template
+                            {t('changeset-template')}
                         </Heading>
                         <Heading as="h6" styleAs="h4">
                             {node.description.title}
@@ -468,7 +510,7 @@ const ChangesetSpecNode: React.FunctionComponent<React.PropsWithChildren<Changes
                         <Text className="mb-0">{node.description.body}</Text>
                         {node.description.published && (
                             <Text>
-                                <strong>Published:</strong> {String(node.description.published)}
+                                <strong>{t('published-status')}</strong> {String(node.description.published)}
                             </Text>
                         )}
                         <Collapse isOpen={areChangesExpanded} onOpenChange={setAreChangesExpanded} openByDefault={true}>
@@ -479,7 +521,7 @@ const ChangesetSpecNode: React.FunctionComponent<React.PropsWithChildren<Changes
                                     className="mr-1"
                                 />
                                 <Heading className="mb-0" as="h4" styleAs="h3">
-                                    Changes
+                                    {t('changes-status')}
                                 </Heading>
                             </CollapseHeader>
                             <CollapsePanel>
@@ -523,6 +565,8 @@ export const OUTPUT_LINES_PER_PAGE = 500
 export const WorkspaceStepOutputLines: React.FunctionComponent<
     React.PropsWithChildren<Pick<WorkspaceStepProps, 'step' | 'workspaceID'>>
 > = ({ step, workspaceID }) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/execute/workspaces')
+
     const { connection, error, loading, fetchMore, hasNextPage } = useShowMorePagination<
         BatchSpecWorkspaceStepResult,
         BatchSpecWorkspaceStepVariables,
@@ -580,7 +624,10 @@ export const WorkspaceStepOutputLines: React.FunctionComponent<
     if (error || !connection || connection.error) {
         return (
             <Text className="text-muted">
-                <span className="text-muted">Unable to fetch output logs for step ${step.number}.</span>
+                <span className="text-muted">
+                    {t('unable-fetch-output-logs')}
+                    {step.number}.
+                </span>
             </Text>
         )
     }
@@ -594,7 +641,7 @@ export const WorkspaceStepOutputLines: React.FunctionComponent<
                         <LoadingSpinner className="bg-transparent ml-3" />
                     ) : (
                         <Button size="sm" className={styles.stepOutputShowMoreBtn} onClick={fetchMore}>
-                            Load more ...
+                            {t('load-more-logs')}
                         </Button>
                     )}
                 </>
@@ -611,6 +658,8 @@ const WorkspaceStep: React.FunctionComponent<React.PropsWithChildren<WorkspaceSt
     queryBatchSpecWorkspaceStepFileDiffs,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/execute/workspaces')
+
     const [isExpanded, setIsExpanded] = useState(false)
     const tabsNames = ['logs', 'output', 'diff', 'files_env', 'cmd_container']
     return (
@@ -622,7 +671,10 @@ const WorkspaceStep: React.FunctionComponent<React.PropsWithChildren<WorkspaceSt
                 <Icon aria-hidden={true} svgPath={isExpanded ? mdiChevronUp : mdiChevronDown} className="mr-1" />
                 <div className={classNames(styles.collapseHeader, step.skipped && 'text-muted')}>
                     <StepStateIcon step={step} />
-                    <H3 className={styles.stepNumber}>Step {step.number}</H3>
+                    <H3 className={styles.stepNumber}>
+                        {t('step-number')}
+                        {step.number}
+                    </H3>
                     <Code className={classNames('text-muted', styles.stepCommand)}>{step.run}</Code>
                 </div>
                 {step.diffStat && <DiffStat className={styles.stepDiffStat} {...step.diffStat} expandedCounts={true} />}
@@ -649,27 +701,27 @@ const WorkspaceStep: React.FunctionComponent<React.PropsWithChildren<WorkspaceSt
                                 <TabList>
                                     <Tab key="logs">
                                         <span className="text-content" data-tab-content="Logs">
-                                            Logs
+                                            {t('logs-section')}
                                         </span>
                                     </Tab>
                                     <Tab key="output-variables">
                                         <span className="text-content" data-tab-content="Output variables">
-                                            Output variables
+                                            {t('output-variables-section')}
                                         </span>
                                     </Tab>
                                     <Tab key="diff">
                                         <span className="text-content" data-tab-content="Diff">
-                                            Diff
+                                            {t('diff-section')}
                                         </span>
                                     </Tab>
                                     <Tab key="files-env">
                                         <span className="text-content" data-tab-content="Files / Env">
-                                            Files / Env
+                                            {t('files-env-section')}
                                         </span>
                                     </Tab>
                                     <Tab key="command-container">
                                         <span className="text-content" data-tab-content="Commands / Container">
-                                            Commands / Container
+                                            {t('commands-container-section')}
                                         </span>
                                     </Tab>
                                 </TabList>
@@ -678,15 +730,15 @@ const WorkspaceStep: React.FunctionComponent<React.PropsWithChildren<WorkspaceSt
                                         {step.startedAt ? (
                                             <WorkspaceStepOutputLines step={step} workspaceID={workspaceID} />
                                         ) : (
-                                            <Text className="text-muted mb-0">Step not started yet</Text>
+                                            <Text className="text-muted mb-0">{t('step-not-started')}</Text>
                                         )}
                                     </TabPanel>
                                     <TabPanel className="pt-2" key="output-variables">
                                         {!step.startedAt && (
-                                            <Text className="text-muted mb-0">Step not started yet</Text>
+                                            <Text className="text-muted mb-0">{t('step-not-started-duplicate')}</Text>
                                         )}
                                         {step.outputVariables?.length === 0 && (
-                                            <Text className="text-muted mb-0">No output variables specified</Text>
+                                            <Text className="text-muted mb-0">{t('no-output-variables')}</Text>
                                         )}
                                         <ul className="mb-0">
                                             {step.outputVariables?.map(variable => (
@@ -698,7 +750,7 @@ const WorkspaceStep: React.FunctionComponent<React.PropsWithChildren<WorkspaceSt
                                     </TabPanel>
                                     <TabPanel className="pt-2" key="diff">
                                         {!step.startedAt && (
-                                            <Text className="text-muted mb-0">Step not started yet</Text>
+                                            <Text className="text-muted mb-0">{t('step-not-started-duplicate-2')}</Text>
                                         )}
                                         {step.startedAt && (
                                             <WorkspaceStepFileDiffConnection
@@ -712,27 +764,34 @@ const WorkspaceStep: React.FunctionComponent<React.PropsWithChildren<WorkspaceSt
                                     </TabPanel>
                                     <TabPanel className="pt-2" key="files-env">
                                         {step.environment.length === 0 && (
-                                            <Text className="text-muted mb-0">No environment variables specified</Text>
+                                            <Text className="text-muted mb-0">{t('no-env-variables')}</Text>
                                         )}
                                         <ul className="mb-0">
-                                            {step.environment.map(variable => (
-                                                <li key={variable.name}>
-                                                    {variable.name}: {variable.value !== null && <>{variable.value}</>}
-                                                    {variable.value === null && <i>Set from secret</i>}
-                                                </li>
-                                            ))}
+                                            {step.environment.map(variable => {
+                                                const { t } = useTranslation(
+                                                    'enterprise/batches/batch-spec/execute/workspaces'
+                                                )
+
+                                                return (
+                                                    <li key={variable.name}>
+                                                        {variable.name}:{' '}
+                                                        {variable.value !== null && <>{variable.value}</>}
+                                                        {variable.value === null && <i>{t('set-from-secret')}</i>}
+                                                    </li>
+                                                )
+                                            })}
                                         </ul>
                                     </TabPanel>
                                     <TabPanel className="pt-2" key="command-container">
                                         {step.ifCondition !== null && (
                                             <>
-                                                <H4>If condition</H4>
+                                                <H4>{t('if-condition-status')}</H4>
                                                 <LogOutput text={step.ifCondition} className="mb-2" />
                                             </>
                                         )}
-                                        <H4>Command</H4>
+                                        <H4>{t('command-status')}</H4>
                                         <LogOutput text={step.run} className="mb-2" />
-                                        <H4>Container</H4>
+                                        <H4>{t('container-status')}</H4>
                                         <Text className="text-monospace mb-0">{step.container}</Text>
                                     </TabPanel>
                                 </TabPanels>
@@ -741,12 +800,9 @@ const WorkspaceStep: React.FunctionComponent<React.PropsWithChildren<WorkspaceSt
                         {step.skipped && (
                             <Text className="mb-0">
                                 <strong>
-                                    Step has been skipped
-                                    {cachedResultFound && <> because a cached result was found for this workspace</>}
-                                    {!cachedResultFound && step.cachedResultFound && (
-                                        <> because a cached result was found for this step</>
-                                    )}
-                                    .
+                                    {t('step-skipped-status')}
+                                    {cachedResultFound && <>{t('cached-result-workspace')}</>}
+                                    {!cachedResultFound && step.cachedResultFound && <>{t('cached-result-step')}</>}.
                                 </strong>
                             </Text>
                         )}

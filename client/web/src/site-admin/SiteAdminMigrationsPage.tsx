@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo } from 'react'
 
 import { mdiAlert, mdiAlertCircle, mdiArrowLeftBold, mdiArrowRightBold } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { of, timer, type Observable } from 'rxjs'
 import { catchError, concatMap, map, repeat, takeWhile } from 'rxjs/operators'
 import { parse as _parseVersion, type SemVer } from 'semver'
@@ -87,6 +88,8 @@ export const SiteAdminMigrationsPage: React.FunctionComponent<
     now,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('site-admin')
+
     useEffect(() => {
         telemetryRecorder.recordEvent('admin.migrations', 'view')
     }, [telemetryRecorder])
@@ -141,17 +144,11 @@ export const SiteAdminMigrationsPage: React.FunctionComponent<
                 <LoadingSpinner />
             ) : (
                 <>
-                    <PageTitle title="Out of band migrations - Admin" />
+                    <PageTitle title={t('out-of-band-migrations-admin')} />
                     <PageHeader
                         path={[{ text: 'Out-of-band migrations' }]}
                         headingElement="h2"
-                        description={
-                            <>
-                                Out-of-band migrations run in the background of the Sourcegraph instance convert data
-                                from an old format into a new format. Consult this page prior to upgrading your
-                                Sourcegraph instance to ensure that all expected migrations have completed.
-                            </>
-                        }
+                        description={<>{t('out-of-band-migrations-description')}</>}
                         className="mb-3"
                     />
 
@@ -230,23 +227,24 @@ interface MigrationInvalidBannerProps {
 
 const MigrationInvalidBanner: React.FunctionComponent<React.PropsWithChildren<MigrationInvalidBannerProps>> = ({
     migrations,
-}) => (
-    <Alert variant="danger">
-        <Text>
-            <Icon className="mr-2" aria-hidden={true} svgPath={mdiAlertCircle} />
-            <strong>Contact support.</strong> The following migrations are not in the expected state. You have partially
-            migrated or un-migrated data in a format that is incompatible with the currently deployed version of
-            Sourcegraph.{' '}
-            <strong>Continuing to run your instance in this state will result in errors and possible data loss.</strong>
-        </Text>
+}) => {
+    const { t } = useTranslation('site-admin')
 
-        <ul className="mb-0">
-            {migrations.map(migration => (
-                <li key={migration.id}>{migration.description}</li>
-            ))}
-        </ul>
-    </Alert>
-)
+    return (
+        <Alert variant="danger">
+            <Text>
+                <Icon className="mr-2" aria-hidden={true} svgPath={mdiAlertCircle} />
+                <Trans i18nKey="contact-support-migration-error" components={{ '0': <strong />, '1': <strong /> }} />
+            </Text>
+
+            <ul className="mb-0">
+                {migrations.map(migration => (
+                    <li key={migration.id}>{migration.description}</li>
+                ))}
+            </ul>
+        </Alert>
+    )
+}
 
 interface MigrationUpgradeWarningBannerProps {
     migrations: OutOfBandMigrationFields[]
@@ -254,21 +252,23 @@ interface MigrationUpgradeWarningBannerProps {
 
 const MigrationUpgradeWarningBanner: React.FunctionComponent<
     React.PropsWithChildren<MigrationUpgradeWarningBannerProps>
-> = ({ migrations }) => (
-    <Alert variant="warning">
-        <Text>
-            The next version of Sourcegraph removes support for reading an old data format. Your Sourcegraph instance
-            must complete the following migrations to ensure your data remains readable.{' '}
-            <strong>If you upgrade your Sourcegraph instance now, you may corrupt or lose data.</strong>
-        </Text>
-        <ul>
-            {migrations.map(migration => (
-                <li key={migration.id}>{migration.description}</li>
-            ))}
-        </ul>
-        <span>Contact support if these migrations are not making progress or if there are associated errors.</span>
-    </Alert>
-)
+> = ({ migrations }) => {
+    const { t } = useTranslation('site-admin')
+
+    return (
+        <Alert variant="warning">
+            <Text>
+                <Trans i18nKey="migration-completion-warning" components={{ '0': <strong /> }} />
+            </Text>
+            <ul>
+                {migrations.map(migration => (
+                    <li key={migration.id}>{migration.description}</li>
+                ))}
+            </ul>
+            <span>{t('contact-support-migration-progress')}</span>
+        </Alert>
+    )
+}
 
 interface MigrationDowngradeWarningBannerProps {
     migrations: OutOfBandMigrationFields[]
@@ -276,129 +276,135 @@ interface MigrationDowngradeWarningBannerProps {
 
 const MigrationDowngradeWarningBanner: React.FunctionComponent<
     React.PropsWithChildren<MigrationDowngradeWarningBannerProps>
-> = ({ migrations }) => (
-    <Alert variant="warning">
-        <Text>
-            <Icon className="mr-2" aria-hidden={true} svgPath={mdiAlert} />
-            <span>
-                The previous version of Sourcegraph does not support reading data that has been migrated into a new
-                format. Your Sourcegraph instance must undo the following migrations to ensure your data can be read by
-                the previous version.{' '}
-                <strong>If you downgrade your Sourcegraph instance now, you may corrupt or lose data.</strong>
-            </span>
-        </Text>
+> = ({ migrations }) => {
+    const { t } = useTranslation('site-admin')
 
-        <ul>
-            {migrations.map(migration => (
-                <li key={migration.id}>{migration.description}</li>
-            ))}
-        </ul>
+    return (
+        <Alert variant="warning">
+            <Text>
+                <Icon className="mr-2" aria-hidden={true} svgPath={mdiAlert} />
+                <span>
+                    <Trans i18nKey="previous-version-migration-warning" components={{ '0': <strong /> }} />
+                </span>
+            </Text>
 
-        <span>Contact support for assistance with downgrading your instance.</span>
-    </Alert>
-)
+            <ul>
+                {migrations.map(migration => (
+                    <li key={migration.id}>{migration.description}</li>
+                ))}
+            </ul>
+
+            <span>{t('contact-support-downgrade-assistance')}</span>
+        </Alert>
+    )
+}
 
 interface MigrationNodeProps {
     node: OutOfBandMigrationFields
     now?: () => Date
 }
 
-const MigrationNode: React.FunctionComponent<React.PropsWithChildren<MigrationNodeProps>> = ({ node, now }) => (
-    <React.Fragment key={node.id}>
-        <span className={styles.separator} />
+const MigrationNode: React.FunctionComponent<React.PropsWithChildren<MigrationNodeProps>> = ({ node, now }) => {
+    const { t } = useTranslation('site-admin')
 
-        <div className={classNames('d-flex flex-column', styles.information)}>
-            <div>
-                <H3>{node.description}</H3>
+    return (
+        <React.Fragment key={node.id}>
+            <span className={styles.separator} />
 
-                <Text className="m-0">
-                    <span className="text-muted">Team</span> <strong>{node.team}</strong>{' '}
-                    <span className="text-muted">is migrating data in</span> <strong>{node.component}</strong>
-                    <span className="text-muted">.</span>
-                </Text>
+            <div className={classNames('d-flex flex-column', styles.information)}>
+                <div>
+                    <H3>{node.description}</H3>
 
-                <Text className="m-0">
-                    <span className="text-muted">Began running in v</span>
-                    {node.introduced}
-                    {node.deprecated && (
+                    <Text className="m-0">
+                        <span className="text-muted">{t('team')}</span> <strong>{node.team}</strong>{' '}
+                        <span className="text-muted">{t('data-migration-status')}</span>{' '}
+                        <strong>{node.component}</strong>
+                        <span className="text-muted">.</span>
+                    </Text>
+
+                    <Text className="m-0">
+                        <span className="text-muted">{t('migration-start-version')}</span>
+                        {node.introduced}
+                        {node.deprecated && (
+                            <>
+                                {' '}
+                                <span className="text-muted">{t('migration-end-version')}</span>
+                                {node.deprecated}
+                            </>
+                        )}
+                        .
+                    </Text>
+                </div>
+            </div>
+
+            <span className={classNames('d-none d-md-inline', styles.progress)}>
+                <div className="m-0 text-nowrap d-flex flex-column align-items-center justify-content-center">
+                    <div>
+                        {node.applyReverse ? (
+                            <Icon className="mr-1 text-danger" aria-hidden={true} svgPath={mdiArrowLeftBold} />
+                        ) : (
+                            <Icon className="mr-1" aria-hidden={true} svgPath={mdiArrowRightBold} />
+                        )}
+                        {Math.floor(node.progress * 100)}%
+                    </div>
+
+                    <Tooltip content={`${Math.floor(node.progress * 100)}%`} placement="bottom">
+                        <div>
+                            <meter
+                                min={0}
+                                low={0.2}
+                                high={0.8}
+                                max={1}
+                                optimum={1}
+                                value={node.progress}
+                                aria-label="migration progress"
+                            />
+                        </div>
+                    </Tooltip>
+
+                    {node.lastUpdated && node.lastUpdated !== '' && (
                         <>
-                            {' '}
-                            <span className="text-muted">and will cease running in v</span>
-                            {node.deprecated}
+                            <div className="text-center">
+                                <span className="text-muted">{t('last-updated')}</span>
+                            </div>
+                            <div className="text-center">
+                                <small>
+                                    <Timestamp date={node.lastUpdated} now={now} noAbout={true} />
+                                </small>
+                            </div>
                         </>
                     )}
-                    .
-                </Text>
-            </div>
-        </div>
-
-        <span className={classNames('d-none d-md-inline', styles.progress)}>
-            <div className="m-0 text-nowrap d-flex flex-column align-items-center justify-content-center">
-                <div>
-                    {node.applyReverse ? (
-                        <Icon className="mr-1 text-danger" aria-hidden={true} svgPath={mdiArrowLeftBold} />
-                    ) : (
-                        <Icon className="mr-1" aria-hidden={true} svgPath={mdiArrowRightBold} />
-                    )}
-                    {Math.floor(node.progress * 100)}%
                 </div>
+            </span>
 
-                <Tooltip content={`${Math.floor(node.progress * 100)}%`} placement="bottom">
-                    <div>
-                        <meter
-                            min={0}
-                            low={0.2}
-                            high={0.8}
-                            max={1}
-                            optimum={1}
-                            value={node.progress}
-                            aria-label="migration progress"
-                        />
+            {node.errors.length > 0 && (
+                <Collapsible
+                    title={<strong>{t('recent-errors-count', { nodeErrorsLength: node.errors.length })}</strong>}
+                    className="p-0 font-weight-normal"
+                    buttonClassName="mb-0"
+                    titleAtStart={true}
+                    defaultExpanded={false}
+                >
+                    <div className={classNames('pt-2', styles.nodeGrid)}>
+                        {node.errors
+                            .map((error, index) => ({ ...error, index }))
+                            .map(error => (
+                                <React.Fragment key={error.index}>
+                                    <div className="py-1 pr-2">
+                                        <Timestamp date={error.created} now={now} />
+                                    </div>
+
+                                    <span className={classNames('py-1 pl-2', styles.nodeGridCode)}>
+                                        <Code>{error.message}</Code>
+                                    </span>
+                                </React.Fragment>
+                            ))}
                     </div>
-                </Tooltip>
-
-                {node.lastUpdated && node.lastUpdated !== '' && (
-                    <>
-                        <div className="text-center">
-                            <span className="text-muted">Last updated</span>
-                        </div>
-                        <div className="text-center">
-                            <small>
-                                <Timestamp date={node.lastUpdated} now={now} noAbout={true} />
-                            </small>
-                        </div>
-                    </>
-                )}
-            </div>
-        </span>
-
-        {node.errors.length > 0 && (
-            <Collapsible
-                title={<strong>Recent errors ({node.errors.length})</strong>}
-                className="p-0 font-weight-normal"
-                buttonClassName="mb-0"
-                titleAtStart={true}
-                defaultExpanded={false}
-            >
-                <div className={classNames('pt-2', styles.nodeGrid)}>
-                    {node.errors
-                        .map((error, index) => ({ ...error, index }))
-                        .map(error => (
-                            <React.Fragment key={error.index}>
-                                <div className="py-1 pr-2">
-                                    <Timestamp date={error.created} now={now} />
-                                </div>
-
-                                <span className={classNames('py-1 pl-2', styles.nodeGridCode)}>
-                                    <Code>{error.message}</Code>
-                                </span>
-                            </React.Fragment>
-                        ))}
-                </div>
-            </Collapsible>
-        )}
-    </React.Fragment>
-)
+                </Collapsible>
+            )}
+        </React.Fragment>
+    )
+}
 
 type PartialVersion = SemVer | null
 

@@ -1,5 +1,6 @@
 import type { FC } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 
 import type { PlatformContextProps } from '@sourcegraph/shared/src/platform/context'
@@ -129,13 +130,15 @@ interface UserSettingAreaIndexPageProps extends PlatformContextProps, SettingsCa
 }
 
 const UserSettingAreaIndexPage: FC<UserSettingAreaIndexPageProps> = props => {
+    const { t } = useTranslation('user/settings')
+
     const { isSourcegraphDotCom, authenticatedUser, user } = props
     const isLightTheme = useIsLightTheme()
 
     if (isSourcegraphDotCom && authenticatedUser && user.id !== authenticatedUser.id) {
         return (
             <SiteAdminAlert className="sidebar__alert" variant="danger">
-                Only the user may access their individual settings.
+                {t('user-access-individual-settings')}
             </SiteAdminAlert>
         )
     }
@@ -148,10 +151,14 @@ const UserSettingAreaIndexPage: FC<UserSettingAreaIndexPageProps> = props => {
                 <>
                     {authenticatedUser && user.id !== authenticatedUser.id && (
                         <SiteAdminAlert className="sidebar__alert">
-                            Viewing settings for <strong>{user.username}</strong>
+                            <Trans
+                                i18nKey="viewing-settings-for-user"
+                                values={{ userUsername: <>{user.username}</> }}
+                                components={{ '0': <strong /> }}
+                            />
                         </SiteAdminAlert>
                     )}
-                    <Text>User settings override global and organization settings.</Text>
+                    <Text>{t('user-settings-override-global')}</Text>
                 </>
             }
         />

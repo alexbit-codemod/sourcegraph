@@ -1,5 +1,7 @@
 import { type FC, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import {
     debugEventLoggingEnabled,
     setDebugEventLoggingEnabled,
@@ -7,6 +9,8 @@ import {
 import { Checkbox } from '@sourcegraph/wildcard'
 
 export const EventLoggingDebugToggle: FC<{}> = () => {
+    const { t } = useTranslation('devsettings/settings')
+
     const [enabled, setEnabled] = useState(debugEventLoggingEnabled())
     return (
         <Checkbox
@@ -16,7 +20,7 @@ export const EventLoggingDebugToggle: FC<{}> = () => {
                 setDebugEventLoggingEnabled(event.target.checked)
                 setEnabled(debugEventLoggingEnabled())
             }}
-            label="Enable event / telemetry debugging"
+            label={t('enable-event-telemetry-debugging')}
             message="When enabled events logged via eventLogger or telemetryService are logged (as debug messages) to the console."
         />
     )

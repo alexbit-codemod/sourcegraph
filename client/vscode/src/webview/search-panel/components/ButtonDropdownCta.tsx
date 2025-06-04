@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
 import { Button, Popover, PopoverContent, PopoverTrigger, Position } from '@sourcegraph/wildcard'
@@ -38,6 +39,8 @@ export const ButtonDropdownCta: React.FunctionComponent<React.PropsWithChildren<
     className,
     extensionCoreAPI,
 }) => {
+    const { t } = useTranslation('../../vscode/src/webview/search-panel/components')
+
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
     const toggleDropdownOpen = useCallback(() => {
@@ -91,7 +94,7 @@ export const ButtonDropdownCta: React.FunctionComponent<React.PropsWithChildren<
                     </div>
                 </div>
                 <VSCodeButton type="button" onClick={onClick} autofocus={true}>
-                    Sign up for Sourcegraph
+                    {t('sign-up-sourcegraph')}
                 </VSCodeButton>
             </PopoverContent>
         </Popover>

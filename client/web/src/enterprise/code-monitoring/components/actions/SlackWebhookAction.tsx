@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 
 import { gql, useMutation } from '@apollo/client'
 import { noop } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Alert, Input, Label, Link } from '@sourcegraph/wildcard'
 
@@ -26,6 +27,8 @@ export const SlackWebhookAction: React.FunctionComponent<React.PropsWithChildren
     monitorName,
     _testStartOpen,
 }) => {
+    const { t } = useTranslation('enterprise/code-monitoring/components/actions')
+
     const [enabled, setEnabled] = useState(action ? action.enabled : true)
 
     const toggleWebhookEnabled: (enabled: boolean, saveImmediately: boolean) => void = useCallback(
@@ -101,7 +104,7 @@ export const SlackWebhookAction: React.FunctionComponent<React.PropsWithChildren
 
     return (
         <ActionEditor
-            title={<div>Send Slack message to channel</div>}
+            title={<div>{t('send-slack-message-to-channel')}</div>}
             subtitle="Post to a specified Slack channel. Requires webhook configuration."
             idName="slack-webhook"
             disabled={disabled}
@@ -124,18 +127,17 @@ export const SlackWebhookAction: React.FunctionComponent<React.PropsWithChildren
             _testStartOpen={_testStartOpen}
         >
             <Alert aria-live="off" variant="info" className="mt-4">
-                Go to{' '}
-                <Link to="https://api.slack.com/apps" target="_blank" rel="noopener">
-                    Slack
-                </Link>{' '}
-                to create a webhook URL.
+                <Trans
+                    i18nKey="go-to-slack-create-webhook-url"
+                    components={{ '0': <Link to="https://api.slack.com/apps" target="_blank" rel="noopener" /> }}
+                />
                 <br />
                 <Link to="/help/code_monitoring/how-tos/slack" target="_blank" rel="noopener">
-                    Read more about how to set up Slack webhooks in the docs.
+                    {t('read-more-about-slack-webhooks')}
                 </Link>
             </Alert>
             <div className="form-group">
-                <Label htmlFor="code-monitor-slack-webhook-url">Slack webhook URL</Label>
+                <Label htmlFor="code-monitor-slack-webhook-url">{t('slack-webhook-url')}</Label>
                 <Input
                     id="code-monitor-slack-webhook-url"
                     type="url"

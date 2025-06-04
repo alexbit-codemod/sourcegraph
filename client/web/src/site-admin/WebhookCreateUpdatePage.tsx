@@ -1,6 +1,7 @@
 import React, { type FC, useCallback, useMemo, useState } from 'react'
 
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { useMutation, useQuery } from '@sourcegraph/http-client'
@@ -37,6 +38,8 @@ export interface Webhook {
 }
 
 export const WebhookCreateUpdatePage: FC<WebhookCreateUpdatePageProps> = ({ existingWebhook }) => {
+    const { t } = useTranslation('site-admin')
+
     const navigate = useNavigate()
     const update = existingWebhook !== undefined
     const initialWebhook = update
@@ -156,7 +159,7 @@ export const WebhookCreateUpdatePage: FC<WebhookCreateUpdatePageProps> = ({ exis
     if (kindsToUrls.size === 0) {
         return (
             <Alert variant="warning" className="mt-2">
-                Please add a code host connection in order to create a webhook.
+                {t('add-code-host-connection-webhook')}
             </Alert>
         )
     }
@@ -183,7 +186,7 @@ export const WebhookCreateUpdatePage: FC<WebhookCreateUpdatePageProps> = ({ exis
             <Container className="mb-2">
                 <div className={styles.form}>
                     <Input
-                        label="Webhook name"
+                        label={t('webhook-name')}
                         pattern="^[a-zA-Z0-9_'\-\/\.\s]+$"
                         required={true}
                         defaultValue={update ? webhook.name : ''}
@@ -226,12 +229,12 @@ export const WebhookCreateUpdatePage: FC<WebhookCreateUpdatePageProps> = ({ exis
                         className="mb-0"
                         message={
                             webhook.codeHostKind && !codeHostSupportsSecrets(webhook.codeHostKind) ? (
-                                <>Code Host doesn't support secrets.</>
+                                <>{t('code-host-no-secrets-support')}</>
                             ) : (
-                                <>Randomly generated. Alter as required.</>
+                                <>{t('randomly-generated-alter-as-required')}</>
                             )
                         }
-                        label="Secret"
+                        label={t('secret')}
                         disabled={webhook.codeHostKind !== null && !codeHostSupportsSecrets(webhook.codeHostKind)}
                         // TODO: Is this pattern too prohibitive? It doesn't even allow `-`.
                         pattern="^[a-zA-Z0-9]+$"
@@ -256,15 +259,15 @@ export const WebhookCreateUpdatePage: FC<WebhookCreateUpdatePageProps> = ({ exis
                             disabled={updateLoading || webhook.name.trim() === ''}
                             className="mr-1"
                         >
-                            Update
+                            {t('update-button')}
                         </Button>
                         <ButtonLink to={`/site-admin/webhooks/incoming/${existingWebhook.id}`} variant="secondary">
-                            Cancel
+                            {t('cancel-button')}
                         </ButtonLink>
                     </>
                 ) : (
                     <Button type="submit" variant="primary" disabled={creationLoading || webhook.name.trim() === ''}>
-                        Create
+                        {t('create-button')}
                     </Button>
                 )}
             </div>

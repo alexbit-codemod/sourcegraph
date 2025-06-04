@@ -1,5 +1,7 @@
 import React, { useMemo } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { pluralize } from '@sourcegraph/common'
 import { AlertLink, Alert } from '@sourcegraph/wildcard'
 
@@ -16,6 +18,8 @@ export const ActiveExecutionNotice: React.FunctionComponent<React.PropsWithChild
     batchChangeURL,
     className,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail')
+
     const numberExecuting = useMemo(
         () =>
             batchSpecs.filter(({ state }) => state === BatchSpecState.PROCESSING || state === BatchSpecState.QUEUED)
@@ -29,8 +33,11 @@ export const ActiveExecutionNotice: React.FunctionComponent<React.PropsWithChild
 
     return (
         <Alert className={className} variant="waiting">
-            There {pluralize('is', numberExecuting, 'are')} currently {numberExecuting} batch{' '}
-            {pluralize('spec', numberExecuting)} <AlertLink to={`${batchChangeURL}/executions`}>executing</AlertLink>.
+            {t('there')}
+            {pluralize('is', numberExecuting, 'are')}
+            {t('current-batch-executing', { numberExecuting })}
+            {pluralize('spec', numberExecuting)}{' '}
+            <AlertLink to={`${batchChangeURL}/executions`}>{t('executing-status')}</AlertLink>.
         </Alert>
     )
 }

@@ -1,0 +1,15 @@
+{
+  "license-tags-unknown-values-check": "License tags contain unknown values (marked red), please check if the tags are correct.",
+  "sourcegraph-logo": "Sourcegraph logo",
+  "license-keys-dev-mode-not-valid": "License keys generated in dev mode are <0>NOT VALID</0>. <1>Use Sourcegraph.com to generate valid license keys.</1>",
+  "formatted-user-count-license": "{{formatUserCountLicenseUserCountTrue}} license",
+  "licensed-users-label": "Licensed users",
+  "licensed-users-description": "The number of users that are currently covered by your license. The true-up model allows having more users, and additional users will incur a retroactive charge on renewal.",
+  "total-users-count": "{{numberWithCommasActualUserCount}} total users{{actualUserCountDateReachedOnActualUserCountDate}}",
+  "maximum-users-label": "Maximum users",
+  "maximum-users-description": "This is the highest peak of users on your installation since the license started, and this is the minimum number you need to purchase when you renew your license.",
+  "users-over-license-count": "{{numberWithCommasMathMax0ActualUserCountLicenseUserCount}} users over{{actualUserCountDateOnActualUserCountDate}}",
+  "users-over-license-label": "Users over license",
+  "users-over-license-description": "The true-up model has a retroactive charge for these users at the next renewal. If you want to update your license sooner to prevent this, please contact sales@sourcegraph.com.",
+  "learn-more-true-up-pricing": "Learn more about <0>Sourcegraph's true-up pricing model</0> ."
+}

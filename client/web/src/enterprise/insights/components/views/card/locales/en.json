@@ -1,0 +1,20 @@
+{
+  "empty-view": "Empty view",
+  "empty-card": "Empty card",
+  "loading-content-view": "View with loading content",
+  "loading-insight-card": "Loading insight card",
+  "loading-insight": "Loading insight",
+  "error-like-content-view": "View with error-like content",
+  "loading-insight-card-duplicate": "Loading insight card",
+  "banner-content-card-resizing": "Card with banner content (resizing state)",
+  "resizing-insight-card": "Resizing insight card",
+  "resizing": "Resizing",
+  "insight-chart-card": "Card with insight chart",
+  "context-action-item-view": "View with context action item",
+  "create-action": "Create",
+  "update-action": "Update",
+  "delete-action": "Delete",
+  "create-action-duplicate": "Create",
+  "update-action-duplicate": "Update",
+  "delete-action-duplicate": "Delete"
+}

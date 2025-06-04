@@ -1,0 +1,21 @@
+{
+  "failed-to-fetch-user-cody-plan-data": "Failed to fetch user Cody plan data",
+  "failed-to-fetch-subscription-data": "Failed to fetch subscription data",
+  "subscription-data-not-available": "Subscription data is not available",
+  "explore-enterprise-plan": "Explore an enterprise plan",
+  "team-plans-limited-to-50-users": "Team plans are limited to 50 users. <0>Contact sales</0> to learn more.",
+  "purchase-button": "Purchase",
+  "show-credit-card-billing-info": "Show credit card and billing info",
+  "terms-of-service-agreement": "By clicking the button, you agree to the <0>Terms of Service</0> and acknowledge that the <1>Privacy Statement</1> applies. Your subscription will renew automatically by charging your payment method on file until you <2>cancel</2> . You may cancel at any time prior to the next billing cycle.",
+  "email-label": "Email",
+  "subscription-renewal-agreement": "By clicking the button, you agree to the <0>Terms of Service</0> and acknowledge that the <1>Privacy Statement</1> applies. Your subscription will renew automatically by charging your payment method on file until you <2>cancel</2> . You may cancel at any time prior to the next billing cycle.",
+  "seat-price-per-month": "${{SEAT_PRICE}} per seat / month",
+  "summary-label": "Summary",
+  "pro-rated-cost-this-month": "Pro-rated cost for this month",
+  "new-total-for": "New total for",
+  "new-seats-pro-rated": {
+    "true": "on {{newDateChangeDueDateToLocaleDateString}}",
+    "false": "next month"
+  },
+  "price-per-month": "${{price}} / month"
+}

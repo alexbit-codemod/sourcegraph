@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from 'react'
 
 import { mdiMagnify } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 import { Navigate, useLocation } from 'react-router-dom'
 import type { Observable } from 'rxjs'
 
@@ -34,6 +35,8 @@ export interface CreateSearchContextPageProps
 export const AuthenticatedCreateSearchContextPage: React.FunctionComponent<
     React.PropsWithChildren<CreateSearchContextPageProps>
 > = props => {
+    const { t } = useTranslation('enterprise/searchContexts')
+
     const { authenticatedUser, createSearchContext, platformContext } = props
 
     const location = useLocation()
@@ -64,27 +67,30 @@ export const AuthenticatedCreateSearchContextPage: React.FunctionComponent<
         <div className="w-100">
             <Page>
                 <div className="container col-sm-8">
-                    <PageTitle title="Create context" />
+                    <PageTitle title={t('create-context-title')} />
                     <PageHeader
                         description={
                             <span className="text-muted">
-                                A search context is a group of repositories at specified branches or revisions that you
-                                can refer to in a search query.{' '}
-                                <Link
-                                    to="/help/code-search/working/search_contexts"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Learn more
-                                </Link>
+                                <Trans
+                                    i18nKey="search-context-description"
+                                    components={{
+                                        '0': (
+                                            <Link
+                                                to="/help/code-search/working/search_contexts"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            />
+                                        ),
+                                    }}
+                                />
                             </span>
                         }
                         className="mb-3"
                     >
                         <PageHeader.Heading as="h2" styleAs="h1">
                             <PageHeader.Breadcrumb icon={mdiMagnify} to="/search" aria-label="Code Search" />
-                            <PageHeader.Breadcrumb to="/contexts">Contexts</PageHeader.Breadcrumb>
-                            <PageHeader.Breadcrumb>Create context</PageHeader.Breadcrumb>
+                            <PageHeader.Breadcrumb to="/contexts">{t('contexts-title')}</PageHeader.Breadcrumb>
+                            <PageHeader.Breadcrumb>{t('create-context-action')}</PageHeader.Breadcrumb>
                         </PageHeader.Heading>
                     </PageHeader>
                     <SearchContextForm {...props} query={query} onSubmit={onSubmit} />

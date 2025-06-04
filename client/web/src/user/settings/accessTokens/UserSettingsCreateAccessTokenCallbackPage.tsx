@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { NEVER, type Observable } from 'rxjs'
 import { catchError, startWith, switchMap, tap } from 'rxjs/operators'
@@ -143,6 +144,8 @@ export const UserSettingsCreateAccessTokenCallbackPage: React.FC<Props> = ({
     user,
     isSourcegraphDotCom,
 }) => {
+    const { t } = useTranslation('user/settings/accessTokens')
+
     const isLightTheme = useIsLightTheme()
     const navigate = useNavigate()
     const location = useLocation()
@@ -298,23 +301,28 @@ export const UserSettingsCreateAccessTokenCallbackPage: React.FC<Props> = ({
 
             <Card className={styles.card}>
                 <H2 as={H1} className={styles.heading}>
-                    Authorize {requester.name}?
+                    {t('authorize-button')}
+                    {requester.name}?
                 </H2>
 
-                <Text weight="bold">This grants access to:</Text>
+                <Text weight="bold">{t('access-granting-message')}</Text>
                 <ul>
-                    <li>Your Sourcegraph.com account</li>
-                    <li>Perform actions on your behalf</li>
+                    <li>{t('sourcegraph-account')}</li>
+                    <li>{t('actions-on-behalf')}</li>
                 </ul>
                 <Text>{requester.infoMessage}</Text>
-                <Text>If you are not trying to connect {requester.name}, click cancel.</Text>
+                <Text>
+                    {t('not-trying-to-connect')}
+                    {requester.name}
+                    {t('click-cancel-instruction')}
+                </Text>
 
                 {!newToken && (
                     <div className={styles.buttonRow}>
                         <LoaderButton
                             className="flex-1"
                             variant="primary"
-                            label="Authorize"
+                            label={t('authorize-label')}
                             loading={creationOrError === 'loading'}
                             // we disable this if the request is made from a mobile device so the access token doesn't
                             // get created at all. This prevents redirecting to an external site from a mobile app.
@@ -328,7 +336,7 @@ export const UserSettingsCreateAccessTokenCallbackPage: React.FC<Props> = ({
                             disabled={creationOrError === 'loading'}
                             as={Link}
                         >
-                            Cancel
+                            {t('cancel-button')}
                         </Button>
                     </div>
                 )}
@@ -337,15 +345,19 @@ export const UserSettingsCreateAccessTokenCallbackPage: React.FC<Props> = ({
                     <>
                         <Text weight="bold">{requester.successMessage}</Text>
                         <details>
-                            <summary>Authorization details</summary>
+                            <summary>{t('authorization-details-title')}</summary>
                             <div className="mt-2">
-                                <Text>{requester.name} access token successfully generated.</Text>
+                                <Text>
+                                    {requester.name}
+                                    {t('access-token-generated')}
+                                </Text>
                                 <CopyableText className="test-access-token" text={newToken} />
                                 <Text className="form-help text-muted" size="small">
-                                    This is an access token to connect your account to {requester.name}. This token will
-                                    expire in {defaultAccessTokenExpiryDays}{' '}
-                                    {pluralize('day', defaultAccessTokenExpiryDays)}. You will not be able to see this
-                                    token again once the window is closed.
+                                    {t('access-token-description')}
+                                    {requester.name}
+                                    {t('token-expiry-warning', { defaultAccessTokenExpiryDays })}
+                                    {pluralize('day', defaultAccessTokenExpiryDays)}
+                                    {t('token-visibility-warning')}
                                 </Text>
                             </div>
                         </details>

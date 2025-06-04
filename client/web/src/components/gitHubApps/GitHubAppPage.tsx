@@ -2,6 +2,7 @@ import { type FC, useEffect, useMemo, useState } from 'react'
 
 import { mdiCog, mdiDelete, mdiOpenInNew, mdiPlus } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
@@ -54,6 +55,8 @@ export const GitHubAppPage: FC<Props> = ({
     headerParentBreadcrumb,
     headerAnnotation,
 }) => {
+    const { t } = useTranslation('components/gitHubApps')
+
     const { appID } = useParams()
     const navigate = useNavigate()
     const [removeModalOpen, setRemoveModalOpen] = useState<boolean>(false)
@@ -92,7 +95,11 @@ export const GitHubAppPage: FC<Props> = ({
 
     return (
         <div>
-            {app ? <PageTitle title={`GitHub App - ${app.name}`} /> : <PageTitle title="GitHub App" />}
+            {app ? (
+                <PageTitle title={t('github-app-name', { appName: app.name })} />
+            ) : (
+                <PageTitle title={t('github-app-title')} />
+            )}
             {(error || fetchError) && <ErrorAlert className="mb-3" error={error ?? fetchError} />}
             {loading && !app && <LoadingSpinner />}
             {app && (
@@ -127,14 +134,18 @@ export const GitHubAppPage: FC<Props> = ({
                     />
                     <div className="d-flex align-items-sm-center flex-sm-row flex-column">
                         <span className="timestamps text-muted mb-2">
-                            Created <Timestamp date={app.createdAt} /> | Updated <Timestamp date={app.updatedAt} />
+                            {t('created-label')}
+                            <Timestamp date={app.createdAt} />
+                            {t('updated-label')}
+                            <Timestamp date={app.updatedAt} />
                         </span>
                         <span className="ml-sm-auto">
                             <AnchorLink to={app.appURL} target="_blank">
-                                View In GitHub <Icon inline={true} svgPath={mdiOpenInNew} aria-hidden={true} />
+                                {t('view-in-github')}
+                                <Icon inline={true} svgPath={mdiOpenInNew} aria-hidden={true} />
                             </AnchorLink>
                             <Button onClick={() => navigate(-1)} variant="secondary" className="mx-2">
-                                Cancel
+                                {t('cancel-button')}
                             </Button>
                             <Button
                                 className="text-nowrap"
@@ -142,7 +153,8 @@ export const GitHubAppPage: FC<Props> = ({
                                 onClick={() => setRemoveModalOpen(true)}
                                 variant="danger"
                             >
-                                <Icon aria-hidden={true} svgPath={mdiDelete} /> Delete
+                                <Icon aria-hidden={true} svgPath={mdiDelete} />
+                                {t('delete-button')}
                             </Button>
                         </span>
                     </div>
@@ -151,13 +163,13 @@ export const GitHubAppPage: FC<Props> = ({
             {app && (
                 <Container className="my-3">
                     <Grid columnCount={2} templateColumns="auto 1fr" spacing={[0.6, 2]}>
-                        <span className="font-weight-bold">GitHub App Name</span>
+                        <span className="font-weight-bold">{t('github-app-name-label')}</span>
                         <span>{app.name}</span>
-                        <span className="font-weight-bold">URL</span>
+                        <span className="font-weight-bold">{t('url-label')}</span>
                         <AnchorLink to={app.appURL} target="_blank" className="text-decoration-none text-break">
                             {app.appURL}
                         </AnchorLink>
-                        <span className="font-weight-bold">AppID</span>
+                        <span className="font-weight-bold">{t('app-id-label')}</span>
                         <span>{app.appID}</span>
                     </Grid>
                     {/* Auth provider is only relevant to repos domain GitHub Apps */}
@@ -167,132 +179,147 @@ export const GitHubAppPage: FC<Props> = ({
 
                     <div>
                         <H2 className="d-flex flex-sm-row flex-column align-items-sm-center mb-3">
-                            Installations
+                            {t('installations-title')}
                             <Button
                                 className="ml-sm-auto mr-sm-0 mr-auto mt-sm-0 mt-2"
                                 onClick={() => onAddInstallation(app)}
                                 variant="primary"
                             >
-                                <Icon svgPath={mdiPlus} aria-hidden={true} /> Add installation
+                                <Icon svgPath={mdiPlus} aria-hidden={true} />
+                                {t('add-installation-button')}
                             </Button>
                         </H2>
+                        <Text>{t('installation-description')}</Text>
                         <Text>
-                            An installation is a connection between a GitHub App and a user or organization on GitHub.
-                            An installation allows the GitHub App to access resources owned by that account and perform
-                            actions on behalf of it.
-                        </Text>
-                        <Text>
-                            A GitHub App can only be installed in multiple accounts if it is{' '}
+                            {t('multiple-installations-info')}
                             <AnchorLink to="https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/making-a-github-app-public-or-private">
-                                public
+                                {t('public-installation-label')}
                             </AnchorLink>
-                            . A private GitHub App can only be installed on the account that originally created it.{' '}
-                            <Link
-                                to="/help/admin/code_hosts/github#multiple-installations"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                Learn more about public vs. private GitHub Apps.
-                            </Link>
+                            <Trans
+                                i18nKey="private-installation-info"
+                                components={{
+                                    '0': (
+                                        <Link
+                                            to="/help/admin/code_hosts/github#multiple-installations"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        />
+                                    ),
+                                }}
+                            />
                         </Text>
                         <Text>
-                            Only{' '}
-                            <Link
-                                to="https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/roles-in-an-organization#organization-owners"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                organization owners
-                            </Link>{' '}
-                            can view and manage installations for an organization.
+                            <Trans
+                                i18nKey="organization-owners-info"
+                                components={{
+                                    '0': (
+                                        <Link
+                                            to="https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/roles-in-an-organization#organization-owners"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        />
+                                    ),
+                                }}
+                            />
                         </Text>
                         <div className="list-group mb-3" aria-label="GitHub App Installations">
                             {app.installations?.length === 0 ? (
-                                <Text>
-                                    This GitHub App does not have any installations. Install the App to create a new
-                                    connection.
-                                </Text>
+                                <Text>{t('no-installations-message')}</Text>
                             ) : (
-                                app.installations?.map(installation => (
-                                    <Container className={classNames(styles.installation, 'p-3')} key={installation.id}>
-                                        <div className="d-flex align-items-center">
-                                            <Link to={installation.account.url} className="d-flex align-items-center">
-                                                <AppLogo
-                                                    src={installation.account.avatarURL}
-                                                    name={installation.account.login}
-                                                    alt="Account avatar"
-                                                    className={styles.logo}
-                                                />
-                                                <div className="d-flex flex-column ml-3">
-                                                    {installation.account.login}
-                                                    <span className="text-muted">
-                                                        ID: {installation.id} | Type: {installation.account.type}
-                                                    </span>
-                                                </div>
-                                            </Link>
-                                            <AnchorLink to={installation.url} target="_blank" className="ml-auto">
-                                                <small>
-                                                    View In GitHub{' '}
-                                                    <Icon inline={true} svgPath={mdiOpenInNew} aria-hidden={true} />
-                                                </small>
-                                            </AnchorLink>
-                                        </div>
-                                        {/* Code host connections are only relevant to repos domain GitHub Apps */}
-                                        {app.domain === GitHubAppDomain.REPOS && (
-                                            <div className="mt-4">
-                                                <H3 className="d-flex align-items-center mb-0">
-                                                    Code host connections
-                                                    <ButtonLink
-                                                        variant="primary"
-                                                        className="ml-auto"
-                                                        to={`/site-admin/external-services/new?id=ghapp&appID=${
-                                                            app.appID
-                                                        }&installationID=${installation.id}&url=${encodeURI(
-                                                            app.baseURL
-                                                        )}`}
-                                                        size="sm"
-                                                    >
-                                                        <Icon svgPath={mdiPlus} aria-hidden={true} /> Add connection
-                                                    </ButtonLink>
-                                                </H3>
-                                                {installation.externalServices?.nodes?.length > 0 ? (
-                                                    <>
-                                                        <ConnectionList
-                                                            as="ul"
-                                                            className={styles.listGroup}
-                                                            aria-label="Code Host Connections"
-                                                        >
-                                                            {installation.externalServices?.nodes?.map(node => (
-                                                                <ExternalServiceNode
-                                                                    key={node.id}
-                                                                    node={node}
-                                                                    editingDisabled={false}
-                                                                />
-                                                            ))}
-                                                        </ConnectionList>
-                                                        {installation.externalServices && (
-                                                            <SummaryContainer className="mt-2" centered={true}>
-                                                                <ConnectionSummary
-                                                                    noSummaryIfAllNodesVisible={false}
-                                                                    first={100}
-                                                                    centered={true}
-                                                                    connection={installation.externalServices}
-                                                                    noun="code host connection"
-                                                                    pluralNoun="code host connections"
-                                                                    hasNextPage={false}
-                                                                />
-                                                            </SummaryContainer>
-                                                        )}
-                                                    </>
-                                                ) : (
-                                                    <Text className="text-center mt-4">
-                                                        You haven't added any code host connections yet.
-                                                    </Text>
-                                                )}
+                                app.installations?.map(installation => {
+                                    const { t } = useTranslation('components/gitHubApps')
+
+                                    return (
+                                        <Container
+                                            className={classNames(styles.installation, 'p-3')}
+                                            key={installation.id}
+                                        >
+                                            <div className="d-flex align-items-center">
+                                                <Link
+                                                    to={installation.account.url}
+                                                    className="d-flex align-items-center"
+                                                >
+                                                    <AppLogo
+                                                        src={installation.account.avatarURL}
+                                                        name={installation.account.login}
+                                                        alt={t('account-avatar-label')}
+                                                        className={styles.logo}
+                                                    />
+                                                    <div className="d-flex flex-column ml-3">
+                                                        {installation.account.login}
+                                                        <span className="text-muted">
+                                                            {t('id-label')}
+                                                            {installation.id}
+                                                            {t('type-label')}
+                                                            {installation.account.type}
+                                                        </span>
+                                                    </div>
+                                                </Link>
+                                                <AnchorLink to={installation.url} target="_blank" className="ml-auto">
+                                                    <small>
+                                                        {t('view-in-github-label')}
+                                                        <Icon inline={true} svgPath={mdiOpenInNew} aria-hidden={true} />
+                                                    </small>
+                                                </AnchorLink>
                                             </div>
-                                        )}
-                                    </Container>
-                                ))
+                                            {/* Code host connections are only relevant to repos domain GitHub Apps */}
+                                            {app.domain === GitHubAppDomain.REPOS && (
+                                                <div className="mt-4">
+                                                    <H3 className="d-flex align-items-center mb-0">
+                                                        {t('code-host-connections-title')}
+                                                        <ButtonLink
+                                                            variant="primary"
+                                                            className="ml-auto"
+                                                            to={`/site-admin/external-services/new?id=ghapp&appID=${
+                                                                app.appID
+                                                            }&installationID=${installation.id}&url=${encodeURI(
+                                                                app.baseURL
+                                                            )}`}
+                                                            size="sm"
+                                                        >
+                                                            <Icon svgPath={mdiPlus} aria-hidden={true} />
+                                                            {t('add-connection-button')}
+                                                        </ButtonLink>
+                                                    </H3>
+                                                    {installation.externalServices?.nodes?.length > 0 ? (
+                                                        <>
+                                                            <ConnectionList
+                                                                as="ul"
+                                                                className={styles.listGroup}
+                                                                aria-label="Code Host Connections"
+                                                            >
+                                                                {installation.externalServices?.nodes?.map(node => (
+                                                                    <ExternalServiceNode
+                                                                        key={node.id}
+                                                                        node={node}
+                                                                        editingDisabled={false}
+                                                                    />
+                                                                ))}
+                                                            </ConnectionList>
+                                                            {installation.externalServices && (
+                                                                <SummaryContainer className="mt-2" centered={true}>
+                                                                    <ConnectionSummary
+                                                                        noSummaryIfAllNodesVisible={false}
+                                                                        first={100}
+                                                                        centered={true}
+                                                                        connection={installation.externalServices}
+                                                                        noun="code host connection"
+                                                                        pluralNoun="code host connections"
+                                                                        hasNextPage={false}
+                                                                    />
+                                                                </SummaryContainer>
+                                                            )}
+                                                        </>
+                                                    ) : (
+                                                        <Text className="text-center mt-4">
+                                                            {t('no-code-host-connections-message')}
+                                                        </Text>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </Container>
+                                    )
+                                })
                             )}
                             <SummaryContainer className="mt-3" centered={true}>
                                 <ConnectionSummary

@@ -3,6 +3,7 @@ import { type FC, type PropsWithChildren, useState } from 'react'
 import { mdiDotsVertical } from '@mdi/js'
 import classNames from 'classnames'
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { useExperimentalFeatures } from '@sourcegraph/shared/src/settings/settings'
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -72,115 +73,126 @@ export const InsightContextMenu: FC<InsightCardMenuProps> = props => {
     return (
         <>
             <Menu>
-                {({ isOpen }) => (
-                    <>
-                        <MenuButton
-                            aria-label="Insight options"
-                            outline={true}
-                            variant="icon"
-                            data-testid="InsightContextMenuButton"
-                            className={classNames('p-1 d-inline-flex', styles.button)}
-                        >
-                            <Icon
-                                className={classNames(styles.buttonIcon, { [styles.buttonIconActive]: isOpen })}
-                                svgPath={mdiDotsVertical}
-                                inline={false}
-                                aria-hidden={true}
-                                height={16}
-                                width={16}
-                            />
-                        </MenuButton>
-                        <MenuList
-                            position={Position.bottomStart}
-                            data-testid={`context-menu.${insight.id}`}
-                            onKeyDown={event => event.stopPropagation()}
-                        >
-                            <MenuSection name="Insight">
-                                <MenuLink
-                                    as={Link}
-                                    data-testid="InsightContextMenuEditLink"
-                                    className={styles.item}
-                                    to={encodeDashboardIdQueryParam(
-                                        `/insights/${insight.id}/edit`,
-                                        currentDashboard?.id
-                                    )}
-                                >
-                                    Edit
-                                </MenuLink>
+                {({ isOpen }) => {
+                    const { t } = useTranslation(
+                        'enterprise/insights/components/insights-view-grid/components/insight-context-menu'
+                    )
 
-                                <MenuLink
-                                    data-testid="InsightContextMenuShareLink"
-                                    className={styles.item}
-                                    onSelect={() => setShowShareModal(true)}
-                                >
-                                    Get shareable link
-                                </MenuLink>
-
-                                {!isLangStatsInsight(insight) && (
-                                    <MenuItem className={styles.item} onSelect={() => setShowExportDataConfirm(true)}>
-                                        Export data
-                                    </MenuItem>
-                                )}
-                            </MenuSection>
-
-                            <MenuSection name="Chart settings">
-                                {menuPermissions.showYAxis && (
-                                    <MenuItem
-                                        role="menuitemcheckbox"
-                                        aria-checked={zeroYAxisMin}
+                    return (
+                        <>
+                            <MenuButton
+                                aria-label="Insight options"
+                                outline={true}
+                                variant="icon"
+                                data-testid="InsightContextMenuButton"
+                                className={classNames('p-1 d-inline-flex', styles.button)}
+                            >
+                                <Icon
+                                    className={classNames(styles.buttonIcon, { [styles.buttonIconActive]: isOpen })}
+                                    svgPath={mdiDotsVertical}
+                                    inline={false}
+                                    aria-hidden={true}
+                                    height={16}
+                                    width={16}
+                                />
+                            </MenuButton>
+                            <MenuList
+                                position={Position.bottomStart}
+                                data-testid={`context-menu.${insight.id}`}
+                                onKeyDown={event => event.stopPropagation()}
+                            >
+                                <MenuSection name="Insight">
+                                    <MenuLink
+                                        as={Link}
                                         data-testid="InsightContextMenuEditLink"
                                         className={styles.item}
-                                        onSelect={onToggleZeroYAxisMin}
+                                        to={encodeDashboardIdQueryParam(
+                                            `/insights/${insight.id}/edit`,
+                                            currentDashboard?.id
+                                        )}
                                     >
-                                        <Checkbox
-                                            id="InsightContextMenuEditInput"
-                                            aria-hidden="true"
-                                            checked={zeroYAxisMin}
-                                            tabIndex={-1}
-                                            label={<span className="font-weight-normal">Start Y Axis at 0</span>}
-                                        />
-                                    </MenuItem>
-                                )}
-                            </MenuSection>
-
-                            <MenuSection name="Others" divider={false}>
-                                {quickFixUrl && showQuickFix && (
-                                    <MenuLink as={Link} className={styles.item} to={quickFixUrl}>
-                                        Golang quick fixes
+                                        {t('edit-action')}
                                     </MenuLink>
-                                )}
 
-                                {currentDashboard && (
-                                    <Tooltip
-                                        content={
-                                            withinVirtualDashboard
-                                                ? "Removing insight isn't available for the All insights dashboard"
-                                                : undefined
-                                        }
-                                        placement="left"
+                                    <MenuLink
+                                        data-testid="InsightContextMenuShareLink"
+                                        className={styles.item}
+                                        onSelect={() => setShowShareModal(true)}
                                     >
-                                        <MenuItem
-                                            data-testid="insight-context-remove-from-dashboard-button"
-                                            onSelect={() => setShowRemoveConfirm(true)}
-                                            disabled={withinVirtualDashboard}
-                                            className={styles.item}
-                                        >
-                                            Remove from this dashboard
-                                        </MenuItem>
-                                    </Tooltip>
-                                )}
+                                        {t('shareable-link')}
+                                    </MenuLink>
 
-                                <MenuItem
-                                    data-testid="insight-context-menu-delete-button"
-                                    onSelect={() => setShowDeleteConfirm(true)}
-                                    className={styles.item}
-                                >
-                                    Delete
-                                </MenuItem>
-                            </MenuSection>
-                        </MenuList>
-                    </>
-                )}
+                                    {!isLangStatsInsight(insight) && (
+                                        <MenuItem
+                                            className={styles.item}
+                                            onSelect={() => setShowExportDataConfirm(true)}
+                                        >
+                                            {t('export-data')}
+                                        </MenuItem>
+                                    )}
+                                </MenuSection>
+
+                                <MenuSection name="Chart settings">
+                                    {menuPermissions.showYAxis && (
+                                        <MenuItem
+                                            role="menuitemcheckbox"
+                                            aria-checked={zeroYAxisMin}
+                                            data-testid="InsightContextMenuEditLink"
+                                            className={styles.item}
+                                            onSelect={onToggleZeroYAxisMin}
+                                        >
+                                            <Checkbox
+                                                id="InsightContextMenuEditInput"
+                                                aria-hidden="true"
+                                                checked={zeroYAxisMin}
+                                                tabIndex={-1}
+                                                label={
+                                                    <span className="font-weight-normal">{t('start-y-axis-zero')}</span>
+                                                }
+                                            />
+                                        </MenuItem>
+                                    )}
+                                </MenuSection>
+
+                                <MenuSection name="Others" divider={false}>
+                                    {quickFixUrl && showQuickFix && (
+                                        <MenuLink as={Link} className={styles.item} to={quickFixUrl}>
+                                            {t('golang-fixes')}
+                                        </MenuLink>
+                                    )}
+
+                                    {currentDashboard && (
+                                        <Tooltip
+                                            content={
+                                                withinVirtualDashboard
+                                                    ? "Removing insight isn't available for the All insights dashboard"
+                                                    : undefined
+                                            }
+                                            placement="left"
+                                        >
+                                            <MenuItem
+                                                data-testid="insight-context-remove-from-dashboard-button"
+                                                onSelect={() => setShowRemoveConfirm(true)}
+                                                disabled={withinVirtualDashboard}
+                                                className={styles.item}
+                                            >
+                                                {t('remove-dashboard-item')}
+                                            </MenuItem>
+                                        </Tooltip>
+                                    )}
+
+                                    <MenuItem
+                                        data-testid="insight-context-menu-delete-button"
+                                        onSelect={() => setShowDeleteConfirm(true)}
+                                        className={styles.item}
+                                    >
+                                        {t('delete-action')}
+                                    </MenuItem>
+                                </MenuSection>
+                            </MenuList>
+                        </>
+                    )
+                }}
             </Menu>
 
             <ConfirmDeleteModal

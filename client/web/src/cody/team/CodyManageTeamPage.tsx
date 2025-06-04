@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 
 import { mdiPlusThick } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -26,6 +27,8 @@ interface CodyManageTeamPageProps extends TelemetryV2Props {
 }
 
 const AuthenticatedCodyManageTeamPage: React.FunctionComponent<CodyManageTeamPageProps> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('cody/team')
+
     useEffect(() => {
         telemetryRecorder.recordEvent('cody.team.management', 'view')
     }, [telemetryRecorder])
@@ -60,7 +63,7 @@ const AuthenticatedCodyManageTeamPage: React.FunctionComponent<CodyManageTeamPag
     return (
         <>
             <Page className={classNames('d-flex flex-column')}>
-                <PageTitle title="Manage Cody team" />
+                <PageTitle title={t('manage-cody-team')} />
                 <PageHeader
                     className="mb-4 mt-4"
                     actions={
@@ -80,7 +83,7 @@ const AuthenticatedCodyManageTeamPage: React.FunctionComponent<CodyManageTeamPag
                                         })
                                     }
                                 >
-                                    Manage subscription
+                                    {t('manage-subscription')}
                                 </Link>
                                 <Button
                                     as={Link}
@@ -88,7 +91,8 @@ const AuthenticatedCodyManageTeamPage: React.FunctionComponent<CodyManageTeamPag
                                     variant="success"
                                     className="text-nowrap"
                                 >
-                                    <Icon aria-hidden={true} svgPath={mdiPlusThick} /> Add seats
+                                    <Icon aria-hidden={true} svgPath={mdiPlusThick} />
+                                    {t('add-seats')}
                                 </Button>
                             </div>
                         )
@@ -97,14 +101,14 @@ const AuthenticatedCodyManageTeamPage: React.FunctionComponent<CodyManageTeamPag
                     <PageHeader.Heading as="h2" styleAs="h1">
                         <div className="d-inline-flex align-items-center">
                             <PageHeaderIcon name="mdi-account-multiple-plus-gradient" className="mr-3" />
-                            Manage team
+                            {t('manage-team')}
                         </div>
                     </PageHeader.Heading>
                 </PageHeader>
 
                 {errorMessage ? (
                     <CodyAlert variant="error">
-                        <H3>We couldn't load team data this time. Please try a bit later.</H3>
+                        <H3>{t('team-data-load-error')}</H3>
                         <Text size="small" className="text-muted mb-0">
                             {errorMessage}
                         </Text>
@@ -113,9 +117,9 @@ const AuthenticatedCodyManageTeamPage: React.FunctionComponent<CodyManageTeamPag
 
                 {newSeatsPurchased && (
                     <CodyAlert variant="purpleSuccess">
-                        <H3>{newSeatsPurchased} Cody teams seats purchased!</H3>
+                        <H3>{t('cody-teams-seats-purchased', { newSeatsPurchased })}</H3>
                         <Text size="small" className="mb-0">
-                            Invited users will receive unlimited autocompletions and unlimited chat messages.
+                            {t('invited-users-info')}
                         </Text>
                     </CodyAlert>
                 )}

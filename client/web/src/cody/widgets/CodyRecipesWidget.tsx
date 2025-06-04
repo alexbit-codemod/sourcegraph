@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 
 import { mdiCardBulletedOutline, mdiDotsVertical, mdiProgressPencil, mdiShuffleVariant } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { TranslateToLanguage } from '@sourcegraph/cody-shared'
 import type { TelemetryRecorder } from '@sourcegraph/shared/src/telemetry'
@@ -19,6 +20,8 @@ export const CodyRecipesWidget: React.FC<{ editor?: CodeMirrorEditor; telemetryR
     editor,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('cody/widgets')
+
     useEffect(() => {
         EVENT_LOGGER.log(EventName.CODY_CHAT_EDITOR_WIDGET_VIEWED)
         telemetryRecorder.recordEvent('cody.chat.editor-widget', 'view')
@@ -40,12 +43,12 @@ export const CodyRecipesWidget: React.FC<{ editor?: CodeMirrorEditor; telemetryR
         <Recipes>
             <Recipe title="Explain" icon={mdiCardBulletedOutline}>
                 <RecipeAction
-                    title="Detailed"
+                    title={t('detailed-description')}
                     onClick={() => void executeRecipe('explain-code-detailed', { scope: { editor } })}
                     disabled={isMessageInProgress}
                 />
                 <RecipeAction
-                    title="High level"
+                    title={t('high-level-overview')}
                     onClick={() => void executeRecipe('explain-code-high-level', { scope: { editor } })}
                     disabled={isMessageInProgress}
                 />
@@ -53,12 +56,12 @@ export const CodyRecipesWidget: React.FC<{ editor?: CodeMirrorEditor; telemetryR
 
             <Recipe title="Generate" icon={mdiProgressPencil}>
                 <RecipeAction
-                    title="A unit test"
+                    title={t('unit-test')}
                     onClick={() => void executeRecipe('generate-unit-test', { scope: { editor } })}
                     disabled={isMessageInProgress}
                 />
                 <RecipeAction
-                    title="A docstring"
+                    title={t('docstring')}
                     onClick={() => void executeRecipe('generate-docstring', { scope: { editor } })}
                     disabled={isMessageInProgress}
                 />
@@ -82,17 +85,17 @@ export const CodyRecipesWidget: React.FC<{ editor?: CodeMirrorEditor; telemetryR
 
             <Recipe icon={mdiDotsVertical}>
                 <RecipeAction
-                    title="Improve variable names"
+                    title={t('improve-variable-names')}
                     disabled={isMessageInProgress}
                     onClick={() => void executeRecipe('improve-variable-names', { scope: { editor } })}
                 />
                 <RecipeAction
-                    title="Smell code"
+                    title={t('code-smell')}
                     onClick={() => void executeRecipe('find-code-smells', { scope: { editor } })}
                     disabled={isMessageInProgress}
                 />
                 <RecipeAction
-                    title="Get Cody in your editor"
+                    title={t('get-cody-in-editor')}
                     to={CodyProRoutes.Manage}
                     disabled={isMessageInProgress}
                 />

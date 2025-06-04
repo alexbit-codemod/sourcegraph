@@ -2,6 +2,7 @@ import { type FC, useCallback, useState } from 'react'
 
 import { mdiChevronDoubleRight, mdiChevronDoubleLeft } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import type { Scalars } from '@sourcegraph/shared/src/graphql-operations'
 import { useKeyboardShortcut } from '@sourcegraph/shared/src/keyboardShortcuts/useKeyboardShortcut'
@@ -51,6 +52,8 @@ const SIDEBAR_KEY = 'repo-revision-sidebar-toggle'
  * The sidebar for a specific repo revision that shows the list of files and directories.
  */
 export const RepoRevisionSidebar: FC<RepoRevisionSidebarProps> = props => {
+    const { t } = useTranslation('repo')
+
     const [persistedTabIndex, setPersistedTabIndex] = useLocalStorage(TABS_KEY, 0)
     const [persistedIsVisible, setPersistedIsVisible] = useLocalStorage(
         SIDEBAR_KEY,
@@ -142,10 +145,10 @@ export const RepoRevisionSidebar: FC<RepoRevisionSidebarProps> = props => {
                                 }
                             >
                                 <Tab data-tab-content="files">
-                                    <span className="tablist-wrapper--tab-label">Files</span>
+                                    <span className="tablist-wrapper--tab-label">{t('files')}</span>
                                 </Tab>
                                 <Tab data-tab-content="symbols">
-                                    <span className="tablist-wrapper--tab-label">Symbols</span>
+                                    <span className="tablist-wrapper--tab-label">{t('symbols')}</span>
                                 </Tab>
                             </TabList>
                             <div

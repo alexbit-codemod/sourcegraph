@@ -2,6 +2,7 @@ import React, { useMemo, type FC } from 'react'
 
 import classNames from 'classnames'
 import { parseISO } from 'date-fns'
+import { useTranslation, Trans } from 'react-i18next'
 import type { Observable } from 'rxjs'
 import { catchError, map } from 'rxjs/operators'
 
@@ -76,6 +77,8 @@ export const ProductSubscriptionStatus: React.FunctionComponent<React.PropsWithC
     className,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/site-admin/productSubscription')
+
     /** The product subscription status, or an error, or undefined while loading. */
     const statusOrError = useObservable(
         useMemo(() => queryProductLicenseInfo().pipe(catchError((error): [ErrorLike] => [asError(error)])), [])
@@ -119,9 +122,12 @@ export const ProductSubscriptionStatus: React.FunctionComponent<React.PropsWithC
                         {!license.isFreePlan ? (
                             <>
                                 <div>
-                                    <strong>User licenses:</strong> {numberFormatter.format(currentUserCount)} currently
-                                    used / {numberFormatter.format(license.userCount - currentUserCount)} remaining (
-                                    {numberFormatter.format(actualUserCount)} maximum ever used)
+                                    <strong>User licenses:</strong> {numberFormatter.format(currentUserCount)}
+                                    {t('currently-used')}
+                                    {numberFormatter.format(license.userCount - currentUserCount)}
+                                    {t('remaining-users')}
+                                    {numberFormatter.format(actualUserCount)}
+                                    {t('maximum-ever-used')}
                                 </div>
                                 <ButtonLink
                                     to="https://sourcegraph.com/pricing"
@@ -135,16 +141,17 @@ export const ProductSubscriptionStatus: React.FunctionComponent<React.PropsWithC
                                         })
                                     }
                                 >
-                                    Upgrade
+                                    {t('upgrade-license')}
                                 </ButtonLink>
                             </>
                         ) : (
                             <>
                                 <div className="mr-2">
-                                    Add a license key to activate Sourcegraph Enterprise features{' '}
-                                    {typeof noLicenseWarningUserCount === 'number'
-                                        ? `or to exceed ${noLicenseWarningUserCount} users`
-                                        : ''}
+                                    {t('add-license-key-warning', {
+                                        noLicenseWarningUserCount,
+                                        typeofNoLicenseWarningUserCountNumber:
+                                            typeof noLicenseWarningUserCount === 'number',
+                                    })}
                                 </div>
                                 <div className="text-nowrap flex-wrap-reverse">
                                     <Tooltip content="Buy a Sourcegraph Enterprise subscription to get a license key">
@@ -161,7 +168,7 @@ export const ProductSubscriptionStatus: React.FunctionComponent<React.PropsWithC
                                                 )
                                             }
                                         >
-                                            Get license
+                                            {t('get-license-button')}
                                         </ButtonLink>
                                     </Tooltip>
                                 </div>
@@ -182,20 +189,23 @@ export const ProductSubscriptionStatus: React.FunctionComponent<React.PropsWithC
 
             {!hasTrueUp && license.userCount - actualUserCount < 0 && (
                 <Alert variant="warning">
-                    You have exceeded your licensed users.{' '}
-                    <Link
-                        to="https://sourcegraph.com/pricing"
-                        target="_blank"
-                        rel="noopener"
-                        onClick={() =>
-                            telemetryRecorder.recordEvent('admin.productSubscription.upgradeCTA', 'click', {
-                                metadata: { location: 1 },
-                            })
-                        }
-                    >
-                        Upgrade your license
-                    </Link>{' '}
-                    to true up and prevent a retroactive charge.
+                    <Trans
+                        i18nKey="exceeded-licensed-users-warning"
+                        components={{
+                            '0': (
+                                <Link
+                                    to="https://sourcegraph.com/pricing"
+                                    target="_blank"
+                                    rel="noopener"
+                                    onClick={() =>
+                                        telemetryRecorder.recordEvent('admin.productSubscription.upgradeCTA', 'click', {
+                                            metadata: { location: 1 },
+                                        })
+                                    }
+                                />
+                            ),
+                        }}
+                    />
                 </Alert>
             )}
         </div>
@@ -207,10 +217,14 @@ interface LicenseDetailsProps {
 }
 
 const LicenseDetails: FC<LicenseDetailsProps> = ({ license }) => {
+    const { t } = useTranslation('enterprise/site-admin/productSubscription')
+
     if (license.isValid) {
         return (
             <>
-                {formatUserCount(license.userCount, true)} license,{' '}
+                {t('user-count-license', {
+                    formatUserCountLicenseUserCountTrue: formatUserCount(license.userCount, true),
+                })}
                 <ExpirationDate
                     date={parseISO(license.expiresAt)}
                     showRelative={true}
@@ -224,7 +238,8 @@ const LicenseDetails: FC<LicenseDetailsProps> = ({ license }) => {
     return (
         <Alert variant="danger">
             <Text className="mb-0">
-                The Sourcegraph license key is invalid. Reason: {license.licenseInvalidityReason}
+                {t('invalid-license-key-reason')}
+                {license.licenseInvalidityReason}
             </Text>
         </Alert>
     )

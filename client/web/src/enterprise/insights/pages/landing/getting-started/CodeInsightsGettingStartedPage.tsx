@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
 
@@ -16,6 +18,8 @@ interface CodeInsightsGettingStartedPageProps extends TelemetryProps, TelemetryV
 export const CodeInsightsGettingStartedPage: React.FunctionComponent<
     React.PropsWithChildren<CodeInsightsGettingStartedPageProps>
 > = props => {
+    const { t } = useTranslation('enterprise/insights/pages/landing/getting-started')
+
     const { telemetryService, telemetryRecorder } = props
 
     useEffect(() => {
@@ -25,7 +29,7 @@ export const CodeInsightsGettingStartedPage: React.FunctionComponent<
 
     return (
         <main className="pb-5">
-            <PageTitle title="Code Insights" />
+            <PageTitle title={t('code-insights')} />
             <DynamicCodeInsightExample telemetryService={telemetryService} telemetryRecorder={telemetryRecorder} />
             <CodeInsightsExamples
                 telemetryService={telemetryService}

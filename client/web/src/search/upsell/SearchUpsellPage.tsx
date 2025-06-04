@@ -1,6 +1,7 @@
 import { useEffect, type FC, useCallback } from 'react'
 
 import { mdiOpenInNew } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { useIsLightTheme } from '@sourcegraph/shared/src/theme'
@@ -39,6 +40,8 @@ const searchFeatures: SearchFeature[] = [
 ]
 
 export const SearchUpsellPage: FC<Props> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('search/upsell')
+
     useEffect(() => telemetryRecorder.recordEvent('searchUpsell', 'view'), [telemetryRecorder])
     const onClickExpertCTA = useCallback(
         () => telemetryRecorder.recordEvent('searchUpsell.talkToAnExpertCTA', 'click'),
@@ -58,11 +61,8 @@ export const SearchUpsellPage: FC<Props> = ({ telemetryRecorder }) => {
                 <CodeSearchIcon isLightTheme={isLightTheme} />
 
                 <section className={styles.heroHeaderContainer}>
-                    <H2 className={styles.heroHeader}>Grok your entire codebase</H2>
-                    <Text className={styles.heroDescription}>
-                        Code Search, along with complementary tools, helps devs find, fix, and onboard to new code
-                        quickly.
-                    </Text>
+                    <H2 className={styles.heroHeader}>{t('grok-your-entire-codebase')}</H2>
+                    <Text className={styles.heroDescription}>{t('code-search-introduction')}</Text>
                 </section>
 
                 <div className={styles.heroCtaContainer}>
@@ -74,7 +74,7 @@ export const SearchUpsellPage: FC<Props> = ({ telemetryRecorder }) => {
                         rel="noreferrer"
                         onClick={onClickExpertCTA}
                     >
-                        Talk to a product expert
+                        {t('talk-to-product-expert')}
                     </ButtonLink>
 
                     <ButtonLink
@@ -85,7 +85,7 @@ export const SearchUpsellPage: FC<Props> = ({ telemetryRecorder }) => {
                         rel="noreferrer"
                         onClick={onClickFindOutMoreCTA}
                     >
-                        Find out more
+                        {t('find-out-more')}
                     </ButtonLink>
                 </div>
             </section>
@@ -95,9 +95,7 @@ export const SearchUpsellPage: FC<Props> = ({ telemetryRecorder }) => {
                 <section className={styles.featuresMeta}>
                     <div>
                         <CodeSearchIcon isLightTheme={isLightTheme} className={styles.featuresCodeSearchIcon} />
-                        <Text className={styles.featuresTagLine}>
-                            Find and fix code in any code host, language, or repository
-                        </Text>
+                        <Text className={styles.featuresTagLine}>{t('find-fix-code-in-any-code-host')}</Text>
                     </div>
                     <FeatureImage className={styles.featuresImage} isLightTheme={isLightTheme} />
                 </section>
@@ -113,11 +111,8 @@ export const SearchUpsellPage: FC<Props> = ({ telemetryRecorder }) => {
 
             <section className={styles.integrations}>
                 <section className={styles.integrationsMeta}>
-                    <Text className={styles.integrationsHeader}>Code Search integrates with Cody 🤝</Text>
-                    <Text className={styles.integrationsDescription}>
-                        Use Cody in Code Search to explain code, generate unit tests, transpile code, improve variable
-                        names and a ton more!
-                    </Text>
+                    <Text className={styles.integrationsHeader}>{t('code-search-integrates-with-cody')}</Text>
+                    <Text className={styles.integrationsDescription}>{t('use-cody-in-code-search')}</Text>
                 </section>
 
                 <IntegrationsIcon />
@@ -126,17 +121,16 @@ export const SearchUpsellPage: FC<Props> = ({ telemetryRecorder }) => {
             <section className={styles.otherIntegrations}>
                 <div className={styles.otherIntegrationsGrid}>
                     <CodeNavLogo className={styles.otherIntegrationsLogo} />
-                    <Text className={styles.otherIntegrationsTitle}>Understand your code and its dependencies</Text>
+                    <Text className={styles.otherIntegrationsTitle}>{t('understand-your-code-dependencies')}</Text>
                     <Text className={styles.otherIntegrationsDescription}>
-                        Complete code reviews, get up to speed on unfamiliar code, and determine the impact of code
-                        changes with the confidence of compiler-accurate code navigation.
+                        {t('complete-code-reviews-impact-of-changes')}
                     </Text>
                     <Link
                         to="/help/code_navigation/explanations/introduction_to_code_navigation"
                         target="_blank"
                         rel="noreferrer"
                     >
-                        Find out more about Code Navigation{' '}
+                        {t('find-out-more-about-code-navigation')}
                         <Icon
                             className={styles.otherIntegrationsLinkIcon}
                             svgPath={mdiOpenInNew}
@@ -148,17 +142,16 @@ export const SearchUpsellPage: FC<Props> = ({ telemetryRecorder }) => {
 
                 <section className={styles.otherIntegrationsGrid}>
                     <BatchChangesLogo className={styles.otherIntegrationsLogo} />
-                    <Text className={styles.otherIntegrationsTitle}>Automate large-scale code changes</Text>
+                    <Text className={styles.otherIntegrationsTitle}>{t('automate-large-scale-code-changes')}</Text>
                     <Text className={styles.otherIntegrationsDescription}>
-                        Find all occurrences of code to change with Code Search and programmatically make those changes
-                        by creating a declarative specification file.
+                        {t('find-and-make-code-changes-programmatically')}
                     </Text>
                     <Link
                         to="https://sourcegraph.com/case-studies/indeed-accelerates-development-velocity"
                         target="_blank"
                         rel="noreferrer"
                     >
-                        Read how Indeed uses Batch Changes to accelerate deployment{' '}
+                        {t('indeed-uses-batch-changes')}
                         <Icon
                             className={styles.otherIntegrationsLinkIcon}
                             svgPath={mdiOpenInNew}
@@ -170,16 +163,18 @@ export const SearchUpsellPage: FC<Props> = ({ telemetryRecorder }) => {
             </section>
 
             <section className={styles.footer}>
-                <Text className={styles.footerText}>Code Search also works great with...</Text>
+                <Text className={styles.footerText}>{t('code-search-works-great-with')}</Text>
                 <Link to="/help/code_monitoring" target="_blank" rel="noreferrer">
-                    Code Monitoring{' '}
+                    {t('code-monitoring')}
                     <Icon svgPath={mdiOpenInNew} inline={false} aria-label="Learn more about Code Monitoring" />
                 </Link>
                 <Link to="/help/code_insights" target="_blank" rel="noreferrer">
-                    Insights <Icon svgPath={mdiOpenInNew} inline={false} aria-label="Learn more about Code Insights" />
+                    {t('insights')}
+                    <Icon svgPath={mdiOpenInNew} inline={false} aria-label="Learn more about Code Insights" />
                 </Link>
                 <Link to="/help/notebooks" target="_blank" rel="noreferrer">
-                    Notebooks <Icon svgPath={mdiOpenInNew} inline={false} aria-label="Learn more about Notebooks" />
+                    {t('notebooks')}
+                    <Icon svgPath={mdiOpenInNew} inline={false} aria-label="Learn more about Notebooks" />
                 </Link>
             </section>
         </div>

@@ -1,5 +1,7 @@
 import type { FC } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { Link } from '@sourcegraph/wildcard'
 
@@ -27,15 +29,23 @@ export const CreatedByAndUpdatedByInfoByline: FC<BylineProps> = ({
     noAuthor,
     type,
 }) => {
+    const { t } = useTranslation('components/Byline')
+
     const createdByPart = noAuthor ? null : type === 'ExternalService' ? (
         createdBy ? (
             <>
-                {' '}
-                by <Link to={createdBy.url}>{createdBy.username}</Link>
+                <Trans
+                    i18nKey="created-by-link"
+                    values={{ createdByUsername: <>{createdBy.username}</> }}
+                    components={{ '0': <Link to={createdBy.url} /> }}
+                />
             </>
         ) : null
     ) : (
-        <> by {createdBy ? <Link to={createdBy.url}>{createdBy.username}</Link> : 'a deleted user'}</>
+        <>
+            {t('by-space')}
+            {createdBy ? <Link to={createdBy.url}>{createdBy.username}</Link> : 'a deleted user'}
+        </>
     )
 
     const updatedPart = (
@@ -47,20 +57,28 @@ export const CreatedByAndUpdatedByInfoByline: FC<BylineProps> = ({
                         <>
                             {updatedBy?.username && (
                                 <>
-                                    Updated by <Link to={updatedBy.url}>{updatedBy.username}</Link>
-                                    <span className="mx-2">|</span>
+                                    <Trans
+                                        i18nKey="updated-by-link"
+                                        values={{ updatedByUsername: <>{updatedBy.username}</> }}
+                                        components={{
+                                            '0': <Link to={updatedBy.url} />,
+                                            '1': <span className="mx-2" />,
+                                        }}
+                                    />
                                 </>
                             )}
                             <>
-                                Last synced <Timestamp date={updatedAt} />
+                                {t('last-synced')}
+                                <Timestamp date={updatedAt} />
                             </>
                         </>
                     ) : (
                         <>
-                            Updated <Timestamp date={updatedAt} />
+                            {t('updated')}
+                            <Timestamp date={updatedAt} />
                             {updatedBy?.username !== createdBy?.username && (
                                 <>
-                                    by{' '}
+                                    {t('by-space-updated')}
                                     {updatedBy ? (
                                         <Link to={updatedBy.url}>{updatedBy.username}</Link>
                                     ) : (
@@ -76,7 +94,8 @@ export const CreatedByAndUpdatedByInfoByline: FC<BylineProps> = ({
     )
     return (
         <>
-            Created <Timestamp date={createdAt} /> {createdByPart} {updatedPart}
+            {t('created')}
+            <Timestamp date={createdAt} /> {createdByPart} {updatedPart}
         </>
     )
 }

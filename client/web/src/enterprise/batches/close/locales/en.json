@@ -1,0 +1,26 @@
+{
+  "toggle-details": {
+    "true": "Hide",
+    "false": "Show"
+  },
+  "will-close": "Will close",
+  "kept-open": "Kept open",
+  "closing-batch-change-not-alter-changesets": "Closing this batch change will not alter changesets and no changesets will remain open.",
+  "batch-change-not-found": "Batch change not found",
+  "preview-close": "Preview close",
+  "action-label": "Action",
+  "changeset-info": "Changeset information",
+  "check-state": "Check state",
+  "review-state": "Review state",
+  "changes-label": "Changes",
+  "closing-batch-change-warning": "Closing the batch change will close the following changesets:",
+  "remaining-changesets-warning": "The following changesets will remain open:",
+  "batch-change-read-only-warning": "After closing this batch change, it will be read-only and no new batch specs can be applied.",
+  "changesets-untouched-default": "By default, all changesets remain untouched.",
+  "also-close": "Also close",
+  "permission-denied-close-batch-change": "You don't have permission to close this batch change. See",
+  "permissions-in-batch-changes": "Permissions in batch changes",
+  "batch-changes-permission-info": "  for more information about the batch changes permission model.",
+  "cancel-button": "Cancel",
+  "close-batch-change-label": "Close batch change"
+}

@@ -1,5 +1,6 @@
 import type { MockedResponse } from '@apollo/client/testing'
 import { fireEvent } from '@testing-library/react'
+import { useTranslation } from 'react-i18next'
 import { describe, expect, it } from 'vitest'
 
 import { dataOrThrowErrors, getDocumentNode, gql } from '@sourcegraph/http-client'
@@ -37,6 +38,8 @@ const TEST_SHOW_MORE_PAGINATION_QUERY = gql`
 `
 
 const TestComponent = ({ skip = false }) => {
+    const { t } = useTranslation('components/FilteredConnection/hooks')
+
     const { connection, fetchMore, hasNextPage } = useShowMorePagination<
         TestShowMorePaginationQueryResult,
         TestShowMorePaginationQueryVariables,
@@ -64,10 +67,15 @@ const TestComponent = ({ skip = false }) => {
                 ))}
             </ul>
 
-            {connection?.totalCount && <Text>Total count: {connection.totalCount}</Text>}
+            {connection?.totalCount && (
+                <Text>
+                    {t('total-count')}
+                    {connection.totalCount}
+                </Text>
+            )}
             {hasNextPage && (
                 <button type="button" onClick={fetchMore}>
-                    Fetch more
+                    {t('fetch-more')}
                 </button>
             )}
         </>

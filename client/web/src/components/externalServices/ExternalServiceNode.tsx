@@ -4,6 +4,7 @@ import { useApolloClient } from '@apollo/client'
 import { mdiCircle, mdiCog, mdiDelete } from '@mdi/js'
 import classNames from 'classnames'
 import { isBefore, parseISO } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { asError, isErrorLike, pluralize } from '@sourcegraph/common'
@@ -23,6 +24,8 @@ export interface ExternalServiceNodeProps {
 }
 
 export const ExternalServiceNode: FC<ExternalServiceNodeProps> = ({ node, editingDisabled }) => {
+    const { t } = useTranslation('components/externalServices')
+
     const [isDeleting, setIsDeleting] = useState<boolean | Error>(false)
     const client = useApolloClient()
     const onDelete = useCallback<React.MouseEventHandler>(async () => {
@@ -95,24 +98,25 @@ export const ExternalServiceNode: FC<ExternalServiceNodeProps> = ({ node, editin
                         <Text className="mb-0 text-muted">
                             <small>
                                 {node.lastSyncAt === null ? (
-                                    <>Never synced.</>
+                                    <>{t('never-synced')}</>
                                 ) : (
                                     <>
-                                        Last synced <Timestamp date={node.lastSyncAt} />.
+                                        {t('last-synced')}
+                                        <Timestamp date={node.lastSyncAt} />.
                                     </>
                                 )}{' '}
                                 {node.nextSyncAt !== null && (
                                     <>
-                                        Next sync scheduled{' '}
+                                        {t('next-sync-scheduled')}
                                         {isBefore(new Date(), parseISO(node.nextSyncAt)) ? (
-                                            <>now</>
+                                            <>{t('now')}</>
                                         ) : (
                                             <Timestamp date={node.nextSyncAt} />
                                         )}
                                         .
                                     </>
                                 )}
-                                {node.nextSyncAt === null && <>No next sync scheduled.</>}
+                                {node.nextSyncAt === null && <>{t('no-next-sync-scheduled')}</>}
                             </small>
                         </Text>
                     </div>
@@ -133,7 +137,8 @@ export const ExternalServiceNode: FC<ExternalServiceNodeProps> = ({ node, editin
                             as={Link}
                             disabled={editingDisabled}
                         >
-                            <Icon aria-hidden={true} svgPath={mdiCog} /> Edit
+                            <Icon aria-hidden={true} svgPath={mdiCog} />
+                            {t('edit')}
                         </Button>
                     </Tooltip>{' '}
                     <Tooltip

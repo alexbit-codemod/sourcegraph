@@ -1,0 +1,21 @@
+{
+  "precise-coverage-percentage": "<0>%</0> Precise coverage for <1>{{lang}}</1>",
+  "configure-precise-navigation": "Configure precise navigation for",
+  "code-navigation": "Code navigation",
+  "total-time-saved": "Total time saved",
+  "suggestions": "Suggestions",
+  "promote-installation": "Promote installation of the",
+  "browser-extension": "browser extension",
+  "add-code-intelligence": "  to add code intelligence to your code hosts.",
+  "precise-code-intel-count": "<0>{{reposPreciseCodeIntelCount}}</0> of your <1>{{reposCount}}</1> repositories have precise code navigation.",
+  "improve-precise-navigation-coverage": "Learn how to improve precise code navigation coverage.",
+  "events-by-language": "Events by language",
+  "precise-code-navigation": "Precise code navigation",
+  "top-repositories": "Top repositories",
+  "events": "Events",
+  "hours-saved": "Hours saved",
+  "precise-enabled": "Precise enabled",
+  "precise-navigation": "Precise navigation",
+  "event-logs-update-info": "All events are generated from entries in the event logs table and are updated every 24 hours.",
+  "calculated-from-precise-events": "* Calculated from precise code navigation events"
+}

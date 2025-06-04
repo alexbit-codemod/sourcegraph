@@ -4,6 +4,7 @@ import { mdiAlertCircle as mdiAlertCircleOutline } from '@mdi/js'
 import classNames from 'classnames'
 import { timeFormat } from 'd3-time-format'
 import ProgressWrench from 'mdi-react/ProgressWrenchIcon'
+import { useTranslation, Trans } from 'react-i18next'
 
 import type { ErrorLike } from '@sourcegraph/common'
 import {
@@ -34,26 +35,20 @@ interface BackendAlertOverLayProps {
 }
 
 export const BackendAlertOverlay: FC<BackendAlertOverLayProps> = props => {
+    const { t } = useTranslation(
+        'enterprise/insights/components/insights-view-grid/components/backend-insight/components/backend-insight-alerts'
+    )
+
     const { isFetchingHistoricalData, hasNoData, className } = props
 
     if (isFetchingHistoricalData) {
         return (
-            <AlertOverlay
-                title="This insight is still being processed"
-                icon={<ProgressWrench size={33} />}
-                className={className}
-            />
+            <AlertOverlay title={t('insight-processing')} icon={<ProgressWrench size={33} />} className={className} />
         )
     }
 
     if (hasNoData) {
-        return (
-            <AlertOverlay
-                title="No data to display"
-                description="We couldn’t find any matches for this insight."
-                className={className}
-            />
-        )
+        return <AlertOverlay title={t('no-data-display')} description={t('no-matches-found')} className={className} />
     }
 
     return null
@@ -94,6 +89,10 @@ interface InsightIncompleteAlertProps {
 }
 
 export const InsightIncompleteAlert: FC<InsightIncompleteAlertProps> = props => {
+    const { t } = useTranslation(
+        'enterprise/insights/components/insights-view-grid/components/backend-insight/components/backend-insight-alerts'
+    )
+
     const { alert } = props
 
     return (
@@ -109,7 +108,7 @@ export const InsightIncompleteAlert: FC<InsightIncompleteAlertProps> = props => 
             <PopoverContent position="bottom" className={classNames(styles.alertPopover, styles.alertPopoverSmall)}>
                 {getAlertMessage(alert)}{' '}
                 <Link to="/help/code_insights/references/incomplete_data_points" target="_blank" rel="noopener">
-                    Troubleshoot
+                    {t('troubleshoot')}
                 </Link>
             </PopoverContent>
 
@@ -143,6 +142,10 @@ interface InsightSeriesIncompleteAlertProps {
 const dateFormatter = timeFormat('%B %d, %Y')
 
 export const InsightSeriesIncompleteAlert: FC<InsightSeriesIncompleteAlertProps> = props => {
+    const { t } = useTranslation(
+        'enterprise/insights/components/insights-view-grid/components/backend-insight/components/backend-insight-alerts'
+    )
+
     const { series, className } = props
 
     const timeoutAlerts = series.alerts.filter(alert => alert.__typename === 'TimeoutDatapointAlert')
@@ -164,16 +167,24 @@ export const InsightSeriesIncompleteAlert: FC<InsightSeriesIncompleteAlertProps>
                 focusContainerClassName={styles.alertPopoverFocusContainer}
             >
                 <Text className={styles.alertDescription}>
-                    Results for some points of this data series may be incomplete.{' '}
-                    <Link to="/help/code_insights/references/incomplete_data_points" target="_blank" rel="noopener">
-                        Troubleshoot
-                    </Link>
+                    <Trans
+                        i18nKey="incomplete-data-points-troubleshoot"
+                        components={{
+                            '0': (
+                                <Link
+                                    to="/help/code_insights/references/incomplete_data_points"
+                                    target="_blank"
+                                    rel="noopener"
+                                />
+                            ),
+                        }}
+                    />
                 </Text>
 
                 <ScrollBox lazyMeasurements={true} className={styles.alertPointsListScroll}>
                     {timeoutAlerts.length > 0 && (
                         <>
-                            <Text className={styles.alertPointSectionTitle}>Exceeded the timeout limit:</Text>
+                            <Text className={styles.alertPointSectionTitle}>{t('timeout-limit-exceeded')}</Text>
                             <ul className={styles.alertPointsList}>
                                 {timeoutAlerts.map(alert => (
                                     <li key={alert.time} className={styles.alertPoint}>
@@ -194,7 +205,7 @@ export const InsightSeriesIncompleteAlert: FC<InsightSeriesIncompleteAlertProps>
 
                     {otherAlerts.length > 0 && (
                         <>
-                            <Text className={styles.alertPointSectionTitle}>Unable to calculate:</Text>
+                            <Text className={styles.alertPointSectionTitle}>{t('unable-to-calculate')}</Text>
                             <ul className={styles.alertPointsList}>
                                 {otherAlerts.map(alert => (
                                     <li key={alert.time} className={styles.alertPoint}>

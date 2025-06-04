@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import { mdiAlertCircle } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Button, LoadingSpinner, Icon } from '@sourcegraph/wildcard'
 
@@ -48,6 +49,8 @@ export const SaveToolbar: React.FunctionComponent<
     willShowError,
     saveDiscardDisabled,
 }) => {
+    const { t } = useTranslation('components')
+
     const disabled = saveDiscardDisabled ? saveDiscardDisabled() : saving || !dirty
     let saveDiscardTitle: string | undefined
     if (saving) {
@@ -77,7 +80,7 @@ export const SaveToolbar: React.FunctionComponent<
                     onClick={onSave}
                     variant="primary"
                 >
-                    Save
+                    {t('save-button')}
                 </Button>
                 <Button
                     disabled={disabled}
@@ -86,12 +89,13 @@ export const SaveToolbar: React.FunctionComponent<
                     onClick={onDiscard}
                     variant="secondary"
                 >
-                    Discard changes
+                    {t('discard-changes')}
                 </Button>
                 {childrenPosition === 'end' && children}
                 {saving && (
                     <span className={classNames(styles.item, styles.message)}>
-                        <LoadingSpinner /> Saving...
+                        <LoadingSpinner />
+                        {t('saving-indicator')}
                     </span>
                 )}
             </div>

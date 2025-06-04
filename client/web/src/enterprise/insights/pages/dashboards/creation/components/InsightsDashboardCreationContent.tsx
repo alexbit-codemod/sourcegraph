@@ -1,6 +1,7 @@
 import React, { type ReactNode } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import {
     Input,
@@ -46,6 +47,8 @@ export interface InsightsDashboardCreationContentProps {
 export const InsightsDashboardCreationContent: React.FunctionComponent<
     InsightsDashboardCreationContentProps
 > = props => {
+    const { t } = useTranslation('enterprise/insights/pages/dashboards/creation/components')
+
     const { initialValues, owners, onSubmit, children } = props
 
     const { licensed } = useUiFeatures()
@@ -80,31 +83,33 @@ export const InsightsDashboardCreationContent: React.FunctionComponent<
             <Input
                 required={true}
                 autoFocus={true}
-                label="Name"
-                placeholder="Example: My personal code insights dashboard"
+                label={t('name-label')}
+                placeholder={t('example-dashboard-description')}
                 message="Shown as the title for your dashboard"
                 {...getDefaultInputProps(name)}
             />
 
             <FormGroup name="visibility" title="Visibility" contentClassName="d-flex flex-column" className="mb-0 mt-4">
-                {personalOwners.map(owner => (
-                    <FormRadioInput
-                        key={owner.id}
-                        name="visibility"
-                        value={owner.id}
-                        title="Private"
-                        description="visible only to you"
-                        checked={visibility.input.value?.id === owner.id}
-                        className="mr-3"
-                        onChange={() => visibility.input.onChange(owner)}
-                    />
-                ))}
+                {personalOwners.map(owner => {
+                    const { t } = useTranslation('enterprise/insights/pages/dashboards/creation/components')
+
+                    return (
+                        <FormRadioInput
+                            key={owner.id}
+                            name="visibility"
+                            value={owner.id}
+                            title={t('private-label')}
+                            description={t('visibility-private-message')}
+                            checked={visibility.input.value?.id === owner.id}
+                            className="mr-3"
+                            onChange={() => visibility.input.onChange(owner)}
+                        />
+                    )
+                })}
 
                 <hr className="mt-2 mb-3" />
 
-                <small className="d-block text-muted mb-3">
-                    Shared - visible to everyone in the chosen organization
-                </small>
+                <small className="d-block text-muted mb-3">{t('shared-visibility-message')}</small>
 
                 {organizationOwners.map(org => (
                     <FormRadioInput
@@ -123,26 +128,30 @@ export const InsightsDashboardCreationContent: React.FunctionComponent<
                         name="visibility"
                         value="organization"
                         disabled={true}
-                        title="Organization"
-                        description="all users in your organization"
+                        title={t('organization-label')}
+                        description={t('organization-users-message')}
                         labelTooltipPosition="right"
                         className="d-inline-block mr-3"
-                        labelTooltipText="Create or join an organization to share the dashboard with others!"
+                        labelTooltipText={t('create-join-organization-message')}
                     />
                 )}
 
-                {globalOwners.map(owner => (
-                    <FormRadioInput
-                        key={owner.id}
-                        name="visibility"
-                        value={owner.id}
-                        title={owner.title}
-                        description="visible to everyone on your Sourcegraph instance"
-                        checked={visibility.input.value?.id === owner.id}
-                        className="mr-3 flex-grow-0"
-                        onChange={() => visibility.input.onChange(owner)}
-                    />
-                ))}
+                {globalOwners.map(owner => {
+                    const { t } = useTranslation('enterprise/insights/pages/dashboards/creation/components')
+
+                    return (
+                        <FormRadioInput
+                            key={owner.id}
+                            name="visibility"
+                            value={owner.id}
+                            title={owner.title}
+                            description={t('visibility-public-message')}
+                            checked={visibility.input.value?.id === owner.id}
+                            className="mr-3 flex-grow-0"
+                            onChange={() => visibility.input.onChange(owner)}
+                        />
+                    )
+                })}
             </FormGroup>
 
             {formAPI.submitErrors?.[FORM_ERROR] && (

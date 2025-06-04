@@ -1,6 +1,7 @@
 import { type FC, useCallback } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { useQuery } from '@sourcegraph/http-client'
 import { Button, Checkbox, ErrorAlert, H3, Label, LoadingSpinner } from '@sourcegraph/wildcard'
@@ -21,6 +22,8 @@ export interface EventTypesProps {
 }
 
 export const EventTypes: FC<EventTypesProps> = ({ className, onChange, values }) => {
+    const { t } = useTranslation('site-admin/outbound-webhooks/create-edit')
+
     const { data, loading, error } = useQuery<OutboundWebhookEventTypesResult, OutboundWebhookEventTypesVariables>(
         OUTBOUND_WEBHOOK_EVENT_TYPES,
         {}
@@ -51,15 +54,15 @@ export const EventTypes: FC<EventTypesProps> = ({ className, onChange, values })
     return (
         <div className={className}>
             <div className={classNames('mb-2', styles.heading)}>
-                <H3>Event types</H3>
+                <H3>{t('event-types')}</H3>
                 {data?.outboundWebhookEventTypes &&
                     (values.size >= data.outboundWebhookEventTypes.length ? (
                         <Button variant="secondary" onClick={deselectAll}>
-                            Deselect all
+                            {t('deselect-all')}
                         </Button>
                     ) : (
                         <Button variant="secondary" onClick={selectAll}>
-                            Select all
+                            {t('select-all')}
                         </Button>
                     ))}
             </div>

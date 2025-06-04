@@ -1,5 +1,7 @@
 import { type FunctionComponent, useState, useEffect } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
 import { ErrorAlert, Link, LoadingSpinner, PageHeader } from '@sourcegraph/wildcard'
@@ -20,6 +22,8 @@ export const CodeIntelInferenceConfigurationPage: FunctionComponent<CodeIntelInf
     authenticatedUser,
     ...props
 }) => {
+    const { t } = useTranslation('enterprise/codeintel/configuration/pages')
+
     const { inferenceScript, loadingScript, fetchError } = useInferenceScript()
     const [previewScript, setPreviewScript] = useState<string | null>(null)
     const inferencePreview = previewScript !== null ? previewScript : inferenceScript
@@ -30,19 +34,20 @@ export const CodeIntelInferenceConfigurationPage: FunctionComponent<CodeIntelInf
 
     return (
         <>
-            <PageTitle title="Code graph inference script" />
+            <PageTitle title={t('code-graph-inference-script-title')} />
             <PageHeader
                 headingElement="h2"
                 path={[
                     {
-                        text: <>Code graph inference script</>,
+                        text: <>{t('code-graph-inference-script-description')}</>,
                     },
                 ]}
                 description={
                     <>
-                        Lua script that emits complete and/or partial auto-indexing job specifications. See the{' '}
-                        <Link to="/help/code_navigation/references/inference_configuration">reference guide</Link> for
-                        more information. The following implementations can also be used as reference of the API:
+                        <Trans
+                            i18nKey="lua-script-auto-indexing-reference"
+                            components={{ '0': <Link to="/help/code_navigation/references/inference_configuration" /> }}
+                        />
                         <ul className={styles.list}>
                             {['Clang', 'Go', 'Java', 'Python', 'Ruby', 'Rust', 'TypeScript'].map(lang => (
                                 <li key={lang.toLowerCase()}>

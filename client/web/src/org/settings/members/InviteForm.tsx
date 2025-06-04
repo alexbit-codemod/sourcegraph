@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react'
 
 import { mdiPlus, mdiEmailOpenOutline, mdiClose } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { lastValueFrom } from 'rxjs'
 import { map } from 'rxjs/operators'
 
@@ -61,6 +62,8 @@ export const InviteForm: React.FunctionComponent<React.PropsWithChildren<Props>>
     onOrganizationUpdate,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('org/settings/members')
+
     const [username, setUsername] = useState<string>('')
     const onUsernameChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(event => {
         setUsername(event.currentTarget.value)
@@ -124,7 +127,7 @@ export const InviteForm: React.FunctionComponent<React.PropsWithChildren<Props>>
                     <Input
                         inputClassName="mb-2 mr-sm-2"
                         id="invite-form__username"
-                        placeholder="Username"
+                        placeholder={t('username-label')}
                         onChange={onUsernameChange}
                         value={username}
                         autoComplete="off"
@@ -150,8 +153,8 @@ export const InviteForm: React.FunctionComponent<React.PropsWithChildren<Props>>
                                         <LoadingSpinner />
                                     ) : (
                                         <Icon aria-hidden={true} svgPath={mdiPlus} />
-                                    )}{' '}
-                                    Add member
+                                    )}
+                                    {t('add-member-button')}
                                 </Button>
                             </Tooltip>
                         )}
@@ -190,8 +193,12 @@ export const InviteForm: React.FunctionComponent<React.PropsWithChildren<Props>>
             {authenticatedUser?.siteAdmin && !emailInvitesEnabled && (
                 <DismissibleAlert variant="info" partialStorageKey="org-invite-email-config">
                     <Text className="mb-0">
-                        Set <Code>email.smtp</Code> in <Link to="/site-admin/configuration">site configuration</Link> to
-                        send email notifications about invitations.
+                        {t('set-notification-settings')}
+                        <Code>email.smtp</Code>
+                        <Trans
+                            i18nKey="email-notification-invite-info"
+                            components={{ '0': <Link to="/site-admin/configuration" /> }}
+                        />
                     </Text>
                 </DismissibleAlert>
             )}
@@ -292,20 +299,22 @@ const InvitedNotification: React.FunctionComponent<React.PropsWithChildren<Invit
     sentInvitationEmail,
     invitationURL,
     onDismiss,
-}) => (
-    <Alert variant="success" className={classNames(styles.invitedNotification, className)}>
-        <div className={styles.message}>
-            {sentInvitationEmail ? (
-                <>
-                    Invitation sent to {username}. You can also send {username} the invitation link directly:
-                </>
-            ) : (
-                <>Generated invitation link. Copy and send it to {username}:</>
-            )}
-            <CopyableText label="Invitation URL" text={invitationURL} size={40} className="mt-2" />
-        </div>
-        <Button variant="icon" title="Dismiss" onClick={onDismiss}>
-            <Icon aria-hidden={true} svgPath={mdiClose} />
-        </Button>
-    </Alert>
-)
+}) => {
+    const { t } = useTranslation('org/settings/members')
+
+    return (
+        <Alert variant="success" className={classNames(styles.invitedNotification, className)}>
+            <div className={styles.message}>
+                {sentInvitationEmail ? (
+                    <>{t('invitation-sent-message', { username })}</>
+                ) : (
+                    <>{t('invitation-link-message', { username })}</>
+                )}
+                <CopyableText label={t('invitation-url-label')} text={invitationURL} size={40} className="mt-2" />
+            </div>
+            <Button variant="icon" title="Dismiss" onClick={onDismiss}>
+                <Icon aria-hidden={true} svgPath={mdiClose} />
+            </Button>
+        </Alert>
+    )
+}

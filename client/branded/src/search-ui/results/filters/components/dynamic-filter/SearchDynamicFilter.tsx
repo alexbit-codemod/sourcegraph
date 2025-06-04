@@ -2,6 +2,7 @@ import { type FC, type ReactNode, useMemo, useRef, useState } from 'react'
 
 import { mdiClose, mdiSourceRepository } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { displayRepoName } from '@sourcegraph/shared/src/components/RepoLink'
 import { UserAvatar } from '@sourcegraph/shared/src/components/UserAvatar'
@@ -67,6 +68,8 @@ export const SearchDynamicFilter: FC<SearchDynamicFilterProps> = ({
     onSelectedFilterChange,
     onAddFilterToQuery,
 }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/results/filters/components/dynamic-filter')
+
     const inputRef = useRef<HTMLInputElement>(null)
 
     const [searchTerm, setSearchTerm] = useState<string>('')
@@ -132,7 +135,7 @@ export const SearchDynamicFilter: FC<SearchDynamicFilterProps> = ({
                 <Input
                     ref={inputRef}
                     value={searchTerm}
-                    placeholder={`Filter ${filterKind}`}
+                    placeholder={t('filter-kind', { filterKind })}
                     onChange={event => setSearchTerm(event.target.value)}
                 />
             )}
@@ -150,29 +153,29 @@ export const SearchDynamicFilter: FC<SearchDynamicFilterProps> = ({
 
                 {filtersToShow.length === 0 && (
                     <small className={styles.description}>
-                        <div className={styles.descriptionHeader}>No matches in search results.</div>
+                        <div className={styles.descriptionHeader}>{t('no-matches-search-results')}</div>
                         {limitHit && suggestedQueryFilter ? (
                             <>
-                                Try adding{' '}
+                                {t('try-adding')}
                                 <Button
                                     onClick={() => onAddFilterToQuery(suggestedQueryFilter)}
                                     className={styles.zeroStateQueryButton}
                                 >
                                     <SyntaxHighlightedSearchQuery query={suggestedQueryFilter} />
-                                </Button>{' '}
-                                to your original search query to narrow results to that repo.
+                                </Button>
+                                {t('narrow-results-query')}
                             </>
                         ) : (
                             <>
-                                Try expanding your search using the{' '}
+                                {t('expand-search')}
                                 <Button
                                     variant="link"
                                     onClick={handleZeroStateButtonClick}
                                     className={styles.zeroStateSearchButton}
                                 >
-                                    search bar
-                                </Button>{' '}
-                                above.
+                                    {t('search-bar')}
+                                </Button>
+                                {t('search-above')}
                             </>
                         )}
                     </small>
@@ -182,8 +185,9 @@ export const SearchDynamicFilter: FC<SearchDynamicFilterProps> = ({
                 <>
                     {showMoreFilters && filteredFilters.length > MAX_FILTERS_NUMBER && (
                         <small className={styles.description}>
-                            There are {filteredFilters.length - MAX_FILTERS_NUMBER} other filters, use search to see
-                            more
+                            {t('other-filters-available', {
+                                filteredFiltersLengthMaxFiltersNumber: filteredFilters.length - MAX_FILTERS_NUMBER,
+                            })}
                         </small>
                     )}
                     <Button variant="link" size="sm" onClick={() => setShowMoreFilters(!showMoreFilters)}>

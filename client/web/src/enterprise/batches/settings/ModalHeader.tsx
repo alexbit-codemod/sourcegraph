@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { H3, Text } from '@sourcegraph/wildcard'
 
 import { defaultExternalServices } from '../../../components/externalServices/externalServices'
@@ -15,9 +17,16 @@ export const ModalHeader: React.FunctionComponent<React.PropsWithChildren<ModalH
     id,
     externalServiceKind,
     externalServiceURL,
-}) => (
-    <>
-        <H3 id={id}>Batch Changes credentials: {defaultExternalServices[externalServiceKind].defaultDisplayName}</H3>
-        <Text className="mb-4">{externalServiceURL}</Text>
-    </>
-)
+}) => {
+    const { t } = useTranslation('enterprise/batches/settings')
+
+    return (
+        <>
+            <H3 id={id}>
+                {t('batch-changes-credentials')}
+                {defaultExternalServices[externalServiceKind].defaultDisplayName}
+            </H3>
+            <Text className="mb-4">{externalServiceURL}</Text>
+        </>
+    )
+}

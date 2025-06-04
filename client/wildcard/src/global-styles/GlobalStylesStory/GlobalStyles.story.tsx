@@ -4,6 +4,7 @@
 // customizations.
 import { action } from '@storybook/addon-actions'
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
+import { useTranslation, Trans } from 'react-i18next'
 
 import '@storybook/addon-designs'
 
@@ -32,77 +33,92 @@ const config: Meta = {
 
 export default config
 
-export const CodeTypography: StoryFn = () => (
-    <>
-        <H1>Code</H1>
+export const CodeTypography: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/global-styles/GlobalStylesStory')
 
-        <H2>Inline Code</H2>
-        <Text>
-            Example of <Code>inline code</Code> that can be achieved with the <Code>{'<code>'}</Code> element.
-        </Text>
+    return (
+        <>
+            <H1>{t('code')}</H1>
 
-        <H2>Highlighted multi-line code</H2>
-        <Text>Custom highlight.js themes are defined for both light and dark themes.</Text>
+            <H2>{t('inline-code')}</H2>
+            <Text>
+                {t('example-of-inline-code')}
+                <Code>{t('inline-code-description')}</Code>
+                {t('achieved-with-element')}
+                <Code>{'<code>'}</Code>
+                {t('highlighted-multi-line-code')}
+            </Text>
 
-        <H3>TypeScript</H3>
-        <pre>
-            <Code
-                dangerouslySetInnerHTML={{
-                    __html: highlightCodeSafe(
-                        ['const foo = 123', 'const bar = "Hello World!"', 'console.log(foo)'].join('\n'),
-                        'typescript'
-                    ),
-                }}
-            />
-        </pre>
+            <H2>{t('custom-highlight-themes')}</H2>
+            <Text>{t('json')}</Text>
 
-        <H3>JSON</H3>
-        <pre>
-            <Code
-                dangerouslySetInnerHTML={{
-                    __html: highlightCodeSafe(
-                        ['{', '  "someString": "Hello World!",', '  "someNumber": 123', '}'].join('\n'),
-                        'json'
-                    ),
-                }}
-            />
-        </pre>
+            <H3>TypeScript</H3>
+            <pre>
+                <Code
+                    dangerouslySetInnerHTML={{
+                        __html: highlightCodeSafe(
+                            ['const foo = 123', 'const bar = "Hello World!"', 'console.log(foo)'].join('\n'),
+                            'typescript'
+                        ),
+                    }}
+                />
+            </pre>
 
-        <H3>Diffs</H3>
-        <pre>
-            <Code
-                dangerouslySetInnerHTML={{
-                    __html: highlightCodeSafe(
-                        [
-                            ' const foo = 123',
-                            '-const bar = "Hello, world!"',
-                            '+const bar = "Hello, traveller!"',
-                            ' console.log(foo)',
-                        ].join('\n'),
-                        'diff'
-                    ),
-                }}
-            />
-        </pre>
+            <H3>{t('diffs')}</H3>
+            <pre>
+                <Code
+                    dangerouslySetInnerHTML={{
+                        __html: highlightCodeSafe(
+                            ['{', '  "someString": "Hello World!",', '  "someNumber": 123', '}'].join('\n'),
+                            'json'
+                        ),
+                    }}
+                />
+            </pre>
 
-        <H2>Keyboard shortcuts</H2>
-        <Text>
-            Keyboard shortcuts should use <Code>{'<kbd>'}</Code>, not <Code>{'<code>'}</Code>. For example,{' '}
-            <kbd>cmd</kbd>+<kbd>C</kbd> is used to copy text to the clipboard.
-        </Text>
-        <H3>Code snippets</H3>
-    </>
-)
+            <H3>{t('keyboard-shortcuts')}</H3>
+            <pre>
+                <Code
+                    dangerouslySetInnerHTML={{
+                        __html: highlightCodeSafe(
+                            [
+                                ' const foo = 123',
+                                '-const bar = "Hello, world!"',
+                                '+const bar = "Hello, traveller!"',
+                                ' console.log(foo)',
+                            ].join('\n'),
+                            'diff'
+                        ),
+                    }}
+                />
+            </pre>
 
-export const Colors: StoryFn = () => (
-    <>
-        <H1>Colors</H1>
+            <H2>{t('keyboard-shortcuts-usage')}</H2>
+            <Text>
+                {t('example-keyboard-shortcut')}
+                <Code>{'<kbd>'}</Code>
+                {t('code-snippets')}
+                <Code>{'<code>'}</Code>
+                <Trans i18nKey="colors" components={{ '0': <kbd />, '1': <kbd /> }} />
+            </Text>
+            <H3>{t('semantic-colors')}</H3>
+        </>
+    )
+}
 
-        <H2>Semantic colors</H2>
-        <Text>These can be used to give semantic clues and always work both in light and dark theme.</Text>
-        <ColorVariants />
-    </>
-)
+export const Colors: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/global-styles/GlobalStylesStory')
+
+    return (
+        <>
+            <H1>{t('semantic-colors-description')}</H1>
+
+            <H2>{t('layout')}</H2>
+            <Text>{t('spacing')}</Text>
+            <ColorVariants />
+        </>
+    )
+}
 
 Colors.parameters = {
     design: {
@@ -112,226 +128,279 @@ Colors.parameters = {
     },
 }
 
-export const Layout: StoryFn = () => (
-    <>
-        <H1>Layout</H1>
+export const Layout: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/global-styles/GlobalStylesStory')
 
-        <H2>Spacing</H2>
-        <Text>
-            Use margin <Code>m-*</Code> and padding <Code>p-*</Code> utilities to align with the{' '}
-            <Link
-                to="https://builttoadapt.io/intro-to-the-8-point-grid-system-d2573cde8632"
-                target="_blank"
-                rel="noopener noreferrer"
+    return (
+        <>
+            <H1>{t('margin-and-padding-utilities')}</H1>
+
+            <H2>{t('8pt-grid-system')}</H2>
+            <Text>
+                {t('rem-units')}
+                <Code>{t('one-dimensional-layout')}</Code>
+                {t('flexbox-for-layouts')}
+                <Code>{t('row-layout')}</Code>
+                <Trans
+                    i18nKey="equally-distributed-columns"
+                    components={{
+                        '0': (
+                            <Link
+                                to="https://builttoadapt.io/intro-to-the-8-point-grid-system-d2573cde8632"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            />
+                        ),
+                    }}
+                />
+                <Code>{t('middle-column-growing')}</Code>
+                {t('two-dimensional-layout')}
+                <Code>0.25</Code>.
+            </Text>
+
+            <H2>{t('css-grid-for-layouts')}</H2>
+            <Text>
+                <Trans
+                    i18nKey="cell-1"
+                    components={{
+                        '0': (
+                            <Link
+                                to="https://css-tricks.com/snippets/css/a-guide-to-flexbox/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            />
+                        ),
+                        '1': (
+                            <Link
+                                to="https://getbootstrap.com/docs/4.5/utilities/flex/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            />
+                        ),
+                    }}
+                />
+            </Text>
+
+            <H3>{t('cell-2')}</H3>
+            <H4>{t('input-groups')}</H4>
+            <div
+                className="d-flex p-1 border mb-2 overflow-hidden"
+                style={{ resize: 'both', minWidth: '16rem', minHeight: '3rem' }}
             >
-                8pt grid
-            </Link>
-            . When hand-writing CSS, use <Code>rem</Code> units in multiples of <Code>0.25</Code>.
-        </Text>
-
-        <H2>One-dimensional layout</H2>
-        <Text>
-            Use{' '}
-            <Link
-                to="https://css-tricks.com/snippets/css/a-guide-to-flexbox/"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                Flexbox
-            </Link>{' '}
-            for one-dimensional layouts (single rows or columns, with optional wrapping). You can use{' '}
-            <Link to="https://getbootstrap.com/docs/4.5/utilities/flex/" target="_blank" rel="noopener noreferrer">
-                utility classes
-            </Link>{' '}
-            for simple flexbox layouts.
-        </Text>
-
-        <H3>Row layout</H3>
-        <H4>Equally distributed</H4>
-        <div
-            className="d-flex p-1 border mb-2 overflow-hidden"
-            style={{ resize: 'both', minWidth: '16rem', minHeight: '3rem' }}
-        >
-            <div className="p-1 m-1 flex-grow-1 d-flex justify-content-center align-items-center border">Column 1</div>
-            <div className="p-1 m-1 flex-grow-1 d-flex justify-content-center align-items-center border">Column 2</div>
-            <div className="p-1 m-1 flex-grow-1 d-flex justify-content-center align-items-center border">Column 3</div>
-        </div>
-
-        <H4>Middle column growing</H4>
-        <div
-            className="d-flex p-1 border mb-2 overflow-hidden"
-            style={{ resize: 'both', minWidth: '16rem', minHeight: '3rem' }}
-        >
-            <div className="p-1 m-1 d-flex justify-content-center align-items-center border border">Column 1</div>
-            <div className="p-1 m-1 d-flex justify-content-center align-items-center border flex-grow-1 border">
-                Column 2
-            </div>
-            <div className="p-1 m-1 d-flex justify-content-center align-items-center border border">Column 3</div>
-        </div>
-
-        <H3>Column layout</H3>
-        <div
-            className="d-flex flex-column p-1 border mb-2 overflow-hidden"
-            style={{ minHeight: '8rem', height: '12rem', minWidth: '6rem', width: '12rem', resize: 'both' }}
-        >
-            <div className="p-1 m-1 flex-grow-1 border d-flex align-items-center justify-content-center">Row 1</div>
-            <div className="p-1 m-1 flex-grow-1 border d-flex align-items-center justify-content-center">Row 2</div>
-            <div className="p-1 m-1 flex-grow-1 border d-flex align-items-center justify-content-center">Row 3</div>
-        </div>
-
-        <H2>Two-dimensional layout</H2>
-        <Text>
-            Use <Link to="https://learncssgrid.com/">CSS Grid</Link> for complex two-dimensional layouts.
-        </Text>
-        <div
-            className="p-2 border overflow-hidden"
-            style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                gridAutoRows: '1fr',
-                gridGap: '0.5rem',
-                resize: 'both',
-                minWidth: '16rem',
-                height: '16rem',
-                minHeight: '6rem',
-                marginBottom: '16rem',
-            }}
-        >
-            <div className="border d-flex align-items-center justify-content-center">Cell 1</div>
-            <div className="border d-flex align-items-center justify-content-center">Cell 2</div>
-            <div className="border d-flex align-items-center justify-content-center">Cell 3</div>
-            <div className="border d-flex align-items-center justify-content-center">Cell 4</div>
-            <div className="border d-flex align-items-center justify-content-center">Cell 5</div>
-            <div className="border d-flex align-items-center justify-content-center">Cell 6</div>
-        </div>
-    </>
-)
-
-export const InputGroups: StoryFn = () => (
-    <>
-        <H1>Input groups</H1>
-
-        <Text>
-            Easily extend form controls by adding text, buttons, or button groups on either side of textual inputs,
-            custom selects, and custom file inputs.{' '}
-            <Link to="https://getbootstrap.com/docs/4.5/components/input-group/">Bootstrap documentation</Link>
-        </Text>
-
-        <H2>Example</H2>
-        <div>
-            <div className="input-group" style={{ maxWidth: '24rem' }}>
-                <Input type="search" placeholder="Search code..." aria-label="Search query" />
-                <div className="input-group-append">
-                    <Button type="submit" variant="primary">
-                        Submit
-                    </Button>
+                <div className="p-1 m-1 flex-grow-1 d-flex justify-content-center align-items-center border">
+                    {t('input-groups-description')}
+                </div>
+                <div className="p-1 m-1 flex-grow-1 d-flex justify-content-center align-items-center border">
+                    {t('example-input')}
+                </div>
+                <div className="p-1 m-1 flex-grow-1 d-flex justify-content-center align-items-center border">
+                    {t('forms')}
                 </div>
             </div>
-        </div>
-    </>
-)
+
+            <H4>{t('forms-validation')}</H4>
+            <div
+                className="d-flex p-1 border mb-2 overflow-hidden"
+                style={{ resize: 'both', minWidth: '16rem', minHeight: '3rem' }}
+            >
+                <div className="p-1 m-1 d-flex justify-content-center align-items-center border border">
+                    {t('email-input')}
+                </div>
+                <div className="p-1 m-1 d-flex justify-content-center align-items-center border flex-grow-1 border">
+                    {t('password-input')}
+                </div>
+                <div className="p-1 m-1 d-flex justify-content-center align-items-center border border">
+                    {t('option-a')}
+                </div>
+            </div>
+
+            <H3>{t('option-b')}</H3>
+            <div
+                className="d-flex flex-column p-1 border mb-2 overflow-hidden"
+                style={{ minHeight: '8rem', height: '12rem', minWidth: '6rem', width: '12rem', resize: 'both' }}
+            >
+                <div className="p-1 m-1 flex-grow-1 border d-flex align-items-center justify-content-center">
+                    {t('option-c')}
+                </div>
+                <div className="p-1 m-1 flex-grow-1 border d-flex align-items-center justify-content-center">
+                    {t('example-textarea')}
+                </div>
+                <div className="p-1 m-1 flex-grow-1 border d-flex align-items-center justify-content-center">
+                    {t('check-me-out')}
+                </div>
+            </div>
+
+            <H2>{t('disabled-input')}</H2>
+            <Text>
+                <Trans i18nKey="disabled-select" components={{ '0': <Link to="https://learncssgrid.com/" /> }} />
+            </Text>
+            <div
+                className="p-2 border overflow-hidden"
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(3, 1fr)',
+                    gridAutoRows: '1fr',
+                    gridGap: '0.5rem',
+                    resize: 'both',
+                    minWidth: '16rem',
+                    height: '16rem',
+                    minHeight: '6rem',
+                    marginBottom: '16rem',
+                }}
+            >
+                <div className="border d-flex align-items-center justify-content-center">{t('readonly-input')}</div>
+                <div className="border d-flex align-items-center justify-content-center">{t('sizing')}</div>
+                <div className="border d-flex align-items-center justify-content-center">{t('small-input')}</div>
+                <div className="border d-flex align-items-center justify-content-center">{t('small-textarea')}</div>
+                <div className="border d-flex align-items-center justify-content-center">{t('small-select')}</div>
+                <div className="border d-flex align-items-center justify-content-center">{t('field-reference')}</div>
+            </div>
+        </>
+    )
+}
+
+export const InputGroups: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/global-styles/GlobalStylesStory')
+
+    return (
+        <>
+            <H1>{t('list-groups')}</H1>
+
+            <Text>
+                <Trans
+                    i18nKey="list-groups-description"
+                    components={{ '0': <Link to="https://getbootstrap.com/docs/4.5/components/input-group/" /> }}
+                />
+            </Text>
+
+            <H2>{t('cras-justo-odio')}</H2>
+            <div>
+                <div className="input-group" style={{ maxWidth: '24rem' }}>
+                    <Input type="search" placeholder={t('dapibus-ac-facilisis')} aria-label="Search query" />
+                    <div className="input-group-append">
+                        <Button type="submit" variant="primary">
+                            {t('morbi-leo-risus')}
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+}
 
 InputGroups.storyName = 'Input groups'
 
-export const Forms: StoryFn = () => (
-    <>
-        <H1>Forms</H1>
-        <Text>
-            Forms are validated using native HTML validation. Submit the below form with invalid input to try it out.{' '}
-            <Link to="https://getbootstrap.com/docs/4.5/components/forms/" target="_blank" rel="noopener noreferrer">
-                Bootstrap documentation
-            </Link>
-        </Text>
-        <Form onSubmit={preventDefault}>
-            <Input
-                type="email"
-                id="example-email-input"
-                placeholder="me@example.com"
-                label="Email address"
-                message="We'll never share your email with anyone else."
-                className="form-group"
-                inputClassName="mb-0"
-            />
-            <Input
-                type="password"
-                id="example-input-password"
-                className="form-group"
-                inputClassName="mb-0"
-                label="Password"
-            />
+export const Forms: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/global-styles/GlobalStylesStory')
 
-            <Select isCustomStyle={true} aria-label="Example select" label="Example select">
-                <option>Option A</option>
-                <option>Option B</option>
-                <option>Option C</option>
-            </Select>
-
-            <div className="form-group">
-                <TextArea label="Example textarea" id="example-textarea" rows={3} />
-            </div>
-
-            <Checkbox label="Check me out" wrapperClassName="mb-3" id="exampleCheck1" />
-
-            <Button type="submit" variant="primary">
-                Submit
-            </Button>
-        </Form>
-
-        <H2 className="mt-3">Disabled</H2>
-        <Form>
-            <fieldset disabled={true}>
+    return (
+        <>
+            <H1>{t('porta-ac-consectetur')}</H1>
+            <Text>
+                <Trans
+                    i18nKey="vestibulum-at-eros"
+                    components={{
+                        '0': (
+                            <Link
+                                to="https://getbootstrap.com/docs/4.5/components/forms/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            />
+                        ),
+                    }}
+                />
+            </Text>
+            <Form onSubmit={preventDefault}>
                 <Input
-                    id="disabledTextInput"
-                    placeholder="Disabled input"
+                    type="email"
+                    id="example-email-input"
+                    placeholder={t('interactive')}
+                    label={t('meter')}
+                    message="We'll never share your email with anyone else."
                     className="form-group"
                     inputClassName="mb-0"
-                    label="Disabled input"
+                />
+                <Input
+                    type="password"
+                    id="example-input-password"
+                    className="form-group"
+                    inputClassName="mb-0"
+                    label={t('meter-element-description')}
                 />
 
-                <Select
-                    isCustomStyle={true}
-                    disabled={true}
-                    label="Disabled select menu"
-                    aria-label="Disabled select menu"
-                >
-                    <option>Disabled select</option>
+                <Select isCustomStyle={true} aria-label="Example select" label="Example select">
+                    <option>{t('examples')}</option>
+                    <option>{t('optimum')}</option>
+                    <option>{t('sub-optimum')}</option>
                 </Select>
 
                 <div className="form-group">
-                    <Checkbox label="Can't check this" id="disabledFieldsetCheck" disabled={true} />
+                    <TextArea label={t('sub-sub-optimum')} id="example-textarea" rows={3} />
                 </div>
-                <Button type="submit" variant="primary">
-                    Submit
-                </Button>
-            </fieldset>
-        </Form>
 
-        <H2 className="mt-3">Readonly</H2>
-        <Input value="I'm a readonly value" readOnly={true} />
-        <H2 className="mt-3">Sizing</H2>
-        <Text>Form fields can be made smaller</Text>
-        <div className="d-flex">
-            <fieldset>
-                <div className="form-group">
-                    <Input className="mb-1" placeholder="Small input" variant="small" />
-                    <TextArea size="small" className="mb-1" placeholder="Small textarea" />
+                <Checkbox label={t('customize-with-controls')} wrapperClassName="mb-3" id="exampleCheck1" />
+
+                <Button type="submit" variant="primary">
+                    {t('')}
+                </Button>
+            </Form>
+
+            <H2 className="mt-3">{t('')}</H2>
+            <Form>
+                <fieldset disabled={true}>
+                    <Input
+                        id="disabledTextInput"
+                        placeholder={t('')}
+                        className="form-group"
+                        inputClassName="mb-0"
+                        label={t('')}
+                    />
+
                     <Select
                         isCustomStyle={true}
-                        selectSize="sm"
-                        className="mb-0"
-                        selectClassName="mb-1"
-                        aria-label=""
-                        id=""
+                        disabled={true}
+                        label="Disabled select menu"
+                        aria-label="Disabled select menu"
                     >
-                        <option>Small select</option>
+                        <option>{t('')}</option>
                     </Select>
-                </div>
-            </fieldset>
-        </div>
-        <H2 className="mt-3">Field reference</H2>
-        <FormFieldVariants />
-    </>
-)
+
+                    <div className="form-group">
+                        <Checkbox label={t('')} id="disabledFieldsetCheck" disabled={true} />
+                    </div>
+                    <Button type="submit" variant="primary">
+                        {t('')}
+                    </Button>
+                </fieldset>
+            </Form>
+
+            <H2 className="mt-3">{t('')}</H2>
+            <Input value="I'm a readonly value" readOnly={true} />
+            <H2 className="mt-3">{t('')}</H2>
+            <Text>{t('')}</Text>
+            <div className="d-flex">
+                <fieldset>
+                    <div className="form-group">
+                        <Input className="mb-1" placeholder={t('')} variant="small" />
+                        <TextArea size="small" className="mb-1" placeholder={t('')} />
+                        <Select
+                            isCustomStyle={true}
+                            selectSize="sm"
+                            className="mb-0"
+                            selectClassName="mb-1"
+                            aria-label=""
+                            id=""
+                        >
+                            <option>{t('')}</option>
+                        </Select>
+                    </div>
+                </fieldset>
+            </div>
+            <H2 className="mt-3">{t('')}</H2>
+            <FormFieldVariants />
+        </>
+    )
+}
 
 Forms.parameters = {
     design: {
@@ -340,103 +409,118 @@ Forms.parameters = {
     },
 }
 
-export const ListGroups: StoryFn = () => (
-    <>
-        <H1>List groups</H1>
-        <Text>
-            List groups are a flexible and powerful component for displaying a series of content. Modify and extend them
-            to support just about any content within.
-        </Text>
-        <ul className="list-group mb-3">
-            <li className="list-group-item">Cras justo odio</li>
-            <li className="list-group-item">Dapibus ac facilisis in</li>
-            <li className="list-group-item">Morbi leo risus</li>
-            <li className="list-group-item">Porta ac consectetur ac</li>
-            <li className="list-group-item">Vestibulum at eros</li>
-        </ul>
+export const ListGroups: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/global-styles/GlobalStylesStory')
 
-        <H2>Interactive</H2>
-        <div className="list-group">
-            <button
-                type="button"
-                className="list-group-item list-group-item-action active"
-                onClick={action('List group item clicked')}
-            >
-                Cras justo odio
-            </button>
-            <button
-                type="button"
-                className="list-group-item list-group-item-action"
-                onClick={action('List group item clicked')}
-            >
-                Dapibus ac facilisis in
-            </button>
-            <button
-                type="button"
-                className="list-group-item list-group-item-action"
-                onClick={action('List group item clicked')}
-            >
-                Morbi leo risus
-            </button>
-            <button
-                type="button"
-                className="list-group-item list-group-item-action"
-                onClick={action('List group item clicked')}
-            >
-                Porta ac consectetur ac
-            </button>
-            <button
-                type="button"
-                className="list-group-item list-group-item-action disabled"
-                tabIndex={-1}
-                aria-disabled="true"
-                onClick={action('List group item clicked')}
-            >
-                Disabled
-            </button>
-        </div>
-    </>
-)
+    return (
+        <>
+            <H1>{t('')}</H1>
+            <Text>{t('')}</Text>
+            <ul className="list-group mb-3">
+                <li className="list-group-item">{t('')}</li>
+                <li className="list-group-item">{t('')}</li>
+                <li className="list-group-item">{t('')}</li>
+                <li className="list-group-item">{t('')}</li>
+                <li className="list-group-item">{t('')}</li>
+            </ul>
+
+            <H2>{t('')}</H2>
+            <div className="list-group">
+                <button
+                    type="button"
+                    className="list-group-item list-group-item-action active"
+                    onClick={action('List group item clicked')}
+                >
+                    {t('')}
+                </button>
+                <button
+                    type="button"
+                    className="list-group-item list-group-item-action"
+                    onClick={action('List group item clicked')}
+                >
+                    {t('')}
+                </button>
+                <button
+                    type="button"
+                    className="list-group-item list-group-item-action"
+                    onClick={action('List group item clicked')}
+                >
+                    {t('')}
+                </button>
+                <button
+                    type="button"
+                    className="list-group-item list-group-item-action"
+                    onClick={action('List group item clicked')}
+                >
+                    {t('')}
+                </button>
+                <button
+                    type="button"
+                    className="list-group-item list-group-item-action disabled"
+                    tabIndex={-1}
+                    aria-disabled="true"
+                    onClick={action('List group item clicked')}
+                >
+                    {t('')}
+                </button>
+            </div>
+        </>
+    )
+}
 
 ListGroups.storyName = 'List groups'
 
-export const Meter: StoryFn = args => (
-    <>
-        <H1>Meter</H1>
-        <Text>
-            The HTML{' '}
-            <Link
-                to="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meter"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                <Code>{'<meter>'}</Code>
-            </Link>{' '}
-            element represents either a scalar value within a known range or a fractional value.
-        </Text>
-        <H2>Examples</H2>
-        <hr />
-        <div className="pb-3">
-            <H3>Optimum</H3>
-            <meter min={0} max={1} optimum={1} value={1} />
-        </div>
-        <hr />
-        <div className="pb-3">
-            <H3>Sub optimum</H3>
-            <meter min={0} max={1} high={0.8} low={0.2} optimum={1} value={0.6} />
-        </div>
-        <hr />
-        <div className="pb-3">
-            <H3>Sub sub optimum</H3>
-            <meter min={0} max={1} high={0.8} low={0.2} optimum={1} value={0.1} />
-        </div>
-        <hr />
-        <div className="pb-3">
-            <H3>Customize with controls</H3>
-            <meter {...args} />
-        </div>
-    </>
-)
+export const Meter: StoryFn = args => {
+    const { t } = useTranslation('../../wildcard/src/global-styles/GlobalStylesStory')
+
+    return (
+        <>
+            <H1>{t('')}</H1>
+            <Text>
+                <Trans
+                    i18nKey=""
+                    values={{
+                        codeMeterCode: (
+                            <>
+                                <Code>{'<meter>'}</Code>
+                            </>
+                        ),
+                    }}
+                    components={{
+                        '0': (
+                            <Link
+                                to="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meter"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            />
+                        ),
+                    }}
+                />
+            </Text>
+            <H2>{t('')}</H2>
+            <hr />
+            <div className="pb-3">
+                <H3>{t('')}</H3>
+                <meter min={0} max={1} optimum={1} value={1} />
+            </div>
+            <hr />
+            <div className="pb-3">
+                <H3>{t('')}</H3>
+                <meter min={0} max={1} high={0.8} low={0.2} optimum={1} value={0.6} />
+            </div>
+            <hr />
+            <div className="pb-3">
+                <H3>{t('')}</H3>
+                <meter min={0} max={1} high={0.8} low={0.2} optimum={1} value={0.1} />
+            </div>
+            <hr />
+            <div className="pb-3">
+                <H3>{t('')}</H3>
+                <meter {...args} />
+            </div>
+        </>
+    )
+}
 
 Meter.argTypes = {
     min: {

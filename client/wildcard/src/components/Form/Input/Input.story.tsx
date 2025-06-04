@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 
 import type { Meta } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { BrandedStory } from '../../../stories/BrandedStory'
 
@@ -28,6 +29,8 @@ const Story: Meta = {
 export default Story
 
 export const Simple = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Form/Input')
+
     const [selected, setSelected] = React.useState('')
 
     const handleChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(event => {
@@ -36,67 +39,64 @@ export const Simple = () => {
 
     return (
         <>
-            <Input label="Input raw" value={selected} onChange={handleChange} />
+            <Input label={t('input-raw')} value={selected} onChange={handleChange} />
             <Input
                 value={selected}
-                label="Input valid"
+                label={t('input-valid')}
                 onChange={handleChange}
                 message="random message"
                 status="valid"
                 disabled={false}
-                placeholder="testing this one"
+                placeholder={t('testing-this-one-1')}
             />
             <Input
                 value={selected}
-                label="Input loading"
+                label={t('input-loading')}
                 onChange={handleChange}
                 message="random message"
                 status="loading"
-                placeholder="loading status input"
+                placeholder={t('loading-status-input')}
             />
             <Input
                 value={selected}
-                label="Input error"
+                label={t('input-error')}
                 onChange={handleChange}
                 error="An error message that can contain `code` or other **Markdown** _formatting_. [Learn more](https://sourcegraph.com/docs)"
                 status="error"
-                placeholder="error status input"
+                placeholder={t('error-status-input')}
             />
             <Input
                 value={selected}
-                label="Disabled input"
+                label={t('disabled-input')}
                 onChange={handleChange}
                 message="random message"
                 disabled={true}
-                placeholder="disable status input"
+                placeholder={t('disable-status-input')}
             />
 
             <Input
                 value={selected}
-                label="Input small"
+                label={t('input-small')}
                 onChange={handleChange}
                 message="random message"
                 status="valid"
                 disabled={false}
-                placeholder="testing this one"
+                placeholder={t('testing-this-one-2')}
                 variant="small"
             />
 
             <section>
-                <Label htmlFor="customInput">Custom label layout</Label>
+                <Label htmlFor="customInput">{t('custom-label-layout')}</Label>
                 <InputElement
                     id="customInput"
-                    placeholder="Field with custom label layout"
+                    placeholder={t('field-with-custom-label-layout')}
                     status={InputStatus.error}
                 />
                 <InputErrorMessage message="Input custom error message" className="mt-2" />
                 <InputDescription className="mt-2">
                     <ul>
-                        <li>Hint: you can use regular expressions within each of the available filters</li>
-                        <li>
-                            Datapoints will be automatically backfilled using the list of repositories resulting from
-                            today’s search. Future data points will use the list refreshed for every snapshot.
-                        </li>
+                        <li>{t('hint-regular-expressions-filters')}</li>
+                        <li>{t('datapoints-backfilled-info')}</li>
                     </ul>
                 </InputDescription>
             </section>

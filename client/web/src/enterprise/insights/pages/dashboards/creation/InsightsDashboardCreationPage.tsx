@@ -1,6 +1,7 @@
 import React, { useContext, useMemo } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { lastValueFrom } from 'rxjs'
 
@@ -26,6 +27,8 @@ interface InsightsDashboardCreationPageProps extends TelemetryProps, TelemetryV2
 export const InsightsDashboardCreationPage: React.FunctionComponent<
     React.PropsWithChildren<InsightsDashboardCreationPageProps>
 > = props => {
+    const { t } = useTranslation('enterprise/insights/pages/dashboards/creation')
+
     const { telemetryService, telemetryRecorder } = props
 
     const navigate = useNavigate()
@@ -60,45 +63,57 @@ export const InsightsDashboardCreationPage: React.FunctionComponent<
 
     return (
         <CodeInsightsPage className={classNames('col-8', styles.page)}>
-            <PageTitle title="Add dashboard - Code Insights" />
+            <PageTitle title={t('add-dashboard-code-insights')} />
 
             <PageHeader path={[{ icon: CodeInsightsIcon }, { text: 'Add new dashboard' }]} />
 
             <span className="text-muted d-block mt-2">
-                Dashboards group your insights and let you share them with others.{' '}
-                <Link to="/help/code_insights/explanations/viewing_code_insights" target="_blank" rel="noopener">
-                    Learn more.
-                </Link>
+                <Trans
+                    i18nKey="dashboards-group-insights-learn-more"
+                    components={{
+                        '0': (
+                            <Link
+                                to="/help/code_insights/explanations/viewing_code_insights"
+                                target="_blank"
+                                rel="noopener"
+                            />
+                        ),
+                    }}
+                />
             </span>
 
             <Container className="mt-4">
                 <InsightsDashboardCreationContent owners={owners} onSubmit={handleSubmit}>
-                    {formAPI => (
-                        <>
-                            <Button
-                                type="button"
-                                variant="secondary"
-                                outline={true}
-                                className="mb-2"
-                                onClick={handleCancel}
-                            >
-                                Cancel
-                            </Button>
+                    {formAPI => {
+                        const { t } = useTranslation('enterprise/insights/pages/dashboards/creation')
 
-                            <Tooltip content={dashboard.createPermissions.submit.tooltip}>
-                                <LoaderButton
-                                    alwaysShowLabel={true}
-                                    data-testid="insight-save-button"
-                                    loading={formAPI.submitting}
-                                    label={formAPI.submitting ? 'Adding' : 'Add dashboard'}
-                                    type="submit"
-                                    disabled={dashboard.createPermissions.submit.disabled || formAPI.submitting}
-                                    className="ml-2 mb-2"
-                                    variant="primary"
-                                />
-                            </Tooltip>
-                        </>
-                    )}
+                        return (
+                            <>
+                                <Button
+                                    type="button"
+                                    variant="secondary"
+                                    outline={true}
+                                    className="mb-2"
+                                    onClick={handleCancel}
+                                >
+                                    {t('cancel-button')}
+                                </Button>
+
+                                <Tooltip content={dashboard.createPermissions.submit.tooltip}>
+                                    <LoaderButton
+                                        alwaysShowLabel={true}
+                                        data-testid="insight-save-button"
+                                        loading={formAPI.submitting}
+                                        label={formAPI.submitting ? 'Adding' : 'Add dashboard'}
+                                        type="submit"
+                                        disabled={dashboard.createPermissions.submit.disabled || formAPI.submitting}
+                                        className="ml-2 mb-2"
+                                        variant="primary"
+                                    />
+                                </Tooltip>
+                            </>
+                        )
+                    }}
                 </InsightsDashboardCreationContent>
             </Container>
         </CodeInsightsPage>

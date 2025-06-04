@@ -3,6 +3,7 @@ import React from 'react'
 import { gql } from '@apollo/client'
 import { createMockClient } from '@apollo/client/testing'
 import type { Meta } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { TemporarySettingsContext } from '@sourcegraph/shared/src/settings/temporary/TemporarySettingsProvider'
 import {
@@ -44,6 +45,8 @@ const Story: Meta = {
 export default Story
 
 export const GaConfirmationModalExample: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
+    const { t } = useTranslation('enterprise/insights/modals')
+
     const settingsStorage = new TemporarySettingsStorage(settingsClient, true)
 
     settingsStorage.setSettingsBackend(new InMemoryMockSettingsBackend({}))
@@ -52,7 +55,7 @@ export const GaConfirmationModalExample: React.FunctionComponent<React.PropsWith
         <CodeInsightsBackendContext.Provider value={api}>
             <TemporarySettingsContext.Provider value={settingsStorage}>
                 <div>
-                    <H2>Some content</H2>
+                    <H2>{t('some-content')}</H2>
                     <GaConfirmationModal />
                 </div>
             </TemporarySettingsContext.Provider>

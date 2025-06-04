@@ -2,6 +2,7 @@ import React, { type FC, useCallback, useMemo, useEffect } from 'react'
 
 import { mdiMapSearch } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { Container, PageHeader, H3, H5, Icon } from '@sourcegraph/wildcard'
@@ -26,14 +27,16 @@ export interface BatchSpecsPageProps extends TelemetryV2Props {
 }
 
 export const BatchSpecsPage: FC<BatchSpecsPageProps> = props => {
+    const { t } = useTranslation('enterprise/batches')
+
     useEffect(() => props.telemetryRecorder.recordEvent('admin.batchSpecs', 'view'), [props.telemetryRecorder])
     return (
         <>
-            <PageTitle title="Batch specs" />
+            <PageTitle title={t('batch-specs-title')} />
             <PageHeader
                 headingElement="h2"
                 path={[{ text: 'Batch specs' }]}
-                description="All batch specs that currently exist."
+                description={t('batch-specs-description')}
                 className="mb-3"
             />
             <Container>
@@ -118,24 +121,32 @@ export const BatchSpecList: React.FunctionComponent<React.PropsWithChildren<Batc
     )
 }
 
-const Header: React.FunctionComponent<React.PropsWithChildren<{}>> = () => (
-    <>
-        <span className="d-none d-md-block" />
-        <H5 as={H3} aria-hidden={true} className="p-2 d-none d-md-block text-uppercase text-center text-nowrap">
-            State
-        </H5>
-        <H5 as={H3} aria-hidden={true} className="p-2 d-none d-md-block text-uppercase text-nowrap">
-            Batch spec
-        </H5>
-        <H5 as={H3} aria-hidden={true} className="d-none d-md-block text-uppercase text-center text-nowrap">
-            Execution time
-        </H5>
-    </>
-)
+const Header: React.FunctionComponent<React.PropsWithChildren<{}>> = () => {
+    const { t } = useTranslation('enterprise/batches')
 
-const EmptyList: React.FunctionComponent<React.PropsWithChildren<{}>> = () => (
-    <div className="text-muted text-center mb-3 w-100">
-        <Icon className="icon" svgPath={mdiMapSearch} inline={false} aria-hidden={true} />
-        <div className="pt-2">No batch specs have been created so far.</div>
-    </div>
-)
+    return (
+        <>
+            <span className="d-none d-md-block" />
+            <H5 as={H3} aria-hidden={true} className="p-2 d-none d-md-block text-uppercase text-center text-nowrap">
+                {t('state-label')}
+            </H5>
+            <H5 as={H3} aria-hidden={true} className="p-2 d-none d-md-block text-uppercase text-nowrap">
+                {t('batch-spec-label')}
+            </H5>
+            <H5 as={H3} aria-hidden={true} className="d-none d-md-block text-uppercase text-center text-nowrap">
+                {t('execution-time-label')}
+            </H5>
+        </>
+    )
+}
+
+const EmptyList: React.FunctionComponent<React.PropsWithChildren<{}>> = () => {
+    const { t } = useTranslation('enterprise/batches')
+
+    return (
+        <div className="text-muted text-center mb-3 w-100">
+            <Icon className="icon" svgPath={mdiMapSearch} inline={false} aria-hidden={true} />
+            <div className="pt-2">{t('no-batch-specs-message')}</div>
+        </div>
+    )
+}

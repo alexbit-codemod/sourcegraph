@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from 'react'
 
 import { mdiPlus } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 import { merge, of, type Observable } from 'rxjs'
 import { catchError, concatMap, map, tap } from 'rxjs/operators'
@@ -53,6 +54,8 @@ const createProductSubscription = (
 const UserCreateSubscriptionNode: React.FunctionComponent<React.PropsWithChildren<UserCreateSubscriptionNodeProps>> = (
     props: UserCreateSubscriptionNodeProps
 ) => {
+    const { t } = useTranslation('enterprise/site-admin/dotcom/productSubscriptions')
+
     const [onSubmit, createdSubscription] = useEventObservable(
         useCallback(
             (
@@ -97,7 +100,8 @@ const UserCreateSubscriptionNode: React.FunctionComponent<React.PropsWithChildre
                                 variant="secondary"
                                 size="sm"
                             >
-                                <Icon aria-hidden={true} svgPath={mdiPlus} /> Create new subscription
+                                <Icon aria-hidden={true} svgPath={mdiPlus} />
+                                {t('create-new-subscription')}
                             </Button>
                         </Form>
                     </div>
@@ -107,7 +111,7 @@ const UserCreateSubscriptionNode: React.FunctionComponent<React.PropsWithChildre
                     createdSubscription !== 'saving' &&
                     !isErrorLike(createdSubscription) &&
                     !createdSubscription.urlForSiteAdmin && (
-                        <Alert variant="danger">No subscription URL available (only accessible to site admins)</Alert>
+                        <Alert variant="danger">{t('no-subscription-url-available')}</Alert>
                     )}
             </li>
         </>
@@ -126,10 +130,12 @@ interface Props extends TelemetryV2Props {
 export const SiteAdminCreateProductSubscriptionPage: React.FunctionComponent<
     React.PropsWithChildren<Props>
 > = props => {
+    const { t } = useTranslation('enterprise/site-admin/dotcom/productSubscriptions')
+
     useEffect(() => props.telemetryRecorder.recordEvent('admin.productSubscriptions.create', 'view'))
     return (
         <div className="site-admin-create-product-subscription-page">
-            <PageTitle title="Create product subscription" />
+            <PageTitle title={t('create-product-subscription')} />
             <PageHeader headingElement="h2" path={[{ text: 'Create product subscription' }]} className="mb-2" />
             <Container className="mb-3">
                 <FilteredConnection<ProductSubscriptionAccountFields, Props>

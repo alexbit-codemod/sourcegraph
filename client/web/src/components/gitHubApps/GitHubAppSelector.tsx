@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { useQuery } from '@sourcegraph/http-client'
@@ -34,6 +35,8 @@ const parseQueryParams = (search: string, gitHubApp?: GitHubAppDetails): GitHubA
 }
 
 export const GitHubAppSelector: React.FC<Props> = ({ disabled = false, gitHubApp }) => {
+    const { t } = useTranslation('components/gitHubApps')
+
     const navigate = useNavigate()
     const { search } = useLocation()
 
@@ -103,7 +106,7 @@ export const GitHubAppSelector: React.FC<Props> = ({ disabled = false, gitHubApp
         <div className="d-flex flex-column">
             <Label className="mt-2">
                 <Text className="mb-2" id="github-app-label">
-                    GitHub App
+                    {t('github-app-title')}
                 </Text>
                 {disabled && id ? (
                     <Link to={`/site-admin/github-apps/${encodeURIComponent(id)}`}>{name}</Link>
@@ -116,7 +119,7 @@ export const GitHubAppSelector: React.FC<Props> = ({ disabled = false, gitHubApp
                         disabled={disabled}
                         isCustomStyle={true}
                     >
-                        <option value="">Choose a GitHub App</option>
+                        <option value="">{t('choose-github-app')}</option>
                         {apps?.map(app => (
                             <option key={app.id} value={`${app.baseURL}|${app.appID}`}>
                                 {app.name}
@@ -127,7 +130,7 @@ export const GitHubAppSelector: React.FC<Props> = ({ disabled = false, gitHubApp
             </Label>
             <Label className="mt-2">
                 <Text className="mb-2" id="installation-id-label">
-                    Installation
+                    {t('installation-title')}
                 </Text>
                 <Select
                     aria-labelledby="installation-id-label"
@@ -137,7 +140,7 @@ export const GitHubAppSelector: React.FC<Props> = ({ disabled = false, gitHubApp
                     disabled={disabled || selectedApp?.installations.length === 1}
                     isCustomStyle={true}
                 >
-                    <option value={-1}>Choose a GitHub App</option>
+                    <option value={-1}>{t('choose-github-app-duplicate')}</option>
                     {selectedApp?.installations?.map(installation => (
                         <option key={installation.id} value={installation.id}>
                             {installation.account.login}

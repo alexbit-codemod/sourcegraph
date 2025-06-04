@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { mdiChevronDown } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import {
     ProductStatusBadge,
@@ -59,6 +60,8 @@ export const DropdownButton: React.FunctionComponent<React.PropsWithChildren<Pro
     onLabel,
     placeholder = 'Select action',
 }) => {
+    const { t } = useTranslation('enterprise/batches')
+
     const [isDisabled, setIsDisabled] = useState(!!disabled)
 
     const [selected, setSelected] = useState<number | undefined>(undefined)
@@ -144,7 +147,7 @@ export const DropdownButton: React.FunctionComponent<React.PropsWithChildren<Pro
                     {actions.length > 1 && (
                         <MenuButton variant="primary" className={styles.dropdownButton}>
                             <Icon svgPath={mdiChevronDown} inline={false} aria-hidden={true} />
-                            <VisuallyHidden>Actions</VisuallyHidden>
+                            <VisuallyHidden>{t('actions-header')}</VisuallyHidden>
                         </MenuButton>
                     )}
                 </ButtonGroup>
@@ -172,6 +175,8 @@ const DropdownItem: React.FunctionComponent<React.PropsWithChildren<DropdownItem
     action,
     setSelectedType,
 }) => {
+    const { t } = useTranslation('enterprise/batches')
+
     const { rolloutWindowConfig, loading } = useBatchChangesRolloutWindowConfig()
     const onSelect = useCallback(() => {
         setSelectedType(action.type)
@@ -199,10 +204,7 @@ const DropdownItem: React.FunctionComponent<React.PropsWithChildren<DropdownItem
                     {!loading && shouldDisplayRolloutInfo && (
                         <>
                             <br />
-                            <strong>
-                                Note: Rollout windows have been set up by the admin. This means that some of the
-                                selected changesets won't be processed until a time in the future.
-                            </strong>
+                            <strong>{t('rollout-windows-note')}</strong>
                         </>
                     )}
                 </small>

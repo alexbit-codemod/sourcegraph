@@ -12,6 +12,7 @@ import {
 
 import { mdiClose } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import type { Observable } from 'rxjs'
 
 import { StreamingProgress, StreamingSearchResultsList, useSearchResultState } from '@sourcegraph/branded'
@@ -362,6 +363,8 @@ interface NewSearchSidebarWrapper extends HTMLAttributes<HTMLElement> {
 }
 
 const NewSearchSidebarWrapper: FC<PropsWithChildren<NewSearchSidebarWrapper>> = props => {
+    const { t } = useTranslation('search/results/components/new-search-content')
+
     const { children, className, onClose, ...attributes } = props
 
     return (
@@ -372,7 +375,7 @@ const NewSearchSidebarWrapper: FC<PropsWithChildren<NewSearchSidebarWrapper>> = 
         >
             <header className={styles.filtersHeader}>
                 <H4 as={H2} className="mb-0">
-                    Filters
+                    {t('filters-section')}
                 </H4>
                 <Button variant="icon" aria-label="Close" onClick={onClose}>
                     <Icon aria-hidden={true} svgPath={mdiClose} />
@@ -389,6 +392,8 @@ interface FilePreviewPanelProps extends TelemetryProps, TelemetryV2Props {
 }
 
 const FilePreviewPanel: FC<FilePreviewPanelProps> = props => {
+    const { t } = useTranslation('search/results/components/new-search-content')
+
     const { blobInfo, onClose, telemetryService, telemetryRecorder } = props
 
     const staticHighlights = useMemo(() => {
@@ -415,7 +420,7 @@ const FilePreviewPanel: FC<FilePreviewPanelProps> = props => {
         >
             <header className={styles.previewHeader}>
                 <H4 as={H2} className="mb-0">
-                    File preview
+                    {t('file-preview')}
                 </H4>
                 <Button variant="icon" aria-label="Close" onClick={onClose}>
                     <Icon aria-hidden={true} svgPath={mdiClose} />

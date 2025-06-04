@@ -1,4 +1,5 @@
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Link } from '@sourcegraph/wildcard'
 
@@ -15,24 +16,28 @@ const config: Meta = {
 
 export default config
 
-export const OneLineAlert: StoryFn = () => (
-    <DismissibleAlert variant="info" partialStorageKey="dismissible-alert-one-line">
-        <span>
-            1 bulk operation has recently failed running. Click the <Link to="?">bulk operations tab</Link> to view.
-        </span>
-    </DismissibleAlert>
-)
+export const OneLineAlert: StoryFn = () => {
+    const { t } = useTranslation('components/DismissibleAlert')
+
+    return (
+        <DismissibleAlert variant="info" partialStorageKey="dismissible-alert-one-line">
+            <span>
+                <Trans i18nKey="bulk-operation-failed-notification" components={{ '0': <Link to="?" /> }} />
+            </span>
+        </DismissibleAlert>
+    )
+}
 
 OneLineAlert.storyName = 'One-line alert'
 
-export const MultilineAlert: StoryFn = () => (
-    <DismissibleAlert variant="info" partialStorageKey="dismissible-alert-multiline">
-        WebAssembly (sometimes abbreviated Wasm) is an open standard that defines a portable binary-code format for
-        executable programs, and a corresponding textual assembly language, as well as interfaces for facilitating
-        interactions between such programs and their host environment. The main goal of WebAssembly is to enable
-        high-performance applications on web pages, but the format is designed to be executed and integrated in other
-        environments as well, including standalone ones.
-    </DismissibleAlert>
-)
+export const MultilineAlert: StoryFn = () => {
+    const { t } = useTranslation('components/DismissibleAlert')
+
+    return (
+        <DismissibleAlert variant="info" partialStorageKey="dismissible-alert-multiline">
+            {t('webassembly-overview')}
+        </DismissibleAlert>
+    )
+}
 
 MultilineAlert.storyName = 'Multiline alert'

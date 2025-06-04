@@ -1,6 +1,7 @@
 import { useEffect, type FC } from 'react'
 
 import { mdiPlus } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 import { Navigate, useLocation } from 'react-router-dom'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -37,6 +38,8 @@ export const ExternalServicesPage: FC<Props> = ({
     externalServicesFromFile,
     allowEditExternalServicesWithFile,
 }) => {
+    const { t } = useTranslation('components/externalServices')
+
     useEffect(() => {
         telemetryService.logViewEvent('SiteAdminExternalServices')
         telemetryRecorder.recordEvent('admin.codeHostConnections', 'view')
@@ -58,10 +61,10 @@ export const ExternalServicesPage: FC<Props> = ({
         <Navigate to="/site-admin/external-services/new" replace={true} />
     ) : (
         <div className="site-admin-external-services-page">
-            <PageTitle title="Code host connections" />
+            <PageTitle title={t('code-host-connections-title')} />
             <PageHeader
                 path={[{ text: 'Code host connections' }]}
-                description="Code host connections to sync repositories."
+                description={t('code-host-connections-sync-repositories')}
                 headingElement="h2"
                 actions={
                     <>
@@ -72,7 +75,8 @@ export const ExternalServicesPage: FC<Props> = ({
                             as={Link}
                             disabled={editingDisabled}
                         >
-                            <Icon aria-hidden={true} svgPath={mdiPlus} /> Add connection
+                            <Icon aria-hidden={true} svgPath={mdiPlus} />
+                            {t('add-connection')}
                         </ButtonLink>
                     </>
                 }

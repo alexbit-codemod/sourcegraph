@@ -2,6 +2,7 @@ import React from 'react'
 
 import { mdiArrowExpandAll, mdiChevronLeft, mdiMessageReplyText, mdiMicrosoftVisualStudioCode } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import { useQuery } from '@sourcegraph/http-client'
@@ -59,6 +60,8 @@ export const CloudSignUpPage: React.FunctionComponent<React.PropsWithChildren<Pr
     telemetryRecorder,
     isSourcegraphDotCom,
 }) => {
+    const { t } = useTranslation('auth')
+
     const location = useLocation()
 
     const queryWithUseEmailToggled = new URLSearchParams(location.search)
@@ -88,7 +91,7 @@ export const CloudSignUpPage: React.FunctionComponent<React.PropsWithChildren<Pr
                 authMinPasswordLength: context.authMinPasswordLength,
                 sourcegraphDotComMode: true,
             }}
-            buttonLabel="Sign up"
+            buttonLabel={t('sign-up')}
             experimental={true}
             className="my-3"
             telemetryRecorder={telemetryRecorder}
@@ -100,9 +103,9 @@ export const CloudSignUpPage: React.FunctionComponent<React.PropsWithChildren<Pr
             <ExternalsAuth
                 page="cloud-signup-page"
                 context={context}
-                githubLabel="Continue with GitHub"
-                gitlabLabel="Continue with GitLab"
-                googleLabel="Continue with Google"
+                githubLabel={t('continue-with-github')}
+                gitlabLabel={t('continue-with-gitlab')}
+                googleLabel={t('continue-with-google')}
                 onClick={() => {}}
                 telemetryRecorder={telemetryRecorder}
                 telemetryService={telemetryService}
@@ -118,7 +121,7 @@ export const CloudSignUpPage: React.FunctionComponent<React.PropsWithChildren<Pr
                     to={`${location.pathname}?${queryWithUseEmailToggled.toString()}`}
                 >
                     <Icon className={styles.backIcon} aria-hidden={true} svgPath={mdiChevronLeft} />
-                    Go back
+                    {t('go-back')}
                 </Link>
             </small>
 
@@ -150,62 +153,56 @@ export const CloudSignUpPage: React.FunctionComponent<React.PropsWithChildren<Pr
                                     className={classNames('mr-3', styles.avatar)}
                                     user={invitedByUser}
                                 />
-                                <strong className="mr-1">{invitedBy}</strong> has invited you to join Sourcegraph
+                                <Trans
+                                    i18nKey="invitation-message"
+                                    values={{ invitedBy: <>{invitedBy}</> }}
+                                    components={{ '0': <strong className="mr-1" /> }}
+                                />
                             </>
                         ) : (
                             title
                         )}
                     </H2>
                     <FeatureList>
-                        <FeatureList.Item
-                            icon={mdiMessageReplyText}
-                            title="Understand, and write code faster with an A.I. assistant"
-                        >
-                            Cody answers code questions and writes code for you by reading your entire codebase and the
-                            code graph.
+                        <FeatureList.Item icon={mdiMessageReplyText} title={t('ai-assistant-description')}>
+                            {t('cody-functionality-description')}
                         </FeatureList.Item>
-                        <FeatureList.Item icon={mdiArrowExpandAll} title="Codebase-aware chat">
-                            Cody knows about your local code and can learn from the code graph and documentation inside
-                            your organization.
+                        <FeatureList.Item icon={mdiArrowExpandAll} title={t('codebase-aware-chat')}>
+                            {t('local-code-awareness')}
                         </FeatureList.Item>
-                        <FeatureList.Item
-                            icon={mdiMicrosoftVisualStudioCode}
-                            title="Get Access to Cody for VS Code and the web"
-                        >
-                            Get free access to Cody for VS Code by signing up. Not a VS Code user? The web app has what
-                            you need and other editors are on the way!
+                        <FeatureList.Item icon={mdiMicrosoftVisualStudioCode} title={t('get-access-to-cody')}>
+                            {t('free-access-signup')}
                         </FeatureList.Item>
                     </FeatureList>
-                    <div className={styles.companiesHeader}>
-                        Trusted by developers at the world's most innovative companies:
-                    </div>
+                    <div className={styles.companiesHeader}>{t('trusted-by-developers')}</div>
                     <img
                         src={`${assetsRoot}/img/customer-logos-${isLightTheme ? 'light' : 'dark'}.svg`}
-                        alt="Cloudflare, Uber, SoFi, Dropbox, Plaid, Toast"
+                        alt={t('trusted-companies')}
                         className={styles.customerLogos}
                     />
                 </div>
 
                 <div className={classNames(styles.leftOrRight, styles.signUpWrapper)}>
-                    <H2>Create a free account</H2>
+                    <H2>{t('create-free-account')}</H2>
                     {renderAuthMethod()}
 
                     <small className="text-muted">
-                        By registering, you agree to our{' '}
-                        <Link to="https://sourcegraph.com/terms" target="_blank" rel="noopener">
-                            Terms of Service
-                        </Link>{' '}
-                        and{' '}
-                        <Link to="https://sourcegraph.com/privacy" target="_blank" rel="noopener">
-                            Privacy Policy
-                        </Link>
-                        .
+                        <Trans
+                            i18nKey="terms-and-privacy-agreement"
+                            components={{
+                                '0': <Link to="https://sourcegraph.com/terms" target="_blank" rel="noopener" />,
+                                '1': <Link to="https://sourcegraph.com/privacy" target="_blank" rel="noopener" />,
+                            }}
+                        />
                     </small>
 
                     <hr className={styles.separator} />
 
                     <div>
-                        Already have an account? <Link to={`/sign-in${location.search}`}>Sign in</Link>
+                        <Trans
+                            i18nKey="already-have-account"
+                            components={{ '0': <Link to={`/sign-in${location.search}`} /> }}
+                        />
                     </div>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { Link } from '@sourcegraph/wildcard'
@@ -20,6 +21,8 @@ export const NeedsRepositoryConfigurationAlert: React.FunctionComponent<React.Pr
     className,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('site')
+
     useEffect(() => telemetryRecorder.recordEvent('alert.needsRepoConfig', 'view'), [telemetryRecorder])
     const onClickCTA = useCallback(
         () => telemetryRecorder.recordEvent('alert.needsRepoConfig.CTA', 'click'),
@@ -31,14 +34,25 @@ export const NeedsRepositoryConfigurationAlert: React.FunctionComponent<React.Pr
             variant="success"
             className={classNames('d-flex align-items-center', className)}
         >
-            <Link
-                className="site-alert__link"
-                to={`${PageRoutes.SetupWizard}/remote-repositories`}
-                onClick={onClickCTA}
-            >
-                <span className="underline">Go to setup wizard</span>
-            </Link>
-            &nbsp;to add remote repositories from GitHub, GitLab, etc.
+            <Trans
+                i18nKey="link-to-setup-wizard"
+                values={{
+                    spanClassNameUnderlineGoToSetupWizardSpan: (
+                        <>
+                            <span className="underline">Go to setup wizard</span>
+                        </>
+                    ),
+                }}
+                components={{
+                    '0': (
+                        <Link
+                            className="site-alert__link"
+                            to={`${PageRoutes.SetupWizard}/remote-repositories`}
+                            onClick={onClickCTA}
+                        />
+                    ),
+                }}
+            />
         </DismissibleAlert>
     )
 }

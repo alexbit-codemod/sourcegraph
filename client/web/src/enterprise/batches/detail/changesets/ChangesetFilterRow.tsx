@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 
 import { reject } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Input, Form } from '@sourcegraph/wildcard'
@@ -23,6 +24,8 @@ export interface ChangesetFilterRowProps {
 export const ChangesetFilterRow: React.FunctionComponent<React.PropsWithChildren<ChangesetFilterRowProps>> = ({
     onFiltersChange,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
     const location = useLocation()
     const navigate = useNavigate()
     const searchElement = useRef<HTMLInputElement | null>(null)
@@ -95,7 +98,7 @@ export const ChangesetFilterRow: React.FunctionComponent<React.PropsWithChildren
                             type="search"
                             ref={searchElement}
                             defaultValue={search}
-                            placeholder="Search title and repository name"
+                            placeholder={t('search-title-repository-name')}
                             aria-label="Search title and repository name"
                         />
                     </Form>
@@ -106,7 +109,7 @@ export const ChangesetFilterRow: React.FunctionComponent<React.PropsWithChildren
                         <div className="col mb-2 ml-0 ml-md-2">
                             <ChangesetFilter<ChangesetState>
                                 values={Object.values(ChangesetState)}
-                                label="Status"
+                                label={t('status')}
                                 selected={state}
                                 onChange={setState}
                                 className="w-100"
@@ -115,7 +118,7 @@ export const ChangesetFilterRow: React.FunctionComponent<React.PropsWithChildren
                         <div className="col mb-2 ml-2">
                             <ChangesetFilter<ChangesetCheckState>
                                 values={Object.values(ChangesetCheckState)}
-                                label="Check state"
+                                label={t('check-state')}
                                 selected={checkState}
                                 onChange={setCheckState}
                                 className="w-100"
@@ -130,7 +133,7 @@ export const ChangesetFilterRow: React.FunctionComponent<React.PropsWithChildren
                                         state === ChangesetReviewState.COMMENTED ||
                                         state === ChangesetReviewState.DISMISSED
                                 )}
-                                label="Review state"
+                                label={t('review-state')}
                                 selected={reviewState}
                                 onChange={setReviewState}
                                 className="w-100"

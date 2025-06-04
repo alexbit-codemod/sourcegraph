@@ -1,4 +1,5 @@
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { Container, LoadingSpinner } from '@sourcegraph/wildcard'
 
@@ -17,11 +18,15 @@ export default config
 
 export const SingleValueLegendItem: StoryFn = () => (
     <WebStory>
-        {() => (
-            <Container>
-                <ValueLegendItem value={12345} description="Single item" tooltip="Here is a tooltip" />
-            </Container>
-        )}
+        {() => {
+            const { t } = useTranslation('site-admin/analytics/components')
+
+            return (
+                <Container>
+                    <ValueLegendItem value={12345} description={t('single-item')} tooltip="Here is a tooltip" />
+                </Container>
+            )
+        }}
     </WebStory>
 )
 

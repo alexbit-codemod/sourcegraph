@@ -1,0 +1,17 @@
+{
+  "all-jobs": "All",
+  "all-jobs-duplicate": "All",
+  "total-jobs-count": "{{formDataIndexJobsLength}} total jobs, showing only {{filteredJobsLength}} matching jobs.",
+  "save-button": "Save",
+  "discard-changes-button": "Discard changes",
+  "add-job-button": " Add job",
+  "job-number-index": "Job #{{jobNumber}}: index",
+  "with-connector": " with",
+  "argument": "arg",
+  "environment-variable": "env var",
+  "local-step": "local step",
+  "step-index": "Step #{{index}}1",
+  "add-step-button": " Add step",
+  "command-string": "command",
+  "add-action-label": " Add {{actionLabel}}"
+}

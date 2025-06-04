@@ -1,0 +1,7 @@
+{
+  "precise-indexes-admin": "Precise indexes - Admin",
+  "default-message": "default",
+  "sourcegraph-com-flag-true": "isSourcegraphDotCom=true",
+  "batch-changes-enabled-false": "batchChangesEnabled=false",
+  "code-insights-enabled-false": "codeInsightsEnabled=false"
+}

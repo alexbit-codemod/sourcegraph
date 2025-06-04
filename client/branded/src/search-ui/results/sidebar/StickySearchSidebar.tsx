@@ -12,6 +12,7 @@ import {
 import { mdiChevronDoubleUp } from '@mdi/js'
 import classNames from 'classnames'
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import StickyBox from 'react-sticky-box'
 
 import type { SectionID } from '@sourcegraph/shared/src/settings/temporary/searchSidebar'
@@ -46,6 +47,8 @@ interface SearchSidebarProps extends HTMLAttributes<HTMLElement> {
  * components.
  */
 export const StickySearchSidebar: FC<PropsWithChildren<SearchSidebarProps>> = props => {
+    const { t } = useTranslation('../../branded/src/search-ui/results/sidebar')
+
     const { children, className, onClose, ...attributes } = props
 
     return (
@@ -58,7 +61,7 @@ export const StickySearchSidebar: FC<PropsWithChildren<SearchSidebarProps>> = pr
             <StickyBox className={styles.stickyBox} offsetTop={8}>
                 <div className={styles.header}>
                     <H4 as={H2} className="mb-0">
-                        Filters
+                        {t('filters-header')}
                     </H4>
                     <Button variant="icon" onClick={onClose}>
                         <Icon svgPath={mdiChevronDoubleUp} aria-label="Hide sidebar" />

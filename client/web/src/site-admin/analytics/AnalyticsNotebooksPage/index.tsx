@@ -2,6 +2,7 @@ import React, { useMemo, useEffect } from 'react'
 
 import classNames from 'classnames'
 import { startCase } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { useQuery } from '@sourcegraph/http-client'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -25,6 +26,8 @@ import styles from './index.module.scss'
 interface Props extends TelemetryV2Props {}
 
 export const AnalyticsNotebooksPage: React.FunctionComponent<Props> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin/analytics/AnalyticsNotebooksPage')
+
     const { dateRange, aggregation, grouping } = useChartFilters({ name: 'Notebooks', telemetryRecorder })
     const { data, error, loading } = useQuery<NotebooksStatisticsResult, NotebooksStatisticsVariables>(
         NOTEBOOKS_STATISTICS,
@@ -133,7 +136,7 @@ export const AnalyticsNotebooksPage: React.FunctionComponent<Props> = ({ telemet
 
     return (
         <>
-            <AnalyticsPageTitle>Notebooks</AnalyticsPageTitle>
+            <AnalyticsPageTitle>{t('notebooks-title')}</AnalyticsPageTitle>
 
             <Card className="p-3 position-relative">
                 <div className="d-flex justify-content-end align-items-stretch mb-2 text-nowrap">
@@ -159,24 +162,22 @@ export const AnalyticsNotebooksPage: React.FunctionComponent<Props> = ({ telemet
                         </div>
                     </div>
                 )}
-                <H2 className="my-3">Total time saved</H2>
+                <H2 className="my-3">{t('total-time-saved')}</H2>
                 {calculatorProps && <TimeSavedCalculator {...calculatorProps} />}
                 <div className={styles.suggestionBox}>
-                    <H4 className="my-3">Suggestions</H4>
+                    <H4 className="my-3">{t('suggestions-title')}</H4>
                     <div className={classNames(styles.border, 'mb-3')} />
                     <ul className="mb-3 pl-3">
                         <Text as="li">
                             <AnchorLink to="https://sourcegraph.com/blog/notebooks-ci" target="_blank">
-                                Learn more
-                            </AnchorLink>{' '}
-                            about how notebooks improves onboarding, code reuse and saves developers time.
+                                {t('learn-more-link')}
+                            </AnchorLink>
+                            {t('notebooks-benefits-summary')}
                         </Text>
                     </ul>
                 </div>
             </Card>
-            <Text className="font-italic text-center mt-2">
-                All events are generated from entries in the event logs table and are updated every 24 hours.
-            </Text>
+            <Text className="font-italic text-center mt-2">{t('event-logs-update-info')}</Text>
         </>
     )
 }

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { VSCodeButton, VSCodeLink } from '@vscode/webview-ui-toolkit/react'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { currentAuthStateQuery } from '@sourcegraph/shared/src/auth'
 import type { CurrentAuthStateResult, CurrentAuthStateVariables } from '@sourcegraph/shared/src/graphql-operations'
@@ -31,6 +32,8 @@ export const AuthSidebarView: React.FunctionComponent<React.PropsWithChildren<Au
     platformContext,
     authenticatedUser,
 }) => {
+    const { t } = useTranslation('../../vscode/src/webview/sidebars/auth')
+
     const [state, setState] = useState<'initial' | 'validating' | 'success' | 'failure'>('initial')
     const [hasAccount, setHasAccount] = useState(authenticatedUser?.username !== undefined)
     const [usePrivateInstance, setUsePrivateInstance] = useState(true)
@@ -140,7 +143,7 @@ export const AuthSidebarView: React.FunctionComponent<React.PropsWithChildren<Au
     const renderCommon = (content: JSX.Element): JSX.Element => (
         <div className={classNames(styles.ctaContainer)}>
             <Form onSubmit={validateAccessToken}>
-                <H5 className={styles.ctaTitle}>Search your private code</H5>
+                <H5 className={styles.ctaTitle}>{t('search-private-code')}</H5>
                 {content}
             </Form>
         </div>
@@ -150,7 +153,7 @@ export const AuthSidebarView: React.FunctionComponent<React.PropsWithChildren<Au
         return renderCommon(
             <>
                 <VSCodeLink className="my-0" onClick={() => setHasAccount(true)}>
-                    Have an account?
+                    {t('have-an-account')}
                 </VSCodeLink>
             </>
         )
@@ -165,18 +168,21 @@ export const AuthSidebarView: React.FunctionComponent<React.PropsWithChildren<Au
 
     return renderCommon(
         <>
+            <Text className={classNames(styles.ctaParagraph)}>{t('sign-in-access-token')}</Text>
             <Text className={classNames(styles.ctaParagraph)}>
-                Sign in by entering an access token created through your user settings on Sourcegraph.
-            </Text>
-            <Text className={classNames(styles.ctaParagraph)}>
-                See our {/* eslint-disable-next-line react/forbid-elements */}{' '}
-                <a
-                    href={VSCE_LINK_USER_DOCS}
-                    onClick={() => platformContext.telemetryService.log('VSCESidebarCreateToken')}
-                >
-                    user docs
-                </a>{' '}
-                for a video guide on how to create an access token.
+                {t('see-user-docs')}
+                {/* eslint-disable-next-line react/forbid-elements */}
+                <Trans
+                    i18nKey="user-docs-video-guide"
+                    components={{
+                        '0': (
+                            <a
+                                href={VSCE_LINK_USER_DOCS}
+                                onClick={() => platformContext.telemetryService.log('VSCESidebarCreateToken')}
+                            />
+                        ),
+                    }}
+                />
             </Text>
             <Text className={classNames(styles.ctaButtonWrapperWithContextBelow)}>
                 <Input
@@ -189,8 +195,8 @@ export const AuthSidebarView: React.FunctionComponent<React.PropsWithChildren<Au
                     autoFocus={true}
                     spellCheck={false}
                     disabled={state === 'validating'}
-                    placeholder="ex 6dfc880b320dff712d9f6cfcac5cbd13ebfad1d8"
-                    label="Access Token"
+                    placeholder={t('example-access-token')}
+                    label={t('access-token-label')}
                     className="mb-0"
                     status={InputStates[state]}
                 />
@@ -208,8 +214,8 @@ export const AuthSidebarView: React.FunctionComponent<React.PropsWithChildren<Au
                         autoFocus={true}
                         spellCheck={false}
                         disabled={state === 'validating'}
-                        placeholder="ex https://sourcegraph.example.com"
-                        label="Sourcegraph Instance URL"
+                        placeholder={t('example-sourcegraph-url')}
+                        label={t('sourcegraph-instance-url')}
                         className="mb-0"
                         status={InputStates[state]}
                     />
@@ -220,11 +226,11 @@ export const AuthSidebarView: React.FunctionComponent<React.PropsWithChildren<Au
                 disabled={state === 'validating'}
                 className={classNames('my-1 p-0', styles.ctaButton, styles.ctaButtonWrapperWithContextBelow)}
             >
-                Authenticate account
+                {t('authenticate-account')}
             </VSCodeButton>
             {state === 'failure' && (
                 <Alert variant="danger" className={classNames(styles.ctaParagraph, 'my-1')}>
-                    Unable to verify your access token for {hostname}. Please try again with a new access token.
+                    {t('unable-to-verify-token', { hostname })}
                 </Alert>
             )}
             <Text className="my-0">
@@ -239,28 +245,24 @@ export const AuthSidebarView: React.FunctionComponent<React.PropsWithChildren<Au
 export const AuthSidebarCta: React.FunctionComponent<React.PropsWithChildren<AuthSidebarCtaProps>> = ({
     platformContext,
 }) => {
+    const { t } = useTranslation('../../vscode/src/webview/sidebars/auth')
+
     const onLinkClick = (type: 'Sourcegraph' | 'Extension'): void =>
         platformContext.telemetryService.log(`VSCESidebarLearn${type}Click`)
 
     return (
         <div>
-            <H5 className={styles.ctaTitle}>Welcome</H5>
-            <Text className={classNames(styles.ctaParagraph)}>
-                The Sourcegraph extension allows you to search millions of open source repositories without cloning them
-                to your local machine.
-            </Text>
-            <Text className={classNames(styles.ctaParagraph)}>
-                Developers use Sourcegraph every day to onboard to new code bases, find code to reuse, resolve
-                incidents, fix security vulnerabilities, and more.
-            </Text>
+            <H5 className={styles.ctaTitle}>{t('welcome-message')}</H5>
+            <Text className={classNames(styles.ctaParagraph)}>{t('sourcegraph-extension-description')}</Text>
+            <Text className={classNames(styles.ctaParagraph)}>{t('developers-use-sourcegraph')}</Text>
             <div className={classNames(styles.ctaParagraph)}>
-                <Text className="mb-0">Learn more:</Text>
+                <Text className="mb-0">{t('learn-more')}</Text>
                 <VSCodeLink href={VSCE_LINK_DOTCOM + VSCE_SIDEBAR_PARAMS} onClick={() => onLinkClick('Sourcegraph')}>
                     Sourcegraph.com
                 </VSCodeLink>
                 <br />
                 <VSCodeLink href={VSCE_LINK_MARKETPLACE} onClick={() => onLinkClick('Extension')}>
-                    Sourcegraph VS Code extension
+                    {t('sourcegraph-vscode-extension')}
                 </VSCodeLink>
             </div>
         </div>

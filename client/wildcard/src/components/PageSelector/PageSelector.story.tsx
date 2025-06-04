@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { H1, H2 } from '..'
 import { BrandedStory } from '../../stories/BrandedStory'
@@ -33,21 +34,25 @@ Simple.args = {
     totalPages: 5,
 }
 
-export const AllPageSelectors: StoryFn = () => (
-    <>
-        <H1>Page Selector</H1>
-        <H2>Short</H2>
-        <Short />
-        <H2>Long</H2>
-        <Long />
-        <H2>Long active</H2>
-        <LongActive />
-        <H2>Long complete</H2>
-        <LongComplete />
-        <H2>Long on mobile</H2>
-        <LongOnMobile />
-    </>
-)
+export const AllPageSelectors: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/PageSelector')
+
+    return (
+        <>
+            <H1>{t('page-selector')}</H1>
+            <H2>{t('short-option')}</H2>
+            <Short />
+            <H2>{t('long-option')}</H2>
+            <Long />
+            <H2>{t('long-active-option')}</H2>
+            <LongActive />
+            <H2>{t('long-complete-option')}</H2>
+            <LongComplete />
+            <H2>{t('long-on-mobile-option')}</H2>
+            <LongOnMobile />
+        </>
+    )
+}
 
 AllPageSelectors.parameters = {
     chromatic: {

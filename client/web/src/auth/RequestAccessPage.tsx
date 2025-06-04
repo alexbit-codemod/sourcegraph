@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -28,6 +29,8 @@ export interface RequestAccessFormProps {
  * It handles the form submission.
  */
 const RequestAccessForm: React.FunctionComponent<RequestAccessFormProps> = ({ onSuccess, onError, xhrHeaders }) => {
+    const { t } = useTranslation('auth')
+
     const [loading, setLoading] = useState<boolean>(false)
     const [email, setEmail] = useState<string>('')
     const [name, setName] = useState<string>('')
@@ -78,9 +81,9 @@ const RequestAccessForm: React.FunctionComponent<RequestAccessFormProps> = ({ on
                 disabled={loading}
                 autoCapitalize="off"
                 autoFocus={true}
-                placeholder="Your name"
+                placeholder={t('your-name')}
                 autoComplete="name"
-                label="Name"
+                label={t('name-label')}
             />
 
             <Input
@@ -91,17 +94,17 @@ const RequestAccessForm: React.FunctionComponent<RequestAccessFormProps> = ({ on
                 disabled={loading}
                 autoCapitalize="off"
                 autoFocus={true}
-                placeholder="Your work email to get access"
+                placeholder={t('work-email-access')}
                 autoComplete="email"
-                label="Email Address"
+                label={t('email-address-label')}
             />
 
             <TextArea
                 id="additionalInfo"
                 onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => setAdditionalInfo(event.target.value)}
                 value={additionalInfo}
-                placeholder="Use this field to provide extra info for your access request"
-                label="Notes for administrator"
+                placeholder={t('extra-info-access-request')}
+                label={t('notes-for-admin')}
                 className="mb-3"
             />
 
@@ -111,7 +114,7 @@ const RequestAccessForm: React.FunctionComponent<RequestAccessFormProps> = ({ on
                 type="submit"
                 disabled={loading}
                 variant="primary"
-                label="Request access"
+                label={t('request-access-button')}
             />
         </Form>
     )
@@ -123,6 +126,8 @@ export interface RequestAccessPageProps extends TelemetryV2Props {}
  * The request access page component.
  */
 export const RequestAccessPage: React.FunctionComponent<RequestAccessPageProps> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('auth')
+
     useEffect(() => {
         EVENT_LOGGER.logPageView('RequestAccessPage')
         telemetryRecorder.recordEvent('auth.requestAccess', 'view')
@@ -144,7 +149,7 @@ export const RequestAccessPage: React.FunctionComponent<RequestAccessPageProps> 
 
     return (
         <>
-            <PageTitle title="Request access" />
+            <PageTitle title={t('duplicate-request-access-button')} />
             <AuthPageWrapper
                 title="Request access to Sourcegraph"
                 sourcegraphDotComMode={sourcegraphDotComMode}
@@ -157,7 +162,7 @@ export const RequestAccessPage: React.FunctionComponent<RequestAccessPageProps> 
                         element={
                             <Container>
                                 <Alert variant="info" data-testid="request-access-post-submit" className="mb-0">
-                                    Thank you! We notified the admin of your request.
+                                    {t('thank-you-request-notification')}
                                 </Alert>
                             </Container>
                         }
@@ -174,7 +179,10 @@ export const RequestAccessPage: React.FunctionComponent<RequestAccessPageProps> 
                                     />
                                 </Container>
                                 <Text className="text-center mt-3">
-                                    Already have an account? <Link to={`/sign-in${location.search}`}>Sign in</Link>
+                                    <Trans
+                                        i18nKey="already-have-account-sign-in"
+                                        components={{ '0': <Link to={`/sign-in${location.search}`} /> }}
+                                    />
                                 </Text>
                             </>
                         }

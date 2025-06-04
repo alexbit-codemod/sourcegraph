@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
 
 import { mdiChevronDown, mdiChevronUp } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { useMutation } from '@sourcegraph/http-client'
@@ -45,6 +46,8 @@ export interface SiteAdminProductLicenseNodeProps extends TelemetryV2Props {
 export const SiteAdminProductLicenseNode: React.FunctionComponent<
     React.PropsWithChildren<SiteAdminProductLicenseNodeProps>
 > = ({ node, showSubscription, onRevokeCompleted, defaultExpanded = false, telemetryRecorder }) => {
+    const { t } = useTranslation('enterprise/site-admin/dotcom/productSubscriptions')
+
     const [revoke, { loading, error }] = useMutation<RevokeLicenseResult, RevokeLicenseVariables>(REVOKE_LICENSE)
 
     const onRevoke = useCallback(() => {
@@ -88,10 +91,13 @@ export const SiteAdminProductLicenseNode: React.FunctionComponent<
                             {showSubscription && (
                                 <div className="text-truncate d-flex">
                                     <H3>
-                                        License in{' '}
-                                        <Link to={node.subscription.urlForSiteAdmin!} className="mr-3">
-                                            {node.subscription.name}
-                                        </Link>
+                                        <Trans
+                                            i18nKey="license-in-link"
+                                            values={{ nodeSubscriptionName: <>{node.subscription.name}</> }}
+                                            components={{
+                                                '0': <Link to={node.subscription.urlForSiteAdmin!} className="mr-3" />,
+                                            }}
+                                        />
                                     </H3>
                                     <span className="mr-3">
                                         <AccountName account={node.subscription.account} />
@@ -99,7 +105,10 @@ export const SiteAdminProductLicenseNode: React.FunctionComponent<
                                 </div>
                             )}
                             {!loading && error && (
-                                <Alert variant="danger">Error revoking license: {error.message}</Alert>
+                                <Alert variant="danger">
+                                    {t('error-revoking-license')}
+                                    {error.message}
+                                </Alert>
                             )}
                             <div className="mb-1">
                                 {node.info && (
@@ -108,7 +117,8 @@ export const SiteAdminProductLicenseNode: React.FunctionComponent<
                             </div>
                             <Text className="mb-2">
                                 <small className="text-muted">
-                                    Created <Timestamp date={node.createdAt} />
+                                    {t('created-date')}
+                                    <Timestamp date={node.createdAt} />
                                 </small>
                             </Text>
                             <ProductLicenseValidity license={node} />
@@ -117,7 +127,7 @@ export const SiteAdminProductLicenseNode: React.FunctionComponent<
                             <LoaderButton
                                 className="ml-auto"
                                 variant="danger"
-                                label="Revoke"
+                                label={t('revoke-button')}
                                 onClick={onRevoke}
                                 loading={loading}
                             />
@@ -126,34 +136,34 @@ export const SiteAdminProductLicenseNode: React.FunctionComponent<
                     <div />
                     <CollapsePanel className="mt-4">
                         <div className="d-flex">
-                            <Label>License Key ID</Label>
+                            <Label>{t('license-key-id')}</Label>
                             <Text className="ml-3">{uuid}</Text>
                         </div>
                         <div className="d-flex">
-                            <Label>Key Version</Label>
+                            <Label>{t('key-version')}</Label>
                             <Text className="ml-3">{node.version}</Text>
                         </div>
                         {node.version > 1 && (
                             <>
                                 <div className="d-flex">
-                                    <Label>Site ID</Label>
+                                    <Label>{t('site-id')}</Label>
                                     <Text className="ml-3">
-                                        {node.siteID ?? <span className="text-muted">Unused</span>}
+                                        {node.siteID ?? <span className="text-muted">{t('unused-status')}</span>}
                                     </Text>
                                 </div>
                                 <div className="d-flex">
-                                    <Label>Salesforce Subscription ID</Label>
+                                    <Label>{t('salesforce-subscription-id')}</Label>
                                     <Text className="ml-3">
                                         {node.info?.salesforceSubscriptionID ?? (
-                                            <span className="text-muted">Unused</span>
+                                            <span className="text-muted">{t('unused-status-2')}</span>
                                         )}
                                     </Text>
                                 </div>
                                 <div className="d-flex">
-                                    <Label>Salesforce Opportunity ID</Label>
+                                    <Label>{t('salesforce-opportunity-id')}</Label>
                                     <Text className="ml-3">
                                         {node.info?.salesforceOpportunityID ?? (
-                                            <span className="text-muted">Unused</span>
+                                            <span className="text-muted">{t('unused-status-3')}</span>
                                         )}
                                     </Text>
                                 </div>
@@ -163,7 +173,7 @@ export const SiteAdminProductLicenseNode: React.FunctionComponent<
                             <>
                                 {hasUnknownTags(node.info.tags) && <UnknownTagWarning className="mb-2" />}
                                 <Label className="w-100">
-                                    <Text className="mb-2">Tags</Text>
+                                    <Text className="mb-2">{t('tags-label')}</Text>
                                     <Text className="mb-2">
                                         <ProductLicenseTags tags={node.info.tags} />
                                     </Text>
@@ -171,7 +181,7 @@ export const SiteAdminProductLicenseNode: React.FunctionComponent<
                             </>
                         )}
                         <Label className="w-100">
-                            <Text className="mb-2">License Key</Text>
+                            <Text className="mb-2">{t('license-key-label')}</Text>
                             <CopyableText flex={true} text={node.licenseKey} />
                         </Label>
                     </CollapsePanel>

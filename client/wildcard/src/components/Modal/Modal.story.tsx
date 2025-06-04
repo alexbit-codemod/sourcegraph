@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { H1 } from '..'
 import { BrandedStory } from '../../stories/BrandedStory'
@@ -14,11 +15,15 @@ const config: Meta = {
 
 export default config
 
-export const Default: StoryFn = () => (
-    <Modal aria-label="Welcome message">
-        <H1>Hello world!</H1>
-    </Modal>
-)
+export const Default: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Modal')
+
+    return (
+        <Modal aria-label="Welcome message">
+            <H1>{t('hello-world-greeting')}</H1>
+        </Modal>
+    )
+}
 
 Default.parameters = {
     component: Modal,
@@ -39,14 +44,22 @@ Default.parameters = {
     ],
 }
 
-export const PositionCentered: StoryFn = () => (
-    <Modal position="center" aria-label="Welcome message">
-        <H1>Hello world!</H1>
-    </Modal>
-)
+export const PositionCentered: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Modal')
 
-export const PositionFull: StoryFn = () => (
-    <Modal position="full" aria-label="Welcome message">
-        <H1>Hello world!</H1>
-    </Modal>
-)
+    return (
+        <Modal position="center" aria-label="Welcome message">
+            <H1>{t('hello-world-greeting-duplicate')}</H1>
+        </Modal>
+    )
+}
+
+export const PositionFull: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Modal')
+
+    return (
+        <Modal position="full" aria-label="Welcome message">
+            <H1>{t('hello-world-greeting-duplicate-2')}</H1>
+        </Modal>
+    )
+}

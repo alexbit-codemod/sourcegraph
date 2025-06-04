@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -38,6 +39,8 @@ const BREADCRUMB = { key: 'compare', element: <>Compare</> }
  * Renders pages related to a repository comparison.
  */
 export const RepositoryCompareArea: FC<RepositoryCompareAreaProps> = props => {
+    const { t } = useTranslation('repo/compare')
+
     const { repo, useBreadcrumb, telemetryRecorder } = props
 
     const { '*': splat } = useParams<{ '*': string }>()
@@ -70,7 +73,7 @@ export const RepositoryCompareArea: FC<RepositoryCompareAreaProps> = props => {
         <div className={classNames('container', styles.repositoryCompareArea)}>
             <RepositoryCompareHeader className="my-3" {...commonProps} />
             {spec === null ? (
-                <Alert variant="danger">Invalid comparison specifier</Alert>
+                <Alert variant="danger">{t('invalid-comparison-specifier')}</Alert>
             ) : (
                 <RepositoryCompareOverviewPage {...commonProps} path={path} location={location} navigate={navigate} />
             )}

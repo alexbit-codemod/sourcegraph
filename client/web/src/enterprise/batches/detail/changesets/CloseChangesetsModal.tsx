@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { asError, isErrorLike } from '@sourcegraph/common'
 import { Button, Modal, H3, Text, ErrorAlert } from '@sourcegraph/wildcard'
 
@@ -24,6 +26,8 @@ export const CloseChangesetsModal: React.FunctionComponent<React.PropsWithChildr
     changesetIDs,
     closeChangesets = _closeChangesets,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
     const [isLoading, setIsLoading] = useState<boolean | Error>(false)
 
     const onSubmit = useCallback<React.FormEventHandler>(async () => {
@@ -38,8 +42,8 @@ export const CloseChangesetsModal: React.FunctionComponent<React.PropsWithChildr
 
     return (
         <Modal onDismiss={onCancel} aria-labelledby={MODAL_LABEL_ID}>
-            <H3 id={MODAL_LABEL_ID}>Close changesets</H3>
-            <Text className="mb-4">Are you sure you want to close all the selected changesets on the code hosts?</Text>
+            <H3 id={MODAL_LABEL_ID}>{t('close-changesets')}</H3>
+            <Text className="mb-4">{t('confirm-close-all-selected-changesets')}</Text>
             {isErrorLike(isLoading) && <ErrorAlert error={isLoading} />}
             <div className="d-flex justify-content-end">
                 <Button
@@ -49,7 +53,7 @@ export const CloseChangesetsModal: React.FunctionComponent<React.PropsWithChildr
                     outline={true}
                     variant="secondary"
                 >
-                    Cancel
+                    {t('cancel-button')}
                 </Button>
                 <LoaderButton
                     onClick={onSubmit}
@@ -57,7 +61,7 @@ export const CloseChangesetsModal: React.FunctionComponent<React.PropsWithChildr
                     variant="primary"
                     loading={isLoading === true}
                     alwaysShowLabel={true}
-                    label="Close"
+                    label={t('close-action')}
                 />
             </div>
         </Modal>

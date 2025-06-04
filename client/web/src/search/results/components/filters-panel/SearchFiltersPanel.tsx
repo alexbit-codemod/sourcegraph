@@ -1,5 +1,6 @@
 import type { FC } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import create from 'zustand'
 
 import { NewSearchFilters, useUrlFilters } from '@sourcegraph/branded'
@@ -39,6 +40,8 @@ export interface SearchFiltersPanelProps extends TelemetryProps, TelemetryV2Prop
  * as it is, use consumer agnostic NewSearchFilters component instead.
  */
 export const SearchFiltersPanel: FC<SearchFiltersPanelProps> = props => {
+    const { t } = useTranslation('search/results/components/filters-panel')
+
     const {
         query,
         filters,
@@ -93,8 +96,8 @@ export const SearchFiltersPanel: FC<SearchFiltersPanelProps> = props => {
                 telemetryRecorder={telemetryRecorder}
             >
                 <Button variant="secondary" outline={true} onClick={() => setFiltersPanel(false)}>
-                    <Icon as={DeleteIcon} width={14} height={14} aria-hidden={true} className={styles.closeIcon} />{' '}
-                    Close filters
+                    <Icon as={DeleteIcon} width={14} height={14} aria-hidden={true} className={styles.closeIcon} />
+                    {t('close-filters')}
                 </Button>
             </NewSearchFilters>
         </Modal>
@@ -117,6 +120,8 @@ export function useSearchFiltersPanelUIMode(): SearchFiltersPanelUIMode {
 }
 
 export const SearchFiltersTabletButton: FC = props => {
+    const { t } = useTranslation('search/results/components/filters-panel')
+
     const mode = useSearchFiltersPanelUIMode()
     const [urlFilters] = useUrlFilters()
     const { setFiltersPanel } = useSearchFiltersStore()
@@ -130,12 +135,14 @@ export const SearchFiltersTabletButton: FC = props => {
 
     return (
         <Button variant="secondary" outline={true} size="sm" onClick={() => setFiltersPanel(true)}>
-            Filters{' '}
-            {urlFilters.length > 0 && (
-                <Badge small={true} variant="primary" className="ml-1">
-                    {urlFilters.length}
-                </Badge>
-            )}
+            {t('filters-with-count', {
+                urlFiltersLength0BadgeSmallTrueVariantPrimaryClassNameMl1UrlFiltersLengthBadge: urlFilters.length >
+                    0 && (
+                    <Badge small={true} variant="primary" className="ml-1">
+                        {urlFilters.length}
+                    </Badge>
+                ),
+            })}
         </Button>
     )
 }

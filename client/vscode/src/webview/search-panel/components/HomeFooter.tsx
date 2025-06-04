@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { SyntaxHighlightedSearchQuery } from '@sourcegraph/branded'
 import type { QueryState } from '@sourcegraph/shared/src/search'
@@ -71,39 +72,45 @@ const SearchExamples: React.FunctionComponent<React.PropsWithChildren<SearchExam
     )
 }
 
-export const HomeFooter: React.FunctionComponent<React.PropsWithChildren<HomeFooterProps>> = props => (
-    <>
-        <div className={styles.footerContainer}>
-            <div className={styles.helpContent}>
-                <SearchExamples
-                    title="Search examples"
-                    subtitle="Find answers faster with code search across multiple repos and commits"
-                    examples={exampleQueries}
-                    icon={<MagnifyingGlassSearchIcon />}
-                    {...props}
-                />
-                <div className={styles.thumbnailWrapper}>
-                    <div className={classNames(styles.title, styles.searchExamplesTitle, 'mb-2')}>Watch and learn</div>
-                    <div className={styles.thumbnail}>
-                        {/* TODO: UPLOAD PREVIEW IMAGE TO SG TO USE SG AS ACCESSROOT */}
-                        <ModalVideo
-                            id="three-ways-to-search-title"
-                            title="Three ways to search"
-                            src="https://youtu.be/w6pz4GPL80g"
-                            thumbnail={{
-                                src: 'DtL9ZJs/vsce-watch-and-learn.png',
-                                alt: 'Watch and learn video thumbnail',
-                            }}
-                            onToggle={() => props.telemetryService.log('VSCEHomeWatch&Lean')}
-                            // assetsRoot="https://sourcegraph.com/.assets/"
-                            assetsRoot="https://i.ibb.co/"
-                        />
+export const HomeFooter: React.FunctionComponent<React.PropsWithChildren<HomeFooterProps>> = props => {
+    const { t } = useTranslation('../../vscode/src/webview/search-panel/components')
+
+    return (
+        <>
+            <div className={styles.footerContainer}>
+                <div className={styles.helpContent}>
+                    <SearchExamples
+                        title={t('search-examples')}
+                        subtitle="Find answers faster with code search across multiple repos and commits"
+                        examples={exampleQueries}
+                        icon={<MagnifyingGlassSearchIcon />}
+                        {...props}
+                    />
+                    <div className={styles.thumbnailWrapper}>
+                        <div className={classNames(styles.title, styles.searchExamplesTitle, 'mb-2')}>
+                            {t('watch-and-learn')}
+                        </div>
+                        <div className={styles.thumbnail}>
+                            {/* TODO: UPLOAD PREVIEW IMAGE TO SG TO USE SG AS ACCESSROOT */}
+                            <ModalVideo
+                                id="three-ways-to-search-title"
+                                title={t('three-ways-to-search')}
+                                src="https://youtu.be/w6pz4GPL80g"
+                                thumbnail={{
+                                    src: 'DtL9ZJs/vsce-watch-and-learn.png',
+                                    alt: 'Watch and learn video thumbnail',
+                                }}
+                                onToggle={() => props.telemetryService.log('VSCEHomeWatch&Lean')}
+                                // assetsRoot="https://sourcegraph.com/.assets/"
+                                assetsRoot="https://i.ibb.co/"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </>
-)
+        </>
+    )
+}
 
 const MagnifyingGlassSearchIcon = React.memo(() => (
     <svg width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">

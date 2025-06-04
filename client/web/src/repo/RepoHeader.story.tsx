@@ -1,5 +1,6 @@
 import { mdiSourceRepository } from '@mdi/js'
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { CopyPathAction } from '@sourcegraph/branded'
 import { EMPTY_SETTINGS_CASCADE } from '@sourcegraph/shared/src/settings/settings'
@@ -39,33 +40,37 @@ const config: Meta = {
 
 export default config
 
-export const Default: StoryFn = () => (
-    <>
-        <H1>Repo header</H1>
-        <H2>Simple</H2>
-        <div className="mb-3 b-1">
-            <RepoHeader {...createProps('client/web/src/repo/RepoHeader.story.tsx')} />
-        </div>
-        <H2>Constrained width</H2>
-        <div className="mb-3 b-1" style={{ maxWidth: 480 }}>
-            <RepoHeader {...createProps('client/web/src/repo/RepoHeader.story.tsx', true)} />
-        </div>
-        <H2>Long path</H2>
-        <RepoHeader
-            {...createProps(
-                'client/web/src/repo/client/web/src/repo/client/web/src/repo/MyJavaStyleManagerReducerSuperCalifragilisticExpialidocious.tsx'
-            )}
-        />
-        <H2>Many subfolders</H2>
-        <RepoHeader {...createProps('client/web/src/repo/client/web/src/repo/client/web/src/repo/main.tsx')} />
-        <H2>Many subfolders and constrained width</H2>
-        <div className="mb-3 b-1" style={{ maxWidth: 480 }}>
+export const Default: StoryFn = () => {
+    const { t } = useTranslation('repo')
+
+    return (
+        <>
+            <H1>{t('repo-header')}</H1>
+            <H2>{t('simple')}</H2>
+            <div className="mb-3 b-1">
+                <RepoHeader {...createProps('client/web/src/repo/RepoHeader.story.tsx')} />
+            </div>
+            <H2>{t('constrained-width')}</H2>
+            <div className="mb-3 b-1" style={{ maxWidth: 480 }}>
+                <RepoHeader {...createProps('client/web/src/repo/RepoHeader.story.tsx', true)} />
+            </div>
+            <H2>{t('long-path')}</H2>
             <RepoHeader
-                {...createProps('client/web/src/repo/client/web/src/repo/client/web/src/repo/main.tsx', true)}
+                {...createProps(
+                    'client/web/src/repo/client/web/src/repo/client/web/src/repo/MyJavaStyleManagerReducerSuperCalifragilisticExpialidocious.tsx'
+                )}
             />
-        </div>
-    </>
-)
+            <H2>{t('many-subfolders')}</H2>
+            <RepoHeader {...createProps('client/web/src/repo/client/web/src/repo/client/web/src/repo/main.tsx')} />
+            <H2>{t('many-subfolders-constrained-width')}</H2>
+            <div className="mb-3 b-1" style={{ maxWidth: 480 }}>
+                <RepoHeader
+                    {...createProps('client/web/src/repo/client/web/src/repo/client/web/src/repo/main.tsx', true)}
+                />
+            </div>
+        </>
+    )
+}
 
 const onLifecyclePropsChange = (lifecycleProps: RepoHeaderContributionsLifecycleProps) => {
     lifecycleProps.repoHeaderContributionsLifecycleProps?.onRepoHeaderContributionAdd({

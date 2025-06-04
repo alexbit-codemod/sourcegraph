@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 
 import { VisuallyHidden } from '@reach/visually-hidden'
+import { useTranslation, Trans } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import type { Observable } from 'rxjs'
 import { startWith, catchError, tap } from 'rxjs/operators'
@@ -44,6 +45,8 @@ const AuthenticatedManageCodeMonitorPage: React.FunctionComponent<
     isSourcegraphDotCom,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/code-monitoring')
+
     const LOADING = 'loading' as const
 
     useEffect(() => {
@@ -113,15 +116,14 @@ const AuthenticatedManageCodeMonitorPage: React.FunctionComponent<
 
     return (
         <div className="container col-sm-8">
-            <PageTitle title="Manage code monitor" />
+            <PageTitle title={t('manage-code-monitor-title')} />
             <PageHeader
                 description={
                     <>
-                        Code monitors watch your code for specific triggers and run actions in response.{' '}
-                        <Link to="/help/code_monitoring" target="_blank" rel="noopener">
-                            <VisuallyHidden>Learn more about code monitors</VisuallyHidden>
-                            <span aria-hidden={true}>Learn more</span>
-                        </Link>
+                        <Trans
+                            i18nKey="code-monitors-description"
+                            components={{ '0': <Link to="/help/code_monitoring" target="_blank" rel="noopener" /> }}
+                        />
                     </>
                 }
             >
@@ -131,7 +133,7 @@ const AuthenticatedManageCodeMonitorPage: React.FunctionComponent<
                         to="/code-monitoring"
                         aria-label="Code monitoring"
                     />
-                    <PageHeader.Breadcrumb>Manage code monitor</PageHeader.Breadcrumb>
+                    <PageHeader.Breadcrumb>{t('manage-code-monitor-action')}</PageHeader.Breadcrumb>
                 </PageHeader.Heading>
             </PageHeader>
             {codeMonitorOrError === 'loading' && <LoadingSpinner />}
@@ -142,7 +144,7 @@ const AuthenticatedManageCodeMonitorPage: React.FunctionComponent<
                         deleteCodeMonitor={deleteMonitorRequest}
                         onSubmit={updateMonitorRequest}
                         codeMonitor={codeMonitorState}
-                        submitButtonLabel="Save"
+                        submitButtonLabel={t('save-button-label')}
                         showDeleteButton={true}
                         isSourcegraphDotCom={isSourcegraphDotCom}
                     />

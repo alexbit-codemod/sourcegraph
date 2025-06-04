@@ -1,0 +1,30 @@
+{
+  "add-saved-search": "Add saved search",
+  "saved-searches-label": "Saved searches",
+  "saved-searches-title": "Saved searches",
+  "no-saved-searches-message": "You haven't created a saved search yet.",
+  "add-saved-search-duplicate": "Add saved search",
+  "update-saved-search": "Update saved search",
+  "manage-saved-search": "Manage saved search",
+  "update-saved-search-duplicate": "Update saved search",
+  "manage-saved-search-duplicate": "Manage saved search",
+  "update-saved-search-duplicate-2": "Update saved search",
+  "manage-saved-search-duplicate-2": "Manage saved search",
+  "description": "Description",
+  "query": "Query",
+  "email-notifications": "Email notifications",
+  "new-code-monitoring-notifications": "<0>New:</0> Watch your code for changes with code monitoring to get notifications.",
+  "go-to-code-monitoring": "Go to code monitoring <0>→</0>",
+  "slack-notifications": "Slack notifications",
+  "warning-non-commit-searches": "<0>Warning:</0> non-commit searches do not currently support notifications. Consider adding",
+  "type-diff": "type:diff",
+  "or": " or",
+  "type-commit": "type:commit",
+  "add-to-query": " to your query.",
+  "warning-email-configuration": {
+    "true": "Use the email.smtp site configuration setting to enable sending emails.",
+    "false": "Contact your server admin for more information."
+  },
+  "watch-for-code-changes_nested_0": "code monitoring <0>→</0>",
+  "watch-for-code-changes": "Watch for changes to your code and trigger email notifications, webhooks, and more with <0>{$t('watch-for-code-changes_nested_0', {  })}</0>"
+}

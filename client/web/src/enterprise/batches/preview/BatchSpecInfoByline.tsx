@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { Link } from '@sourcegraph/wildcard'
 
@@ -13,9 +15,16 @@ interface Props extends Pick<BatchSpecFields, 'createdAt' | 'creator'> {}
 export const BatchSpecInfoByline: React.FunctionComponent<React.PropsWithChildren<Props>> = ({
     createdAt,
     creator,
-}) => (
-    <>
-        Uploaded <Timestamp date={createdAt} /> by {creator && <Link to={creator.url}>{creator.username}</Link>}
-        {!creator && <strong>deleted user</strong>}
-    </>
-)
+}) => {
+    const { t } = useTranslation('enterprise/batches/preview')
+
+    return (
+        <>
+            {t('uploaded-message')}
+            <Timestamp date={createdAt} />
+            {t('by-separator')}
+            {creator && <Link to={creator.url}>{creator.username}</Link>}
+            {!creator && <strong>{t('deleted-user')}</strong>}
+        </>
+    )
+}

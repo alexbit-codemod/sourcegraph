@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo } from 'react'
 
 import { mdiAccount, mdiPlus, mdiDownload } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { useQuery } from '@sourcegraph/http-client'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -28,6 +29,8 @@ export const UsersManagement: React.FunctionComponent<UsersManagementProps> = ({
     renderAssignmentModal,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('site-admin/UserManagement')
+
     useEffect(() => {
         EVENT_LOGGER.logPageView('UsersManagement')
         telemetryRecorder.recordEvent('admin.users', 'view')
@@ -93,8 +96,8 @@ export const UsersManagement: React.FunctionComponent<UsersManagementProps> = ({
                         aria-label="user administration avatar icon"
                         size="md"
                         className={styles.linkColor}
-                    />{' '}
-                    User administration
+                    />
+                    {t('user-administration')}
                 </H1>
                 <div>
                     <Button
@@ -106,11 +109,11 @@ export const UsersManagement: React.FunctionComponent<UsersManagementProps> = ({
                         as={AnchorLink}
                     >
                         <Icon svgPath={mdiDownload} aria-label="Download usage stats" className="mr-1" />
-                        Download usage stats
+                        {t('download-usage-stats')}
                     </Button>
                     <Button to="/site-admin/users/new" variant="primary" as={Link}>
                         <Icon svgPath={mdiPlus} aria-label="create user" className="mr-1" />
-                        Create User
+                        {t('create-user')}
                     </Button>
                 </div>
             </div>
@@ -124,9 +127,7 @@ export const UsersManagement: React.FunctionComponent<UsersManagementProps> = ({
                 )}
                 <UsersList onActionEnd={refetch} renderAssignmentModal={renderAssignmentModal} />
             </Card>
-            <Text className="font-italic text-center mt-2">
-                All events are generated from entries in the event logs table and are updated every 24 hours.
-            </Text>
+            <Text className="font-italic text-center mt-2">{t('event-logs-update-info')}</Text>
         </>
     )
 }

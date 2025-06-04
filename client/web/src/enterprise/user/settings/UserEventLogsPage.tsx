@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import type { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
@@ -32,26 +33,31 @@ interface UserEventNodeProps {
 
 export const UserEventNode: React.FunctionComponent<React.PropsWithChildren<UserEventNodeProps>> = ({
     node,
-}: UserEventNodeProps) => (
-    <li className={classNames('list-group-item', styles.eventLog)}>
-        <div className="d-flex align-items-center justify-content-between">
-            <Code>{node.name}</Code>
-            <div>
-                <Timestamp date={node.timestamp} />
+}: UserEventNodeProps) => {
+    const { t } = useTranslation('enterprise/user/settings')
+
+    return (
+        <li className={classNames('list-group-item', styles.eventLog)}>
+            <div className="d-flex align-items-center justify-content-between">
+                <Code>{node.name}</Code>
+                <div>
+                    <Timestamp date={node.timestamp} />
+                </div>
             </div>
-        </div>
-        <div className="text-break">
-            <small>
-                From: {node.source}{' '}
-                {node.url && (
-                    <span>
-                        (<Link to={node.url}>{node.url}</Link>)
-                    </span>
-                )}
-            </small>
-        </div>
-    </li>
-)
+            <div className="text-break">
+                <small>
+                    {t('from-label')}
+                    {node.source}{' '}
+                    {node.url && (
+                        <span>
+                            (<Link to={node.url}>{node.url}</Link>)
+                        </span>
+                    )}
+                </small>
+            </div>
+        </li>
+    )
+}
 
 export interface UserEventLogsPageProps
     extends Pick<UserSettingsAreaRouteContext, 'authenticatedUser' | 'isSourcegraphDotCom'>,
@@ -68,10 +74,12 @@ export const UserEventLogsPage: React.FunctionComponent<React.PropsWithChildren<
     telemetryRecorder,
     user,
 }) => {
+    const { t } = useTranslation('enterprise/user/settings')
+
     if (isSourcegraphDotCom && authenticatedUser && user.id !== authenticatedUser.id) {
         return (
             <SiteAdminAlert className="sidebar__alert" variant="danger">
-                Only the user may access their event logs.
+                {t('user-access-event-logs')}
             </SiteAdminAlert>
         )
     }
@@ -81,6 +89,8 @@ export const UserEventLogsPage: React.FunctionComponent<React.PropsWithChildren<
 export const UserEventLogsPageContent: React.FunctionComponent<
     React.PropsWithChildren<UserEventLogsPageContentProps>
 > = ({ telemetryRecorder, user }) => {
+    const { t } = useTranslation('enterprise/user/settings')
+
     useMemo(() => {
         telemetryRecorder.recordEvent('settings.userEventLogs', 'view')
     }, [telemetryRecorder])
@@ -135,7 +145,7 @@ export const UserEventLogsPageContent: React.FunctionComponent<
 
     return (
         <>
-            <PageTitle title="User event log" />
+            <PageTitle title={t('user-event-log-title')} />
             <PageHeader path={[{ text: 'Event log' }]} headingElement="h2" className="mb-3" />
             <Container className="mb-3">
                 <FilteredConnection<UserEventLogFields, {}>

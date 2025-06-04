@@ -1,0 +1,11 @@
+{
+  "name-label": "Name",
+  "example-dashboard-description": "Example: My personal code insights dashboard",
+  "private-label": "Private",
+  "visibility-private-message": "visible only to you",
+  "shared-visibility-message": "Shared - visible to everyone in the chosen organization",
+  "organization-label": "Organization",
+  "organization-users-message": "all users in your organization",
+  "create-join-organization-message": "Create or join an organization to share the dashboard with others!",
+  "visibility-public-message": "visible to everyone on your Sourcegraph instance"
+}

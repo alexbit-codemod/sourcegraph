@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { mdiAccountMultiple } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 
 import { Alert, Badge, Link, PageHeader, ProductStatusBadge } from '@sourcegraph/wildcard'
@@ -15,6 +16,8 @@ interface Props extends Pick<TeamAreaRouteContext, 'team'> {
  * Header for the team area.
  */
 export const TeamHeader: React.FunctionComponent<React.PropsWithChildren<Props>> = ({ team, className = '' }) => {
+    const { t } = useTranslation('team/area')
+
     const url = team.url
 
     return (
@@ -25,7 +28,7 @@ export const TeamHeader: React.FunctionComponent<React.PropsWithChildren<Props>>
                         <PageHeader className="mb-3">
                             <PageHeader.Heading as="h2" styleAs="h1">
                                 <PageHeader.Breadcrumb to="/teams" icon={mdiAccountMultiple}>
-                                    Teams
+                                    {t('teams-title')}
                                 </PageHeader.Breadcrumb>
                                 <PageHeader.Breadcrumb>
                                     {team.displayName ? (
@@ -42,9 +45,10 @@ export const TeamHeader: React.FunctionComponent<React.PropsWithChildren<Props>>
 
                         {team.readonly && (
                             <Alert variant="info" className="mb-3">
-                                This team is managed externally and cannot be modified from the UI except by site
-                                admins.{' '}
-                                <Link to="/help/admin/teams#configuring-teams">Read more about configuring Teams.</Link>
+                                <Trans
+                                    i18nKey="external-team-management-info"
+                                    components={{ '0': <Link to="/help/admin/teams#configuring-teams" /> }}
+                                />
                             </Alert>
                         )}
 
@@ -54,7 +58,7 @@ export const TeamHeader: React.FunctionComponent<React.PropsWithChildren<Props>>
                                     <NavLink to={url} className="nav-link" end={true}>
                                         <span>
                                             <span className="text-content" data-tab-content="Profile">
-                                                Profile
+                                                {t('profile-title')}
                                             </span>
                                         </span>
                                     </NavLink>
@@ -64,7 +68,8 @@ export const TeamHeader: React.FunctionComponent<React.PropsWithChildren<Props>>
                                         <span>
                                             <span className="text-content" data-tab-content="Members">
                                                 <span>
-                                                    Members <Badge pill={true}>{team.members.totalCount}</Badge>
+                                                    {t('members-title')}
+                                                    <Badge pill={true}>{team.members.totalCount}</Badge>
                                                 </span>
                                             </span>
                                         </span>
@@ -75,7 +80,8 @@ export const TeamHeader: React.FunctionComponent<React.PropsWithChildren<Props>>
                                         <span>
                                             <span className="text-content" data-tab-content="Child teams">
                                                 <span>
-                                                    Child teams <Badge pill={true}>{team.childTeams.totalCount}</Badge>
+                                                    {t('child-teams-title')}
+                                                    <Badge pill={true}>{team.childTeams.totalCount}</Badge>
                                                 </span>
                                             </span>
                                         </span>

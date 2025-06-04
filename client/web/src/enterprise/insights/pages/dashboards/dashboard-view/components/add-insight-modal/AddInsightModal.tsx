@@ -2,6 +2,7 @@ import { type FC, type ReactElement, type ReactNode, useContext, useState, useMe
 
 import { useApolloClient } from '@apollo/client'
 import { mdiClose } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 import { lastValueFrom } from 'rxjs'
 
 import { isErrorLike, pluralize } from '@sourcegraph/common'
@@ -35,6 +36,8 @@ export interface AddInsightModalProps {
 }
 
 export const AddInsightModal: FC<AddInsightModalProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/dashboards/dashboard-view/components/add-insight-modal')
+
     const { dashboard, onClose } = props
 
     const client = useApolloClient()
@@ -78,7 +81,11 @@ export const AddInsightModal: FC<AddInsightModalProps> = props => {
         >
             <header className={styles.header}>
                 <H2 className="m-0 font-weight-normal">
-                    Add insight to <q>{dashboard.title}</q>
+                    <Trans
+                        i18nKey="add-insight-to-dashboard-title"
+                        values={{ dashboardTitle: <>{dashboard.title}</> }}
+                        components={{ '0': <q /> }}
+                    />
                 </H2>
 
                 <Button variant="icon" className={styles.closeButton} aria-label="Close" onClick={onClose}>
@@ -98,22 +105,29 @@ export const AddInsightModal: FC<AddInsightModalProps> = props => {
                     <MultiComboboxInput
                         value={search}
                         autoFocus={true}
-                        placeholder="Search insights..."
+                        placeholder={t('search-insights-placeholder')}
                         status={loading ? 'loading' : 'initial'}
                         onChange={event => setSearch(event.target.value)}
                     />
 
                     <small className={styles.description}>
                         <span>
-                            Don't see an insight?{' '}
-                            <Link to={encodeDashboardIdQueryParam('/insights/create', dashboard.id)}>
-                                Create a new insight.
-                            </Link>
+                            <Trans
+                                i18nKey="create-new-insight-link"
+                                components={{
+                                    '0': <Link to={encodeDashboardIdQueryParam('/insights/create', dashboard.id)} />,
+                                }}
+                            />
                         </span>
                         {connection && (
                             <span>
                                 {plural('result', connection.nodes.length)}
-                                {connection.totalCount && <> out of {plural('total', connection.totalCount)}</>}
+                                {connection.totalCount && (
+                                    <>
+                                        {t('out-of-insights')}
+                                        {plural('total', connection.totalCount)}
+                                    </>
+                                )}
                             </span>
                         )}
                     </small>
@@ -123,29 +137,35 @@ export const AddInsightModal: FC<AddInsightModalProps> = props => {
                         renderEmptyList={true}
                         className={styles.suggestionsList}
                     >
-                        {items => (
-                            <>
-                                {items.map((item, index) => (
-                                    <InsightSuggestionCard key={getInsightId(item)} item={item} index={index} />
-                                ))}
-                                {items.length === 0 && (
-                                    <span className={styles.zeroStateMessage}>
-                                        {loading ? 'Loading...' : 'No insights found'}
-                                    </span>
-                                )}
-                                {connection?.pageInfo?.hasNextPage && (
-                                    <Button
-                                        size="sm"
-                                        variant="secondary"
-                                        outline={true}
-                                        className={styles.loadMore}
-                                        onClick={fetchMore}
-                                    >
-                                        Load more insights
-                                    </Button>
-                                )}
-                            </>
-                        )}
+                        {items => {
+                            const { t } = useTranslation(
+                                'enterprise/insights/pages/dashboards/dashboard-view/components/add-insight-modal'
+                            )
+
+                            return (
+                                <>
+                                    {items.map((item, index) => (
+                                        <InsightSuggestionCard key={getInsightId(item)} item={item} index={index} />
+                                    ))}
+                                    {items.length === 0 && (
+                                        <span className={styles.zeroStateMessage}>
+                                            {loading ? 'Loading...' : 'No insights found'}
+                                        </span>
+                                    )}
+                                    {connection?.pageInfo?.hasNextPage && (
+                                        <Button
+                                            size="sm"
+                                            variant="secondary"
+                                            outline={true}
+                                            className={styles.loadMore}
+                                            onClick={fetchMore}
+                                        >
+                                            {t('load-more-insights')}
+                                        </Button>
+                                    )}
+                                </>
+                            )
+                        }}
                     </MultiComboboxList>
                 </MultiCombobox>
 
@@ -153,8 +173,7 @@ export const AddInsightModal: FC<AddInsightModalProps> = props => {
 
                 <footer className={styles.footer}>
                     <span className={styles.keyboardExplanation}>
-                        Press <kbd>↑</kbd>
-                        <kbd>↓</kbd> to navigate through results
+                        <Trans i18nKey="navigate-results-instructions" components={{ '0': <kbd />, '1': <kbd /> }} />
                     </span>
 
                     <Button
@@ -164,7 +183,7 @@ export const AddInsightModal: FC<AddInsightModalProps> = props => {
                         outline={true}
                         onClick={onClose}
                     >
-                        Cancel
+                        {t('cancel-action')}
                     </Button>
 
                     <LoaderButton
@@ -191,6 +210,8 @@ interface InsightSuggestionCardProps {
 }
 
 function InsightSuggestionCard(props: InsightSuggestionCardProps): ReactElement {
+    const { t } = useTranslation('enterprise/insights/pages/dashboards/dashboard-view/components/add-insight-modal')
+
     const { item, index } = props
 
     return (
@@ -199,7 +220,9 @@ function InsightSuggestionCard(props: InsightSuggestionCardProps): ReactElement 
                 <MultiComboboxOptionText />
             </span>
             <small className={styles.suggestionCardDescription}>
-                {item.type} insight {getInsightDetails(item)}
+                {item.type}
+                {t('insight-label')}
+                {getInsightDetails(item)}
             </small>
         </MultiComboboxOption>
     )

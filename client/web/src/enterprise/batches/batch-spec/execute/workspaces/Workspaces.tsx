@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { timer } from 'rxjs'
 import { repeat, retry, tap } from 'rxjs/operators'
 
@@ -34,6 +35,8 @@ export const Workspaces: React.FunctionComponent<React.PropsWithChildren<Workspa
     executionURL,
     queryWorkspacesList = _queryWorkspacesList,
 }) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/execute/workspaces')
+
     const [filters, setFilters] = useState<WorkspaceFilters>({ state: null, search: null })
     const [error, setError] = useState<string>()
 
@@ -65,7 +68,7 @@ export const Workspaces: React.FunctionComponent<React.PropsWithChildren<Workspa
 
     return (
         <div className="d-flex flex-column w-100 h-100 pr-3">
-            <WorkspacesListHeader>Workspaces</WorkspacesListHeader>
+            <WorkspacesListHeader>{t('workspaces')}</WorkspacesListHeader>
             <WorkspaceFilterRow onFiltersChange={setFilters} />
             <div className={styles.listContainer}>
                 {error && <ConnectionError errors={[error]} className="mb-2" />}

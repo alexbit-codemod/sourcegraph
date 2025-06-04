@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from 'react'
 
 import { mdiArrowRight } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { SyntaxHighlightedSearchQuery } from '@sourcegraph/branded'
 import { ALL_LANGUAGES } from '@sourcegraph/common'
@@ -155,6 +156,8 @@ export const DidYouMean: React.FunctionComponent<React.PropsWithChildren<DidYouM
             <div className={classNames(className, styles.root)}>
                 <ul className={styles.container}>
                     {suggestions.map(suggestion => {
+                        const { t } = useTranslation('search/suggestion')
+
                         const builtURLQuery = buildSearchURLQuery(
                             suggestion.query,
                             patternType,
@@ -171,7 +174,10 @@ export const DidYouMean: React.FunctionComponent<React.PropsWithChildren<DidYouM
                                     to={createLinkUrl({ pathname: '/search', search: builtURLQuery })}
                                     className={styles.link}
                                 >
-                                    <span className={styles.listItemDescription}>Did you mean: {suggestion.text}</span>
+                                    <span className={styles.listItemDescription}>
+                                        {t('did-you-mean')}
+                                        {suggestion.text}
+                                    </span>
                                     <Icon svgPath={mdiArrowRight} aria-hidden={true} className="mx-2 text-body" />
                                     <span className={styles.suggestion}>
                                         <SyntaxHighlightedSearchQuery query={suggestion.query.trim()} />

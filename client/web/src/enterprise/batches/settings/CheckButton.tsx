@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { mdiCheck, mdiClose } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { Button, LoadingSpinner, Icon, Alert } from '@sourcegraph/wildcard'
 
@@ -19,6 +20,8 @@ export const CheckButton: React.FunctionComponent<React.PropsWithChildren<CheckB
     successMessage,
     failedMessage,
 }) => {
+    const { t } = useTranslation('enterprise/batches/settings')
+
     if (!loading && !successMessage && !failedMessage) {
         return (
             <Button
@@ -28,14 +31,15 @@ export const CheckButton: React.FunctionComponent<React.PropsWithChildren<CheckB
                 size="sm"
                 aria-label={label}
             >
-                Check
+                {t('check-message')}
             </Button>
         )
     }
     if (loading) {
         return (
             <div className="text-muted">
-                <LoadingSpinner /> Checking
+                <LoadingSpinner />
+                {t('checking-message')}
             </div>
         )
     }

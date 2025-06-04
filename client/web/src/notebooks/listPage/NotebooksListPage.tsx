@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { mdiBookOutline } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { Navigate, useLocation, useNavigate, type Location, type NavigateFunction } from 'react-router-dom'
 import type { Observable } from 'rxjs'
 import { catchError, startWith, switchMap } from 'rxjs/operators'
@@ -71,6 +72,8 @@ export const NotebooksListPage: React.FunctionComponent<React.PropsWithChildren<
     fetchNotebooks = _fetchNotebooks,
     createNotebook = _createNotebook,
 }) => {
+    const { t } = useTranslation('notebooks/listPage')
+
     const [importState, setImportState] = useState<typeof LOADING | ErrorLike | undefined>()
     const navigate = useNavigate()
     const location = useLocation()
@@ -267,12 +270,16 @@ export const NotebooksListPage: React.FunctionComponent<React.PropsWithChildren<
                     className="mb-3"
                 >
                     <PageHeader.Heading as="h2" styleAs="h1">
-                        <PageHeader.Breadcrumb icon={mdiBookOutline}>Notebooks</PageHeader.Breadcrumb>
+                        <PageHeader.Breadcrumb icon={mdiBookOutline}>{t('notebooks-title')}</PageHeader.Breadcrumb>
                     </PageHeader.Heading>
                 </PageHeader>
                 {isErrorLike(importState) && (
                     <Alert variant="danger">
-                        Error while importing the notebook: <strong>{importState.message}</strong>
+                        <Trans
+                            i18nKey="error-importing-notebook"
+                            values={{ importStateMessage: <>{importState.message}</> }}
+                            components={{ '0': <strong /> }}
+                        />
                     </Alert>
                 )}
                 <div className="mb-4">

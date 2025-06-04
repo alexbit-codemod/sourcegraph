@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react'
 
 import classNames from 'classnames'
 import { noop } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { useMutation } from '@sourcegraph/http-client'
@@ -68,6 +69,8 @@ export const ConfigurationForm: React.FunctionComponent<React.PropsWithChildren<
     insightTitle,
     initialNamespaceID,
 }) => {
+    const { t } = useTranslation('enterprise/batches/create')
+
     const [createEmptyBatchChange, { loading: batchChangeLoading, error: batchChangeError }] = useMutation<
         CreateEmptyBatchChangeResult,
         CreateEmptyBatchChangeVariables
@@ -177,19 +180,15 @@ export const ConfigurationForm: React.FunctionComponent<React.PropsWithChildren<
                 {isUnlicensed && (
                     <Alert variant="info">
                         <div className="mb-2">
-                            <strong>
-                                Your license only allows for {maxUnlicensedChangesets} changesets per batch change
-                            </strong>
+                            <strong>{t('license-changeset-limit', { maxUnlicensedChangesets })}</strong>
                         </div>
-                        You can execute this batch spec and see how it operates, but if more than{' '}
-                        {maxUnlicensedChangesets} changesets are generated, you won't be able to apply the batch change
-                        and actually publish the changesets to the code host.
+                        {t('batch-spec-execution-warning', { maxUnlicensedChangesets })}
                     </Alert>
                 )}
                 {error && <ErrorAlert error={error} />}
                 {namespaceSelector}
                 <Input
-                    label="Batch change name"
+                    label={t('batch-change-name-label')}
                     value={nameInput}
                     onChange={onNameChange}
                     pattern="^[\w.-]+$"
@@ -199,11 +198,12 @@ export const ConfigurationForm: React.FunctionComponent<React.PropsWithChildren<
                 />
                 {!isReadOnly && (
                     <small className="text-muted">
-                        Give it a short, descriptive name to reference the batch change on Sourcegraph. Do not include
-                        confidential information.{' '}
-                        <span className={classNames(isNameValid === false && 'text-danger')}>
-                            Only letters, numbers, _, and - are allowed.
-                        </span>
+                        <Trans
+                            i18nKey="batch-change-name-description"
+                            components={{
+                                '0': <span className={classNames(isNameValid === false && 'text-danger')} />,
+                            }}
+                        />
                     </small>
                 )}
             </Container>
@@ -211,7 +211,7 @@ export const ConfigurationForm: React.FunctionComponent<React.PropsWithChildren<
             {!isReadOnly && (
                 <div className={styles.ctaGroup}>
                     <Button variant="secondary" type="button" outline={true} onClick={handleCancel}>
-                        Cancel
+                        {t('cancel-button')}
                     </Button>
                     <Button
                         variant="primary"
@@ -220,7 +220,7 @@ export const ConfigurationForm: React.FunctionComponent<React.PropsWithChildren<
                         aria-label={isNameValid ? undefined : 'Batch change name is invalid'}
                         disabled={isButtonDisabled || nameInput === '' || !isNameValid}
                     >
-                        Create
+                        {t('create-button')}
                     </Button>
                 </div>
             )}

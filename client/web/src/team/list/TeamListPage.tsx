@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { mdiAccountMultiple, mdiPlus } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { type TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { Button, Link, Icon, PageHeader, Container, useDebounce, ProductStatusBadge } from '@sourcegraph/wildcard'
@@ -32,6 +33,8 @@ export interface TeamListPageProps extends TelemetryV2Props {}
 export const TeamListPage: React.FunctionComponent<React.PropsWithChildren<TeamListPageProps>> = ({
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('team/list')
+
     const [searchValue, setSearchValue] = useState('')
     const query = useDebounce(searchValue, 200)
 
@@ -41,26 +44,27 @@ export const TeamListPage: React.FunctionComponent<React.PropsWithChildren<TeamL
 
     return (
         <Page className="mb-3">
-            <PageTitle title="Teams" />
+            <PageTitle title={t('teams-title')} />
             <PageHeader
                 actions={
                     <>
                         <Button to="/teams/new" variant="primary" as={Link}>
-                            <Icon aria-hidden={true} svgPath={mdiPlus} /> Create team
+                            <Icon aria-hidden={true} svgPath={mdiPlus} />
+                            {t('create-team')}
                         </Button>
                     </>
                 }
                 description={
                     <>
-                        A team is a set of users. See the <Link to="/help/admin/teams">Teams documentation</Link> for
-                        more information about configuring teams.
+                        <Trans i18nKey="team-description" components={{ '0': <Link to="/help/admin/teams" /> }} />
                     </>
                 }
                 className="mb-3"
             >
                 <PageHeader.Heading as="h2" styleAs="h1">
                     <PageHeader.Breadcrumb icon={mdiAccountMultiple}>
-                        Teams <ProductStatusBadge status="experimental" />
+                        {t('teams-header')}
+                        <ProductStatusBadge status="experimental" />
                     </PageHeader.Breadcrumb>
                 </PageHeader.Heading>
             </PageHeader>
@@ -89,6 +93,8 @@ export const ChildTeamListPage: React.FunctionComponent<React.PropsWithChildren<
     parentTeam,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('team/list')
+
     const [searchValue, setSearchValue] = useState('')
     const query = useDebounce(searchValue, 200)
 
@@ -98,7 +104,8 @@ export const ChildTeamListPage: React.FunctionComponent<React.PropsWithChildren<
         <>
             <div className="d-flex justify-content-end mb-3">
                 <Button to={`/teams/new?parentTeam=${parentTeam}`} variant="primary" as={Link}>
-                    <Icon aria-hidden={true} svgPath={mdiPlus} /> Create child team
+                    <Icon aria-hidden={true} svgPath={mdiPlus} />
+                    {t('create-child-team')}
                 </Button>
             </div>
             <Container className="mb-3">
@@ -135,34 +142,38 @@ export const TeamList: React.FunctionComponent<TeamListProps> = ({
     query,
     className,
     telemetryRecorder,
-}) => (
-    <ConnectionContainer className={classNames(className)}>
-        <ConnectionForm
-            inputValue={searchValue}
-            onInputChange={event => setSearchValue(event.target.value)}
-            inputPlaceholder="Search teams"
-        />
+}) => {
+    const { t } = useTranslation('team/list')
 
-        {error && <ConnectionError errors={[error.message]} />}
-        {loading && !connection && <ConnectionLoading />}
-        <ConnectionList as="ul" className="list-group" aria-label="Teams">
-            {connection?.nodes?.map(node => (
-                <TeamNode key={node.id} node={node} refetchAll={refetchAll} telemetryRecorder={telemetryRecorder} />
-            ))}
-        </ConnectionList>
-        {connection && (
-            <SummaryContainer className="mt-2">
-                <ConnectionSummary
-                    first={15}
-                    centered={true}
-                    connection={connection}
-                    noun="team"
-                    pluralNoun="teams"
-                    hasNextPage={hasNextPage}
-                    connectionQuery={query}
-                />
-                {hasNextPage && <ShowMoreButton centered={true} onClick={fetchMore} />}
-            </SummaryContainer>
-        )}
-    </ConnectionContainer>
-)
+    return (
+        <ConnectionContainer className={classNames(className)}>
+            <ConnectionForm
+                inputValue={searchValue}
+                onInputChange={event => setSearchValue(event.target.value)}
+                inputPlaceholder={t('search-teams')}
+            />
+
+            {error && <ConnectionError errors={[error.message]} />}
+            {loading && !connection && <ConnectionLoading />}
+            <ConnectionList as="ul" className="list-group" aria-label="Teams">
+                {connection?.nodes?.map(node => (
+                    <TeamNode key={node.id} node={node} refetchAll={refetchAll} telemetryRecorder={telemetryRecorder} />
+                ))}
+            </ConnectionList>
+            {connection && (
+                <SummaryContainer className="mt-2">
+                    <ConnectionSummary
+                        first={15}
+                        centered={true}
+                        connection={connection}
+                        noun="team"
+                        pluralNoun="teams"
+                        hasNextPage={hasNextPage}
+                        connectionQuery={query}
+                    />
+                    {hasNextPage && <ShowMoreButton centered={true} onClick={fetchMore} />}
+                </SummaryContainer>
+            )}
+        </ConnectionContainer>
+    )
+}

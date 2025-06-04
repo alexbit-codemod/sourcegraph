@@ -2,6 +2,7 @@ import type { FC } from 'react'
 
 import classNames from 'classnames'
 import { noop } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { useMutation } from '@sourcegraph/http-client'
 import { Alert, Button, ErrorAlert, Link, LoadingSpinner, renderError, Tooltip } from '@sourcegraph/wildcard'
@@ -51,6 +52,8 @@ export const ExternalServiceEntry: FC<ExternalServiceEntryProps> = ({
     updateExclusionLoading,
     redirectAfterExclusion,
 }) => {
+    const { t } = useTranslation('repo/settings/components')
+
     const [excludeRepo, { data, error, loading: isExcluding }] = useMutation<
         ExcludeRepoFromExternalServicesResult,
         ExcludeRepoFromExternalServicesVariables
@@ -61,15 +64,19 @@ export const ExternalServiceEntry: FC<ExternalServiceEntryProps> = ({
             <div className={classNames(styles.card, data ? '' : 'mb-3')}>
                 {data && !redirectAfterExclusion ? (
                     <Alert variant="success">
-                        Code host configuration updated. Please see the updated code host configuration{' '}
-                        <Link to={`/site-admin/external-services/${encodeURIComponent(service.id)}`}>here</Link>
+                        <Trans
+                            i18nKey="code-host-configuration-updated-link"
+                            components={{
+                                '0': <Link to={`/site-admin/external-services/${encodeURIComponent(service.id)}`} />,
+                            }}
+                        />
                     </Alert>
                 ) : (
                     <ExternalServiceCard
                         {...defaultExternalServices[service.kind]}
                         kind={service.kind}
                         title={service.displayName}
-                        shortDescription="Update this code host configuration to manage repository mirroring."
+                        shortDescription={t('update-code-host-configuration-repository-mirroring')}
                         to={`/site-admin/external-services/${encodeURIComponent(service.id)}`}
                         toIcon={null}
                         bordered={false}
@@ -114,7 +121,7 @@ export const ExternalServiceEntry: FC<ExternalServiceEntryProps> = ({
                             }}
                             disabled={excludingDisabled || (excludingLoading && !isExcluding)}
                         >
-                            <span className={isExcluding ? styles.invisibleText : ''}>Exclude repository</span>
+                            <span className={isExcluding ? styles.invisibleText : ''}>{t('exclude-repository')}</span>
                             {isExcluding && <LoadingSpinner className={styles.loader} />}
                         </Button>
                     </Tooltip>

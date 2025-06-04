@@ -1,5 +1,7 @@
 import React, { useCallback } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { Button, Modal, H3, ErrorAlert, Select } from '@sourcegraph/wildcard'
 
 import { LoaderButton } from '../../../../components/LoaderButton'
@@ -28,6 +30,8 @@ export const ExportChangesetsModal: React.FunctionComponent<React.PropsWithChild
     batchChangeID,
     changesetIDs,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
     const [getChangesetsByIDs, { loading, error }] = useGetChangesetsByIDs(batchChangeID, changesetIDs)
     const [selectedDataExportType, setSelectedDataExportType] = React.useState<ExportFormat>(exportOptions.CSV)
 
@@ -112,7 +116,7 @@ export const ExportChangesetsModal: React.FunctionComponent<React.PropsWithChild
 
     return (
         <Modal onDismiss={onCancel} aria-labelledby={MODAL_LABEL_ID}>
-            <H3 id={MODAL_LABEL_ID}>Export changesets</H3>
+            <H3 id={MODAL_LABEL_ID}>{t('export-changesets')}</H3>
 
             <Select
                 id="format"
@@ -121,14 +125,14 @@ export const ExportChangesetsModal: React.FunctionComponent<React.PropsWithChild
                 value={selectedDataExportType}
                 onChange={handleFormatChange}
             >
-                <option value={exportOptions.CSV}>CSV</option>
-                <option value={exportOptions.JSON}>JSON</option>
+                <option value={exportOptions.CSV}>{t('csv-format')}</option>
+                <option value={exportOptions.JSON}>{t('json-format')}</option>
             </Select>
 
             {error && <ErrorAlert error={error} />}
             <div className="d-flex justify-content-end">
                 <Button disabled={loading} className="mr-2" onClick={onCancel} outline={true} variant="secondary">
-                    Cancel
+                    {t('cancel-button')}
                 </Button>
                 <LoaderButton
                     onClick={onSubmit}
@@ -136,7 +140,7 @@ export const ExportChangesetsModal: React.FunctionComponent<React.PropsWithChild
                     variant="primary"
                     loading={loading}
                     alwaysShowLabel={true}
-                    label="Export"
+                    label={t('export-label')}
                 />
             </div>
         </Modal>

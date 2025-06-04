@@ -1,6 +1,7 @@
 import React, { type FC, useMemo } from 'react'
 
 import { mdiChevronDown, mdiChevronUp, mdiDomain, mdiLock, mdiWeb } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
@@ -28,6 +29,8 @@ interface NotebookShareOptionsDropdownProps extends TelemetryProps, TelemetryV2P
 const ShareOptionComponent: React.FunctionComponent<
     React.PropsWithChildren<Omit<ShareOption, 'namespaceId'> & { isSourcegraphDotCom: boolean }>
 > = ({ isSourcegraphDotCom, namespaceType, namespaceName, isPublic }) => {
+    const { t } = useTranslation('notebooks/notebookPage')
+
     if (namespaceType === 'User') {
         if (isPublic) {
             const publicText = isSourcegraphDotCom ? 'Public' : 'Instance'
@@ -54,8 +57,8 @@ const ShareOptionComponent: React.FunctionComponent<
                     aria-hidden={true}
                     height="1.15rem"
                     width="1.15rem"
-                />{' '}
-                Private
+                />
+                {t('private-label')}
             </>
         )
     }

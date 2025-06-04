@@ -1,4 +1,5 @@
 import { mdiLoading, mdiPlus } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { type ErrorLike, asError } from '@sourcegraph/common'
 import { useMutation } from '@sourcegraph/http-client'
@@ -17,6 +18,8 @@ export interface MakeOwnerButtonProps {
 }
 
 export const MakeOwnerButton: React.FC<MakeOwnerButtonProps> = ({ onSuccess, onError, repoId, path, userId }) => {
+    const { t } = useTranslation('repo/blob/own')
+
     const tooltipContent =
         userId === undefined
             ? 'Only ownership entries that are recognized as Sourcegraph users can be assigned ownership.'
@@ -48,7 +51,7 @@ export const MakeOwnerButton: React.FC<MakeOwnerButtonProps> = ({ onSuccess, onE
         <Tooltip content={tooltipContent}>
             <Button onClick={assignOwner} variant="secondary" outline={true} size="sm" disabled={userId === undefined}>
                 <Icon aria-hidden={true} svgPath={loading ? mdiLoading : mdiPlus} />
-                Make owner
+                {t('make-owner')}
             </Button>
         </Tooltip>
     )

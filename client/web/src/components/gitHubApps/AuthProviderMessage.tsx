@@ -2,6 +2,7 @@ import { type FC, useMemo, useState } from 'react'
 
 import { mdiEye, mdiEyeOffOutline } from '@mdi/js'
 import { parse as parseJSONC } from 'jsonc-parser'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { useQuery } from '@sourcegraph/http-client'
 import { Icon, Button, Alert, Text, Link, Code } from '@sourcegraph/wildcard'
@@ -22,6 +23,8 @@ interface Props {
 }
 
 const AuthProviderJSON: FC<Props> = ({ app, id }) => {
+    const { t } = useTranslation('components/gitHubApps')
+
     const [reveal, setReveal] = useState(false)
     const { data, loading, error } = useQuery<GitHubAppClientSecretResult, GitHubAppClientSecretVariables>(
         GITHUB_APP_CLIENT_SECRET_QUERY,
@@ -62,7 +65,8 @@ const AuthProviderJSON: FC<Props> = ({ app, id }) => {
     if (error) {
         return (
             <Alert variant="danger" className="m-3">
-                Error fetching GitHub App client secret: {error.message}
+                {t('error-fetching-github-app-client-secret')}
+                {error.message}
             </Alert>
         )
     }
@@ -80,6 +84,8 @@ const AuthProviderJSON: FC<Props> = ({ app, id }) => {
 }
 
 export const AuthProviderMessage: FC<Props> = ({ app, id }) => {
+    const { t } = useTranslation('components/gitHubApps')
+
     const { data, loading, error } = useQuery<SiteResult, SiteVariables>(SITE_SETTINGS_QUERY, {
         skip: !app || !id,
     })
@@ -101,7 +107,8 @@ export const AuthProviderMessage: FC<Props> = ({ app, id }) => {
     if (error) {
         return (
             <Alert variant="danger" className="m-3">
-                Error fetching site configuration: {error.message}
+                {t('error-fetching-site-configuration')}
+                {error.message}
             </Alert>
         )
     }
@@ -109,11 +116,10 @@ export const AuthProviderMessage: FC<Props> = ({ app, id }) => {
     return (
         <Alert variant="warning" className="mt-4 mb-4">
             <Text>
-                Add the following configuration to the{' '}
-                <Link to="/site-admin/configuration">
-                    <Code>"auth.providers"</Code> list in site-config
-                </Link>{' '}
-                to make sure that users can login and sync permissions via the GitHub app:
+                <Trans
+                    i18nKey="add-configuration-for-github-app-login"
+                    components={{ '0': <Link to="/site-admin/configuration" /> }}
+                />
             </Text>
             <AuthProviderJSON app={app} id={id} />
         </Alert>

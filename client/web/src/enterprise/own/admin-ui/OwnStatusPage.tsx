@@ -1,5 +1,6 @@
 import { type FC, useState, useEffect } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { noop } from 'rxjs'
 
 import { Toggle } from '@sourcegraph/branded/src/components/Toggle'
@@ -23,6 +24,8 @@ import styles from './own-status-page-styles.module.scss'
 interface OwnStatusPageProps extends TelemetryV2Props {}
 
 export const OwnStatusPage: FC<OwnStatusPageProps> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('enterprise/own/admin-ui')
+
     const [hasLocalChanges, setHasLocalChanges] = useState<boolean>(false)
     const [localData, setLocalData] = useState<OwnSignalConfig[]>([])
     const [saveError, setSaveError] = useState<Error | null>()
@@ -57,11 +60,11 @@ export const OwnStatusPage: FC<OwnStatusPageProps> = ({ telemetryRecorder }) => 
         <div>
             <span className={styles.topHeader}>
                 <div>
-                    <PageTitle title="Code ownership signals configuration" />
+                    <PageTitle title={t('code-ownership-signals-configuration')} />
                     <PageHeader
                         headingElement="h2"
                         path={[{ text: 'Code ownership signals configuration' }]}
-                        description="List of code ownership inference signal indexers and their configurations. All repositories are included by default."
+                        description={t('list-of-code-ownership-inference-signal-indexers')}
                         className="mb-3"
                     />
                     {saveError && <ErrorAlert error={saveError} />}
@@ -112,43 +115,47 @@ export const OwnStatusPage: FC<OwnStatusPageProps> = ({ telemetryRecorder }) => 
                 {!loading &&
                     localData &&
                     !error &&
-                    localData.map((job: OwnSignalConfig, index: number) => (
-                        <li key={job.name} className={styles.job}>
-                            <div className={styles.jobHeader}>
-                                <H3 className={styles.jobName}>{job.name}</H3>
-                                <div id="job-item" className={styles.jobStatus}>
-                                    <Toggle
-                                        onToggle={value => {
-                                            onUpdateJob(index, { ...job, isEnabled: value })
-                                            telemetryRecorder.recordEvent('admin.ownershipSignals.job', 'toggle')
-                                        }}
-                                        title={job.isEnabled ? 'Enabled' : 'Disabled'}
-                                        id="job-enabled"
-                                        value={job.isEnabled}
-                                        aria-label={`Toggle ${job.name} job`}
-                                    />
-                                    <Text id="statusText" size="small" className="text-muted mb-0">
-                                        {job.isEnabled ? 'Enabled' : 'Disabled'}
-                                    </Text>
-                                </div>
-                            </div>
-                            <span className={styles.jobDescription}>{job.description}</span>
+                    localData.map((job: OwnSignalConfig, index: number) => {
+                        const { t } = useTranslation('enterprise/own/admin-ui')
 
-                            <div className={styles.excludeRepos} id="excludeRepos">
-                                <Label className="mb-0">Exclude repositories</Label>
-                                <RepositoryPatternList
-                                    repositoryPatterns={job.excludedRepoPatterns}
-                                    setRepositoryPatterns={updater => {
-                                        const updatedJob: OwnSignalConfig = {
-                                            ...job,
-                                            excludedRepoPatterns: updater(job.excludedRepoPatterns),
-                                        } as OwnSignalConfig
-                                        onUpdateJob(index, updatedJob)
-                                    }}
-                                />
-                            </div>
-                        </li>
-                    ))}
+                        return (
+                            <li key={job.name} className={styles.job}>
+                                <div className={styles.jobHeader}>
+                                    <H3 className={styles.jobName}>{job.name}</H3>
+                                    <div id="job-item" className={styles.jobStatus}>
+                                        <Toggle
+                                            onToggle={value => {
+                                                onUpdateJob(index, { ...job, isEnabled: value })
+                                                telemetryRecorder.recordEvent('admin.ownershipSignals.job', 'toggle')
+                                            }}
+                                            title={job.isEnabled ? 'Enabled' : 'Disabled'}
+                                            id="job-enabled"
+                                            value={job.isEnabled}
+                                            aria-label={`Toggle ${job.name} job`}
+                                        />
+                                        <Text id="statusText" size="small" className="text-muted mb-0">
+                                            {job.isEnabled ? 'Enabled' : 'Disabled'}
+                                        </Text>
+                                    </div>
+                                </div>
+                                <span className={styles.jobDescription}>{job.description}</span>
+
+                                <div className={styles.excludeRepos} id="excludeRepos">
+                                    <Label className="mb-0">{t('exclude-repositories')}</Label>
+                                    <RepositoryPatternList
+                                        repositoryPatterns={job.excludedRepoPatterns}
+                                        setRepositoryPatterns={updater => {
+                                            const updatedJob: OwnSignalConfig = {
+                                                ...job,
+                                                excludedRepoPatterns: updater(job.excludedRepoPatterns),
+                                            } as OwnSignalConfig
+                                            onUpdateJob(index, updatedJob)
+                                        }}
+                                    />
+                                </div>
+                            </li>
+                        )
+                    })}
             </Container>
         </div>
     )

@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { H3, Text } from '@sourcegraph/wildcard'
@@ -26,6 +27,8 @@ export const ConfirmDeleteModal: React.FunctionComponent<ConfirmDeleteModalProps
     onConfirm = noop,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/insights/components/modals')
+
     const { delete: handleDelete, loading } = useDeleteInsight(telemetryRecorder)
 
     const handleConfirm = async (): Promise<void> => {
@@ -48,8 +51,15 @@ export const ConfirmDeleteModal: React.FunctionComponent<ConfirmDeleteModalProps
             variant="danger"
             confirmText="Delete forever"
         >
-            <H3 className="text-danger mb-4">Delete '{insight.title}'?</H3>
-            <Text className="mb-4">Are you sure you want to delete insight {insight.title}? This can't be undone.</Text>
+            <H3 className="text-danger mb-4">
+                {t('delete-quote')}
+                {insight.title}'?
+            </H3>
+            <Text className="mb-4">
+                {t('confirm-delete-insight')}
+                {insight.title}
+                {t('delete-warning')}
+            </Text>
         </ConfirmationModal>
     )
 }

@@ -12,6 +12,7 @@ import {
 } from '@mdi/js'
 import classNames from 'classnames'
 import { isEqual } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import {
     Icon,
@@ -438,6 +439,8 @@ interface ActionsProps<T> {
 }
 
 function Actions<T>({ children, actions, disabled, selection, className }: ActionsProps<T>): JSX.Element {
+    const { t } = useTranslation('site-admin/UserManagement/components')
+
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const handleOpenChange = useCallback((event: PopoverOpenEvent): void => {
         setIsOpen(event.isOpen)
@@ -480,7 +483,7 @@ function Actions<T>({ children, actions, disabled, selection, className }: Actio
                         ))}
                     </ul>
                 ) : (
-                    <Text className="m-2 font-italic text-muted">No actions available</Text>
+                    <Text className="m-2 font-italic text-muted">{t('no-actions-available')}</Text>
                 )}
             </PopoverContent>
         </Popover>

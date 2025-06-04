@@ -2,6 +2,7 @@ import { type FC, type PropsWithChildren, useState, useMemo, useEffect } from 'r
 
 import AJV from 'ajv'
 import addFormats from 'ajv-formats'
+import { useTranslation } from 'react-i18next'
 
 import { useMutation, useQuery } from '@sourcegraph/http-client'
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -53,6 +54,8 @@ addFormats(ajv)
 interface Props extends TelemetryProps, TelemetryV2Props {}
 
 export const SiteAdminOnboardingTourPage: FC<PropsWithChildren<Props>> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin')
+
     const isLightTheme = useIsLightTheme()
     const [value, setValue] = useState<string | null>(null)
     const { data, loading, error, previousData } = useQuery<OnboardingTourConfigResult, OnboardingTourConfigVariables>(
@@ -112,22 +115,22 @@ export const SiteAdminOnboardingTourPage: FC<PropsWithChildren<Props>> = ({ tele
 
     return (
         <>
-            <PageTitle title="End user onboarding" />
+            <PageTitle title={t('end-user-onboarding-title')} />
             <PageHeader className="mb-3">
                 <PageHeader.Heading as="h3" styleAs="h2">
                     <PageHeader.Breadcrumb>
                         <span className="d-inline-flex align-items-center">
-                            <span>End user onboarding</span>{' '}
+                            <span>{t('end-user-onboarding')}</span>{' '}
                             <Badge className="ml-2" variant="warning">
-                                Experimental
+                                {t('experimental-settings')}
                             </Badge>
                         </span>
                     </PageHeader.Breadcrumb>
                 </PageHeader.Heading>
             </PageHeader>
-            <Text>This settings controls the onboarding task list that is displayed to all users by default.</Text>
+            <Text>{t('onboarding-task-list-description')}</Text>
             <Container>
-                {initialLoad && <LoadingSpinner title="Loading onboarding configuration" />}
+                {initialLoad && <LoadingSpinner title={t('loading-onboarding-configuration')} />}
                 {!initialLoad && (
                     <>
                         <BeforeUnloadPrompt when={saving || dirty} message="Discard settings changes?" />
@@ -152,7 +155,7 @@ export const SiteAdminOnboardingTourPage: FC<PropsWithChildren<Props>> = ({ tele
                                 className="ml-auto"
                                 variant="secondary"
                             >
-                                Reset
+                                {t('reset-button')}
                             </Button>
                         </SaveToolbar>
                     </>

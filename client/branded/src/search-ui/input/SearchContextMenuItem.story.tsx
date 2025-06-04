@@ -1,4 +1,5 @@
 import type { Meta, StoryFn, Decorator } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { Combobox } from '@sourcegraph/wildcard'
 import { BrandedStory } from '@sourcegraph/wildcard/src/stories'
@@ -23,18 +24,22 @@ export default config
 
 export const SelectedDefaultItem: StoryFn = () => (
     <BrandedStory>
-        {() => (
-            <Combobox>
-                <SearchContextMenuItem
-                    spec="@user/test"
-                    description="Default description"
-                    query=""
-                    selected={true}
-                    isDefault={true}
-                    starred={false}
-                />
-            </Combobox>
-        )}
+        {() => {
+            const { t } = useTranslation('../../branded/src/search-ui/input')
+
+            return (
+                <Combobox>
+                    <SearchContextMenuItem
+                        spec="@user/test"
+                        description={t('default-description-1')}
+                        query=""
+                        selected={true}
+                        isDefault={true}
+                        starred={false}
+                    />
+                </Combobox>
+            )
+        }}
     </BrandedStory>
 )
 
@@ -42,18 +47,22 @@ SelectedDefaultItem.storyName = 'selected default item'
 
 export const StarredItem: StoryFn = () => (
     <BrandedStory>
-        {() => (
-            <Combobox>
-                <SearchContextMenuItem
-                    spec="@user/test"
-                    description="Default description"
-                    query=""
-                    selected={false}
-                    isDefault={false}
-                    starred={true}
-                />
-            </Combobox>
-        )}
+        {() => {
+            const { t } = useTranslation('../../branded/src/search-ui/input')
+
+            return (
+                <Combobox>
+                    <SearchContextMenuItem
+                        spec="@user/test"
+                        description={t('default-description-2')}
+                        query=""
+                        selected={false}
+                        isDefault={false}
+                        starred={true}
+                    />
+                </Combobox>
+            )
+        }}
     </BrandedStory>
 )
 

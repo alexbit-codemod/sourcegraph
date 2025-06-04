@@ -1,6 +1,7 @@
 import { Suspense, type FC, memo, useMemo } from 'react'
 
 import { mdiPlus } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 import { useParams, useNavigate } from 'react-router-dom'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -133,6 +134,8 @@ interface CodeInsightHeaderActionsProps extends TelemetryProps, TelemetryV2Props
 }
 
 const CodeInsightHeaderActions: FC<CodeInsightHeaderActionsProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages')
+
     const { dashboardId, telemetryService, telemetryRecorder } = props
 
     const { insight } = useUiFeatures()
@@ -149,7 +152,8 @@ const CodeInsightHeaderActions: FC<CodeInsightHeaderActionsProps> = props => {
                 className="mr-2"
                 aria-label="Add dashboard"
             >
-                <Icon aria-hidden={true} svgPath={mdiPlus} /> Add dashboard
+                <Icon aria-hidden={true} svgPath={mdiPlus} />
+                {t('add-dashboard')}
             </Button>
 
             <Tooltip content={!available ? 'You have reached your insights limit' : null}>
@@ -163,7 +167,8 @@ const CodeInsightHeaderActions: FC<CodeInsightHeaderActionsProps> = props => {
                     }}
                     disabled={!available}
                 >
-                    <Icon aria-hidden={true} svgPath={mdiPlus} /> Create insight
+                    <Icon aria-hidden={true} svgPath={mdiPlus} />
+                    {t('create-insight')}
                 </Button>
             </Tooltip>
         </>

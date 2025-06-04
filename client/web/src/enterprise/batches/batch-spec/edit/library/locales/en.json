@@ -1,0 +1,8 @@
+{
+  "replace-batch-spec-question": "Replace batch spec?",
+  "replace-batch-spec-confirmation-message": "Are you sure you want to replace your current batch spec with the template for <0>{{libraryItemName}}</0>?",
+  "cancel-button-label": "Cancel",
+  "confirm-button-label": "Confirm",
+  "library-title": "Library",
+  "view-more-examples": "View more examples"
+}

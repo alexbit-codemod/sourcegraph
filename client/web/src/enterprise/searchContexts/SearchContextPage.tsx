@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { mdiMagnify } from '@mdi/js'
 import classNames from 'classnames'
 import { debounce } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { catchError, startWith } from 'rxjs/operators'
 
@@ -51,6 +52,8 @@ const incrementalRepositoriesToShow = 10
 const SearchContextRepositories: React.FunctionComponent<
     React.PropsWithChildren<{ repositories: SearchContextRepositoryRevisionsFields[] }>
 > = ({ repositories }) => {
+    const { t } = useTranslation('enterprise/searchContexts')
+
     const [filterQuery, setFilterQuery] = useState('')
     const debouncedSetFilterQuery = useMemo(() => debounce(value => setFilterQuery(value), 250), [setFilterQuery])
     const filteredRepositories = useMemo(
@@ -115,7 +118,7 @@ const SearchContextRepositories: React.FunctionComponent<
                 {repositories.length > 0 && (
                     <Input
                         className="w-50"
-                        placeholder="Search repositories and revisions"
+                        placeholder={t('search-repositories-and-revisions')}
                         onChange={event => debouncedSetFilterQuery(event.target.value)}
                     />
                 )}
@@ -123,8 +126,8 @@ const SearchContextRepositories: React.FunctionComponent<
             {repositories.length > 0 && (
                 <>
                     <div className="d-flex mt-3">
-                        <div className="w-50">Repositories</div>
-                        <div className="w-50">Revisions</div>
+                        <div className="w-50">{t('repositories')}</div>
+                        <div className="w-50">{t('revisions')}</div>
                     </div>
                     <hr className="mt-2 mb-0" />
                     <VirtualList<SearchContextRepositoryRevisionsFields>
@@ -147,6 +150,8 @@ export const SearchContextPage: React.FunctionComponent<SearchContextPageProps> 
     platformContext,
     authenticatedUser,
 }) => {
+    const { t } = useTranslation('enterprise/searchContexts')
+
     const params = useParams()
     const spec: string = params.spec ? `${params.specOrOrg}/${params.spec}` : params.specOrOrg!
 
@@ -212,12 +217,12 @@ export const SearchContextPage: React.FunctionComponent<SearchContextPageProps> 
                     variant="secondary"
                     as={Link}
                 >
-                    Edit
+                    {t('edit')}
                 </Button>
             )}
             {searchContext && authenticatedUser && !isDefault && (
                 <Button variant="secondary" onClick={setAsDefaultWithErrorHandling}>
-                    Use as default
+                    {t('use-as-default')}
                 </Button>
             )}
         </div>
@@ -238,7 +243,7 @@ export const SearchContextPage: React.FunctionComponent<SearchContextPageProps> 
                             <PageHeader className="mb-2" actions={actions}>
                                 <PageHeader.Heading as="h2" styleAs="h1">
                                     <PageHeader.Breadcrumb icon={mdiMagnify} to="/search" aria-label="Code Search" />
-                                    <PageHeader.Breadcrumb to="/contexts">Contexts</PageHeader.Breadcrumb>
+                                    <PageHeader.Breadcrumb to="/contexts">{t('contexts')}</PageHeader.Breadcrumb>
                                     <PageHeader.Breadcrumb>
                                         <div>
                                             <span
@@ -261,24 +266,25 @@ export const SearchContextPage: React.FunctionComponent<SearchContextPageProps> 
                                             className="text-uppercase"
                                             data-testid="search-context-default-badge"
                                         >
-                                            Default
+                                            {t('default')}
                                         </Badge>{' '}
                                     </>
                                 ) : null}
                                 {!searchContext.public ? (
                                     <>
                                         <Badge variant="secondary" pill={true}>
-                                            Private
+                                            {t('private')}
                                         </Badge>{' '}
                                     </>
                                 ) : null}
                                 {searchContext.autoDefined ? (
                                     <Badge variant="outlineSecondary" pill={true}>
-                                        Auto
+                                        {t('auto')}
                                     </Badge>
                                 ) : (
                                     <span className="ml-1 text-muted">
-                                        Updated <Timestamp date={searchContext.updatedAt} noAbout={true} />
+                                        {t('updated')}
+                                        <Timestamp date={searchContext.updatedAt} noAbout={true} />
                                     </span>
                                 )}
                             </div>
@@ -312,7 +318,11 @@ export const SearchContextPage: React.FunctionComponent<SearchContextPageProps> 
                     )}
                     {isErrorLike(searchContextOrError) && (
                         <Alert variant="danger">
-                            Error while loading the search context: <strong>{searchContextOrError.message}</strong>
+                            <Trans
+                                i18nKey="error-loading-search-context"
+                                values={{ searchContextOrErrorMessage: <>{searchContextOrError.message}</> }}
+                                components={{ '0': <strong /> }}
+                            />
                         </Alert>
                     )}
                 </div>

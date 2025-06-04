@@ -1,0 +1,10 @@
+{
+  "new-team-title": "New team",
+  "team-description": "A team is a group of users. See <0>Teams documentation</0> for information about configuring teams.",
+  "team-name-label": "Team name",
+  "engineering-team-id": "engineering",
+  "display-name-label": "Display name",
+  "engineering-team-name": "Engineering Team",
+  "parent-team-label": "Parent team",
+  "create-team-title": "Create team"
+}

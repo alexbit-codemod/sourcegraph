@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { createAggregateError } from '@sourcegraph/common'
 import { gql } from '@sourcegraph/http-client'
 import type { Scalars } from '@sourcegraph/shared/src/graphql-operations'
@@ -67,6 +69,8 @@ export const RepositoriesPopover: React.FunctionComponent<React.PropsWithChildre
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('repo/RepositoriesPopover')
+
     const [searchValue, setSearchValue] = useState('')
     const query = useDebounce(searchValue, 200)
 
@@ -113,7 +117,7 @@ export const RepositoriesPopover: React.FunctionComponent<React.PropsWithChildre
                 <ConnectionPopoverForm
                     inputValue={searchValue}
                     onInputChange={event => setSearchValue(event.target.value)}
-                    inputPlaceholder="Search repositories..."
+                    inputPlaceholder={t('search-repositories-placeholder')}
                     autoFocus={true}
                     compact={true}
                 />

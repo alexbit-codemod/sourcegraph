@@ -9,6 +9,7 @@ import {
     mdiInformationOutline,
 } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { useQuery } from '@sourcegraph/http-client'
 import {
@@ -195,6 +196,8 @@ interface Props {
  * more information on these tasks.
  */
 export const StatusMessagesNavItem: React.FunctionComponent<React.PropsWithChildren<Props>> = props => {
+    const { t } = useTranslation('nav')
+
     const [isOpen, setIsOpen] = useState(false)
     const toggleIsOpen = (): void => setIsOpen(old => !old)
 
@@ -255,10 +258,10 @@ export const StatusMessagesNavItem: React.FunctionComponent<React.PropsWithChild
             return (
                 <StatusMessagesNavItemEntry
                     key="up-to-date"
-                    title="Repositories up to date"
+                    title={t('repositories-up-to-date')}
                     message="Repositories synced from code host and available for search."
                     linkTo="/site-admin/repositories"
-                    linkText="View repositories"
+                    linkText={t('view-repositories')}
                     linkOnClick={toggleIsOpen}
                     entryType="success"
                 />
@@ -273,10 +276,10 @@ export const StatusMessagesNavItem: React.FunctionComponent<React.PropsWithChild
                             <StatusMessagesNavItemEntry
                                 key={status.message}
                                 message={status.message}
-                                title="Code syncing disabled"
+                                title={t('code-syncing-disabled')}
                                 messageHint="Remove disableGitAutoUpdates or set it to false in the site configuration"
                                 linkTo="/site-admin/configuration"
-                                linkText="View site configuration"
+                                linkText={t('view-site-configuration')}
                                 linkOnClick={toggleIsOpen}
                                 entryType="warning"
                             />
@@ -286,10 +289,10 @@ export const StatusMessagesNavItem: React.FunctionComponent<React.PropsWithChild
                         return (
                             <StatusMessagesNavItemEntry
                                 key="no-repositories"
-                                title="No repositories"
+                                title={t('no-repositories')}
                                 message="Connect a code host to connect repositories to Sourcegraph."
                                 linkTo="/setup"
-                                linkText="Setup code hosts"
+                                linkText={t('setup-code-hosts')}
                                 linkOnClick={toggleIsOpen}
                                 entryType="info"
                             />
@@ -300,10 +303,10 @@ export const StatusMessagesNavItem: React.FunctionComponent<React.PropsWithChild
                             <StatusMessagesNavItemEntry
                                 key={status.message}
                                 message={status.message}
-                                title="Cloning repositories"
+                                title={t('cloning-repositories')}
                                 messageHint="Not all repositories available for search yet."
                                 linkTo="/site-admin/repositories"
-                                linkText="View repositories"
+                                linkText={t('view-repositories-duplicate')}
                                 linkOnClick={toggleIsOpen}
                                 entryType="progress"
                             />
@@ -316,10 +319,10 @@ export const StatusMessagesNavItem: React.FunctionComponent<React.PropsWithChild
                                 message={`Indexing repositories. ${status.indexed} out of ${
                                     status.indexed + status.notIndexed
                                 } indexed.`}
-                                title="Indexing repositories"
+                                title={t('indexing-repositories')}
                                 messageHint="Indexing repositories speeds up search."
                                 linkTo="/site-admin/repositories"
-                                linkText="View repositories"
+                                linkText={t('view-repositories-duplicate-2')}
                                 linkOnClick={toggleIsOpen}
                                 entryType="indexing"
                             />
@@ -329,11 +332,11 @@ export const StatusMessagesNavItem: React.FunctionComponent<React.PropsWithChild
                         return (
                             <StatusMessagesNavItemEntry
                                 key={status.externalService.id}
-                                title="Code host connection"
+                                title={t('code-host-connection')}
                                 message={`Failed to connect to "${status.externalService.displayName}".`}
                                 messageHint="Repositories synced to Sourcegraph may not be up to date."
                                 linkTo={`/site-admin/external-services/${status.externalService.id}`}
-                                linkText="View code host configuration"
+                                linkText={t('view-code-host-configuration')}
                                 linkOnClick={toggleIsOpen}
                                 entryType="error"
                             />
@@ -344,10 +347,10 @@ export const StatusMessagesNavItem: React.FunctionComponent<React.PropsWithChild
                             <StatusMessagesNavItemEntry
                                 key={status.message}
                                 message={status.message}
-                                title="Syncing repositories from code hosts"
+                                title={t('syncing-repositories-from-code-hosts')}
                                 messageHint="Repository contents may not be up to date."
                                 linkTo="/site-admin/repositories?status=failed-fetch"
-                                linkText="View affected repositories"
+                                linkText={t('view-affected-repositories')}
                                 linkOnClick={toggleIsOpen}
                                 entryType="warning"
                             />
@@ -357,11 +360,11 @@ export const StatusMessagesNavItem: React.FunctionComponent<React.PropsWithChild
                         return (
                             <StatusMessagesNavItemEntry
                                 key="disk-threshold-reached"
-                                title="Gitserver disk threshold reached"
+                                title={t('gitserver-disk-threshold-reached')}
                                 message={status.message}
                                 messageHint="Search and cloning may be impacted until disk usage is reduced."
                                 linkTo="/site-admin/gitservers"
-                                linkText="Manage Gitservers"
+                                linkText={t('manage-gitservers')}
                                 linkOnClick={toggleIsOpen}
                                 entryType="warning"
                             />
@@ -396,7 +399,7 @@ export const StatusMessagesNavItem: React.FunctionComponent<React.PropsWithChild
 
             <PopoverContent position={Position.bottom} className={classNames('p-0', styles.dropdownMenu)}>
                 <div className={styles.dropdownMenuContent}>
-                    <small className={classNames('d-inline-block text-muted', styles.sync)}>Status</small>
+                    <small className={classNames('d-inline-block text-muted', styles.sync)}>{t('status')}</small>
                     {error && (
                         <ErrorAlert className={styles.entry} prefix="Failed to load status messages" error={error} />
                     )}

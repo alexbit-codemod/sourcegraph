@@ -1,6 +1,7 @@
 import { type FC, type ReactElement, type ReactNode, useState } from 'react'
 
 import { mdiChevronDown, mdiChevronUp } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { NOOP_TELEMETRY_SERVICE } from '@sourcegraph/shared/src/telemetry/telemetryService'
@@ -91,13 +92,15 @@ interface CodeHostJSONFormContentProps extends TelemetryV2Props {
 }
 
 export function CodeHostJSONFormContent(props: CodeHostJSONFormContentProps): ReactElement {
+    const { t } = useTranslation('setup-wizard/components/remote-repositories-step/components/code-hosts/common')
+
     const { displayNameField, configurationField, externalServiceOptions } = props
     const isLightTheme = useIsLightTheme()
 
     // Fragment to avoid nesting since it's rendered within TabPanel fieldset
     return (
         <>
-            <Input label="Display name" {...getDefaultInputProps(displayNameField)} />
+            <Input label={t('display-name')} {...getDefaultInputProps(displayNameField)} />
 
             <FormGroup
                 name="Configuration"
@@ -125,7 +128,7 @@ export function CodeHostJSONFormContent(props: CodeHostJSONFormContentProps): Re
                     className={styles.configurationGroupEditor}
                     explanation={
                         <Text className="form-text text-muted" size="small">
-                            Use Ctrl+Space for completion, and hover over JSON properties for documentation.
+                            {t('ctrl-space-completion-instructions')}
                         </Text>
                     }
                 />
@@ -139,6 +142,8 @@ interface CodeHostInstructionsProps {
 }
 
 const CodeHostInstructions: FC<CodeHostInstructionsProps> = props => {
+    const { t } = useTranslation('setup-wizard/components/remote-repositories-step/components/code-hosts/common')
+
     const { instructions: Instructions } = props
     const [isInstructionOpen, setInstructionOpen] = useState(false)
 
@@ -155,7 +160,7 @@ const CodeHostInstructions: FC<CodeHostInstructionsProps> = props => {
                 size="sm"
                 className={styles.configurationGroupInstructionButton}
             >
-                See instructions how to fill out JSONC configuration{' '}
+                {t('jsonc-configuration-instructions')}
                 <Icon aria-hidden={true} svgPath={isInstructionOpen ? mdiChevronDown : mdiChevronUp} className="mr-1" />
             </CollapseHeader>
             <CollapsePanel className={styles.configurationGroupInstructions}>

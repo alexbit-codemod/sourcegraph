@@ -3,6 +3,7 @@ import React, { useCallback, useState } from 'react'
 import { mdiContentCopy } from '@mdi/js'
 import copy from 'copy-to-clipboard'
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { Button, TextArea, Link, Icon, Label, Text } from '@sourcegraph/wildcard'
 
@@ -46,6 +47,8 @@ export const CodeHostSshPublicKey: React.FunctionComponent<React.PropsWithChildr
     showCopyButton = true,
     label = 'Public SSH key',
 }) => {
+    const { t } = useTranslation('enterprise/batches/settings')
+
     const [copied, setCopied] = useState<boolean>(false)
     const onCopy = useCallback(() => {
         copy(sshPublicKey)
@@ -73,7 +76,7 @@ export const CodeHostSshPublicKey: React.FunctionComponent<React.PropsWithChildr
             {showInstructionsLink && (
                 <Text>
                     <Link to={configInstructionLinks[externalServiceKind]} target="_blank" rel="noopener">
-                        Configuration instructions
+                        {t('configuration-instructions')}
                     </Link>
                 </Text>
             )}

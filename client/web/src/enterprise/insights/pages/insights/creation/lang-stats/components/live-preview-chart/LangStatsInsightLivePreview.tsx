@@ -1,5 +1,7 @@
 import type { FC, HTMLAttributes } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { useDebounce, useDeepMemo, ErrorAlert } from '@sourcegraph/wildcard'
 
 import {
@@ -33,6 +35,8 @@ export interface LangStatsInsightLivePreviewProps extends HTMLAttributes<HTMLEle
  * from creation UI form.
  */
 export const LangStatsInsightLivePreview: FC<LangStatsInsightLivePreviewProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation/lang-stats/components/live-preview-chart')
+
     const { repository = '', threshold, disabled = false, ...attributes } = props
 
     const settings = useDeepMemo({
@@ -50,13 +54,17 @@ export const LangStatsInsightLivePreview: FC<LangStatsInsightLivePreviewProps> =
 
             <LivePreviewCard>
                 {state.status === LivePreviewStatus.Loading ? (
-                    <LivePreviewLoading>Loading code insight</LivePreviewLoading>
+                    <LivePreviewLoading>{t('loading-code-insight')}</LivePreviewLoading>
                 ) : state.status === LivePreviewStatus.Error ? (
                     <ErrorAlert error={state.error} className="m-0" />
                 ) : (
                     <LivePreviewChart>
-                        {parent =>
-                            state.status === LivePreviewStatus.Data ? (
+                        {parent => {
+                            const { t } = useTranslation(
+                                'enterprise/insights/pages/insights/creation/lang-stats/components/live-preview-chart'
+                            )
+
+                            return state.status === LivePreviewStatus.Data ? (
                                 <CategoricalChart
                                     type={CategoricalBasedChartTypes.Pie}
                                     width={parent.width}
@@ -75,13 +83,10 @@ export const LangStatsInsightLivePreview: FC<LangStatsInsightLivePreviewProps> =
                                         {...(DEFAULT_PREVIEW_MOCK as CategoricalChartContent<unknown>)}
                                     />
 
-                                    <LivePreviewBanner>
-                                        The chart preview will be shown here once you have filled out the repository
-                                        field.
-                                    </LivePreviewBanner>
+                                    <LivePreviewBanner>{t('chart-preview-repository-field')}</LivePreviewBanner>
                                 </>
                             )
-                        }
+                        }}
                     </LivePreviewChart>
                 )}
             </LivePreviewCard>

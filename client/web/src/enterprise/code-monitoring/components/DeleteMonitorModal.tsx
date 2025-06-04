@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { type Observable, throwError } from 'rxjs'
 import { mergeMap, startWith, tap, catchError } from 'rxjs/operators'
@@ -21,6 +22,8 @@ export const DeleteMonitorModal: React.FunctionComponent<React.PropsWithChildren
     toggleDeleteModal,
     codeMonitor,
 }) => {
+    const { t } = useTranslation('enterprise/code-monitoring/components')
+
     const LOADING = 'loading' as const
     const navigate = useNavigate()
 
@@ -57,23 +60,25 @@ export const DeleteMonitorModal: React.FunctionComponent<React.PropsWithChildren
             data-testid="delete-modal"
         >
             <H3 className="text-danger" id={deleteLabelId}>
-                Delete code monitor?
+                {t('delete-code-monitor-confirmation')}
             </H3>
 
             <Text>
-                <strong>This action cannot be undone.</strong> Code monitoring will no longer watch for trigger event
-                and all actions will immediately be removed.
+                <Trans i18nKey="delete-code-monitor-warning" components={{ '0': <strong /> }} />
             </Text>
             {(!deleteCompletedOrError || isErrorLike(deleteCompletedOrError)) && (
                 <div className="text-right">
                     <Button className="mr-2" onClick={toggleDeleteModal} outline={true} variant="secondary">
-                        Cancel
+                        {t('cancel-button-label')}
                     </Button>
                     <Button onClick={onDelete} data-testid="confirm-delete-monitor" variant="danger">
-                        Yes, delete code monitor
+                        {t('confirm-delete-code-monitor')}
                     </Button>
                     {isErrorLike(deleteCompletedOrError) && (
-                        <Alert variant="danger">Error deleting monitor: {deleteCompletedOrError.message}</Alert>
+                        <Alert variant="danger">
+                            {t('error-deleting-monitor')}
+                            {deleteCompletedOrError.message}
+                        </Alert>
                     )}
                 </div>
             )}

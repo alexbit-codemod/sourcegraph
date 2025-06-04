@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { asError, isErrorLike } from '@sourcegraph/common'
 import { Button, Modal, H3, Text, ErrorAlert } from '@sourcegraph/wildcard'
 
@@ -20,6 +22,8 @@ export interface ReenqueueChangesetsModalProps {
 export const ReenqueueChangesetsModal: React.FunctionComponent<
     React.PropsWithChildren<ReenqueueChangesetsModalProps>
 > = ({ onCancel, afterCreate, batchChangeID, changesetIDs, reenqueueChangesets = _reenqueueChangesets }) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
     const [isLoading, setIsLoading] = useState<boolean | Error>(false)
 
     const onSubmit = useCallback<React.FormEventHandler>(async () => {
@@ -34,8 +38,8 @@ export const ReenqueueChangesetsModal: React.FunctionComponent<
 
     return (
         <Modal onDismiss={onCancel} aria-labelledby={LABEL_ID}>
-            <H3 id={LABEL_ID}>Re-enqueue changesets</H3>
-            <Text className="mb-4">Are you sure you want to re-enqueue all the selected changesets?</Text>
+            <H3 id={LABEL_ID}>{t('re-enqueue-changesets')}</H3>
+            <Text className="mb-4">{t('confirm-reenqueue-all-selected-changesets')}</Text>
             {isErrorLike(isLoading) && <ErrorAlert error={isLoading} />}
             <div className="d-flex justify-content-end">
                 <Button
@@ -45,7 +49,7 @@ export const ReenqueueChangesetsModal: React.FunctionComponent<
                     outline={true}
                     variant="secondary"
                 >
-                    Cancel
+                    {t('cancel-button')}
                 </Button>
                 <LoaderButton
                     onClick={onSubmit}

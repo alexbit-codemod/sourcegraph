@@ -1,5 +1,7 @@
 import { type FC, type MouseEvent, useEffect, useMemo, forwardRef } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { FilterType, resolveFilter } from '@sourcegraph/shared/src/search/query/filters'
 import { scanSearchQuery } from '@sourcegraph/shared/src/search/query/scanner'
 import type { Filter } from '@sourcegraph/shared/src/search/query/token'
@@ -17,6 +19,8 @@ export interface ComputeInsightMapPickerProps {
 }
 
 export const ComputeInsightMapPicker: FC<ComputeInsightMapPickerProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation/compute/components')
+
     const { series, value, onChange } = props
 
     const handleOptionClick = (event: MouseEvent<HTMLButtonElement>): void => {
@@ -57,11 +61,11 @@ export const ComputeInsightMapPicker: FC<ComputeInsightMapPickerProps> = props =
     return (
         <ButtonGroup className="mb-3 d-block">
             <OptionButton active={value === GroupByField.REPO} value={GroupByField.REPO} onClick={handleOptionClick}>
-                repository
+                {t('repository-label')}
             </OptionButton>
 
             <OptionButton active={value === GroupByField.PATH} value={GroupByField.PATH} onClick={handleOptionClick}>
-                path
+                {t('path-label')}
             </OptionButton>
 
             <Tooltip content={!hasTypeDiffOrCommit ? TOOLTIP_TEXT : undefined}>
@@ -71,7 +75,7 @@ export const ComputeInsightMapPicker: FC<ComputeInsightMapPickerProps> = props =
                     disabled={!hasTypeDiffOrCommit}
                     onClick={handleOptionClick}
                 >
-                    author
+                    {t('author-label')}
                 </OptionButton>
             </Tooltip>
 
@@ -82,7 +86,7 @@ export const ComputeInsightMapPicker: FC<ComputeInsightMapPickerProps> = props =
                     disabled={!hasTypeDiffOrCommit}
                     onClick={handleOptionClick}
                 >
-                    date
+                    {t('date-label')}
                 </OptionButton>
             </Tooltip>
         </ButtonGroup>

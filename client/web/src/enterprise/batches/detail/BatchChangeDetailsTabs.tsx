@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
 
 import { mdiSourceBranch, mdiChartLineVariant, mdiFileDocument, mdiArchive, mdiMonitorStar } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 import type { Settings, SettingsCascadeProps } from '@sourcegraph/shared/src/settings/settings'
@@ -83,6 +84,8 @@ export const BatchChangeDetailsTabs: React.FunctionComponent<React.PropsWithChil
     refetchBatchChange,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail')
+
     const isExecutionEnabled = isBatchChangesExecutionEnabled(settingsCascade)
 
     const pendingExecutionsCount = useMemo(
@@ -155,7 +158,7 @@ export const BatchChangeDetailsTabs: React.FunctionComponent<React.PropsWithChil
                     <span>
                         <Icon aria-hidden={true} className="text-muted mr-2" svgPath={mdiSourceBranch} />
                         <span className="text-content" data-tab-content="Changesets">
-                            Changesets
+                            {t('changesets')}
                         </span>
                         <Badge variant="secondary" pill={true} className="ml-2">
                             {changesetCount}
@@ -166,7 +169,7 @@ export const BatchChangeDetailsTabs: React.FunctionComponent<React.PropsWithChil
                     <span>
                         <Icon aria-hidden={true} className="text-muted mr-2" svgPath={mdiChartLineVariant} />
                         <span className="text-content" data-tab-content="Burndown chart">
-                            Burndown chart
+                            {t('burndown-chart')}
                         </span>
                     </span>
                 </Tab>
@@ -179,7 +182,7 @@ export const BatchChangeDetailsTabs: React.FunctionComponent<React.PropsWithChil
                         <span>
                             <Icon aria-hidden={true} className="text-muted mr-2" svgPath={mdiFileDocument} />
                             <span className="text-content" data-tab-content="Executions">
-                                Executions
+                                {t('executions')}
                             </span>
                             {pendingExecutionsCount > 0 && (
                                 <Badge variant="warning" pill={true} className="ml-2">
@@ -193,7 +196,7 @@ export const BatchChangeDetailsTabs: React.FunctionComponent<React.PropsWithChil
                         <span>
                             <Icon aria-hidden={true} className="text-muted mr-2" svgPath={mdiFileDocument} />
                             <span className="text-content" data-tab-content="Spec">
-                                Spec
+                                {t('spec')}
                             </span>
                         </span>
                     </Tab>
@@ -202,7 +205,7 @@ export const BatchChangeDetailsTabs: React.FunctionComponent<React.PropsWithChil
                     <span>
                         <Icon aria-hidden={true} className="text-muted mr-2" svgPath={mdiArchive} />
                         <span className="text-content" data-tab-content="Archived">
-                            Archived
+                            {t('archived')}
                         </span>
                         <Badge variant="secondary" pill={true} className="ml-2">
                             {batchChange.changesetsStats.archived}
@@ -213,7 +216,7 @@ export const BatchChangeDetailsTabs: React.FunctionComponent<React.PropsWithChil
                     <span>
                         <Icon aria-hidden={true} className="text-muted mr-2" svgPath={mdiMonitorStar} />
                         <span className="text-content" data-tab-content="Bulk operations">
-                            Bulk operations
+                            {t('bulk-operations')}
                         </span>
                         <Badge variant="secondary" pill={true} className="ml-2">
                             {batchChange.bulkOperations.totalCount}
@@ -267,14 +270,14 @@ export const BatchChangeDetailsTabs: React.FunctionComponent<React.PropsWithChil
                 </TabPanel>
                 <TabPanel>
                     <Text className="my-3">
-                        Archived changesets are changesets created and published by an earlier version of the batch
-                        change to workspaces that are no longer in scope of the current version. They are still
-                        associated with the batch change, but they will be closed on the code host. They do not count
-                        towards the batch change completion percentage. See our{' '}
-                        <Link to="/help/batch_changes/how-tos/updating_a_batch_change#removing-changesets">
-                            how-to guide
-                        </Link>{' '}
-                        for more information.
+                        <Trans
+                            i18nKey="archived-changesets-description"
+                            components={{
+                                '0': (
+                                    <Link to="/help/batch_changes/how-tos/updating_a_batch_change#removing-changesets" />
+                                ),
+                            }}
+                        />
                     </Text>
                     <BatchChangeChangesets
                         batchChangeID={batchChange.id}

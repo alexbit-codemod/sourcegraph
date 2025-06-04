@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 
 import { mdiClose, mdiTimerSand, mdiCheck, mdiAlertCircle, mdiProgressClock } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
+import { useTranslation } from 'react-i18next'
 
 import { Button, Modal, Icon, H3, H4 } from '@sourcegraph/wildcard'
 
@@ -21,26 +22,30 @@ interface DiagnosticsModalProps {
 export const DiagnosticsModal: React.FunctionComponent<React.PropsWithChildren<DiagnosticsModalProps>> = ({
     node,
     onCancel,
-}) => (
-    <Modal className={styles.modalBody} position="center" onDismiss={onCancel} aria-label="Execution timeline">
-        <div className={styles.modalHeader}>
-            <H3 className="mb-0">Execution timeline</H3>
-            <Button className="p-0 ml-2" onClick={onCancel} variant="icon">
-                <VisuallyHidden>Close</VisuallyHidden>
-                <Icon aria-hidden={true} svgPath={mdiClose} />
-            </Button>
-        </div>
-        <div className={styles.modalContent}>
-            <ExecutionTimeline node={node} />
-            {node.executor && (
-                <>
-                    <H4 className="mt-2">Executor</H4>
-                    <ExecutorNode node={node.executor} />
-                </>
-            )}
-        </div>
-    </Modal>
-)
+}) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/execute')
+
+    return (
+        <Modal className={styles.modalBody} position="center" onDismiss={onCancel} aria-label="Execution timeline">
+            <div className={styles.modalHeader}>
+                <H3 className="mb-0">{t('execution-timeline')}</H3>
+                <Button className="p-0 ml-2" onClick={onCancel} variant="icon">
+                    <VisuallyHidden>{t('close-button')}</VisuallyHidden>
+                    <Icon aria-hidden={true} svgPath={mdiClose} />
+                </Button>
+            </div>
+            <div className={styles.modalContent}>
+                <ExecutionTimeline node={node} />
+                {node.executor && (
+                    <>
+                        <H4 className="mt-2">{t('executor-label')}</H4>
+                        <ExecutorNode node={node.executor} />
+                    </>
+                )}
+            </div>
+        </Modal>
+    )
+}
 
 interface ExecutionTimelineProps {
     node: VisibleBatchSpecWorkspaceFields

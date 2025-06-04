@@ -1,0 +1,6 @@
+{
+  "redirect-message-ttl": "{{messagePrefix}} You will be redirected in {{ttl}}...",
+  "code-host-configuration-updated-link": "Code host configuration updated. Please see the updated code host configuration <0>here</0>",
+  "update-code-host-configuration-repository-mirroring": "Update this code host configuration to manage repository mirroring.",
+  "exclude-repository": "Exclude repository"
+}

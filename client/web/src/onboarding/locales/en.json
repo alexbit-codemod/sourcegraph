@@ -1,0 +1,10 @@
+{
+  "setup-title": "Setup",
+  "configure-now": "Configure now",
+  "upgrade-license": "Upgrade your license",
+  "enter-license-key-setup": "Enter your license key to start your enterprise set up:",
+  "license-key-not-recognized": "License key not recognized. Please try again.",
+  "license-key": "License key",
+  "skip-for-now": "Skip for now",
+  "upgrade-and-start-setup": "Upgrade and start set up"
+}

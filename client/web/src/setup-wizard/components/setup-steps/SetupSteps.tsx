@@ -17,6 +17,7 @@ import { mdiChevronLeft, mdiChevronRight } from '@mdi/js'
 import classNames from 'classnames'
 import { noop } from 'lodash'
 import { createPortal } from 'react-dom'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, Routes, Route, Navigate, matchPath } from 'react-router-dom'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -230,6 +231,8 @@ export const SetupStepsHeader: FC<SetupStepsHeaderProps> = props => {
 }
 
 export const SetupStepsFooter: FC<HTMLAttributes<HTMLElement>> = props => {
+    const { t } = useTranslation('setup-wizard/components/setup-steps')
+
     const { className, ...attributes } = props
 
     const { steps, activeStepIndex, setNextButtonPortal, onSkip, onPrevStep, onNextStep } =
@@ -241,12 +244,13 @@ export const SetupStepsFooter: FC<HTMLAttributes<HTMLElement>> = props => {
             <div className={styles.footerNavigation}>
                 <div className={styles.footerInnerNavigation}>
                     <Button variant="link" className={styles.footerSkip} onClick={onSkip}>
-                        Skip setup
+                        {t('skip-setup')}
                     </Button>
 
                     {activeStepIndex > 0 && (
                         <Button variant="secondary" onClick={onPrevStep}>
-                            <Icon svgPath={mdiChevronLeft} aria-hidden={true} /> Previous
+                            <Icon svgPath={mdiChevronLeft} aria-hidden={true} />
+                            {t('previous')}
                         </Button>
                     )}
 

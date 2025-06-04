@@ -1,0 +1,8 @@
+{
+  "keyboard-shortcuts": "Keyboard shortcuts",
+  "character-key-shortcuts-status": {
+    "true": "enabled ",
+    "false": "disabled"
+  },
+  "toggle-character-key-shortcuts": "Toggle character key shortcuts"
+}

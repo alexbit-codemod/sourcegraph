@@ -1,5 +1,7 @@
 import { type ReactElement, useEffect } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
 import { Text } from '@sourcegraph/wildcard'
@@ -18,6 +20,8 @@ export function SyncRepositoriesStep({
     baseURL,
     ...attributes
 }: SyncRepositoriesStepProps): ReactElement {
+    const { t } = useTranslation('setup-wizard/components')
+
     useEffect(() => {
         telemetryService.log('SetupWizardLandedSyncRepositories')
         telemetryRecorder.recordEvent('setupWizard.syncRepos', 'view')
@@ -30,12 +34,10 @@ export function SyncRepositoriesStep({
 
     return (
         <section {...attributes}>
-            <Text className="mb-2">
-                It may take a few moments to clone and index each repository. View statuses below.
-            </Text>
+            <Text className="mb-2">{t('cloning-indexing-repositories-message')}</Text>
             <SiteAdminRepositoriesContainer alwaysPoll={true} />
 
-            <CustomNextButton label="Start searching" disabled={false} onClick={handleFinishButtonClick} />
+            <CustomNextButton label={t('start-searching-button')} disabled={false} onClick={handleFinishButtonClick} />
         </section>
     )
 }

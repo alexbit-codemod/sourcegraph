@@ -1,6 +1,7 @@
 import { type FC, useEffect } from 'react'
 
 import { mdiAlertCircle, mdiWebhook, mdiMapSearch, mdiPencil, mdiPlus } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { pluralize } from '@sourcegraph/common'
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -27,6 +28,8 @@ import styles from './OutboundWebhooksPage.module.scss'
 export interface OutboundWebhooksPageProps extends TelemetryProps, TelemetryV2Props {}
 
 export const OutboundWebhooksPage: FC<OutboundWebhooksPageProps> = ({ telemetryService, telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin/outbound-webhooks')
+
     useEffect(() => {
         telemetryService.logPageView('OutboundWebhooksPage')
         telemetryRecorder.recordEvent('admin.outboundWebhooks', 'view')
@@ -36,15 +39,16 @@ export const OutboundWebhooksPage: FC<OutboundWebhooksPageProps> = ({ telemetryS
 
     return (
         <div>
-            <PageTitle title="Outgoing webhooks" />
+            <PageTitle title={t('outgoing-webhooks-title')} />
             <PageHeader
                 path={[{ icon: mdiWebhook }, { to: '/site-admin/webhooks/outgoing', text: 'Outgoing webhooks' }]}
                 headingElement="h2"
-                description="All configured outgoing webhooks"
+                description={t('outgoing-webhooks-description')}
                 className="mb-3"
                 actions={
                     <ButtonLink to="/site-admin/webhooks/outgoing/create" variant="primary">
-                        <Icon aria-hidden={true} svgPath={mdiPlus} /> Create webhook
+                        <Icon aria-hidden={true} svgPath={mdiPlus} />
+                        {t('create-webhook-button')}
                     </ButtonLink>
                 }
             />
@@ -83,6 +87,8 @@ const OutboundWebhookNode: FC<{
     node: OutboundWebhookFieldsWithStats
     onDelete: () => void
 }> = ({ node, onDelete }) => {
+    const { t } = useTranslation('site-admin/outbound-webhooks')
+
     const edit = `/site-admin/webhooks/outgoing/${node.id}`
 
     return (
@@ -93,16 +99,21 @@ const OutboundWebhookNode: FC<{
                     <Link to={edit}>{node.url}</Link>
                 </H3>
                 <small className="text-muted">
-                    {node.stats.total} recent {pluralize('request', node.stats.total)} sent,{' '}
-                    {node.stats.errored > 0
-                        ? `including ${node.stats.errored} ${pluralize('error', node.stats.errored)}`
-                        : 'with no errors'}
+                    {node.stats.total}
+                    {t('recent-webhook-label')}
+                    {pluralize('request', node.stats.total)}
+                    {t('webhook-error-status', {
+                        nodeStatsErrored: node.stats.errored,
+                        pluralizeErrorNodeStatsErrored: pluralize('error', node.stats.errored),
+                        nodeStatsErrored0: node.stats.errored > 0,
+                    })}
                 </small>
             </div>
             <RecentErrorIcon count={node.stats.errored} link={`${edit}?only_errors=true#logs`} />
             <div className={styles.buttons}>
                 <ButtonLink to={edit} variant="secondary" className="mr-2">
-                    <Icon aria-hidden={true} svgPath={mdiPencil} /> Edit
+                    <Icon aria-hidden={true} svgPath={mdiPencil} />
+                    {t('edit-webhook-button')}
                 </ButtonLink>
                 <DeleteButton id={node.id} onDeleted={onDelete} />
             </div>
@@ -110,12 +121,16 @@ const OutboundWebhookNode: FC<{
     )
 }
 
-const EmptyList: FC<React.PropsWithChildren<{}>> = () => (
-    <div className="text-muted text-center mb-3 w-100">
-        <Icon className="icon" svgPath={mdiMapSearch} inline={false} aria-hidden={true} />
-        <div className="pt-2">No webhooks have been created so far.</div>
-    </div>
-)
+const EmptyList: FC<React.PropsWithChildren<{}>> = () => {
+    const { t } = useTranslation('site-admin/outbound-webhooks')
+
+    return (
+        <div className="text-muted text-center mb-3 w-100">
+            <Icon className="icon" svgPath={mdiMapSearch} inline={false} aria-hidden={true} />
+            <div className="pt-2">{t('no-webhooks-created-message')}</div>
+        </div>
+    )
+}
 
 interface RecentErrorIconProps {
     count: number

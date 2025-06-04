@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 
 import { mdiInformationOutline } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { RepoLink } from '@sourcegraph/shared/src/components/RepoLink'
@@ -51,6 +52,8 @@ export const UserSettingsPermissionsPage: React.FunctionComponent<React.PropsWit
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/user/settings/auth')
+
     useEffect(() => telemetryRecorder.recordEvent('settings.permissions', 'view'), [telemetryRecorder])
 
     const [{ query }, setSearchQuery] = useURLSyncedState({ query: '' })
@@ -91,13 +94,16 @@ export const UserSettingsPermissionsPage: React.FunctionComponent<React.PropsWit
 
     return (
         <div className="w-100">
-            <PageTitle title="Permissions" />
+            <PageTitle title={t('permissions-title')} />
             <PageHeader
                 headingElement="h2"
                 path={[{ text: 'Permissions' }]}
                 description={
                     <>
-                        Learn more about <Link to="/help/admin/permissions/syncing">permissions syncing</Link>.
+                        <Trans
+                            i18nKey="permissions-syncing-info"
+                            components={{ '0': <Link to="/help/admin/permissions/syncing" /> }}
+                        />
                     </>
                 }
                 className="mb-3"
@@ -105,7 +111,7 @@ export const UserSettingsPermissionsPage: React.FunctionComponent<React.PropsWit
             <Container className="mb-3">
                 <>
                     <div className="d-flex">
-                        <b>Last update to permissions </b>
+                        <b>{t('last-update-permissions')}</b>
                         <span className="d-flex flex-grow-1">
                             {permissionsInfo.updatedAt ? (
                                 <>
@@ -113,20 +119,18 @@ export const UserSettingsPermissionsPage: React.FunctionComponent<React.PropsWit
                                         <Timestamp date={permissionsInfo.updatedAt} />
                                     </span>
                                     <span>
-                                        by <PermsSource source={permissionsInfo.source} />
+                                        {t('by-unknown-user')}
+                                        <PermsSource source={permissionsInfo.source} />
                                     </span>
                                 </>
                             ) : (
-                                <span className="flex-grow-1 pl-2">Never</span>
+                                <span className="flex-grow-1 pl-2">{t('never-permission-records')}</span>
                             )}
                         </span>
                     </div>
                     <Text className="text-muted mt-2 mb-4">
-                        <Icon aria-label="more-info text-normal" svgPath={mdiInformationOutline} /> The timestamp
-                        indicates the last update made to the repository permissions of this user. If the value{' '}
-                        <i>never</i> is displayed, it means we currently do not have any permission records for the
-                        user. However, please note that the user may have had permissions stored in Sourcegraph in the
-                        past.
+                        <Icon aria-label="more-info text-normal" svgPath={mdiInformationOutline} />
+                        <Trans i18nKey="permissions-timestamp-info" components={{ '0': <i /> }} />
                     </Text>
                     <ScheduleUserPermissionsSyncActionContainer user={user} />
                 </>
@@ -136,8 +140,7 @@ export const UserSettingsPermissionsPage: React.FunctionComponent<React.PropsWit
                 path={[{ text: 'Sync Jobs' }]}
                 description={
                     <>
-                        List of permission sync jobs that fetch which <i>private</i> repositories the user can access on
-                        the code host.
+                        <Trans i18nKey="permission-sync-jobs-list" components={{ '0': <i /> }} />
                     </>
                 }
                 className="my-3 pt-3"
@@ -155,7 +158,7 @@ export const UserSettingsPermissionsPage: React.FunctionComponent<React.PropsWit
                 path={[{ text: 'Accessible Repositories' }]}
                 description={
                     <>
-                        List of <i>all</i> repositories the user can access on Sourcegraph.
+                        <Trans i18nKey="accessible-repositories-list" components={{ '0': <i /> }} />
                     </>
                 }
                 className="my-3 pt-3"
@@ -164,7 +167,7 @@ export const UserSettingsPermissionsPage: React.FunctionComponent<React.PropsWit
                 <div className="d-flex mb-3">
                     <Input
                         type="search"
-                        placeholder="Search repositories..."
+                        placeholder={t('search-repositories-placeholder')}
                         name="query"
                         value={query}
                         onChange={event => setSearchQuery({ query: event.currentTarget.value })}
@@ -182,7 +185,7 @@ export const UserSettingsPermissionsPage: React.FunctionComponent<React.PropsWit
                     {...paginationProps}
                     className="mt-4"
                     totalCount={connection?.totalCount ?? null}
-                    totalLabel="accessible repositories"
+                    totalLabel={t('accessible-repositories-label')}
                 />
             </Container>
         </div>
@@ -264,8 +267,10 @@ interface PermsSourceProps {
 }
 
 const PermsSource: React.FunctionComponent<PermsSourceProps> = ({ source }) => {
+    const { t } = useTranslation('enterprise/user/settings/auth')
+
     if (!source) {
-        return <>unknown</>
+        return <>{t('unknown-permission-status')}</>
     }
     let href = '/help/admin/permissions/syncing#permission-syncing'
     if (source === PermissionSource.API) {

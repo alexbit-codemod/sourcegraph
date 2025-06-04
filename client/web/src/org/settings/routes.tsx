@@ -1,5 +1,7 @@
 import type { FC } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { useIsLightTheme } from '@sourcegraph/shared/src/theme'
 import { lazyComponent } from '@sourcegraph/shared/src/util/lazyComponent'
 import { Text } from '@sourcegraph/wildcard'
@@ -46,6 +48,8 @@ export const orgSettingsAreaRoutes: readonly OrgSettingsAreaRoute[] = [
 interface SettingsAreaIndexPageProps extends OrgSettingsAreaRouteContext {}
 
 const SettingsAreaIndexPage: FC<SettingsAreaIndexPageProps> = props => {
+    const { t } = useTranslation('org/settings')
+
     const isLightTheme = useIsLightTheme()
 
     return (
@@ -58,12 +62,14 @@ const SettingsAreaIndexPage: FC<SettingsAreaIndexPageProps> = props => {
                     <>
                         {props.authenticatedUser && props.org.viewerCanAdminister && !props.org.viewerIsMember && (
                             <SiteAdminAlert className="sidebar__alert">
-                                Viewing settings for <strong>{props.org.name}</strong>
+                                <Trans
+                                    i18nKey="viewing-settings-org-name"
+                                    values={{ propsOrgName: <>{props.org.name}</> }}
+                                    components={{ '0': <strong /> }}
+                                />
                             </SiteAdminAlert>
                         )}
-                        <Text>
-                            Organization settings apply to all members. User settings override organization settings.
-                        </Text>
+                        <Text>{t('org-settings-apply-to-members')}</Text>
                     </>
                 }
             />

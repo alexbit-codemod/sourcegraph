@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 
 import { mdiConnection, mdiDotsHorizontal, mdiGithub, mdiOpenInNew, mdiPencil, mdiRefresh, mdiTrashCan } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { animated, useSpring } from 'react-spring'
 
@@ -55,6 +56,8 @@ export const GitHubAppControls: React.FunctionComponent<GitHubAppControlsProps> 
     gitHubAppKind,
     credentialID,
 }) => {
+    const { t } = useTranslation('enterprise/batches/settings')
+
     const [removeModalOpen, setRemoveModalOpen] = useState<boolean>(false)
     const [refreshGitHubApp, { loading, error, data }] = useRefreshGitHubApp()
     const createURL = `/site-admin/batch-changes/github-apps/new?baseURL=${encodeURIComponent(baseURL)}`
@@ -84,7 +87,8 @@ export const GitHubAppControls: React.FunctionComponent<GitHubAppControlsProps> 
                                 {config.name}
                             </Text>
                             <Text size="small" className="text-muted mb-0">
-                                AppID: {config.appID}
+                                {t('app-id-label')}
+                                {config.appID}
                             </Text>
                         </div>
                         <div className={styles.appDetailsColumn}>
@@ -95,7 +99,8 @@ export const GitHubAppControls: React.FunctionComponent<GitHubAppControlsProps> 
                 <MenuList position={Position.bottomEnd} className={styles.menuList}>
                     <MenuItem as={Button} onSelect={() => window.open(config?.appURL, '_blank')} className="p-2">
                         <Icon aria-hidden={true} svgPath={mdiGithub} className="mr-1" />
-                        View on GitHub <Icon inline={true} svgPath={mdiOpenInNew} aria-hidden={true} />
+                        {t('view-on-github')}
+                        <Icon inline={true} svgPath={mdiOpenInNew} aria-hidden={true} />
                     </MenuItem>
                     <MenuDivider />
                     {credentialID && (
@@ -106,7 +111,7 @@ export const GitHubAppControls: React.FunctionComponent<GitHubAppControlsProps> 
                             className="p-2"
                         >
                             <Icon aria-hidden={true} svgPath={mdiConnection} className="mr-1" />
-                            Check
+                            {t('check-button-label')}
                         </MenuItem>
                     )}
                     <MenuItem
@@ -116,42 +121,48 @@ export const GitHubAppControls: React.FunctionComponent<GitHubAppControlsProps> 
                         className="p-2"
                     >
                         <Icon aria-hidden={true} svgPath={mdiRefresh} className="mr-1" />
-                        Refresh
+                        {t('refresh-button-label')}
                     </MenuItem>
                     {
                         // Once we have a GitHubApps page for users, we can drop this check. Currently, we only have that for site-admins.
                         gitHubAppKind !== GitHubAppKind.USER_CREDENTIAL && (
                             <MenuItem as={Button} onSelect={() => navigate(`github-apps/${config.id}`)} className="p-2">
                                 <Icon aria-hidden={true} svgPath={mdiPencil} className="mr-1" />
-                                Edit
+                                {t('edit-button-label')}
                             </MenuItem>
                         )
                     }
                     <MenuItem as={Button} onSelect={() => setRemoveModalOpen(true)} className="p-2">
                         <Icon aria-hidden={true} svgPath={mdiTrashCan} className="mr-1" />
-                        Remove
+                        {t('remove-button-label')}
                     </MenuItem>
                 </MenuList>
             </Menu>
             {error && <NodeAlert variant="danger">{error.message}</NodeAlert>}
             {!loading && data && (
                 <NodeAlert variant="success">
-                    Installations for <span className="font-weight-bold">"{config.name}"</span> successfully refreshed.
+                    <Trans
+                        i18nKey="installations-refreshed-message"
+                        components={{ '0': <span className="font-weight-bold" /> }}
+                    />
                 </NodeAlert>
             )}
             {!checkCredLoading && (checkCredResult || checkCredErr) && (
                 <>
                     <br />
                     <NodeAlert variant={checkCredErr ? 'danger' : 'success'}>
-                        <span className="font-weight-bold">{config.name}</span> is {checkCredErr ? 'not' : ''}{' '}
-                        accessible.
+                        <Trans
+                            i18nKey="accessibility-status-message"
+                            values={{ configName: <>{config.name}</>, checkCredErr }}
+                            components={{ '0': <span className="font-weight-bold" /> }}
+                        />
                     </NodeAlert>
                 </>
             )}
         </div>
     ) : (
         <ButtonLink to={createURL} className="ml-auto text-nowrap" variant="success" as={Link} size="sm">
-            Create GitHub App
+            {t('create-github-app-button')}
         </ButtonLink>
     )
 }

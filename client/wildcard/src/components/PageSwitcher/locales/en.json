@@ -1,0 +1,6 @@
+{
+  "prev-button-label": "Prev",
+  "next-button-label": "Next",
+  "total-count-display": "Total <0>{{totalLabel}}</0> : {{totalCount}}",
+  "showing-page-of-total-pages": "Showing page {{page}} of {{totalPages}}"
+}

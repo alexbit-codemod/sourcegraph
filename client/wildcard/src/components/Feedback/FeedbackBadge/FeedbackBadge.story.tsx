@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { BrandedStory } from '../../../stories/BrandedStory'
 import { PRODUCT_STATUSES } from '../../Badge'
@@ -34,17 +35,21 @@ const config: Meta = {
 
 export default config
 
-export const FeedbackBadgeExample: StoryFn = () => (
-    <>
-        <H1>FeedbackBadges</H1>
-        <Text>Our badges come in different status.</Text>
-        {PRODUCT_STATUSES.map(status => (
-            <FeedbackBadge
-                className="mb-2"
-                status={status}
-                key={status}
-                feedback={{ mailto: 'support@sourcegraph.com' }}
-            />
-        ))}
-    </>
-)
+export const FeedbackBadgeExample: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Feedback/FeedbackBadge')
+
+    return (
+        <>
+            <H1>FeedbackBadges</H1>
+            <Text>{t('badges-different-status')}</Text>
+            {PRODUCT_STATUSES.map(status => (
+                <FeedbackBadge
+                    className="mb-2"
+                    status={status}
+                    key={status}
+                    feedback={{ mailto: 'support@sourcegraph.com' }}
+                />
+            ))}
+        </>
+    )
+}

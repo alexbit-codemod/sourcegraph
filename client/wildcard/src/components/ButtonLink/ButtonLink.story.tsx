@@ -1,6 +1,7 @@
 import { mdiMagnify } from '@mdi/js'
 import type { Meta, StoryFn } from '@storybook/react'
 import { startCase } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { ButtonLink, H1, H2, Text } from '..'
 import { BrandedStory } from '../../stories/BrandedStory'
@@ -36,53 +37,62 @@ const Config: Meta = {
 
 export default Config
 
-export const Overview: StoryFn = () => (
-    <>
-        <H1>ButtonLink</H1>
-        <H2>Variants</H2>
-        <Grid className="mb-3" columnCount={3}>
-            {BUTTON_VARIANTS.map(variant => (
-                <div key={variant}>
-                    <ButtonLink variant={variant} to="https://sourcegraph.com" target="_blank" onClick={console.log}>
-                        {startCase(variant)}
-                    </ButtonLink>
-                </div>
-            ))}
-        </Grid>
-        <H2>Outline</H2>
-        <ButtonLink
-            variant="danger"
-            outline={true}
-            to="https://sourcegraph.com"
-            target="_blank"
-            onClick={console.log}
-            className="mb-2"
-        >
-            Outline
-        </ButtonLink>
-        <H2>Icons</H2>
-        <Text>We can use icons with our buttons.</Text>{' '}
-        <ButtonLink
-            variant="secondary"
-            to="https://sourcegraph.com"
-            target="_blank"
-            onClick={console.log}
-            className="mb-2"
-        >
-            <Icon aria-hidden={true} className="mr-1" svgPath={mdiMagnify} />
-            Search
-        </ButtonLink>
-        <H2>Smaller</H2>
-        <Text>We can make our buttons smaller.</Text>
-        <ButtonLink
-            variant="secondary"
-            to="https://sourcegraph.com"
-            target="_blank"
-            onClick={console.log}
-            className="mb-2"
-            size="sm"
-        >
-            Smaller
-        </ButtonLink>
-    </>
-)
+export const Overview: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/ButtonLink')
+
+    return (
+        <>
+            <H1>ButtonLink</H1>
+            <H2>{t('variants')}</H2>
+            <Grid className="mb-3" columnCount={3}>
+                {BUTTON_VARIANTS.map(variant => (
+                    <div key={variant}>
+                        <ButtonLink
+                            variant={variant}
+                            to="https://sourcegraph.com"
+                            target="_blank"
+                            onClick={console.log}
+                        >
+                            {startCase(variant)}
+                        </ButtonLink>
+                    </div>
+                ))}
+            </Grid>
+            <H2>{t('outline')}</H2>
+            <ButtonLink
+                variant="danger"
+                outline={true}
+                to="https://sourcegraph.com"
+                target="_blank"
+                onClick={console.log}
+                className="mb-2"
+            >
+                {t('outline-fragment')}
+            </ButtonLink>
+            <H2>{t('icons')}</H2>
+            <Text>{t('icons-with-buttons')}</Text>{' '}
+            <ButtonLink
+                variant="secondary"
+                to="https://sourcegraph.com"
+                target="_blank"
+                onClick={console.log}
+                className="mb-2"
+            >
+                <Icon aria-hidden={true} className="mr-1" svgPath={mdiMagnify} />
+                {t('search-fragment')}
+            </ButtonLink>
+            <H2>{t('smaller')}</H2>
+            <Text>{t('smaller-buttons')}</Text>
+            <ButtonLink
+                variant="secondary"
+                to="https://sourcegraph.com"
+                target="_blank"
+                onClick={console.log}
+                className="mb-2"
+                size="sm"
+            >
+                {t('smaller-fragment')}
+            </ButtonLink>
+        </>
+    )
+}

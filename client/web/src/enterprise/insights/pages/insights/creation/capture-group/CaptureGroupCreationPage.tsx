@@ -1,5 +1,7 @@
 import { type FC, useEffect, useMemo, useCallback } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
 import {
@@ -31,6 +33,8 @@ interface CaptureGroupCreationPageProps extends TelemetryProps, TelemetryV2Props
 }
 
 export const CaptureGroupCreationPage: FC<CaptureGroupCreationPageProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation/capture-group')
+
     const { backUrl, telemetryService, telemetryRecorder, onInsightCreateRequest, onSuccessfulCreation, onCancel } =
         props
 
@@ -78,7 +82,7 @@ export const CaptureGroupCreationPage: FC<CaptureGroupCreationPageProps> = props
 
     return (
         <CodeInsightsPage>
-            <PageTitle title="Create detect and track patterns insight - Code Insights" />
+            <PageTitle title={t('create-detect-track-patterns-insight')} />
 
             <PageHeader
                 className="mb-5"
@@ -89,14 +93,18 @@ export const CaptureGroupCreationPage: FC<CaptureGroupCreationPageProps> = props
                 ]}
                 description={
                     <span className="text-muted">
-                        Capture group code insights analyze your code based on generated data series queries.{' '}
-                        <Link
-                            to="/help/code_insights/explanations/automatically_generated_data_series"
-                            target="_blank"
-                            rel="noopener"
-                        >
-                            Learn more.
-                        </Link>
+                        <Trans
+                            i18nKey="capture-group-code-insights-learn-more"
+                            components={{
+                                '0': (
+                                    <Link
+                                        to="/help/code_insights/explanations/automatically_generated_data_series"
+                                        target="_blank"
+                                        rel="noopener"
+                                    />
+                                ),
+                            }}
+                        />
                     </span>
                 }
             />

@@ -1,0 +1,5 @@
+{
+  "site-initialization": "Site initialization",
+  "user-signed-in-admin-initialization-required": "You're signed in as <0>{{authenticatedUserUsername}}</0>. A site admin must initialize Sourcegraph before you can continue.",
+  "create-admin-account-and-continue": "Create admin account and continue"
+}

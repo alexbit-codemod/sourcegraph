@@ -1,0 +1,12 @@
+{
+  "filter-results": "Filter results",
+  "reset-all": "Reset all <0>{{shortcutDisplayNameAltBackspace}}</0>",
+  "by-repository": "By repository",
+  "by-language": "By language",
+  "by-symbol-kind": "By symbol kind",
+  "by-author": "By author",
+  "by-commit-date": "By commit date",
+  "by-file": "By file",
+  "snippets": "Snippets",
+  "move-filters-to-query": "Move filters to the query"
+}

@@ -1,0 +1,19 @@
+{
+  "loading-message-1": "Loading",
+  "loading-message-2": "Loading",
+  "loading-failed-message": " failed:",
+  "nothing-found-message": "Nothing found",
+  "nothing-found": "Nothing found",
+  "code-intelligence-not-available": "Code intelligence is not available",
+  "could-not-find-token": "Could not find token.",
+  "nothing-found-duplicate": "Nothing found",
+  "type-to-filter-by-filename": "Type to filter by filename",
+  "no-prefix": "No",
+  "no-matching-results": " matching <0>{{propsFilter}}</0> found",
+  "no-prefix-duplicate": "No",
+  "found-suffix": " found",
+  "loading-more": "Loading more",
+  "load-more-button": "Load more",
+  "loading-code-intel": "Loading code intel ...",
+  "loading-code-intel-failed": "Loading code intel failed:"
+}

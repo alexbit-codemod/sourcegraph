@@ -1,4 +1,5 @@
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { Code, Grid } from '@sourcegraph/wildcard'
 
@@ -24,54 +25,58 @@ export default config
 // due to importing enterprise path in oss folders.
 export const AdminSidebarItems: StoryFn = () => (
     <WebStory>
-        {webProps => (
-            <Grid columnCount={5}>
-                <Code>default</Code>
-                <Code>isSourcegraphDotCom=true</Code>
-                <Code>batchChangesEnabled=false</Code>
-                <Code>codeInsightsEnabled=false</Code>
-                <SiteAdminSidebar
-                    {...webProps}
-                    groups={siteAdminSidebarGroups}
-                    isSourcegraphDotCom={false}
-                    batchChangesEnabled={true}
-                    batchChangesExecutionEnabled={true}
-                    batchChangesWebhookLogsEnabled={true}
-                    codeInsightsEnabled={true}
-                    endUserOnboardingEnabled={false}
-                />
-                <SiteAdminSidebar
-                    {...webProps}
-                    groups={siteAdminSidebarGroups}
-                    isSourcegraphDotCom={true}
-                    batchChangesEnabled={true}
-                    batchChangesExecutionEnabled={true}
-                    batchChangesWebhookLogsEnabled={true}
-                    codeInsightsEnabled={true}
-                    endUserOnboardingEnabled={false}
-                />
-                <SiteAdminSidebar
-                    {...webProps}
-                    groups={siteAdminSidebarGroups}
-                    isSourcegraphDotCom={false}
-                    batchChangesEnabled={false}
-                    batchChangesExecutionEnabled={false}
-                    batchChangesWebhookLogsEnabled={false}
-                    codeInsightsEnabled={true}
-                    endUserOnboardingEnabled={false}
-                />
-                <SiteAdminSidebar
-                    {...webProps}
-                    groups={siteAdminSidebarGroups}
-                    isSourcegraphDotCom={false}
-                    batchChangesEnabled={true}
-                    batchChangesExecutionEnabled={true}
-                    batchChangesWebhookLogsEnabled={true}
-                    codeInsightsEnabled={false}
-                    endUserOnboardingEnabled={false}
-                />
-            </Grid>
-        )}
+        {webProps => {
+            const { t } = useTranslation('enterprise/site-admin')
+
+            return (
+                <Grid columnCount={5}>
+                    <Code>{t('default-message')}</Code>
+                    <Code>{t('sourcegraph-com-flag-true')}</Code>
+                    <Code>{t('batch-changes-enabled-false')}</Code>
+                    <Code>{t('code-insights-enabled-false')}</Code>
+                    <SiteAdminSidebar
+                        {...webProps}
+                        groups={siteAdminSidebarGroups}
+                        isSourcegraphDotCom={false}
+                        batchChangesEnabled={true}
+                        batchChangesExecutionEnabled={true}
+                        batchChangesWebhookLogsEnabled={true}
+                        codeInsightsEnabled={true}
+                        endUserOnboardingEnabled={false}
+                    />
+                    <SiteAdminSidebar
+                        {...webProps}
+                        groups={siteAdminSidebarGroups}
+                        isSourcegraphDotCom={true}
+                        batchChangesEnabled={true}
+                        batchChangesExecutionEnabled={true}
+                        batchChangesWebhookLogsEnabled={true}
+                        codeInsightsEnabled={true}
+                        endUserOnboardingEnabled={false}
+                    />
+                    <SiteAdminSidebar
+                        {...webProps}
+                        groups={siteAdminSidebarGroups}
+                        isSourcegraphDotCom={false}
+                        batchChangesEnabled={false}
+                        batchChangesExecutionEnabled={false}
+                        batchChangesWebhookLogsEnabled={false}
+                        codeInsightsEnabled={true}
+                        endUserOnboardingEnabled={false}
+                    />
+                    <SiteAdminSidebar
+                        {...webProps}
+                        groups={siteAdminSidebarGroups}
+                        isSourcegraphDotCom={false}
+                        batchChangesEnabled={true}
+                        batchChangesExecutionEnabled={true}
+                        batchChangesWebhookLogsEnabled={true}
+                        codeInsightsEnabled={false}
+                        endUserOnboardingEnabled={false}
+                    />
+                </Grid>
+            )
+        }}
     </WebStory>
 )
 

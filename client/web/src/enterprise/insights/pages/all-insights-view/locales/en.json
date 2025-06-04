@@ -1,0 +1,6 @@
+{
+  "show-more": "Show more",
+  "total-insights-count": "{{connectionTotalCount0}} <0>insights</0> total",
+  "showing-first-insights": "(showing first {{insightsLength}})",
+  "no-insights-message": "It seems that you don't have any insights yet, you can create your first insight from here."
+}

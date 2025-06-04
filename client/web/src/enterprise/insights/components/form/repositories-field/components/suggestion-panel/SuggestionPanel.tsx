@@ -3,6 +3,7 @@ import React from 'react'
 import { mdiSourceRepository } from '@mdi/js'
 import { ComboboxList, ComboboxOption, ComboboxOptionText } from '@reach/combobox'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { isErrorLike } from '@sourcegraph/common'
 import { LoadingSpinner, Icon, ErrorAlert } from '@sourcegraph/wildcard'
@@ -19,6 +20,8 @@ interface SuggestionsPanelProps {
  * Renders suggestion panel for repositories combobox component.
  */
 export const SuggestionsPanel: React.FunctionComponent<React.PropsWithChildren<SuggestionsPanelProps>> = props => {
+    const { t } = useTranslation('enterprise/insights/components/form/repositories-field/components/suggestion-panel')
+
     const { value, suggestions, className } = props
 
     if (suggestions === undefined) {
@@ -57,7 +60,7 @@ export const SuggestionsPanel: React.FunctionComponent<React.PropsWithChildren<S
             ))}
 
             {!isValueEmpty && !suggestions.length && (
-                <span className={styles.suggestionsListItem}>No results found</span>
+                <span className={styles.suggestionsListItem}>{t('no-results-found')}</span>
             )}
         </ComboboxList>
     )

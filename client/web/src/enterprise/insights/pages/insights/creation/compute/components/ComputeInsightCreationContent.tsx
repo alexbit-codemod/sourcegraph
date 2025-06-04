@@ -1,5 +1,7 @@
 import type { FC, HTMLAttributes, ReactNode } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { GroupByField } from '@sourcegraph/shared/src/graphql-operations'
 import {
     Code,
@@ -55,6 +57,8 @@ interface ComputeInsightCreationContentProps extends NativeContainerProps {
 }
 
 export const ComputeInsightCreationContent: FC<ComputeInsightCreationContentProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation/compute/components')
+
     const { touched, initialValue, onChange, onSubmit, children, ...attributes } = props
     const { licensed } = useUiFeatures()
 
@@ -124,11 +128,11 @@ export const ComputeInsightCreationContent: FC<ComputeInsightCreationContentProp
                     title="Targeted repositories"
                     subtitle="Create a list of repositories to run your search over"
                 >
-                    <Label htmlFor="repositories-id">Repositories</Label>
+                    <Label htmlFor="repositories-id">{t('repositories')}</Label>
                     <RepositoriesField
                         id="repositories-id"
-                        description="Find and choose at least 1 repository to run insight"
-                        placeholder="Search repositories..."
+                        description={t('find-and-choose-repository')}
+                        placeholder={t('search-repositories')}
                         {...getDefaultInputProps(repositories)}
                     />
                 </FormGroup>
@@ -156,14 +160,25 @@ export const ComputeInsightCreationContent: FC<ComputeInsightCreationContentProp
                         queryFieldDescription={
                             <ul className="pl-3">
                                 <li>
-                                    Do not include <Code>context:</Code> <Code>repo:</Code> or <Code>rev:</Code>{' '}
-                                    filters; if needed, <Code>repo:</Code> will be added automatically.
+                                    {t('do-not-include')}
+                                    <Code>{t('context-key')}</Code> <Code>{t('repo-key')}</Code>
+                                    {t('or-key')}
+                                    <Code>{t('rev-key')}</Code>
+                                    {t('filters-if-needed')}
+                                    <Code>{t('repo-key-duplicate')}</Code>
+                                    {t('added-automatically')}
                                 </li>
                                 <li>
-                                    You can use <Code weight="bold">before:</Code> and <Code weight="bold">after:</Code>{' '}
-                                    operators for <Code weight="bold">type:diff</Code> and{' '}
-                                    <Code weight="bold">type:commit</Code> to define the timeframe (example query:{' '}
-                                    <Code>type:diff author:nick before:"last thursday" SearchTerm</Code>)
+                                    {t('use-operators')}
+                                    <Code weight="bold">{t('before-key')}</Code>
+                                    {t('and-key')}
+                                    <Code weight="bold">{t('after-key')}</Code>
+                                    {t('operators-for-type')}
+                                    <Code weight="bold">{t('type-diff')}</Code>
+                                    {t('and-space')}
+                                    <Code weight="bold">{t('type-commit')}</Code>
+                                    {t('define-timeframe-example-query')}
+                                    <Code>{t('example-query')}</Code>)
                                 </li>
                             </ul>
                         }
@@ -184,10 +199,10 @@ export const ComputeInsightCreationContent: FC<ComputeInsightCreationContentProp
 
                 <FormGroup name="chart settings group" title="Chart settings">
                     <Input
-                        label="Title"
+                        label={t('title-key')}
                         required={true}
                         message="Shown as the title for your insight"
-                        placeholder="Example: Migration to React function components"
+                        placeholder={t('example-migration-to-react')}
                         className="d-flex flex-column"
                         {...getDefaultInputProps(title)}
                     />

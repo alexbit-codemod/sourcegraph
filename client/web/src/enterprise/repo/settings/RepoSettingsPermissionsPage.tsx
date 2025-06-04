@@ -1,6 +1,7 @@
 import React, { type FC, useEffect, useState, useCallback } from 'react'
 
 import { mdiChevronDown, mdiInformationOutline } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { UserAvatar } from '@sourcegraph/shared/src/components/UserAvatar'
@@ -61,6 +62,8 @@ export const RepoSettingsPermissionsPage: FC<RepoSettingsPermissionsPageProps> =
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/repo/settings')
+
     useEffect(() => {
         telemetryRecorder.recordEvent('repo.settings.permissions', 'view')
     }, [telemetryRecorder])
@@ -97,30 +100,32 @@ export const RepoSettingsPermissionsPage: FC<RepoSettingsPermissionsPageProps> =
 
     return (
         <>
-            <PageTitle title="Repo Permissions" />
+            <PageTitle title={t('repo-permissions')} />
             <PageHeader
                 path={[{ text: 'Repo Permissions' }]}
                 headingElement="h2"
                 className="mb-3"
                 description={
                     <>
-                        Learn more about <Link to="/help/admin/permissions/syncing">permission syncing</Link>.
+                        <Trans
+                            i18nKey="learn-more-permission-syncing"
+                            components={{ '0': <Link to="/help/admin/permissions/syncing" /> }}
+                        />
                     </>
                 }
             />
             <Container className="repo-settings-permissions-page">
                 {!repo.isPrivate ? (
                     <Alert className="mb-0" variant="info">
-                        Access to this repository is <strong>not restricted</strong>, all Sourcegraph users have access.
+                        <Trans i18nKey="access-not-restricted" components={{ '0': <strong /> }} />
                     </Alert>
                 ) : !permissionsInfo ? (
                     <Alert className="mb-0" variant="info">
-                        This repository is queued to sync permissions, only site admins will have access to it until
-                        syncing is finished.
+                        {t('repository-queued-sync-permissions')}
                     </Alert>
                 ) : permissionsInfo.unrestricted ? (
                     <Alert className="mb-0" variant="info">
-                        This repository has been explicitly flagged as unrestricted, all Sourcegraph users have access.
+                        {t('repository-unrestricted-access')}
                     </Alert>
                 ) : (
                     <div>
@@ -128,7 +133,7 @@ export const RepoSettingsPermissionsPage: FC<RepoSettingsPermissionsPageProps> =
                             <tbody>
                                 <tr>
                                     <th>
-                                        Last complete sync{' '}
+                                        {t('last-complete-sync')}
                                         <Tooltip content="Syncs repository permissions from the code host. All users that have access to the repository on the code host will have access on Sourcegraph as well.">
                                             <Icon aria-label="more-info" svgPath={mdiInformationOutline} />
                                         </Tooltip>
@@ -140,11 +145,11 @@ export const RepoSettingsPermissionsPage: FC<RepoSettingsPermissionsPageProps> =
                                             'Never'
                                         )}
                                     </td>
-                                    <td className="text-muted">Updated by repository-centric permission sync.</td>
+                                    <td className="text-muted">{t('updated-by-repo-permission-sync')}</td>
                                 </tr>
                                 <tr>
                                     <th>
-                                        Last partial sync{' '}
+                                        {t('last-partial-sync')}
                                         <Tooltip content="Syncs user permissions from the code host. If a user-centric sync returns this repository as accessible, it is noted here as partial sync. Partial syncs do not show in the list of permission sync jobs below.">
                                             <Icon aria-label="more-info" svgPath={mdiInformationOutline} />
                                         </Tooltip>
@@ -156,7 +161,7 @@ export const RepoSettingsPermissionsPage: FC<RepoSettingsPermissionsPageProps> =
                                             <Timestamp date={permissionsInfo.updatedAt} />
                                         )}
                                     </td>
-                                    <td className="text-muted">Partial update done by user-centric permission sync.</td>
+                                    <td className="text-muted">{t('partial-update-user-centric-sync')}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -167,12 +172,7 @@ export const RepoSettingsPermissionsPage: FC<RepoSettingsPermissionsPageProps> =
             <PageHeader
                 headingElement="h2"
                 path={[{ text: 'Permissions Sync Jobs' }]}
-                description={
-                    <>
-                        List of permissions sync jobs. A permission sync job fetches the newest permissions for the
-                        given repository.
-                    </>
-                }
+                description={<>{t('list-of-permissions-sync-jobs')}</>}
                 className="my-3 pt-3"
             />
             <Container className="mb-3">
@@ -186,14 +186,14 @@ export const RepoSettingsPermissionsPage: FC<RepoSettingsPermissionsPageProps> =
             <PageHeader
                 headingElement="h2"
                 path={[{ text: 'Users' }]}
-                description="List of users who have access to the repository."
+                description={t('list-of-users-access-repository')}
                 className="my-3 pt-3"
             />
             <Container className="mb-3">
                 <div className="d-flex mb-3">
                     <Input
                         type="search"
-                        placeholder="Search users..."
+                        placeholder={t('search-users')}
                         name="query"
                         value={query}
                         onChange={event => setSearchQuery({ query: event.currentTarget.value })}

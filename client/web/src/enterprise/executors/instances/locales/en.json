@@ -1,0 +1,22 @@
+{
+  "executor-instances-title": "Executor instances",
+  "executor-instances-description": "The executor instances attached to your Sourcegraph instance.",
+  "executor-instances-label": "Executor instances",
+  "setting-up-executors-title": "Setting up executors",
+  "executor-features-description": "Executors enable <0>auto-indexing for code navigation</0>  and <1>running batch changes server-side</1> . In order to use those features, <2>set them up</2> .",
+  "no-executors-found-message": " No executors found.",
+  "hostname-outdated": "{{hostname}} is outdated.",
+  "upgrade-executor-link": "Please <0>upgrade this executor</0>  to a version compatible with your Sourcegraph version.",
+  "sourcegraph-instance-outdated": "Your Sourcegraph instance is out of date.",
+  "upgrade-or-downgrade-sourcegraph": "Please <0>upgrade your Sourcegraph instance</0> or <1>downgrade this executor</1> .",
+  "last-seen": "last seen",
+  "operating-system": "OS",
+  "architecture": "Architecture",
+  "executor-version": "Executor version",
+  "docker-version": "Docker version",
+  "git-version": "Git version",
+  "ignite-version": "Ignite version",
+  "src-cli-version": "src-cli version",
+  "first-seen-at": "First seen at",
+  "not-available": "n/a"
+}

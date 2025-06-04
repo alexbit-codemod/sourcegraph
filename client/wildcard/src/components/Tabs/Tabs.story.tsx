@@ -1,24 +1,29 @@
 import type { Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { H1, H2 } from '..'
 import { BrandedStory } from '../../stories/BrandedStory'
 
 import { Tabs, Tab, TabList, TabPanel, TabPanels, type TabsProps } from '.'
 
-export const TabsStory: StoryFn<TabsProps & { actions: boolean }> = args => (
-    <>
-        <H1>Tabs</H1>
-        <Container title="Standard">
-            <TabsVariant {...args} />
-        </Container>
-        <Container width={300} title="Limited width">
-            <TabsVariant {...args} />
-        </Container>
-        <Container width={300} title="Scrolled tab list">
-            <TabsVariant {...args} longTabList="scroll" />
-        </Container>
-    </>
-)
+export const TabsStory: StoryFn<TabsProps & { actions: boolean }> = args => {
+    const { t } = useTranslation('../../wildcard/src/components/Tabs')
+
+    return (
+        <>
+            <H1>{t('tabs-title')}</H1>
+            <Container title="Standard">
+                <TabsVariant {...args} />
+            </Container>
+            <Container width={300} title="Limited width">
+                <TabsVariant {...args} />
+            </Container>
+            <Container width={300} title="Scrolled tab list">
+                <TabsVariant {...args} longTabList="scroll" />
+            </Container>
+        </>
+    )
+}
 
 TabsStory.storyName = 'Tabs component'
 
@@ -65,24 +70,26 @@ const config: Meta = {
 }
 
 const TabsVariant: StoryFn<TabsProps & { actions: boolean }> = args => {
+    const { t } = useTranslation('../../wildcard/src/components/Tabs')
+
     const { actions, lazy, behavior, size, ...props } = args
     return (
         <Tabs lazy={lazy} behavior={behavior} size={size} {...props}>
-            <TabList actions={actions ? <div>custom component rendered</div> : null}>
-                <Tab>Tab 1</Tab>
-                <Tab>Tab 2</Tab>
-                <Tab>Third tab</Tab>
-                <Tab>Fourth tab</Tab>
-                <Tab>Fifth tab</Tab>
-                <Tab>Sixth tab</Tab>
+            <TabList actions={actions ? <div>{t('custom-component-rendered')}</div> : null}>
+                <Tab>{t('tab-1')}</Tab>
+                <Tab>{t('tab-2')}</Tab>
+                <Tab>{t('third-tab')}</Tab>
+                <Tab>{t('fourth-tab')}</Tab>
+                <Tab>{t('fifth-tab')}</Tab>
+                <Tab>{t('sixth-tab')}</Tab>
             </TabList>
             <TabPanels>
-                <TabPanel>Panel 1</TabPanel>
-                <TabPanel>Panel 2</TabPanel>
-                <TabPanel>Panel 3</TabPanel>
-                <TabPanel>Panel 4</TabPanel>
-                <TabPanel>Panel 5</TabPanel>
-                <TabPanel>Panel 6</TabPanel>
+                <TabPanel>{t('panel-1')}</TabPanel>
+                <TabPanel>{t('panel-2')}</TabPanel>
+                <TabPanel>{t('panel-3')}</TabPanel>
+                <TabPanel>{t('panel-4')}</TabPanel>
+                <TabPanel>{t('panel-5')}</TabPanel>
+                <TabPanel>{t('panel-6')}</TabPanel>
             </TabPanels>
         </Tabs>
     )

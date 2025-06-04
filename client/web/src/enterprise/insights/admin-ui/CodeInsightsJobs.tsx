@@ -1,6 +1,7 @@
 import { type ChangeEvent, type FC, useState, useEffect } from 'react'
 
 import { mdiMapSearch } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { BackfillQueueOrderBy, InsightQueueItemState } from '@sourcegraph/shared/src/graphql-operations'
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -29,6 +30,8 @@ import styles from './CodeInsightsJobs.module.scss'
 interface Props extends TelemetryV2Props {}
 
 export const CodeInsightsJobs: FC<Props> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('enterprise/insights/admin-ui')
+
     const [search, setSearch] = useState<string>('')
     const [orderBy, setOrderBy] = useState<BackfillQueueOrderBy>(BackfillQueueOrderBy.QUEUE_POSITION)
     const [selectedJobs, setSelectedJobs] = useState<string[]>([])
@@ -66,11 +69,11 @@ export const CodeInsightsJobs: FC<Props> = ({ telemetryRecorder }) => {
 
     return (
         <div>
-            <PageTitle title="Code Insights jobs" />
+            <PageTitle title={t('code-insights-jobs')} />
             <PageHeader
                 headingElement="h2"
                 path={[{ text: 'Code Insights jobs' }]}
-                description="List of actionable Code Insights queued jobs"
+                description={t('actionable-code-insights-queued-jobs-list')}
                 className="mb-3"
             />
 
@@ -95,7 +98,7 @@ export const CodeInsightsJobs: FC<Props> = ({ telemetryRecorder }) => {
                     />
 
                     <Input
-                        placeholder="Search jobs by title or series label"
+                        placeholder={t('search-jobs-by-title-or-series-label')}
                         value={search}
                         className={styles.search}
                         status={loading ? 'loading' : 'initial'}
@@ -105,7 +108,8 @@ export const CodeInsightsJobs: FC<Props> = ({ telemetryRecorder }) => {
 
                 {loading && !connection && (
                     <small className={styles.insightJobsMessage}>
-                        <LoadingSpinner /> Loading code insights job
+                        <LoadingSpinner />
+                        {t('loading-code-insights-job')}
                     </small>
                 )}
 
@@ -113,9 +117,11 @@ export const CodeInsightsJobs: FC<Props> = ({ telemetryRecorder }) => {
 
                 {connection && connection.nodes.length === 0 && !error && (
                     <span className={styles.insightJobsMessage}>
-                        <Icon svgPath={mdiMapSearch} inline={false} aria-hidden={true} /> No code insight jobs yet.
-                        Enable code insights and <Link to="/insights/create">create</Link> at least one insight to see
-                        its jobs here.
+                        <Icon svgPath={mdiMapSearch} inline={false} aria-hidden={true} />
+                        <Trans
+                            i18nKey="no-code-insight-jobs-yet"
+                            components={{ '0': <Link to="/insights/create" /> }}
+                        />
                     </span>
                 )}
 
@@ -133,7 +139,7 @@ export const CodeInsightsJobs: FC<Props> = ({ telemetryRecorder }) => {
                 )}
 
                 <PageSwitcher
-                    totalLabel="jobs"
+                    totalLabel={t('jobs')}
                     totalCount={connection?.totalCount ?? null}
                     {...paginationProps}
                     className="mt-5"

@@ -4,6 +4,7 @@ import { mdiPlus, mdiClose } from '@mdi/js'
 import AJV from 'ajv'
 import addFormats from 'ajv-formats'
 import { cloneDeep, uniqueId } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import {
@@ -47,6 +48,8 @@ export const InferenceForm: React.FunctionComponent<InferenceFormProps> = ({
     showInferButton,
     onInfer,
 }) => {
+    const { t } = useTranslation('enterprise/codeintel/configuration/components/inference-form')
+
     const initialFormData = useDeepMemo(cloneDeep(_initialFormData))
     const [formData, setFormData] = useState<InferenceFormData>(initialFormData)
     const [loading, setLoading] = useState(false)
@@ -191,7 +194,7 @@ export const InferenceForm: React.FunctionComponent<InferenceFormProps> = ({
                             onChange={event => setFilter({ ...filter, root: event.target.value })}
                             className="mb-2"
                         >
-                            <option value="">All</option>
+                            <option value="">{t('all-jobs')}</option>
                             {roots.map(root => (
                                 <option key={root} value={root}>
                                     {root}
@@ -209,7 +212,7 @@ export const InferenceForm: React.FunctionComponent<InferenceFormProps> = ({
                             onChange={event => setFilter({ ...filter, indexer: event.target.value })}
                             className="mb-2"
                         >
-                            <option value="">All</option>
+                            <option value="">{t('all-jobs-duplicate')}</option>
                             {indexers.sort().map(indexer => (
                                 <option key={indexer} value={indexer}>
                                     {indexer}
@@ -221,7 +224,10 @@ export const InferenceForm: React.FunctionComponent<InferenceFormProps> = ({
 
                 {filteredJobs.length < formData.index_jobs.length && (
                     <div className="mb-2 px-2 text-muted">
-                        {formData.index_jobs.length} total jobs, showing only {filteredJobs.length} matching jobs.
+                        {t('total-jobs-count', {
+                            formDataIndexJobsLength: formData.index_jobs.length,
+                            filteredJobsLength: filteredJobs.length,
+                        })}
                     </div>
                 )}
 
@@ -261,21 +267,21 @@ export const InferenceForm: React.FunctionComponent<InferenceFormProps> = ({
                     <div className="d-flex justify-content-between">
                         <div className="d-flex align-items-center">
                             <Button type="submit" variant="primary" disabled={!isDirty} className="mr-2">
-                                Save
+                                {t('save-button')}
                             </Button>
                             <Button
                                 variant="secondary"
                                 disabled={!isDirty}
                                 onClick={() => setFormData(initialFormData)}
                             >
-                                Discard changes
+                                {t('discard-changes-button')}
                             </Button>
                             {showInferButton && <ConfigurationInferButton onClick={onInfer} />}
                             {loading && <LoadingSpinner className="ml-2" />}
                         </div>
                         <Button variant="secondary" onClick={addJob} className="mr-2">
                             <Icon svgPath={mdiPlus} aria-hidden={true} className="mr-1" />
-                            Add job
+                            {t('add-job-button')}
                         </Button>
                     </div>
                 )}

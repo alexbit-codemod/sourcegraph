@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { asError, isErrorLike } from '@sourcegraph/common'
@@ -17,6 +18,8 @@ import styles from './NewOrganizationPage.module.scss'
 interface Props extends TelemetryV2Props {}
 
 export const NewOrganizationPage: React.FunctionComponent<React.PropsWithChildren<Props>> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('org/new')
+
     const navigate = useNavigate()
     useEffect(() => {
         EVENT_LOGGER.logViewEvent('NewOrg')
@@ -56,14 +59,15 @@ export const NewOrganizationPage: React.FunctionComponent<React.PropsWithChildre
 
     return (
         <Page className={styles.newOrgPage}>
-            <PageTitle title="New organization" />
+            <PageTitle title={t('new-organization-label')} />
             <PageHeader
                 path={[{ text: 'Create a new organization' }]}
                 description={
                     <>
-                        An organization is a set of users with associated configuration. See{' '}
-                        <Link to="/help/admin/organizations">Sourcegraph documentation</Link> for information about
-                        configuring organizations.
+                        <Trans
+                            i18nKey="organization-description"
+                            components={{ '0': <Link to="/help/admin/organizations" /> }}
+                        />
                     </>
                 }
                 className="mb-3"
@@ -85,7 +89,7 @@ export const NewOrganizationPage: React.FunctionComponent<React.PropsWithChildre
                         onChange={onNameChange}
                         disabled={loading === true}
                         aria-describedby="new-org-page__form-name-help"
-                        label="Organization name"
+                        label={t('organization-name-label')}
                         message="An organization name consists of letters, numbers, hyphens (-), dots (.) and may not begin
                             or end with a dot, nor begin with a hyphen."
                         className="form-group"
@@ -94,12 +98,12 @@ export const NewOrganizationPage: React.FunctionComponent<React.PropsWithChildre
                     <Input
                         id="new-org-page__form-display-name"
                         data-testid="test-new-org-display-name-input"
-                        placeholder="ACME Corporation"
+                        placeholder={t('example-organization-name')}
                         autoCorrect="off"
                         value={displayName}
                         onChange={onDisplayNameChange}
                         disabled={loading === true}
-                        label="Display name"
+                        label={t('display-name-label')}
                         className="mb-0"
                     />
                 </Container>
@@ -111,7 +115,7 @@ export const NewOrganizationPage: React.FunctionComponent<React.PropsWithChildre
                     variant="primary"
                 >
                     {loading === true && <LoadingSpinner />}
-                    Create organization
+                    {t('create-organization-button')}
                 </Button>
             </Form>
         </Page>

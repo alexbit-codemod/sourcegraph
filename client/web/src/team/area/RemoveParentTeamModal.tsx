@@ -1,5 +1,7 @@
 import React, { useCallback } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { logger } from '@sourcegraph/common'
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { Button, ErrorAlert, Form, H3, Modal, Text } from '@sourcegraph/wildcard'
@@ -23,6 +25,8 @@ export const RemoveParentTeamModal: React.FunctionComponent<React.PropsWithChild
     afterEdit,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('team/area')
+
     const labelId = 'removeParentTeam'
 
     const [editTeam, { loading, error }] = useRemoveParentTeam()
@@ -48,17 +52,15 @@ export const RemoveParentTeamModal: React.FunctionComponent<React.PropsWithChild
 
     return (
         <Modal aria-labelledby={labelId} onDismiss={onCancel}>
-            <H3 id={labelId}>Confirm detaching from parent team</H3>
-            <Text>
-                This change will make {teamName} top-level. That is {teamName} will now have no parent team.
-            </Text>
+            <H3 id={labelId}>{t('confirm-detaching-from-parent-team')}</H3>
+            <Text>{t('make-team-top-level', { teamName })}</Text>
             {error && <ErrorAlert error={error} />}
             <Form onSubmit={onSubmit}>
                 <div className="d-flex justify-content-end">
                     <Button className="mr-2" disabled={loading} onClick={onCancel} outline={true} variant="secondary">
-                        Cancel
+                        {t('cancel-button')}
                     </Button>
-                    <LoaderButton type="submit" variant="danger" alwaysShowLabel={true} label="Confirm" />
+                    <LoaderButton type="submit" variant="danger" alwaysShowLabel={true} label={t('confirm-word')} />
                 </div>
             </Form>
         </Modal>

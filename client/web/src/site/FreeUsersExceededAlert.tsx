@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { Alert, Link } from '@sourcegraph/wildcard'
 
@@ -16,6 +18,8 @@ export const FreeUsersExceededAlert: React.FunctionComponent<React.PropsWithChil
     className,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('site')
+
     useEffect(() => telemetryRecorder.recordEvent('alert.freeUsersExceeded', 'view'), [telemetryRecorder])
     const onClickCTA = useCallback(
         () => telemetryRecorder.recordEvent('alert.freeUsersExceeded.CTA', 'click'),
@@ -23,13 +27,29 @@ export const FreeUsersExceededAlert: React.FunctionComponent<React.PropsWithChil
     )
     return (
         <Alert className={className} variant="danger">
-            This Sourcegraph instance has reached{' '}
-            {noLicenseWarningUserCount === null ? 'the limit for' : noLicenseWarningUserCount} free users, and an admin
-            must{' '}
-            <Link className="site-alert__link" to="https://sourcegraph.com/contact/sales" onClick={onClickCTA}>
-                <span className="underline">contact Sourcegraph to start a free trial or purchase a license</span>
-            </Link>{' '}
-            to add more
+            <Trans
+                i18nKey="sourcegraph-instance-limit-warning"
+                values={{
+                    noLicenseWarningUserCount,
+                    noLicenseWarningUserCountNull: noLicenseWarningUserCount === null,
+                    spanClassNameUnderlineContactSourcegraphToStartAFreeTrialOrPurchaseALicenseSpan: (
+                        <>
+                            <span className="underline">
+                                contact Sourcegraph to start a free trial or purchase a license
+                            </span>
+                        </>
+                    ),
+                }}
+                components={{
+                    '0': (
+                        <Link
+                            className="site-alert__link"
+                            to="https://sourcegraph.com/contact/sales"
+                            onClick={onClickCTA}
+                        />
+                    ),
+                }}
+            />
         </Alert>
     )
 }

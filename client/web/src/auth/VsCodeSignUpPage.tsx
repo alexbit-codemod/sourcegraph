@@ -2,6 +2,7 @@ import React from 'react'
 
 import { mdiChevronLeft } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -46,6 +47,8 @@ export const VsCodeSignUpPage: React.FunctionComponent<React.PropsWithChildren<V
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('auth')
+
     const isLightTheme = useIsLightTheme()
     const location = useLocation()
 
@@ -66,7 +69,7 @@ export const VsCodeSignUpPage: React.FunctionComponent<React.PropsWithChildren<V
                 sourcegraphDotComMode: true,
                 authMinPasswordLength: context.authMinPasswordLength,
             }}
-            buttonLabel="Sign up"
+            buttonLabel={t('sign-up')}
             experimental={true}
             className="my-3"
             telemetryRecorder={telemetryRecorder}
@@ -78,9 +81,9 @@ export const VsCodeSignUpPage: React.FunctionComponent<React.PropsWithChildren<V
             <ExternalsAuth
                 page="vscode-signup-page"
                 context={context}
-                githubLabel="Continue with GitHub"
-                gitlabLabel="Continue with GitLab"
-                googleLabel="Continue with Google"
+                githubLabel={t('continue-with-github')}
+                gitlabLabel={t('continue-with-gitlab')}
+                googleLabel={t('continue-with-google')}
                 onClick={() => {}}
                 telemetryRecorder={telemetryRecorder}
                 telemetryService={telemetryService}
@@ -96,7 +99,7 @@ export const VsCodeSignUpPage: React.FunctionComponent<React.PropsWithChildren<V
                     to={`${location.pathname}?${queryWithUseEmailToggled.toString()}`}
                 >
                     <Icon className={styles.backIcon} aria-hidden={true} svgPath={mdiChevronLeft} />
-                    Go back
+                    {t('go-back')}
                 </Link>
             </small>
 
@@ -120,41 +123,40 @@ export const VsCodeSignUpPage: React.FunctionComponent<React.PropsWithChildren<V
                         <div className={classNames(styles.iconCirlce, 'mr-3')}>
                             <VSCodeIcon />
                         </div>{' '}
-                        <strong className="mr-1">Unlock the full potential of the Sourcegraph extension</strong>
+                        <strong className="mr-1">{t('unlock-sourcegraph-extension')}</strong>
                     </H2>
-                    With a Sourcegraph account, you can:
+                    {t('sourcegraph-account-benefits')}
                     <ul className={styles.featureList}>
-                        <li>Search all of your code from your code host, even without downloading it locally</li>
-                        <li>Reference and re-use code from all your projects without leaving VS Code</li>
-                        <li>Create code monitors to alert you to changes in code</li>
+                        <li>{t('search-code-host')}</li>
+                        <li>{t('reuse-code-in-vs-code')}</li>
+                        <li>{t('create-code-monitors')}</li>
                     </ul>
-                    <div className={styles.companiesHeader}>
-                        Trusted by developers at the world's most innovative companies:
-                    </div>
+                    <div className={styles.companiesHeader}>{t('trusted-developers')}</div>
                     <img
                         src={`${assetsRoot}/img/customer-logos-${isLightTheme ? 'light' : 'dark'}.svg`}
-                        alt="Cloudflare, Uber, SoFi, Dropbox, Plaid, Toast"
+                        alt={t('trusted-companies')}
                         className={styles.customerLogos}
                     />
                 </div>
                 <div className={classNames(styles.leftOrRight, styles.signUpWrapper)}>
                     {' '}
-                    <H2>Create a free account</H2>
+                    <H2>{t('create-free-account')}</H2>
                     {renderAuthMethod()}
                     <small className="text-muted">
-                        By registering, you agree to our{' '}
-                        <Link to="https://sourcegraph.com/terms" target="_blank" rel="noopener">
-                            Terms of Service
-                        </Link>{' '}
-                        and{' '}
-                        <Link to="https://sourcegraph.com/privacy" target="_blank" rel="noopener">
-                            Privacy Policy
-                        </Link>
-                        .
+                        <Trans
+                            i18nKey="terms-and-privacy-agreement"
+                            components={{
+                                '0': <Link to="https://sourcegraph.com/terms" target="_blank" rel="noopener" />,
+                                '1': <Link to="https://sourcegraph.com/privacy" target="_blank" rel="noopener" />,
+                            }}
+                        />
                     </small>
                     <hr className={styles.separator} />
                     <div>
-                        Already have an account? <Link to={`/sign-in${location.search}`}>Sign in</Link>
+                        <Trans
+                            i18nKey="already-have-account-sign-in"
+                            components={{ '0': <Link to={`/sign-in${location.search}`} /> }}
+                        />
                     </div>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 import React from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { UserAvatar } from '@sourcegraph/shared/src/components/UserAvatar'
@@ -37,6 +38,8 @@ export const GitCommitNodeByline: React.FunctionComponent<React.PropsWithChildre
     isPerforceDepot,
     as = 'div',
 }) => {
+    const { t } = useTranslation('repo/commits')
+
     const Wrapper = as
 
     const refActionType = isPerforceDepot ? 'submitted by' : 'committed by'
@@ -72,14 +75,17 @@ export const GitCommitNodeByline: React.FunctionComponent<React.PropsWithChildre
                     {!compact ? (
                         <>
                             {messageElement}
-                            <PersonLink person={author.person} className="font-weight-bold" /> authored and{' '}
-                            {refActionType} <PersonLink person={committer.person} className="font-weight-bold" />{' '}
+                            <PersonLink person={author.person} className="font-weight-bold" />
+                            {t('authored-and-ref-action-type', { refActionType })}
+                            <PersonLink person={committer.person} className="font-weight-bold" />{' '}
                             <Timestamp date={committer.date} preferAbsolute={preferAbsoluteTimestamps} />
                             {commitMessageBody}
                         </>
                     ) : (
                         <>
-                            <PersonLink person={author.person} /> and <PersonLink person={committer.person} />{' '}
+                            <PersonLink person={author.person} />
+                            {t('and')}
+                            <PersonLink person={committer.person} />{' '}
                         </>
                     )}
                 </div>

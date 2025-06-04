@@ -1,30 +1,35 @@
 import { render, type RenderResult, cleanup, waitFor, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { wait } from '@testing-library/user-event/dist/utils'
+import { useTranslation } from 'react-i18next'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import { Tooltip } from './Tooltip'
 
-const TooltipTest = () => (
-    <>
-        Hover on{' '}
-        <Tooltip content="Tooltip 1">
-            <strong data-testid="trigger-1">me</strong>
-        </Tooltip>
-        , or{' '}
-        <Tooltip content="Tooltip 2">
-            <strong data-testid="trigger-2">me</strong>
-        </Tooltip>
-        , but nothing for{' '}
-        <Tooltip content="">
-            <strong data-testid="trigger-3">empty string</strong>
-        </Tooltip>{' '}
-        or{' '}
-        <Tooltip content={null}>
-            <strong data-testid="trigger-4">null</strong>
-        </Tooltip>
-    </>
-)
+const TooltipTest = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Tooltip')
+
+    return (
+        <>
+            {t('hover-on-space')}
+            <Tooltip content="Tooltip 1">
+                <strong data-testid="trigger-1">{t('me')}</strong>
+            </Tooltip>
+            {t('comma-or-space')}
+            <Tooltip content="Tooltip 2">
+                <strong data-testid="trigger-2">{t('me')}</strong>
+            </Tooltip>
+            {t('comma-but-nothing-for-space')}
+            <Tooltip content="">
+                <strong data-testid="trigger-3">{t('empty-string')}</strong>
+            </Tooltip>
+            {t('space-or-space')}
+            <Tooltip content={null}>
+                <strong data-testid="trigger-4">{t('null')}</strong>
+            </Tooltip>
+        </>
+    )
+}
 
 describe('Tooltip', () => {
     let rendered: RenderResult

@@ -1,0 +1,18 @@
+{
+  "no-metadata-value": "No metadata value",
+  "no-metadata-value-duplicate": "No metadata value",
+  "fork": "Fork",
+  "archived": "Archived",
+  "private": "Private",
+  "how-to-search": "How to search",
+  "popular-queries": "Popular queries",
+  "complete-query-reference": "Complete query reference",
+  "default-message": "Default",
+  "link-action": "Link",
+  "delete-action": "Delete",
+  "owner-match": "Owner match",
+  "show-files": "Show files",
+  "owner-not-associated-with-user-or-team": "This owner is not associated with any Sourcegraph user or team.",
+  "commit-hash-label": "Commit hash:",
+  "committed-status": "Committed"
+}

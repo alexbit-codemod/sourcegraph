@@ -3,6 +3,7 @@ import { type FC, useEffect, useState } from 'react'
 import classNames from 'classnames'
 import MapSearchIcon from 'mdi-react/MapSearchIcon'
 import ViewDashboardOutlineIcon from 'mdi-react/ViewDashboardOutlineIcon'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { useTemporarySetting } from '@sourcegraph/shared/src/settings/temporary/useTemporarySetting'
@@ -30,6 +31,8 @@ export interface DashboardsContentProps extends TelemetryProps, TelemetryV2Props
 }
 
 export const DashboardsContent: FC<DashboardsContentProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/dashboards/dashboard-view/components/dashboards-content')
+
     const { currentDashboard, dashboards, telemetryService, telemetryRecorder } = props
 
     const navigate = useNavigate()
@@ -78,7 +81,7 @@ export const DashboardsContent: FC<DashboardsContentProps> = props => {
     return (
         <div className={styles.root}>
             <DashboardHeader className={styles.header}>
-                <span className={styles.dashboardSelectLabel}>Dashboard:</span>
+                <span className={styles.dashboardSelectLabel}>{t('dashboard-title')}</span>
 
                 <DashboardSelect
                     dashboard={currentDashboard}
@@ -101,7 +104,7 @@ export const DashboardsContent: FC<DashboardsContentProps> = props => {
                         disabled={addRemovePermissions.disabled}
                         onClick={() => setAddInsightsState(true)}
                     >
-                        Add or remove insights
+                        {t('add-remove-insights')}
                     </Button>
                 </Tooltip>
             </DashboardHeader>
@@ -142,6 +145,8 @@ interface DashboardEmptyContentProps {
 }
 
 const DashboardEmptyContent: FC<DashboardEmptyContentProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/dashboards/dashboard-view/components/dashboards-content')
+
     const { dashboards } = props
 
     if (dashboards.length === 0) {
@@ -149,16 +154,16 @@ const DashboardEmptyContent: FC<DashboardEmptyContentProps> = props => {
             <HeroPage
                 lessPadding={true}
                 icon={ViewDashboardOutlineIcon}
-                title="Your dashboard will appear here"
+                title={t('dashboard-placeholder')}
                 subtitle="Your instance does not have any dashboards or you may not have permissions to view them."
                 body={
                     <Button as={Link} to="/insights/add-dashboard" variant="primary" className="mt-4">
-                        Create your first dashboard
+                        {t('first-dashboard-prompt')}
                     </Button>
                 }
             />
         )
     }
 
-    return <HeroPage icon={MapSearchIcon} title="Hmm, the dashboard wasn't found." />
+    return <HeroPage icon={MapSearchIcon} title={t('dashboard-not-found')} />
 }

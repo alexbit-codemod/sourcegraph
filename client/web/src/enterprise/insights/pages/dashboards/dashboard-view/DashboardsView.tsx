@@ -1,5 +1,6 @@
 import type { FC } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -22,6 +23,8 @@ export interface DashboardsViewProps extends TelemetryProps, TelemetryV2Props {
 }
 
 export const DashboardsView: FC<DashboardsViewProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/dashboards/dashboard-view')
+
     const { dashboardId, telemetryService, telemetryRecorder } = props
 
     const { dashboards } = useInsightDashboards()
@@ -47,7 +50,11 @@ export const DashboardsView: FC<DashboardsViewProps> = props => {
 
     return (
         <>
-            <PageTitle title={`${currentDashboard?.title || ''} - Code Insights`} />
+            <PageTitle
+                title={t('current-dashboard-title-code-insights', {
+                    currentDashboardTitle: currentDashboard?.title || '',
+                })}
+            />
             <DashboardsContent
                 currentDashboard={currentDashboard}
                 dashboards={dashboards}

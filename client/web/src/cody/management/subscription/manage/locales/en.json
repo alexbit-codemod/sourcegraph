@@ -1,0 +1,20 @@
+{
+  "edit-credit-card": "Edit credit card",
+  "cancel-button": "Cancel",
+  "save-button": "Save",
+  "invoice-history": "Invoice history",
+  "no-invoices-message": "You have no invoices.",
+  "get-invoice-button": "Get Invoice",
+  "renew-subscription": "Renew subscription",
+  "cancel-subscription": " Cancel subscription",
+  "confirmation-prompt": "Are you sure?",
+  "cancel-subscription-warning": "Canceling your subscription now means that you won't be able to use Cody with Pro features after",
+  "proceed-confirmation": "Do you want to proceed?",
+  "change-mind": "No, I've changed my mind",
+  "confirm-cancellation": "Yes, cancel",
+  "billing-address": "Billing address",
+  "manage-subscription": "Manage subscription",
+  "manage-subscription-plain": "Manage subscription",
+  "failed-fetch-subscription-data": "Failed to fetch subscription data",
+  "subscription-data-not-available": "Subscription data is not available"
+}

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { mdiBitbucket, mdiChevronLeft, mdiGithub, mdiGitlab, mdiKeyVariant, mdiMicrosoftAzureDevops } from '@mdi/js'
 import classNames from 'classnames'
 import { partition } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 import { Navigate, useLocation, useSearchParams } from 'react-router-dom'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -38,6 +39,8 @@ export interface SignInPageProps extends TelemetryV2Props {
 }
 
 export const SignInPage: React.FunctionComponent<React.PropsWithChildren<SignInPageProps>> = props => {
+    const { t } = useTranslation('auth')
+
     const { context, authenticatedUser } = props
     useEffect(() => {
         EVENT_LOGGER.logViewEvent('SignIn', null, false)
@@ -98,14 +101,15 @@ export const SignInPage: React.FunctionComponent<React.PropsWithChildren<SignInP
 
         return (
             <>
-                <PageTitle title="Signing in..." />
+                <PageTitle title={t('signing-in')} />
                 <AuthPageWrapper
                     title="Redirecting to sign in..."
                     sourcegraphDotComMode={context.sourcegraphDotComMode}
                     className={styles.wrapper}
                 >
                     <Alert className="mt-3" variant="info">
-                        You are being redirected to sign in with {thirdPartyAuthProviders[0].displayName}.
+                        {t('redirecting-to-sign-in')}
+                        {thirdPartyAuthProviders[0].displayName}.
                     </Alert>
                 </AuthPageWrapper>
             </>
@@ -123,7 +127,7 @@ export const SignInPage: React.FunctionComponent<React.PropsWithChildren<SignInP
 
     const body = !hasProviders ? (
         <Alert className="mt-3" variant="info">
-            No authentication providers are available. Contact a site administrator for help.
+            {t('no-auth-providers-available')}
         </Alert>
     ) : (
         <>
@@ -137,7 +141,7 @@ export const SignInPage: React.FunctionComponent<React.PropsWithChildren<SignInP
                             onClick={() => toggleMoreProviders(false)}
                         >
                             <Icon aria-hidden={true} svgPath={mdiChevronLeft} />
-                            Back
+                            {t('back-button')}
                         </Button>
                     </div>
                 )}
@@ -184,7 +188,8 @@ export const SignInPage: React.FunctionComponent<React.PropsWithChildren<SignInP
                         variant="secondary"
                         onClick={() => toggleMoreProviders(true)}
                     >
-                        <Icon aria-hidden={true} svgPath={mdiKeyVariant} /> Other login methods
+                        <Icon aria-hidden={true} svgPath={mdiKeyVariant} />
+                        {t('other-login-methods')}
                     </Button>
                 )}
             </Container>
@@ -199,7 +204,7 @@ export const SignInPage: React.FunctionComponent<React.PropsWithChildren<SignInP
 
     return (
         <>
-            <PageTitle title="Sign in" />
+            <PageTitle title={t('sign-in-button')} />
             <AuthPageWrapper
                 title="Sign in to Sourcegraph"
                 sourcegraphDotComMode={context.sourcegraphDotComMode}
@@ -243,6 +248,8 @@ const SignUpNotice: React.FunctionComponent<SignUpNoticeProps> = ({
     isRequestAccessAllowed,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('auth')
+
     const dotcomCTAs = (
         <>
             <Link
@@ -252,7 +259,7 @@ const SignUpNotice: React.FunctionComponent<SignUpNoticeProps> = ({
                     telemetryRecorder.recordEvent('auth.enterpriseCTA', 'click')
                 }}
             >
-                consider Sourcegraph Enterprise
+                {t('consider-sourcegraph-enterprise')}
             </Link>
             .
         </>
@@ -261,8 +268,8 @@ const SignUpNotice: React.FunctionComponent<SignUpNoticeProps> = ({
     if (allowSignup) {
         return (
             <Text className="mt-3 text-center">
-                New to Sourcegraph? <Link to="/sign-up">Sign up</Link>{' '}
-                {sourcegraphDotComMode && <>To use Sourcegraph on private repositories, {dotcomCTAs}</>}
+                <Trans i18nKey="new-to-sourcegraph-sign-up" components={{ '0': <Link to="/sign-up" /> }} />
+                {sourcegraphDotComMode && <>{t('use-sourcegraph-private-repositories', { dotcomCTAs })}</>}
             </Text>
         )
     }
@@ -270,7 +277,7 @@ const SignUpNotice: React.FunctionComponent<SignUpNoticeProps> = ({
     if (isRequestAccessAllowed) {
         return (
             <Text className="mt-3 text-center text-muted">
-                Need an account? <Link to="/request-access">Request access</Link> or contact your site admin.
+                <Trans i18nKey="need-account-request-access" components={{ '0': <Link to="/request-access" /> }} />
             </Text>
         )
     }
@@ -278,11 +285,12 @@ const SignUpNotice: React.FunctionComponent<SignUpNoticeProps> = ({
     if (sourcegraphDotComMode) {
         return (
             <Text className="mt-3 text-center text-muted">
-                Currently, we are unable to create accounts using email. Please use the providers listed above to
-                continue. <br /> For private code, {dotcomCTAs}
+                {t('unable-to-create-accounts-email')}
+                <br />
+                {t('private-code-dotcom-ctas', { dotcomCTAs })}
             </Text>
         )
     }
 
-    return <Text className="mt-3 text-center text-muted">Need an account? Contact your site admin.</Text>
+    return <Text className="mt-3 text-center text-muted">{t('need-account-contact-admin')}</Text>
 }

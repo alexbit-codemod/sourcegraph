@@ -1,0 +1,11 @@
+{
+  "sort-by-result-count": "Sort by result count",
+  "highest-option": "Highest",
+  "lowest-option": "Lowest",
+  "sort-by-name": "Sort by name",
+  "sort-by-date-added": "Sort by date added",
+  "newest-option": "Newest",
+  "oldest-option": "Oldest",
+  "max-data-series-display": "Max number of data series to display <0>(max {{MAX_NUMBER_OF_SERIES}})</0>",
+  "max-series-points-display": "Max number of series points to display <0>(max 90)</0>"
+}

@@ -1,0 +1,36 @@
+{
+  "cancel-button": "Cancel",
+  "save-button": "Save",
+  "behavior-message": "Behavior",
+  "blocklist-message": "Blocklist",
+  "allowlist-message": "Allowlist",
+  "name-label": "Name",
+  "filter-label": " Filter",
+  "version-label": "Version",
+  "example-version": "e.g. v1.*",
+  "summary-title": "Summary",
+  "no-package-filter-match": "No package currently matches this filter",
+  "one-package-filter-match": "1 package currently matches this filter, across",
+  "total-count-version": "{{totalCount}} version",
+  "total-count-versions": "{{totalCount}} versions",
+  "showing-versions": "(showing only {{versionsLength}})",
+  "show-all-or-limited-versions": {
+    "true": "all ",
+    "false": "{{nextFetchLimitToString}}"
+  },
+  "example-types-filter": "Example: @types/*",
+  "all-versions-blocked-message": "All versions of all matching packages are blocked when using a name filter.",
+  "summary-label": "Summary",
+  "no-matching-packages-message": "No package currently matches this filter",
+  "filter-info-message": "  this filter {{nodesLengthTotalCountShowingOnlyNodesLength}}",
+  "single-package-matching-message": "{{totalCount}} package currently matches",
+  "multiple-packages-matching-message": "{{totalCount}} packages currently match",
+  "showing-only-message": "(showing only {{nodesLength}})",
+  "show-all-or-limited-packages": {
+    "true": "all ",
+    "false": "{{nextFetchLimitToString}}"
+  },
+  "package-already-blocked-message": "This package is already blocked by a filter.",
+  "package-size-label": "Size:",
+  "package-not-synced-message": "This package has not yet been synced."
+}

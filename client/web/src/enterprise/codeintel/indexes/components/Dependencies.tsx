@@ -3,6 +3,7 @@ import { type FunctionComponent, useCallback } from 'react'
 import { useApolloClient } from '@apollo/client'
 import { mdiChevronRight, mdiMapSearch } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import type { Observable } from 'rxjs'
 
 import { H3, Icon, Link, Text, Tooltip } from '@sourcegraph/wildcard'
@@ -88,55 +89,63 @@ interface DependencyOrDependentNodeProps {
     node: PreciseIndexFields
 }
 
-const DependencyOrDependentNode: FunctionComponent<DependencyOrDependentNodeProps> = ({ node }) => (
-    <div className={classNames(styles.listItem, 'px-4')}>
-        <div>
-            <div>
-                <H3 className="m-0 mb-1">
-                    {node.projectRoot ? (
-                        <Link to={node.projectRoot.repository.url}>{node.projectRoot.repository.name}</Link>
-                    ) : (
-                        <span>Unknown repository</span>
-                    )}
-                </H3>
-            </div>
+const DependencyOrDependentNode: FunctionComponent<DependencyOrDependentNodeProps> = ({ node }) => {
+    const { t } = useTranslation('enterprise/codeintel/indexes/components')
 
+    return (
+        <div className={classNames(styles.listItem, 'px-4')}>
             <div>
-                <span className="mr-2 d-block d-mdinline-block">
-                    <ProjectDescription index={node} />
-                </span>
+                <div>
+                    <H3 className="m-0 mb-1">
+                        {node.projectRoot ? (
+                            <Link to={node.projectRoot.repository.url}>{node.projectRoot.repository.name}</Link>
+                        ) : (
+                            <span>{t('unknown-repository')}</span>
+                        )}
+                    </H3>
+                </div>
 
-                <small className="text-mute">
-                    <PreciseIndexLastUpdated index={node} />{' '}
-                    {node.shouldReindex && (
-                        <Tooltip content="This index has been marked as replaceable by auto-indexing.">
-                            <span className={classNames(styles.tag, 'ml-1 rounded')}>
-                                (replaceable by auto-indexing)
-                            </span>
-                        </Tooltip>
-                    )}
-                </small>
+                <div>
+                    <span className="mr-2 d-block d-mdinline-block">
+                        <ProjectDescription index={node} />
+                    </span>
+
+                    <small className="text-mute">
+                        <PreciseIndexLastUpdated index={node} />{' '}
+                        {node.shouldReindex && (
+                            <Tooltip content="This index has been marked as replaceable by auto-indexing.">
+                                <span className={classNames(styles.tag, 'ml-1 rounded')}>
+                                    {t('replaceable-by-auto-indexing')}
+                                </span>
+                            </Tooltip>
+                        )}
+                    </small>
+                </div>
             </div>
+            {node.projectRoot && (
+                <Link
+                    to={`/${node.projectRoot.repository.name}/-/code-graph/indexes/${node.id}`}
+                    className="d-flex justify-content-end align-items-center align-self-stretch p-0"
+                >
+                    <Icon svgPath={mdiChevronRight} inline={false} aria-label="View details" />
+                </Link>
+            )}
         </div>
-        {node.projectRoot && (
-            <Link
-                to={`/${node.projectRoot.repository.name}/-/code-graph/indexes/${node.id}`}
-                className="d-flex justify-content-end align-items-center align-self-stretch p-0"
-            >
-                <Icon svgPath={mdiChevronRight} inline={false} aria-label="View details" />
-            </Link>
-        )}
-    </div>
-)
+    )
+}
 
 interface EmptyDependencyOrDependentsProps {
     pluralNoun: string
 }
 
-const EmptyDependencyOrDependents: React.FunctionComponent<EmptyDependencyOrDependentsProps> = ({ pluralNoun }) => (
-    <Text alignment="center" className="text-muted w-100 mb-0 mt-1">
-        <Icon className="mb-2" svgPath={mdiMapSearch} inline={false} aria-hidden={true} />
-        <br />
-        No {pluralNoun}.
-    </Text>
-)
+const EmptyDependencyOrDependents: React.FunctionComponent<EmptyDependencyOrDependentsProps> = ({ pluralNoun }) => {
+    const { t } = useTranslation('enterprise/codeintel/indexes/components')
+
+    return (
+        <Text alignment="center" className="text-muted w-100 mb-0 mt-1">
+            <Icon className="mb-2" svgPath={mdiMapSearch} inline={false} aria-hidden={true} />
+            <br />
+            {t('no-plural-noun', { pluralNoun })}
+        </Text>
+    )
+}

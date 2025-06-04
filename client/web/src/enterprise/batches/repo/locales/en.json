@@ -1,0 +1,17 @@
+{
+  "changesets-total-summary": " changesets total (showing first {{MAX_CHANGESETS_COUNT}})",
+  "see-all-button": "See all",
+  "created-label": "created",
+  "status": "Status",
+  "changeset-information": "Changeset information",
+  "check-state": "Check state",
+  "review-state": "Review state",
+  "changes": "Changes",
+  "batch-changes-title": "Batch Changes",
+  "batch-changes-created-message": "Batch changes has created",
+  "changesets-on-repo": " changesets on {{repoDisplayName}}",
+  "status-open": " open",
+  "status-unpublished": " unpublished",
+  "status-closed": " closed",
+  "status-merged": " merged"
+}

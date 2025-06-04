@@ -1,6 +1,7 @@
 import React, { useState, type FunctionComponent, useCallback } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { lastValueFrom } from 'rxjs'
 
 import { asError, type ErrorLike, isErrorLike } from '@sourcegraph/common'
@@ -41,6 +42,8 @@ export const SetUserPrimaryEmailForm: FunctionComponent<React.PropsWithChildren<
     className,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('user/settings/emails')
+
     const currentPrimaryEmail = findPrimaryEmail(emails)
     const [primaryEmail, setPrimaryEmail] = useState<string | undefined>(currentPrimaryEmail)
     const [statusOrError, setStatusOrError] = useState<Status>()
@@ -121,7 +124,7 @@ export const SetUserPrimaryEmailForm: FunctionComponent<React.PropsWithChildren<
                     <div className={styles.formButton}>
                         <LoaderButton
                             loading={statusOrError === 'loading'}
-                            label="Save"
+                            label={t('save-button')}
                             type="submit"
                             disabled={
                                 // In case no email is marked primary yet, and none

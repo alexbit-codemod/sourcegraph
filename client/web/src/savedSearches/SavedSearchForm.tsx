@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import type { Omit } from 'utility-types'
 
 import { LazyQueryInputFormControl } from '@sourcegraph/branded'
@@ -50,6 +51,8 @@ export interface SavedSearchFormProps extends NamespaceProps {
 }
 
 export const SavedSearchForm: React.FunctionComponent<React.PropsWithChildren<SavedSearchFormProps>> = props => {
+    const { t } = useTranslation('savedSearches')
+
     const [values, setValues] = useState<Omit<SavedQueryFields, 'id'>>(() => ({
         description: props.defaultValues?.description || '',
         query: props.defaultValues?.query || '',
@@ -118,11 +121,11 @@ export const SavedSearchForm: React.FunctionComponent<React.PropsWithChildren<Sa
                         value={description}
                         onChange={createInputChangeHandler('description')}
                         className={classNames('form-group', styles.label)}
-                        label="Description"
+                        label={t('description')}
                         autoFocus={true}
                     />
                     <Label className={classNames('w-100 form-group', styles.label)}>
-                        <div className="mb-2">Query</div>
+                        <div className="mb-2">{t('query')}</div>
                         <LazyQueryInputFormControl
                             patternType={defaultPatternType}
                             isSourcegraphDotCom={props.isSourcegraphDotCom}
@@ -137,7 +140,7 @@ export const SavedSearchForm: React.FunctionComponent<React.PropsWithChildren<Sa
                             {/* Label is for visual benefit, input has more specific label attached */}
                             {}
                             <Label className={styles.label} id="saved-search-form-email-notifications">
-                                Email notifications
+                                {t('email-notifications')}
                             </Label>
                             <div aria-labelledby="saved-search-form-email-notifications">
                                 <Checkbox
@@ -161,11 +164,16 @@ export const SavedSearchForm: React.FunctionComponent<React.PropsWithChildren<Sa
 
                             <Alert variant="primary" className={classNames(styles.codeMonitoringAlert, 'p-3 mb-0')}>
                                 <div className="mb-2">
-                                    <strong>New:</strong> Watch your code for changes with code monitoring to get
-                                    notifications.
+                                    <Trans
+                                        i18nKey="new-code-monitoring-notifications"
+                                        components={{ '0': <strong /> }}
+                                    />
                                 </div>
                                 <Button to={codeMonitoringUrl} variant="primary" as={Link}>
-                                    Go to code monitoring <span aria-hidden={true}>→</span>
+                                    <Trans
+                                        i18nKey="go-to-code-monitoring"
+                                        components={{ '0': <span aria-hidden={true} /> }}
+                                    />
                                 </Button>
                             </Alert>
                         </div>
@@ -179,23 +187,26 @@ export const SavedSearchForm: React.FunctionComponent<React.PropsWithChildren<Sa
                             disabled={true}
                             onChange={createInputChangeHandler('slackWebhookURL')}
                             className={classNames('mt-3 mb-0', styles.label)}
-                            label="Slack notifications"
+                            label={t('slack-notifications')}
                             message="Slack webhooks are deprecated and will be removed in a future Sourcegraph version."
                         />
                     )}
                     {isUnsupportedNotifyQuery && (
                         <Alert className="mt-3 mb-0" variant="warning">
-                            <strong>Warning:</strong> non-commit searches do not currently support notifications.
-                            Consider adding <Code>type:diff</Code> or <Code>type:commit</Code> to your query.
+                            <Trans i18nKey="warning-non-commit-searches" components={{ '0': <strong /> }} />
+                            <Code>{t('type-diff')}</Code>
+                            {t('or')}
+                            <Code>{t('type-commit')}</Code>
+                            {t('add-to-query')}
                         </Alert>
                     )}
                     {notify && !window.context.emailEnabled && !isUnsupportedNotifyQuery && (
                         <Alert className="mt-3 mb-0" variant="warning">
-                            <strong>Warning:</strong> Sending emails is not currently configured on this Sourcegraph
-                            server.{' '}
-                            {props.authenticatedUser?.siteAdmin
-                                ? 'Use the email.smtp site configuration setting to enable sending emails.'
-                                : 'Contact your server admin for more information.'}
+                            <Trans
+                                i18nKey="warning-email-configuration"
+                                values={{ propsAuthenticatedUserSiteAdmin: props.authenticatedUser?.siteAdmin }}
+                                components={{ '0': <strong /> }}
+                            />
                         </Alert>
                     )}
                 </Container>
@@ -214,10 +225,10 @@ export const SavedSearchForm: React.FunctionComponent<React.PropsWithChildren<Sa
                     <Container className="d-flex p-3 align-items-start">
                         <ProductStatusBadge status="new" className="mr-3" />
                         <span>
-                            Watch for changes to your code and trigger email notifications, webhooks, and more with{' '}
-                            <Link to="/code-monitoring">
-                                code monitoring <span aria-hidden={true}>→</span>
-                            </Link>
+                            <Trans
+                                i18nKey="watch-for-code-changes"
+                                components={{ '0': <Link to="/code-monitoring" /> }}
+                            />
                         </span>
                     </Container>
                 )}

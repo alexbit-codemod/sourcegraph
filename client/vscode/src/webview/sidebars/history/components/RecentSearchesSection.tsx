@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react'
 
 import { mdiChevronDown, mdiChevronLeft } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { SyntaxHighlightedSearchQuery } from '@sourcegraph/branded'
 import { type EventLogResult, fetchRecentSearches } from '@sourcegraph/shared/src/search'
@@ -18,6 +19,8 @@ export const RecentSearchesSection: React.FunctionComponent<React.PropsWithChild
     extensionCoreAPI,
     authenticatedUser,
 }) => {
+    const { t } = useTranslation('../../vscode/src/webview/sidebars/history/components')
+
     const itemsToLoad = 15
     const [collapsed, setCollapsed] = useState(false)
 
@@ -62,7 +65,7 @@ export const RecentSearchesSection: React.FunctionComponent<React.PropsWithChild
                 onClick={() => setCollapsed(!collapsed)}
                 aria-label={`${collapsed ? 'Expand' : 'Collapse'} recent searches`}
             >
-                <H5 className="flex-grow-1">Recent Searches</H5>
+                <H5 className="flex-grow-1">{t('recent-searches')}</H5>
                 <Icon className="mr-1" svgPath={collapsed ? mdiChevronLeft : mdiChevronDown} aria-hidden={true} />
             </Button>
 

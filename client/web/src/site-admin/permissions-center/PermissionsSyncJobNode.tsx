@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react'
 
 import { mdiChevronDown } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { UserAvatar } from '@sourcegraph/shared/src/components/UserAvatar'
@@ -133,6 +134,8 @@ const getWarningMessage = (codeHostStates: CodeHostState[]): string => {
 }
 
 export const PermissionsSyncJobSubject: React.FunctionComponent<PermissionsSyncJobDefaultProps> = ({ job }) => {
+    const { t } = useTranslation('site-admin/permissions-center')
+
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const handleOpenChange = useCallback((event: PopoverOpenEvent): void => {
         setIsOpen(event.isOpen)
@@ -159,11 +162,11 @@ export const PermissionsSyncJobSubject: React.FunctionComponent<PermissionsSyncJ
                             <PopoverContent position={Position.bottom} focusLocked={false}>
                                 <div className="p-2">
                                     <Text className="mb-0" weight="bold">
-                                        Name
+                                        {t('name-label')}
                                     </Text>
                                     <Text className="mb-0">{job.subject.name}</Text>
                                     <Text className="mb-0 mt-2" weight="bold">
-                                        External Service
+                                        {t('external-service-label')}
                                     </Text>
                                     <div className="d-flex align-items-center">
                                         <ExternalRepositoryIcon externalRepo={job.subject.externalRepository} />

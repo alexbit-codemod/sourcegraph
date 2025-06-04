@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { startCase } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import '@storybook/addon-designs'
 
@@ -23,21 +24,25 @@ export const ButtonVariants: React.FunctionComponent<React.PropsWithChildren<But
     icon: ButtonIcon,
 }) => (
     <div className={styles.grid}>
-        {variants.map(variant => (
-            <React.Fragment key={variant}>
-                <Button variant={variant} size={size} outline={outline} onClick={logger.log}>
-                    {ButtonIcon && <Icon aria-hidden={true} as={ButtonIcon} className="mr-1" />}
-                    {startCase(variant)}
-                </Button>
-                <Button variant={variant} size={size} outline={outline} onClick={logger.log} className="focus">
-                    {ButtonIcon && <Icon aria-hidden={true} as={ButtonIcon} className="mr-1" />}
-                    Focus
-                </Button>
-                <Button variant={variant} size={size} outline={outline} onClick={logger.log} disabled={true}>
-                    {ButtonIcon && <Icon aria-hidden={true} as={ButtonIcon} className="mr-1" />}
-                    Disabled
-                </Button>
-            </React.Fragment>
-        ))}
+        {variants.map(variant => {
+            const { t } = useTranslation('../../wildcard/src/components/Button/story')
+
+            return (
+                <React.Fragment key={variant}>
+                    <Button variant={variant} size={size} outline={outline} onClick={logger.log}>
+                        {ButtonIcon && <Icon aria-hidden={true} as={ButtonIcon} className="mr-1" />}
+                        {startCase(variant)}
+                    </Button>
+                    <Button variant={variant} size={size} outline={outline} onClick={logger.log} className="focus">
+                        {ButtonIcon && <Icon aria-hidden={true} as={ButtonIcon} className="mr-1" />}
+                        {t('focus-message')}
+                    </Button>
+                    <Button variant={variant} size={size} outline={outline} onClick={logger.log} disabled={true}>
+                        {ButtonIcon && <Icon aria-hidden={true} as={ButtonIcon} className="mr-1" />}
+                        {t('disabled-message')}
+                    </Button>
+                </React.Fragment>
+            )
+        })}
     </div>
 )

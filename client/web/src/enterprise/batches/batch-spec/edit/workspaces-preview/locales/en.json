@@ -1,0 +1,8 @@
+{
+  "search-repository-name": "Search repository name",
+  "no-workspaces-found": "No workspaces found",
+  "optimized-batch-changes-workspaces": "The experience is currently optimized for batch changes targeting up to {{WORKSPACE_WARNING_MIN_TOTAL_COUNT}}  workspaces. Break your batch change down into several smaller batch changes for a better experience.",
+  "license-limit-changesets-per-batch": "Your license only allows for {{maxCount}} changesets per batch change. If more than {{maxCount}} changesets are generated, you won't be able to apply the batch change and actually publish the changesets to the code host.",
+  "workspaces-preview-loading": "Workspaces preview is loading...",
+  "importing-changesets": "Importing changesets"
+}

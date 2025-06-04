@@ -2,6 +2,7 @@ import React, { useCallback, useRef } from 'react'
 
 import { mdiChevronDown } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
+import { useTranslation } from 'react-i18next'
 import * as uuid from 'uuid'
 
 import type { ErrorLike } from '@sourcegraph/common'
@@ -45,6 +46,8 @@ interface NotebooksListPageHeaderProps extends TelemetryProps, TelemetryV2Props 
 export const NotebooksListPageHeader: React.FunctionComponent<
     React.PropsWithChildren<NotebooksListPageHeaderProps>
 > = ({ authenticatedUser, telemetryService, telemetryRecorder, setImportState, importNotebook }) => {
+    const { t } = useTranslation('notebooks/listPage')
+
     const fileInputReference = useRef<HTMLInputElement>(null)
 
     const onImportMenuItemSelect = useCallback(() => {
@@ -106,16 +109,16 @@ export const NotebooksListPageHeader: React.FunctionComponent<
             <Menu>
                 <ButtonGroup>
                     <Button to={PageRoutes.NotebookCreate} variant="primary" as={Link}>
-                        Create notebook
+                        {t('create-notebook')}
                     </Button>
                     <MenuButton variant="primary" className={styles.dropdownButton}>
                         <Icon aria-hidden={true} svgPath={mdiChevronDown} />
-                        <VisuallyHidden>Actions</VisuallyHidden>
+                        <VisuallyHidden>{t('actions')}</VisuallyHidden>
                     </MenuButton>
                 </ButtonGroup>
                 <MenuList position={Position.bottomEnd}>
                     <MenuItem className={styles.menuItem} onSelect={onImportMenuItemSelect}>
-                        Import Markdown notebook
+                        {t('import-markdown-notebook')}
                     </MenuItem>
                 </MenuList>
             </Menu>

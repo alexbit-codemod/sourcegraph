@@ -1,5 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { pluralize } from '@sourcegraph/common'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { H2, Link, Text, H3, TextArea, Button, H1 } from '@sourcegraph/wildcard'
@@ -20,6 +22,8 @@ interface InviteUsersProps extends TelemetryV2Props {
 }
 
 export const InviteUsers: React.FunctionComponent<InviteUsersProps> = ({ telemetryRecorder, subscriptionSummary }) => {
+    const { t } = useTranslation('cody/invites')
+
     const subscriptionQueryResult = useCurrentSubscription()
     const isAdmin = subscriptionSummary.userRole === 'admin'
     const teamId = subscriptionSummary.teamId
@@ -109,9 +113,9 @@ export const InviteUsers: React.FunctionComponent<InviteUsersProps> = ({ telemet
         return (
             <CodyAlert variant="greenSuccess">
                 <H1 as="p" className="mb-2">
-                    Remaining invites removed from plan
+                    {t('remaining-invites-removed-from-plan')}
                 </H1>
-                <Text className="mb-0">You can add more seats at any time with the "Add seats" button.</Text>
+                <Text className="mb-0">{t('add-seats-button-info')}</Text>
             </CodyAlert>
         )
     }
@@ -127,22 +131,26 @@ export const InviteUsers: React.FunctionComponent<InviteUsersProps> = ({ telemet
             {sendInviteMutation.status === 'success' && (
                 <CodyAlert variant="greenSuccess">
                     <H3>
-                        {emailAddresses.length} {pluralize('invite', emailAddresses.length)} sent!
+                        {emailAddresses.length} {pluralize('invite', emailAddresses.length)}
+                        {t('sent-confirmation')}
                     </H3>
                     <Text size="small" className="mb-0">
-                        Invitees will receive an email from cody@sourcegraph.com.
+                        {t('invitees-email-notification')}
                     </Text>
                 </CodyAlert>
             )}
             {sendInviteMutation.status === 'error' && (
                 <CodyAlert variant="error">
-                    <H3>Invites not sent.</H3>
+                    <H3>{t('invites-not-sent')}</H3>
                     <Text size="small" className="text-muted mb-0">
-                        Error sending invites: {sendInviteMutation.error?.message}
+                        {t('error-sending-invites')}
+                        {sendInviteMutation.error?.message}
                     </Text>
                     <Text size="small" className="mb-0">
-                        If you encounter this issue repeatedly, please contact support at{' '}
-                        <Link to="mailto:support@sourcegraph.com">support@sourcegraph.com</Link>.
+                        <Trans
+                            i18nKey="contact-support-invite-issue"
+                            components={{ '0': <Link to="mailto:support@sourcegraph.com" /> }}
+                        />
                     </Text>
                 </CodyAlert>
             )}
@@ -153,11 +161,12 @@ export const InviteUsers: React.FunctionComponent<InviteUsersProps> = ({ telemet
                     <div className="flex-1 d-flex flex-column ml-4">
                         <H2 className="mb-4 font-weight-normal">
                             <strong>Invite users</strong> – {remainingInviteCount}{' '}
-                            {pluralize('seat', remainingInviteCount)} remaining
+                            {pluralize('seat', remainingInviteCount)}
+                            {t('remaining-invites')}
                         </H2>
                         <TextArea
                             className="mb-2"
-                            placeholder="Example: someone@sourcegraph.com, another.user@sourcegraph.com"
+                            placeholder={t('example-email-format')}
                             rows={4}
                             onChange={event => {
                                 setEmailAddressErrorMessage(null)
@@ -169,7 +178,7 @@ export const InviteUsers: React.FunctionComponent<InviteUsersProps> = ({ telemet
                         {emailAddressErrorMessage ? (
                             <Text className="text-danger">{emailAddressErrorMessage}</Text>
                         ) : (
-                            <Text className="text-muted">Enter email addresses separated by a comma.</Text>
+                            <Text className="text-muted">{t('enter-email-addresses')}</Text>
                         )}
 
                         <div>
@@ -179,7 +188,7 @@ export const InviteUsers: React.FunctionComponent<InviteUsersProps> = ({ telemet
                                 onClick={onSendInvitesClicked}
                                 className="mr-2"
                             >
-                                Send
+                                {t('send-button')}
                             </Button>
                             <Button
                                 variant="link"
@@ -192,7 +201,7 @@ export const InviteUsers: React.FunctionComponent<InviteUsersProps> = ({ telemet
                                     })
                                 }
                             >
-                                Remove invites from plan
+                                {t('remove-invites-from-plan')}
                             </Button>
                         </div>
                     </div>

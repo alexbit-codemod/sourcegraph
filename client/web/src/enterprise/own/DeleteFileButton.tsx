@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 
 import { mdiTrashCan } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { type ErrorLike, isErrorLike } from '@sourcegraph/common'
 import { useMutation } from '@sourcegraph/http-client'
@@ -21,6 +22,8 @@ interface DeleteFileButtonProps {
 }
 
 export const DeleteFileButton: React.FunctionComponent<DeleteFileButtonProps> = ({ repo, onComplete }) => {
+    const { t } = useTranslation('enterprise/own')
+
     const [showModal, setShowModal] = useState(false)
 
     const [deleteError, setDeleteError] = useState<ErrorLike | null>(null)
@@ -48,13 +51,13 @@ export const DeleteFileButton: React.FunctionComponent<DeleteFileButtonProps> = 
         <>
             <Button variant="danger" outline={true} className="ml-2" onClick={() => setShowModal(true)}>
                 <Icon svgPath={mdiTrashCan} aria-hidden={true} className="mr-2" />
-                Delete uploaded file
+                {t('delete-uploaded-file')}
             </Button>
 
             {showModal && (
                 <Modal onDismiss={() => setShowModal(false)} aria-labelledby="delete-codeowners">
-                    <H3 id="delete-codeowners">Are you sure you want to delete this uploaded CODEOWNERS file?</H3>
-                    <strong className="d-block text-danger my-3">Deleting is irreversible.</strong>
+                    <H3 id="delete-codeowners">{t('confirm-delete-codeowners-file')}</H3>
+                    <strong className="d-block text-danger my-3">{t('deleting-is-irreversible')}</strong>
 
                     {deleteError && <ErrorAlert className="mt-2" error={deleteError} prefix="Error deleting file: " />}
                     <div className="d-flex justify-content-end pt-1">
@@ -65,13 +68,13 @@ export const DeleteFileButton: React.FunctionComponent<DeleteFileButtonProps> = 
                             outline={true}
                             variant="secondary"
                         >
-                            Cancel
+                            {t('cancel-action')}
                         </Button>
                         <LoaderButton
                             variant="danger"
                             loading={loading}
                             onClick={onDeleteClicked}
-                            label="Delete uploaded file"
+                            label={t('delete-uploaded-file-quote')}
                         />
                     </div>
                 </Modal>

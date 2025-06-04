@@ -4,6 +4,7 @@ import { mdiChevronDown } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
 import copy from 'copy-to-clipboard'
+import { useTranslation, Trans } from 'react-i18next'
 import { of } from 'rxjs'
 import { delay, map } from 'rxjs/operators'
 
@@ -76,6 +77,8 @@ const filters: Filter[] = [
 export const SiteAdminOutboundRequestsPage: React.FunctionComponent<
     React.PropsWithChildren<SiteAdminOutboundRequestsPageProps>
 > = ({ telemetryService, telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin')
+
     const [items, setItems] = useState<OutboundRequest[]>([])
 
     useEffect(() => {
@@ -147,7 +150,7 @@ export const SiteAdminOutboundRequestsPage: React.FunctionComponent<
 
     return (
         <div className="site-admin-outbound-requests-page">
-            <PageTitle title="Outbound requests - Admin" />
+            <PageTitle title={t('outbound-requests-admin')} />
             <Button variant="secondary" onClick={togglePolling} className="float-right">
                 {polling ? 'Pause updating' : 'Resume updating'}
             </Button>
@@ -156,9 +159,8 @@ export const SiteAdminOutboundRequestsPage: React.FunctionComponent<
                 headingElement="h2"
                 description={
                     <>
-                        This is the log of recent external requests sent by the Sourcegraph instance. Handy for seeing
-                        what's happening between Sourcegraph and other services.{' '}
-                        {polling ? <strong>The list updates every five seconds.</strong> : null}
+                        {t('recent-external-requests-log-description')}
+                        {polling ? <strong>{t('list-updates-every-five-seconds')}</strong> : null}
                     </>
                 }
                 className="mb-3"
@@ -180,10 +182,14 @@ export const SiteAdminOutboundRequestsPage: React.FunctionComponent<
                     />
                 ) : (
                     <>
-                        <Text>Outbound request logging is currently disabled.</Text>
+                        <Text>{t('outbound-request-logging-disabled')}</Text>
                         <Text>
-                            Set <Code>outboundRequestLogLimit</Code> to a non-zero value in your{' '}
-                            <Link to="/site-admin/configuration">site config</Link> to enable it.
+                            {t('set-non-zero-value')}
+                            <Code>outboundRequestLogLimit</Code>
+                            <Trans
+                                i18nKey="enable-logging-in-site-config"
+                                components={{ '0': <Link to="/site-admin/configuration" /> }}
+                            />
                         </Text>
                     </>
                 )}
@@ -193,6 +199,8 @@ export const SiteAdminOutboundRequestsPage: React.FunctionComponent<
 }
 
 const OutboundRequestNode: React.FunctionComponent<{ node: React.PropsWithChildren<OutboundRequest> }> = ({ node }) => {
+    const { t } = useTranslation('site-admin')
+
     const [copied, setCopied] = useState(false)
 
     const copyToClipboard = (text: string): void => {
@@ -210,7 +218,7 @@ const OutboundRequestNode: React.FunctionComponent<{ node: React.PropsWithChildr
             <div>
                 <Tooltip content="HTTP request method">
                     <span>
-                        <VisuallyHidden>Request method</VisuallyHidden>
+                        <VisuallyHidden>{t('request-method')}</VisuallyHidden>
                         <span
                             className={classNames(
                                 styles.method,
@@ -227,7 +235,7 @@ const OutboundRequestNode: React.FunctionComponent<{ node: React.PropsWithChildr
             <div>
                 <Tooltip content="HTTP response status code">
                     <span className={isSuccessful(node) ? styles.successful : styles.failed}>
-                        <VisuallyHidden>Status code</VisuallyHidden>
+                        <VisuallyHidden>{t('status-code')}</VisuallyHidden>
                         {node.statusCode}
                     </span>
                 </Tooltip>
@@ -237,37 +245,43 @@ const OutboundRequestNode: React.FunctionComponent<{ node: React.PropsWithChildr
                 <SimplePopover label="More info">
                     <small className={styles.moreInfo}>
                         <Text>
-                            <strong>URL: </strong>
+                            <strong>{t('url-label')}</strong>
                             {node.url}
                         </Text>
                         <Text>
-                            <strong>Status: </strong>
+                            <strong>{t('status-label')}</strong>
                             {node.statusCode}
                         </Text>
                         <Text>
-                            <strong>Date/time started: </strong>
+                            <strong>{t('date-time-started')}</strong>
                             <Timestamp date={node.startedAt} preferAbsolute={true} noAbout={true} />
                         </Text>
                         <Text>
-                            <strong>Duration: </strong>
-                            {(node.durationMs / 1000).toFixed(2)} second{node.durationMs === 1000 ? '' : 's'}
+                            <Trans
+                                i18nKey="duration-format"
+                                values={{
+                                    nodeDurationMs1000ToFixed2: (node.durationMs / 1000).toFixed(2),
+                                    nodeDurationMs1000: node.durationMs === 1000,
+                                }}
+                                components={{ '0': <strong /> }}
+                            />
                         </Text>
                         <Text>
-                            <strong>Client created at: </strong>
+                            <strong>{t('client-created-at')}</strong>
                             <Code>{formatStackFrameLine(node.creationStackFrame)}</Code>
                         </Text>
                         <Text>
-                            <strong>Request made at: </strong>
+                            <strong>{t('request-made-at')}</strong>
                         </Text>
                         {formatStackFrame(node.callStack)}
                         <Text>
-                            <strong>Error: </strong>
+                            <strong>{t('error-label')}</strong>
                             {node.errorMessage ? node.errorMessage : 'No error'}
                         </Text>
                         {node.requestHeaders.length ? (
                             <>
                                 <Text>
-                                    <strong>Request headers:</strong>{' '}
+                                    <strong>{t('request-headers')}</strong>{' '}
                                 </Text>
                                 <ul>
                                     {[...node.requestHeaders]
@@ -285,7 +299,7 @@ const OutboundRequestNode: React.FunctionComponent<{ node: React.PropsWithChildr
                         {node.responseHeaders.length ? (
                             <>
                                 <Text>
-                                    <strong>Response headers:</strong>{' '}
+                                    <strong>{t('response-headers')}</strong>{' '}
                                 </Text>
                                 <ul>
                                     {[...node.responseHeaders]
@@ -301,7 +315,7 @@ const OutboundRequestNode: React.FunctionComponent<{ node: React.PropsWithChildr
                             'No request headers'
                         )}
                         <Text>
-                            <strong>Request body:</strong> {node.requestBody ? node.requestBody : 'Empty body'}
+                            <strong>{t('request-body')}</strong> {node.requestBody ? node.requestBody : 'Empty body'}
                         </Text>
                     </small>
                 </SimplePopover>
@@ -309,7 +323,7 @@ const OutboundRequestNode: React.FunctionComponent<{ node: React.PropsWithChildr
             <div>
                 <Tooltip content={copied ? 'Curl command copied' : 'Copy curl command (may contain REDACTED fields!)'}>
                     <Button className="ml-2" onClick={() => copyToClipboard(buildCurlCommand(node))}>
-                        Copy curl
+                        {t('copy-curl')}
                     </Button>
                 </Tooltip>
             </div>

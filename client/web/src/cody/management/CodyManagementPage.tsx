@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react'
 
 import { mdiCreditCardOutline, mdiHelpCircleOutline, mdiPlusThick } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { useQuery } from '@sourcegraph/http-client'
@@ -40,6 +41,8 @@ export const CodyManagementPage: React.FunctionComponent<CodyManagementPageProps
     authenticatedUser,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('cody/management')
+
     const navigate = useNavigate()
     const parameters = useSearchParameters()
 
@@ -149,7 +152,7 @@ export const CodyManagementPage: React.FunctionComponent<CodyManagementPageProps
                     }}
                 >
                     <Icon svgPath={mdiCreditCardOutline} className="mr-1" aria-hidden={true} />
-                    Manage subscription
+                    {t('manage-subscription')}
                 </ButtonLink>
             )
         }
@@ -157,22 +160,22 @@ export const CodyManagementPage: React.FunctionComponent<CodyManagementPageProps
         // User is on a free plan. Render a link to the subscriptions page.
         return (
             <ButtonLink to={CodyProRoutes.Subscription} variant="primary" onClick={onClickUpgradeToProCTA}>
-                Upgrade plan
+                {t('upgrade-plan')}
             </ButtonLink>
         )
     })()
 
     return (
         <Page className={classNames('d-flex flex-column')}>
-            <PageTitle title="Dashboard" />
+            <PageTitle title={t('dashboard-title')} />
 
             {inviteWidgets.banner}
 
             {welcomeToPro && (
                 <CodyAlert variant="greenCodyPro">
-                    <H2 className="mt-4">Welcome to Cody Pro</H2>
+                    <H2 className="mt-4">{t('welcome-to-cody-pro')}</H2>
                     <Text size="small" className="mb-0">
-                        You now have Cody Pro with access to unlimited autocomplete, chats, and commands.
+                        {t('cody-pro-description')}
                     </Text>
                 </CodyAlert>
             )}
@@ -188,14 +191,14 @@ export const CodyManagementPage: React.FunctionComponent<CodyManagementPageProps
                             className="text-muted text-center text-sm"
                         >
                             <Icon svgPath={mdiHelpCircleOutline} className="mr-1" aria-hidden={true} />
-                            Help &amp; community
+                            {t('help-and-community')}
                         </Link>
                     </div>
                 }
             >
                 <PageHeader.Heading as="h1" className="text-3xl font-medium">
                     <PageHeaderIcon name="dashboard" className="mr-3" />
-                    <Text as="span">Cody dashboard</Text>
+                    <Text as="span">{t('cody-dashboard-title')}</Text>
                 </PageHeader.Heading>
             </PageHeader>
 
@@ -209,7 +212,7 @@ export const CodyManagementPage: React.FunctionComponent<CodyManagementPageProps
                 />
             </div>
 
-            <H3 className="mt-3 text-muted">Use Cody...</H3>
+            <H3 className="mt-3 text-muted">{t('use-cody')}</H3>
             <div className={classNames('border bg-1 mb-2', styles.container)}>
                 <CodyEditorsAndClients telemetryRecorder={telemetryRecorder} />
             </div>

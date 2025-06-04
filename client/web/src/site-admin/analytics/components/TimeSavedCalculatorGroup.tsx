@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import type { TemporarySettingsSchema } from '@sourcegraph/shared/src/settings/temporary/TemporarySettings'
 import { useTemporarySetting } from '@sourcegraph/shared/src/settings/temporary/useTemporarySetting'
@@ -65,6 +66,8 @@ export const TimeSavedCalculatorGroup: React.FunctionComponent<TimeSavedCalculat
     dateRange,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('site-admin/analytics/components')
+
     const [memoizedItems, setMemoizedItems] = useState(calculateHoursSaved(items))
     const [minutesInputChangeLogs, setMinutesInputChangeLogs] = useState<{ [index: number]: boolean }>({})
     const [percentageInputChangeLogs, setPercentageInputChangeLogs] = useState<{ [index: number]: boolean }>({})
@@ -158,29 +161,30 @@ export const TimeSavedCalculatorGroup: React.FunctionComponent<TimeSavedCalculat
                             {formatNumber(totalSavedHours)}
                         </Text>
                         <Text as="span" alignment="center" className="text-muted">
-                            Hours saved
+                            {t('hours-saved-title')}
                         </Text>
                     </div>
                     <div className="flex-1 d-flex flex-column m-0">
                         <Text as="span" weight="bold">
-                            About this statistic
+                            {t('about-statistic-title')}
                         </Text>
                         <Text as="span" dangerouslySetInnerHTML={{ __html: description }} />
                     </div>
                 </div>
                 <div className="d-flex flex-column align-items-center mt-4">
                     <H2>
-                        Annual projection:{' '}
-                        <span className={styles.purpleColor}>{formatNumber(projectedHoursSaved)} hours</span> saved*
+                        <Trans
+                            i18nKey="annual-projection-hours-saved"
+                            values={{ formatNumberProjectedHoursSaved: formatNumber(projectedHoursSaved) }}
+                            components={{ '0': <span className={styles.purpleColor} /> }}
+                        />
                     </H2>
                     <Text as="span" className="text-muted">
-                        * Based on{' '}
-                        {dateRange === AnalyticsDateRange.LAST_THREE_MONTHS
-                            ? 'last 3 months'
-                            : dateRange === AnalyticsDateRange.LAST_MONTH
-                            ? 'last month'
-                            : 'last week'}{' '}
-                        of data
+                        {t('data-range-description', {
+                            dateRangeAnalyticsDateRangeLastMonth: dateRange === AnalyticsDateRange.LAST_MONTH,
+                            dateRangeAnalyticsDateRangeLastThreeMonths:
+                                dateRange === AnalyticsDateRange.LAST_THREE_MONTHS,
+                        })}
                     </Text>
                 </div>
             </Card>
@@ -188,7 +192,7 @@ export const TimeSavedCalculatorGroup: React.FunctionComponent<TimeSavedCalculat
                 <div />
                 {typeof memoizedItems[0]?.percentage === 'number' ? (
                     <Text as="span" className="text-muted">
-                        % of total
+                        {t('percentage-of-total')}
                     </Text>
                 ) : (
                     <Text as="span" alignment="center" className="text-muted">
@@ -196,10 +200,10 @@ export const TimeSavedCalculatorGroup: React.FunctionComponent<TimeSavedCalculat
                     </Text>
                 )}
                 <Text as="span" className="text-nowrap text-muted">
-                    Minutes per
+                    {t('minutes-per-title')}
                 </Text>
                 <Text as="span" alignment="center" className="text-muted">
-                    Hours saved
+                    {t('hours-saved-title-duplicate')}
                 </Text>
                 <div />
                 {memoizedItems.map(({ label, percentage, minPerItem, hoursSaved, value, description }, index) => (
@@ -303,6 +307,8 @@ export const TimeSavedCalculator: React.FunctionComponent<TimeSavedCalculatorPro
     temporarySettingsKey,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('site-admin/analytics/components')
+
     const [minPerItemSavedSetting, setMinPerItemSaved] = useTemporarySetting(temporarySettingsKey, defaultMinPerItem)
     const minPerItemSaved = Number(minPerItemSavedSetting) || defaultMinPerItem
     const [inputChangeLogged, setInputChangeLogged] = useState(false)
@@ -354,7 +360,7 @@ export const TimeSavedCalculator: React.FunctionComponent<TimeSavedCalculatorPro
                             }}
                         />
                         <Text as="span" className="text-nowrap">
-                            Minutes per
+                            {t('minutes-per-title-duplicate')}
                         </Text>
                     </div>
                     <div className="d-flex flex-column align-items-center mr-5">
@@ -362,30 +368,30 @@ export const TimeSavedCalculator: React.FunctionComponent<TimeSavedCalculatorPro
                             {formatNumber(hoursSaved)}
                         </Text>
                         <Text as="span" alignment="center">
-                            Hours saved
+                            {t('hours-saved-title-another')}
                         </Text>
                     </div>
                 </div>
                 <div className="flex-1 d-flex flex-column m-0">
                     <Text as="span" weight="bold">
-                        About this statistic
+                        {t('about-statistic-title-duplicate')}
                     </Text>
                     <Text as="span" dangerouslySetInnerHTML={{ __html: description }} />
                 </div>
             </div>
             <div className="d-flex flex-column align-items-center mt-4">
                 <H2>
-                    Annual projection:{' '}
-                    <span className={styles.purpleColor}>{formatNumber(projectedHoursSaved)} hours</span> saved*
+                    <Trans
+                        i18nKey="annual-projection-hours-saved-duplicate"
+                        values={{ formatNumberProjectedHoursSaved: formatNumber(projectedHoursSaved) }}
+                        components={{ '0': <span className={styles.purpleColor} /> }}
+                    />
                 </H2>
                 <Text as="span" className="text-muted">
-                    * Based on{' '}
-                    {dateRange === AnalyticsDateRange.LAST_THREE_MONTHS
-                        ? 'last 3 months'
-                        : dateRange === AnalyticsDateRange.LAST_MONTH
-                        ? 'last month'
-                        : 'last week'}{' '}
-                    of data
+                    {t('data-range-description-duplicate', {
+                        dateRangeAnalyticsDateRangeLastMonth: dateRange === AnalyticsDateRange.LAST_MONTH,
+                        dateRangeAnalyticsDateRangeLastThreeMonths: dateRange === AnalyticsDateRange.LAST_THREE_MONTHS,
+                    })}
                 </Text>
             </div>
         </Card>

@@ -1,0 +1,6 @@
+{
+  "organizations-title": "Organizations",
+  "support-for-organizations-unavailable": "Support for organizations is not currently available on Sourcegraph.com.",
+  "need-more-enterprise-features": "Need more enterprise features? Run Sourcegraph self-hosted",
+  "additional-code-hosts-enterprise-features": "For additional code hosts and enterprise only features, install Sourcegraph self-hosted."
+}

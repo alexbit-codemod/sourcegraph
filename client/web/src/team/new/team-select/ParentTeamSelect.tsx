@@ -3,6 +3,7 @@ import React, { type ButtonHTMLAttributes, forwardRef, useEffect, useState } fro
 import classNames from 'classnames'
 import ChevronDownIcon from 'mdi-react/ChevronDownIcon'
 import ChevronUpIcon from 'mdi-react/ChevronUpIcon'
+import { useTranslation } from 'react-i18next'
 
 import { TeamAvatar } from '@sourcegraph/shared/src/components/TeamAvatar'
 import {
@@ -90,6 +91,8 @@ export const ParentTeamSelectContent: React.FunctionComponent<ParentTeamSelectCo
     teamId,
     onSelect,
 }) => {
+    const { t } = useTranslation('team/new/team-select')
+
     const [search, setSearch] = useState<string>('')
 
     const { data, loading, error } = useParentTeamSelectSearch(teamId || null, search)
@@ -116,7 +119,7 @@ export const ParentTeamSelectContent: React.FunctionComponent<ParentTeamSelectCo
                 value={search}
                 autoFocus={true}
                 spellCheck={false}
-                placeholder="Search teams"
+                placeholder={t('search-teams')}
                 aria-label="Search teams"
                 inputClassName={styles.comboboxInput}
                 className={styles.comboboxInputContainer}

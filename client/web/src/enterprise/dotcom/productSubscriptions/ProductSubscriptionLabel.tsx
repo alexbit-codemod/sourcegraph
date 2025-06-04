@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import type { ProductSubscriptionFields, SiteAdminProductSubscriptionFields } from '../../../graphql-operations'
 import { formatUserCount } from '../../../productSubscription/helpers'
 
@@ -12,15 +14,19 @@ export const ProductSubscriptionLabel: React.FunctionComponent<
         productSubscription: ProductSubscriptionFields | SiteAdminProductSubscriptionFields
         className?: string
     }>
-> = ({ productSubscription, className = '' }) => (
-    <span className={className}>
-        {productSubscription.activeLicense?.info ? (
-            <>
-                {productSubscription.activeLicense.info.productNameWithBrand} (
-                {formatUserCount(productSubscription.activeLicense.info.userCount)})
-            </>
-        ) : (
-            <span className="text-muted font-italic">No plan selected</span>
-        )}
-    </span>
-)
+> = ({ productSubscription, className = '' }) => {
+    const { t } = useTranslation('enterprise/dotcom/productSubscriptions')
+
+    return (
+        <span className={className}>
+            {productSubscription.activeLicense?.info ? (
+                <>
+                    {productSubscription.activeLicense.info.productNameWithBrand} (
+                    {formatUserCount(productSubscription.activeLicense.info.userCount)})
+                </>
+            ) : (
+                <span className="text-muted font-italic">{t('no-plan-selected')}</span>
+            )}
+        </span>
+    )
+}

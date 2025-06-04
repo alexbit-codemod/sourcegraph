@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from 'react'
 
 import { subDays, startOfDay } from 'date-fns'
 import AlertCircleIcon from 'mdi-react/AlertCircleIcon'
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import { useQuery } from '@sourcegraph/http-client'
@@ -48,6 +49,8 @@ export interface BatchChangeDetailsPageProps extends BatchChangeDetailsProps, Se
 export const BatchChangeDetailsPage: React.FunctionComponent<
     React.PropsWithChildren<BatchChangeDetailsPageProps>
 > = props => {
+    const { t } = useTranslation('enterprise/batches/detail')
+
     const { batchChangeName } = useParams()
     const { namespaceID, telemetryService, telemetryRecorder, authenticatedUser, deleteBatchChange } = props
 
@@ -94,7 +97,7 @@ export const BatchChangeDetailsPage: React.FunctionComponent<
     }
     // If there weren't any errors and we just didn't receive any data
     if (!data?.batchChange) {
-        return <HeroPage icon={AlertCircleIcon} title="Batch change not found" />
+        return <HeroPage icon={AlertCircleIcon} title={t('batch-change-not-found')} />
     }
 
     const { batchChange } = data

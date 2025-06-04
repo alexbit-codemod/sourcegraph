@@ -1,0 +1,9 @@
+{
+  "filters-title": "Filters",
+  "filters-title-duplicate": "Filters",
+  "clear-filters": "Clear filters",
+  "choose-query-based-search-context": "Choose <0>query-based search context (beta)</0>  to change the scope of this insight.",
+  "use-regular-expression-scope": "Use regular expression to change the scope of this insight.",
+  "default-filters-applied": "<0>Default filters</0>  applied",
+  "save-as-new-view": " Save as new view"
+}

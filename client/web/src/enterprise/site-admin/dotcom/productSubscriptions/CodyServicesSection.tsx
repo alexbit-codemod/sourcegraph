@@ -4,6 +4,7 @@ import type { ConnectError } from '@connectrpc/connect'
 import { mdiPencil, mdiTrashCan } from '@mdi/js'
 import type { UseQueryResult } from '@tanstack/react-query'
 import type { GraphQLError } from 'graphql'
+import { useTranslation } from 'react-i18next'
 
 import { Toggle } from '@sourcegraph/branded/src/components/Toggle'
 import { logger } from '@sourcegraph/common'
@@ -70,6 +71,8 @@ export const CodyServicesSection: React.FunctionComponent<Props> = ({
     codyGatewayAccess,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/site-admin/dotcom/productSubscriptions')
+
     // TODO: Figure out strategy for what instance to target
     const codyGatewayUsageQuery = useGetCodyGatewayUsage(enterprisePortalEnvironment, productSubscriptionUUID)
 
@@ -115,7 +118,8 @@ export const CodyServicesSection: React.FunctionComponent<Props> = ({
     return (
         <>
             <H3>
-                Cody services <ProductStatusBadge status="beta" />
+                {t('cody-services')}
+                <ProductStatusBadge status="beta" />
             </H3>
             <Container className="mb-3">
                 {currentSourcegraphAccessToken && (
@@ -130,7 +134,7 @@ export const CodyServicesSection: React.FunctionComponent<Props> = ({
                                     onToggle={setCodyServicesStateChange}
                                     className="mr-1 align-text-bottom"
                                 />
-                                Access to hosted Cody services
+                                {t('access-to-hosted-cody-services')}
                                 {updateCodyGatewayConfigLoading && (
                                     <>
                                         {' '}
@@ -144,15 +148,15 @@ export const CodyServicesSection: React.FunctionComponent<Props> = ({
                             <>
                                 <hr className="my-3" />
 
-                                <H4>Completions</H4>
-                                <Label className="mb-2">Rate limits</Label>
+                                <H4>{t('completions')}</H4>
+                                <Label className="mb-2">{t('rate-limits')}</Label>
                                 <table className={styles.limitsTable}>
                                     <thead>
                                         <tr>
-                                            <th>Feature</th>
-                                            <th>Source</th>
-                                            <th>Rate limit</th>
-                                            {viewerCanAdminister && <th>Actions</th>}
+                                            <th>{t('feature')}</th>
+                                            <th>{t('source')}</th>
+                                            <th>{t('rate-limit')}</th>
+                                            {viewerCanAdminister && <th>{t('actions')}</th>}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -161,7 +165,7 @@ export const CodyServicesSection: React.FunctionComponent<Props> = ({
                                             productSubscriptionID={productSubscriptionID}
                                             rateLimit={codyGatewayAccess.chatCompletionsRateLimit}
                                             refetchSubscription={refetchSubscription}
-                                            title="Chat and recipes"
+                                            title={t('chat-and-recipes')}
                                             viewerCanAdminister={viewerCanAdminister}
                                         />
                                         <RateLimitRow
@@ -169,7 +173,7 @@ export const CodyServicesSection: React.FunctionComponent<Props> = ({
                                             productSubscriptionID={productSubscriptionID}
                                             rateLimit={codyGatewayAccess.codeCompletionsRateLimit}
                                             refetchSubscription={refetchSubscription}
-                                            title="Code completions"
+                                            title={t('code-completions')}
                                             viewerCanAdminister={viewerCanAdminister}
                                         />
                                     </tbody>
@@ -178,15 +182,15 @@ export const CodyServicesSection: React.FunctionComponent<Props> = ({
 
                                 <hr className="my-3" />
 
-                                <H4>Embeddings</H4>
-                                <Label className="mb-2">Rate limits</Label>
+                                <H4>{t('embeddings')}</H4>
+                                <Label className="mb-2">{t('rate-limits-duplicate')}</Label>
                                 <table className={styles.limitsTable}>
                                     <thead>
                                         <tr>
-                                            <th>Feature</th>
-                                            <th>Source</th>
-                                            <th>Rate limit</th>
-                                            {viewerCanAdminister && <th>Actions</th>}
+                                            <th>{t('feature-duplicate')}</th>
+                                            <th>{t('source-duplicate')}</th>
+                                            <th>{t('rate-limit-duplicate')}</th>
+                                            {viewerCanAdminister && <th>{t('actions-duplicate')}</th>}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -195,7 +199,7 @@ export const CodyServicesSection: React.FunctionComponent<Props> = ({
                                             productSubscriptionID={productSubscriptionID}
                                             rateLimit={codyGatewayAccess.embeddingsRateLimit}
                                             refetchSubscription={refetchSubscription}
-                                            title="Embeddings tokens"
+                                            title={t('embeddings-tokens')}
                                             viewerCanAdminister={viewerCanAdminister}
                                         />
                                     </tbody>
@@ -208,14 +212,11 @@ export const CodyServicesSection: React.FunctionComponent<Props> = ({
                     </>
                 )}
 
-                <H4>Access token</H4>
-                <Text className="mb-2">
-                    Access tokens can be used for Cody Gateway access. In most cases this is not needed, since access
-                    tokens are automatically generated from each instance's configured license key.
-                </Text>
+                <H4>{t('access-token')}</H4>
+                <Text className="mb-2">{t('access-token-description')}</Text>
                 {currentSourcegraphAccessToken && (
                     <CopyableText
-                        label="Access token"
+                        label={t('access-token-summary')}
                         secret={true}
                         flex={true}
                         text={currentSourcegraphAccessToken}
@@ -224,13 +225,8 @@ export const CodyServicesSection: React.FunctionComponent<Props> = ({
                 )}
                 {(accessTokenError?.extensions?.code === 'ErrActiveLicenseRequired' && (
                     <Alert variant="info" className="mb-0">
-                        {viewerCanAdminister && <>Create a license key to generate an access token automatically.</>}
-                        {!viewerCanAdminister && (
-                            <>
-                                Once an active subscription has been purchased, an access token will be automatically
-                                generated.
-                            </>
-                        )}
+                        {viewerCanAdminister && <>{t('create-license-key-for-access-token')}</>}
+                        {!viewerCanAdminister && <>{t('access-token-automatic-generation')}</>}
                     </Alert>
                 )) ||
                     (accessTokenError && <ErrorAlert error={accessTokenError} className="mb-0" />)}
@@ -251,12 +247,14 @@ export const CodyGatewayRateLimitSourceBadge: React.FunctionComponent<{
     source: CodyGatewayRateLimitSource
     className?: string
 }> = ({ source, className }) => {
+    const { t } = useTranslation('enterprise/site-admin/dotcom/productSubscriptions')
+
     switch (source) {
         case CodyGatewayRateLimitSource.OVERRIDE: {
             return (
                 <Tooltip content="The limit has been specified by a custom override">
                     <Badge variant="primary" className={className}>
-                        Override
+                        {t('override')}
                     </Badge>
                 </Tooltip>
             )
@@ -265,7 +263,7 @@ export const CodyGatewayRateLimitSourceBadge: React.FunctionComponent<{
             return (
                 <Tooltip content="The limit is derived from the current subscription plan">
                     <Badge variant="primary" className={className}>
-                        Plan
+                        {t('plan')}
                     </Badge>
                 </Tooltip>
             )
@@ -412,10 +410,12 @@ interface RateLimitUsageProps {
 }
 
 const RateLimitUsage: React.FunctionComponent<RateLimitUsageProps> = ({ usageQuery: { data, isLoading, error } }) => {
+    const { t } = useTranslation('enterprise/site-admin/dotcom/productSubscriptions')
+
     if (isLoading && !data) {
         return (
             <>
-                <H5 className="mb-2">Usage</H5>
+                <H5 className="mb-2">{t('usage')}</H5>
                 <LoadingSpinner />
             </>
         )
@@ -424,7 +424,7 @@ const RateLimitUsage: React.FunctionComponent<RateLimitUsageProps> = ({ usageQue
     if (error) {
         return (
             <>
-                <H5 className="mb-2">Usage</H5>
+                <H5 className="mb-2">{t('usage-duplicate-1')}</H5>
                 <ErrorAlert error={error} />
             </>
         )
@@ -433,7 +433,7 @@ const RateLimitUsage: React.FunctionComponent<RateLimitUsageProps> = ({ usageQue
     const usage = data?.usage
     return (
         <>
-            <H5 className="mb-2">Usage</H5>
+            <H5 className="mb-2">{t('usage-duplicate-2')}</H5>
             <ChartContainer labelX="Date" labelY="Daily usage">
                 {width => (
                     <LineChart
@@ -479,10 +479,12 @@ const RateLimitUsage: React.FunctionComponent<RateLimitUsageProps> = ({ usageQue
 const EmbeddingsRateLimitUsage: React.FunctionComponent<RateLimitUsageProps> = ({
     usageQuery: { data, isLoading, error },
 }) => {
+    const { t } = useTranslation('enterprise/site-admin/dotcom/productSubscriptions')
+
     if (isLoading && !data) {
         return (
             <>
-                <H5 className="mb-2">Usage</H5>
+                <H5 className="mb-2">{t('usage-duplicate-3')}</H5>
                 <LoadingSpinner />
             </>
         )
@@ -491,7 +493,7 @@ const EmbeddingsRateLimitUsage: React.FunctionComponent<RateLimitUsageProps> = (
     if (error) {
         return (
             <>
-                <H5 className="mb-2">Usage</H5>
+                <H5 className="mb-2">{t('usage-duplicate-4')}</H5>
                 <ErrorAlert error={error} />
             </>
         )
@@ -500,7 +502,7 @@ const EmbeddingsRateLimitUsage: React.FunctionComponent<RateLimitUsageProps> = (
     const usage = data?.usage
     return (
         <>
-            <H5 className="mb-2">Usage</H5>
+            <H5 className="mb-2">{t('usage-duplicate-5')}</H5>
             <ChartContainer labelX="Date" labelY="Daily usage">
                 {width => (
                     <LineChart
@@ -540,20 +542,19 @@ const ToggleCodyServicesConfirmationModal: React.FunctionComponent<ToggleCodySer
     onAccept,
     targetState,
 }) => {
+    const { t } = useTranslation('enterprise/site-admin/dotcom/productSubscriptions')
+
     const labelId = 'toggle-cody-services'
     return (
         <Modal onDismiss={onCancel} aria-labelledby={labelId}>
-            <H3 id={labelId}>{targetState ? 'Enable' : 'Disable'} access to Cody Gateway</H3>
-            <Text>
-                Cody Gateway is a Sourcegraph managed service that allows customer instances to talk to upstream LLMs
-                and generate embeddings under our negotiated terms with third party providers in a safe manner.
-            </Text>
+            <H3 id={labelId}>{t('toggle-access-to-cody-gateway', { targetState })}</H3>
+            <Text>{t('cody-gateway-description')}</Text>
 
-            <Alert variant="info">Note that changes may take up to 10 minutes to propagate.</Alert>
+            <Alert variant="info">{t('changes-propagation-note')}</Alert>
 
             <div className="d-flex justify-content-end">
                 <Button className="mr-2" onClick={onCancel} outline={true} variant="secondary">
-                    Cancel
+                    {t('cancel')}
                 </Button>
                 <Button variant="primary" onClick={onAccept}>
                     {targetState ? 'Enable' : 'Disable'}

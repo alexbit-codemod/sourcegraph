@@ -1,4 +1,5 @@
 import ServerIcon from 'mdi-react/ServerIcon'
+import { useTranslation } from 'react-i18next'
 
 import { FeedbackText } from '@sourcegraph/wildcard'
 
@@ -10,6 +11,8 @@ interface Props {
     pageError: PageError
 }
 export const PageError: React.FC<Props> = ({ pageError }) => {
+    const { t } = useTranslation('')
+
     const statusCode = pageError.statusCode
     const statusText = pageError.statusText
     const errorMessage = pageError.error
@@ -17,7 +20,7 @@ export const PageError: React.FC<Props> = ({ pageError }) => {
 
     let subtitle: JSX.Element | undefined
     if (errorID) {
-        subtitle = <FeedbackText headerText="Sorry, there's been a problem." />
+        subtitle = <FeedbackText headerText={t('sorry-problem')} />
     }
     if (errorMessage) {
         subtitle = (

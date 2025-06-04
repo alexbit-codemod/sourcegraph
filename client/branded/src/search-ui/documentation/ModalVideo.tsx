@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react'
 
 import { mdiClose } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Button, Modal, Icon, H3 } from '@sourcegraph/wildcard'
 
@@ -30,6 +31,8 @@ export const ModalVideo: React.FunctionComponent<React.PropsWithChildren<ModalVi
     titleClassName,
     assetsRoot = '',
 }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/documentation')
+
     const [isOpen, setIsOpen] = useState(false)
     const toggleDialog = useCallback(
         (isOpen: boolean) => {
@@ -100,7 +103,7 @@ export const ModalVideo: React.FunctionComponent<React.PropsWithChildren<ModalVi
                                 <iframe
                                     className={styles.iframeVideo}
                                     src={src}
-                                    title="YouTube video player"
+                                    title={t('youtube-video-player')}
                                     frameBorder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen={true}

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { pluralize, renderMarkdown } from '@sourcegraph/common'
@@ -34,6 +35,8 @@ export interface BatchChangeNodeProps {
 // `BatchChangeStatePill` and should be removed once SSBC is not longer behind a feature
 // flag.
 const StateBadge: React.FunctionComponent<React.PropsWithChildren<{ state: BatchChangeState }>> = ({ state }) => {
+    const { t } = useTranslation('enterprise/batches/list')
+
     switch (state) {
         case BatchChangeState.OPEN:
         // DRAFT should only be possible if SSBC is enabled; if we do find a batch change
@@ -49,14 +52,14 @@ const StateBadge: React.FunctionComponent<React.PropsWithChildren<{ state: Batch
                     variant="success"
                     className={classNames('a11y-ignore', styles.batchChangeNodeBadge, 'text-uppercase')}
                 >
-                    Open
+                    {t('open-button')}
                 </Badge>
             )
         }
         case BatchChangeState.CLOSED: {
             return (
                 <Badge variant="danger" className={classNames(styles.batchChangeNodeBadge, 'text-uppercase')}>
-                    Closed
+                    {t('closed-button')}
                 </Badge>
             )
         }
@@ -72,6 +75,8 @@ export const BatchChangeNode: React.FunctionComponent<React.PropsWithChildren<Ba
     now = () => new Date(),
     displayNamespace,
 }) => {
+    const { t } = useTranslation('enterprise/batches/list')
+
     const latestExecution: ListBatchChangeLatestSpecFields | undefined = useMemo(
         () => node.batchSpecs.nodes?.[0] || node.currentSpec,
         [node.batchSpecs.nodes, node.currentSpec]
@@ -150,7 +155,8 @@ export const BatchChangeNode: React.FunctionComponent<React.PropsWithChildren<Ba
                         </Link>
                     </H3>
                     <small className="text-muted d-sm-block">
-                        created <Timestamp date={node.createdAt} now={now} />
+                        {t('created-status')}
+                        <Timestamp date={node.createdAt} now={now} />
                     </small>
                 </div>
                 <Markdown

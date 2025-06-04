@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react'
+import { useTranslation } from 'react-i18next'
 import { describe, expect, it } from 'vitest'
 
 import { MockedTestProvider } from '@sourcegraph/shared/src/testing/apollo'
@@ -10,8 +11,16 @@ import { withFeatureFlag } from './withFeatureFlag'
 describe('withFeatureFlag', () => {
     const trueComponentTestId = 'true-component'
     const falseComponentTestId = 'false-component'
-    const TrueComponent = () => <div data-testid={trueComponentTestId}>rendered when flag is true</div>
-    const FalseComponent = () => <div data-testid={falseComponentTestId}>rendered when flag is false</div>
+    const TrueComponent = () => {
+        const { t } = useTranslation('featureFlags')
+
+        return <div data-testid={trueComponentTestId}>{t('flag-true-rendered')}</div>
+    }
+    const FalseComponent = () => {
+        const { t } = useTranslation('featureFlags')
+
+        return <div data-testid={falseComponentTestId}>{t('flag-false-rendered')}</div>
+    }
     const TEST_FLAG = 'test-flag' as FeatureFlagName
     const Wrapper = withFeatureFlag(TEST_FLAG, TrueComponent, FalseComponent)
 

@@ -1,5 +1,6 @@
 import type { Meta, StoryFn } from '@storybook/react'
 import { ParentSize } from '@visx/responsive'
+import { useTranslation } from 'react-i18next'
 import { ResizableBox } from 'react-resizable'
 
 import { BrandedStory } from '../../../../stories/BrandedStory'
@@ -78,47 +79,52 @@ export const BarChartDemo: StoryFn = () => (
     </main>
 )
 
-const PlainBarChartExample = () => (
-    <section style={{ flexBasis: 0 }}>
-        <H2>Plain bar chart</H2>
+const PlainBarChartExample = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Charts/components/bar-chart')
 
-        <Text>
-            By default bar chart uses a bar name as a group name, so in this example, each bar has its own group (each
-            bar is independent). See grouped bar example for bars grouping.
-        </Text>
+    return (
+        <section style={{ flexBasis: 0 }}>
+            <H2>{t('plain-bar-chart')}</H2>
 
-        <BarChart
-            width={400}
-            height={400}
-            data={LANGUAGE_USAGE_DATA}
-            getDatumName={getName}
-            getDatumValue={getValue}
-            getDatumColor={getColor}
-            getDatumLink={getLink}
-            getDatumHover={datum => `custom text for ${datum.name}`}
-        />
-    </section>
-)
+            <Text>{t('bar-chart-grouping-description')}</Text>
 
-const SortedBarChartExample = () => (
-    <section style={{ flexBasis: 0 }}>
-        <H2>Sorted bar chart</H2>
+            <BarChart
+                width={400}
+                height={400}
+                data={LANGUAGE_USAGE_DATA}
+                getDatumName={getName}
+                getDatumValue={getValue}
+                getDatumColor={getColor}
+                getDatumLink={getLink}
+                getDatumHover={datum => `custom text for ${datum.name}`}
+            />
+        </section>
+    )
+}
 
-        <Text>This is the default bar chart sorted by descending value.</Text>
+const SortedBarChartExample = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Charts/components/bar-chart')
 
-        <BarChart
-            width={400}
-            height={400}
-            data={LANGUAGE_USAGE_DATA}
-            sortByValue={true}
-            getDatumName={getName}
-            getDatumValue={getValue}
-            getDatumColor={getColor}
-            getDatumLink={getLink}
-            getDatumHover={datum => `custom text for ${datum.name}`}
-        />
-    </section>
-)
+    return (
+        <section style={{ flexBasis: 0 }}>
+            <H2>{t('sorted-bar-chart')}</H2>
+
+            <Text>{t('sorted-bar-chart-description')}</Text>
+
+            <BarChart
+                width={400}
+                height={400}
+                data={LANGUAGE_USAGE_DATA}
+                sortByValue={true}
+                getDatumName={getName}
+                getDatumValue={getValue}
+                getDatumColor={getColor}
+                getDatumLink={getLink}
+                getDatumHover={datum => `custom text for ${datum.name}`}
+            />
+        </section>
+    )
+}
 
 const LANGUAGE_USAGE_GROUPED_BY_REPO_DATA: LanguageUsageDatum[] = [
     {
@@ -178,47 +184,56 @@ const LANGUAGE_USAGE_GROUPED_BY_REPO_DATA: LanguageUsageDatum[] = [
     },
 ]
 
-const GroupedBarExample = () => (
-    <section style={{ flexBasis: 0 }}>
-        <H2>Grouped bar chart</H2>
+const GroupedBarExample = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Charts/components/bar-chart')
 
-        <Text>It's possible to group (categories) bars by group name. You can do it with the `getCategory` prop.</Text>
+    return (
+        <section style={{ flexBasis: 0 }}>
+            <H2>{t('grouped-bar-chart')}</H2>
 
-        <BarChart
-            width={400}
-            height={400}
-            data={LANGUAGE_USAGE_GROUPED_BY_REPO_DATA}
-            getCategory={getGroup}
-            getDatumName={getName}
-            getDatumValue={getValue}
-            getDatumColor={getColor}
-            getDatumLink={getLink}
-        />
-    </section>
-)
+            <Text>{t('grouped-bar-chart-description')}</Text>
 
-const StackedBarExample = () => (
-    <section style={{ flexBasis: 0 }}>
-        <H2>Stacked bar chart</H2>
+            <BarChart
+                width={400}
+                height={400}
+                data={LANGUAGE_USAGE_GROUPED_BY_REPO_DATA}
+                getCategory={getGroup}
+                getDatumName={getName}
+                getDatumValue={getValue}
+                getDatumColor={getColor}
+                getDatumLink={getLink}
+            />
+        </section>
+    )
+}
 
-        <Text>
-            <Badge variant="merged">Experimental</Badge> You can stack bars which are placed in one category (group).
-        </Text>
+const StackedBarExample = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Charts/components/bar-chart')
 
-        <BarChart
-            stacked={true}
-            width={400}
-            height={400}
-            data={LANGUAGE_USAGE_GROUPED_BY_REPO_DATA}
-            getCategory={getGroup}
-            getDatumName={getName}
-            getDatumValue={getValue}
-            getDatumColor={getColor}
-            getDatumLink={getLink}
-            getDatumHover={datum => `custom text for ${datum.name}`}
-        />
-    </section>
-)
+    return (
+        <section style={{ flexBasis: 0 }}>
+            <H2>{t('stacked-bar-chart')}</H2>
+
+            <Text>
+                <Badge variant="merged">{t('experimental-feature')}</Badge>
+                {t('stacked-bar-chart-description')}
+            </Text>
+
+            <BarChart
+                stacked={true}
+                width={400}
+                height={400}
+                data={LANGUAGE_USAGE_GROUPED_BY_REPO_DATA}
+                getCategory={getGroup}
+                getDatumName={getName}
+                getDatumValue={getValue}
+                getDatumColor={getColor}
+                getDatumLink={getLink}
+                getDatumHover={datum => `custom text for ${datum.name}`}
+            />
+        </section>
+    )
+}
 
 const MANY_LANGUAGES_DATA: LanguageUsageDatum[] = [
     {
@@ -271,52 +286,57 @@ const MANY_LANGUAGES_DATA: LanguageUsageDatum[] = [
     },
 ]
 
-const ManyBarsExample = () => (
-    <section style={{ flexBasis: 0 }}>
-        <H2>Smart labels UI</H2>
+const ManyBarsExample = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Charts/components/bar-chart')
 
-        <Text style={{ maxWidth: 400, minWidth: 400 }}>
-            <Badge variant="merged">Experimental</Badge> Try to resize charts (drag bottom right corner), note that
-            labels rotate if they don't have enough space.
-        </Text>
+    return (
+        <section style={{ flexBasis: 0 }}>
+            <H2>{t('smart-labels-ui')}</H2>
 
-        <ResizableBox width={400} height={400} axis="both" minConstraints={[200, 200]} className="p-3">
-            <ParentSize debounceTime={0}>
-                {parent => (
-                    <BarChart
-                        width={parent.width}
-                        height={parent.height}
-                        data={MANY_LANGUAGES_DATA}
-                        getDatumName={getName}
-                        getDatumValue={getValue}
-                        getDatumColor={getColor}
-                        getDatumLink={getLink}
-                        getDatumHover={datum => `custom text for ${datum.name}`}
-                    />
-                )}
-            </ParentSize>
-        </ResizableBox>
-    </section>
-)
+            <Text style={{ maxWidth: 400, minWidth: 400 }}>
+                <Badge variant="merged">{t('experimental-feature-2')}</Badge>
+                {t('chart-resize-description')}
+            </Text>
 
-const CustomDimmedColor = () => (
-    <section style={{ flexBasis: 0 }}>
-        <H2>Dimmed colors</H2>
+            <ResizableBox width={400} height={400} axis="both" minConstraints={[200, 200]} className="p-3">
+                <ParentSize debounceTime={0}>
+                    {parent => (
+                        <BarChart
+                            width={parent.width}
+                            height={parent.height}
+                            data={MANY_LANGUAGES_DATA}
+                            getDatumName={getName}
+                            getDatumValue={getValue}
+                            getDatumColor={getColor}
+                            getDatumLink={getLink}
+                            getDatumHover={datum => `custom text for ${datum.name}`}
+                        />
+                    )}
+                </ParentSize>
+            </ResizableBox>
+        </section>
+    )
+}
 
-        <Text style={{ maxWidth: 400, minWidth: 400 }}>
-            You can specify any dimmed colors for the non-active bars. (see bar chart README.md for more details about
-            chart colours.
-        </Text>
+const CustomDimmedColor = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Charts/components/bar-chart')
 
-        <BarChart
-            width={400}
-            height={400}
-            data={LANGUAGE_USAGE_DATA}
-            getDatumName={getName}
-            getDatumValue={getValue}
-            getDatumColor={getColor}
-            getDatumFadeColor={() => 'var(--blue)'}
-            getDatumLink={getLink}
-        />
-    </section>
-)
+    return (
+        <section style={{ flexBasis: 0 }}>
+            <H2>{t('dimmed-colors')}</H2>
+
+            <Text style={{ maxWidth: 400, minWidth: 400 }}>{t('dimmed-colors-description')}</Text>
+
+            <BarChart
+                width={400}
+                height={400}
+                data={LANGUAGE_USAGE_DATA}
+                getDatumName={getName}
+                getDatumValue={getValue}
+                getDatumColor={getColor}
+                getDatumFadeColor={() => 'var(--blue)'}
+                getDatumLink={getLink}
+            />
+        </section>
+    )
+}

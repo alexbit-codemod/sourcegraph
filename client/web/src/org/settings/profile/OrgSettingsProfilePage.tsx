@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { asError, isErrorLike } from '@sourcegraph/common'
 import { EVENT_LOGGER } from '@sourcegraph/shared/src/telemetry/web/eventLogger'
@@ -20,6 +22,8 @@ export const OrgSettingsProfilePage: React.FunctionComponent<React.PropsWithChil
     onOrganizationUpdate,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('org/settings/profile')
+
     useEffect(() => {
         EVENT_LOGGER.logViewEvent('OrgSettingsProfile')
         telemetryRecorder.recordEvent('org.profile', 'view')
@@ -79,8 +83,9 @@ export const OrgSettingsProfilePage: React.FunctionComponent<React.PropsWithChil
                             </>
                         ) : (
                             org.name
-                        )}{' '}
-                        was created <Timestamp date={org.createdAt} />.
+                        )}
+                        {t('was-created')}
+                        <Timestamp date={org.createdAt} />.
                     </>
                 }
                 className="mb-3"
@@ -90,22 +95,22 @@ export const OrgSettingsProfilePage: React.FunctionComponent<React.PropsWithChil
                     <Input
                         id="org-settings-profile-page-display-name"
                         inputClassName="org-settings-profile-page__display-name"
-                        placeholder="Organization name"
+                        placeholder={t('organization-name')}
                         onChange={onDisplayNameFieldChange}
                         value={displayName}
                         spellCheck={false}
                         maxLength={ORG_DISPLAY_NAME_MAX_LENGTH}
-                        label="Display name"
+                        label={t('display-name')}
                         className="form-group"
                     />
 
                     <Button type="submit" disabled={isLoading === true} variant="primary">
-                        Update
+                        {t('update-message')}
                     </Button>
                     {isLoading === true && <LoadingSpinner />}
                     {updated && (
                         <Text className="mb-0">
-                            <small>Updated!</small>
+                            <small>{t('updated-successfully')}</small>
                         </Text>
                     )}
                     {isErrorLike(isLoading) && <ErrorAlert error={isLoading} />}

@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 
 import { mdiDelete, mdiPencil } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { useMutation, useQuery } from '@sourcegraph/http-client'
 import { LoadingSpinner, ErrorAlert, Badge, Input, Label, Button, Icon, Alert } from '@sourcegraph/wildcard'
@@ -26,6 +27,8 @@ export const ManagePackageFiltersModalContent: React.FunctionComponent<ManagePac
     setActiveFilter,
     onDismiss,
 }) => {
+    const { t } = useTranslation('site-admin/packages/modal-content')
+
     const { data, loading, error } = useQuery<PackageRepoFiltersResult, PackageRepoFiltersVariables>(
         packageRepoFiltersQuery,
         {}
@@ -40,10 +43,10 @@ export const ManagePackageFiltersModalContent: React.FunctionComponent<ManagePac
             ) : (
                 <div className={styles.content}>
                     <div className={styles.grid}>
-                        <Label className={styles.label}>Behavior</Label>
-                        <Label className={styles.label}>Ecosystem</Label>
-                        <Label className={styles.label}>Package filter</Label>
-                        <Label className={styles.label}>Version filter</Label>
+                        <Label className={styles.label}>{t('behavior')}</Label>
+                        <Label className={styles.label}>{t('ecosystem')}</Label>
+                        <Label className={styles.label}>{t('package-filter')}</Label>
+                        <Label className={styles.label}>{t('version-filter')}</Label>
                     </div>
                     {(data.packageRepoFilters ?? []).length > 0 ? (
                         <ul className="list-group list-group-flush">
@@ -53,14 +56,14 @@ export const ManagePackageFiltersModalContent: React.FunctionComponent<ManagePac
                         </ul>
                     ) : (
                         <Alert variant="info" className="mt-3">
-                            No package filters found
+                            {t('no-package-filters-found')}
                         </Alert>
                     )}
                 </div>
             )}
             <div className={styles.closeAction}>
                 <Button variant="secondary" onClick={onDismiss} className="mt-2">
-                    Close
+                    {t('close-button')}
                 </Button>
             </div>
         </>

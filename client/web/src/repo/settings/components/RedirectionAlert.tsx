@@ -1,5 +1,6 @@
 import { type FC, useEffect, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { Alert } from '@sourcegraph/wildcard'
@@ -14,6 +15,8 @@ interface Props {
  * The repository settings options page.
  */
 export const RedirectionAlert: FC<Props> = ({ to, className, messagePrefix }) => {
+    const { t } = useTranslation('repo/settings/components')
+
     const [ttl, setTtl] = useState(3)
     const navigate = useNavigate()
 
@@ -31,7 +34,7 @@ export const RedirectionAlert: FC<Props> = ({ to, className, messagePrefix }) =>
 
     return (
         <Alert className={className} variant="success">
-            {messagePrefix} You will be redirected in {ttl}...
+            {t('redirect-message-ttl', { messagePrefix, ttl })}
         </Alert>
     )
 }

@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { Button, Modal, H4, Input } from '@sourcegraph/wildcard'
 
 import type { BatchChangesCodeHostFields, BatchChangesCredentialFields } from '../../../graphql-operations'
@@ -19,6 +21,8 @@ export const ViewCredentialModal: React.FunctionComponent<React.PropsWithChildre
     codeHost,
     onClose,
 }) => {
+    const { t } = useTranslation('enterprise/batches/settings')
+
     const labelId = 'viewCredential'
     return (
         <Modal onDismiss={onClose} aria-labelledby={labelId}>
@@ -28,7 +32,7 @@ export const ViewCredentialModal: React.FunctionComponent<React.PropsWithChildre
                 externalServiceURL={codeHost.externalServiceURL}
             />
 
-            <H4>Personal access token</H4>
+            <H4>{t('personal-access-token')}</H4>
             <Input className="form-group" value="PATs cannot be viewed after entering." disabled={true} />
 
             <hr className="mb-3" />
@@ -40,7 +44,7 @@ export const ViewCredentialModal: React.FunctionComponent<React.PropsWithChildre
 
             <div className="d-flex justify-content-end">
                 <Button onClick={onClose} outline={true} variant="secondary">
-                    Close
+                    {t('close-button-text')}
                 </Button>
             </div>
         </Modal>

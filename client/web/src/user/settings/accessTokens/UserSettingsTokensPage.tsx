@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 
 import { mdiPlus } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 import { type Observable, Subject } from 'rxjs'
 import { map } from 'rxjs/operators'
 
@@ -54,6 +55,8 @@ export const UserSettingsTokensPage: React.FunctionComponent<React.PropsWithChil
     onDidPresentNewToken,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('user/settings/accessTokens')
+
     useEffect(() => {
         telemetryService.logViewEvent('UserSettingsTokens')
         telemetryRecorder.recordEvent('settings.tokens', 'view')
@@ -85,16 +88,17 @@ export const UserSettingsTokensPage: React.FunctionComponent<React.PropsWithChil
 
     return (
         <div className="user-settings-tokens-page">
-            <PageTitle title="Access tokens" />
+            <PageTitle title={t('access-tokens-title')} />
             <PageHeader
                 headingElement="h2"
                 path={[{ text: 'Access tokens' }]}
-                description="Access tokens may be used to access the Sourcegraph API."
+                description={t('access-tokens-api-description')}
                 actions={
                     <>
                         {accessTokensEnabled && (
                             <ButtonLink variant="primary" className="ml-2" to="new">
-                                <Icon aria-hidden={true} svgPath={mdiPlus} /> Generate new token
+                                <Icon aria-hidden={true} svgPath={mdiPlus} />
+                                {t('generate-new-token-action')}
                             </ButtonLink>
                         )}
                         {!accessTokensEnabled && (
@@ -106,7 +110,8 @@ export const UserSettingsTokensPage: React.FunctionComponent<React.PropsWithChil
                                 }
                             >
                                 <Button variant="primary" className="ml-2" disabled={true}>
-                                    <Icon aria-hidden={true} svgPath={mdiPlus} /> Generate new token
+                                    <Icon aria-hidden={true} svgPath={mdiPlus} />
+                                    {t('generate-new-token-action-2')}
                                 </Button>
                             </Tooltip>
                         )}
@@ -131,7 +136,7 @@ export const UserSettingsTokensPage: React.FunctionComponent<React.PropsWithChil
                     noSummaryIfAllNodesVisible={true}
                     emptyElement={
                         <Text alignment="center" className="text-muted w-100 mb-0">
-                            You don't have any access tokens.
+                            {t('no-access-tokens-message')}
                         </Text>
                     }
                 />

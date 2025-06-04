@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { NavItem, NavLink } from '../nav'
 import type { NavLinkProps } from '../nav/NavBar'
 
@@ -12,10 +14,14 @@ interface Props extends Pick<NavLinkProps, 'variant'> {
 /**
  * An item in {@link GlobalNavbar} that links to the batch changes area.
  */
-export const BatchChangesNavItem: React.FunctionComponent<React.PropsWithChildren<Props>> = ({ variant }) => (
-    <NavItem icon={BatchChangesIconNav}>
-        <NavLink to="/batch-changes" variant={variant}>
-            Batch Changes
-        </NavLink>
-    </NavItem>
-)
+export const BatchChangesNavItem: React.FunctionComponent<React.PropsWithChildren<Props>> = ({ variant }) => {
+    const { t } = useTranslation('batches')
+
+    return (
+        <NavItem icon={BatchChangesIconNav}>
+            <NavLink to="/batch-changes" variant={variant}>
+                {t('batch-changes')}
+            </NavLink>
+        </NavItem>
+    )
+}

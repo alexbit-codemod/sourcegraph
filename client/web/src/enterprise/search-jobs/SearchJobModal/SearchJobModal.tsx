@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 
 import { useApolloClient } from '@apollo/client'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { gql, useMutation } from '@sourcegraph/http-client'
 import { Button, ErrorAlert, H2, LoadingSpinner, Modal, Text } from '@sourcegraph/wildcard'
@@ -24,6 +25,8 @@ interface SearchJobModalProps {
 }
 
 export const SearchJobDeleteModal: FC<SearchJobModalProps> = props => {
+    const { t } = useTranslation('enterprise/search-jobs/SearchJobModal')
+
     const { searchJob, onDismiss } = props
     const client = useApolloClient()
 
@@ -42,11 +45,10 @@ export const SearchJobDeleteModal: FC<SearchJobModalProps> = props => {
 
     return (
         <Modal position="center" aria-label="Delete search job" onDismiss={onDismiss}>
-            <H2>Do you want to delete this search job?</H2>
+            <H2>{t('delete-search-job-confirmation')}</H2>
 
             <Text className="mt-4">
-                <b>Note:</b> All query runs across all repositories will be stopped or canceled. In case if the search
-                job is still running search results will be deleted.
+                <Trans i18nKey="delete-search-job-note" components={{ '0': <b /> }} />
             </Text>
 
             <SearchJobCard searchJob={searchJob} />
@@ -55,7 +57,7 @@ export const SearchJobDeleteModal: FC<SearchJobModalProps> = props => {
 
             <footer className={styles.footer}>
                 <Button variant="secondary" outline={true} onClick={onDismiss}>
-                    Cancel
+                    {t('cancel-button')}
                 </Button>
                 <Button
                     variant="danger"
@@ -65,7 +67,8 @@ export const SearchJobDeleteModal: FC<SearchJobModalProps> = props => {
                 >
                     {loading ? (
                         <>
-                            <LoadingSpinner /> Deleting
+                            <LoadingSpinner />
+                            {t('deleting-status')}
                         </>
                     ) : (
                         'Delete'
@@ -110,6 +113,8 @@ const CREATE_SEARCH_JOB = gql`
 `
 
 export const RerunSearchJobModal: FC<SearchJobModalProps> = props => {
+    const { t } = useTranslation('enterprise/search-jobs/SearchJobModal')
+
     const { searchJob, onDismiss } = props
 
     const [cancelSearchJob, { loading: cancelLoading, error: cancelError }] = useMutation(CANCEL_SEARCH_JOB)
@@ -134,10 +139,10 @@ export const RerunSearchJobModal: FC<SearchJobModalProps> = props => {
 
     return (
         <Modal position="center" aria-label="Delete search job" onDismiss={onDismiss}>
-            <H2>Do you want to re-run this search job?</H2>
+            <H2>{t('rerun-search-job-confirmation')}</H2>
 
             <Text className="mt-4">
-                <b>Note:</b> Re-run will create a new search job, the current search job will be cancelled.
+                <Trans i18nKey="rerun-search-job-note" components={{ '0': <b /> }} />
             </Text>
 
             <SearchJobCard searchJob={searchJob} />
@@ -146,7 +151,7 @@ export const RerunSearchJobModal: FC<SearchJobModalProps> = props => {
 
             <footer className={styles.footer}>
                 <Button variant="secondary" outline={true} onClick={onDismiss}>
-                    Cancel
+                    {t('cancel-button-rerun')}
                 </Button>
                 <Button
                     variant="primary"
@@ -156,10 +161,11 @@ export const RerunSearchJobModal: FC<SearchJobModalProps> = props => {
                 >
                     {loading ? (
                         <>
-                            <LoadingSpinner /> Re-running
+                            <LoadingSpinner />
+                            {t('rerunning-status')}
                         </>
                     ) : (
-                        <>Rerun</>
+                        <>{t('rerun-button')}</>
                     )}
                 </Button>
             </footer>
@@ -168,6 +174,8 @@ export const RerunSearchJobModal: FC<SearchJobModalProps> = props => {
 }
 
 export const CancelSearchJobModal: FC<SearchJobModalProps> = props => {
+    const { t } = useTranslation('enterprise/search-jobs/SearchJobModal')
+
     const { searchJob, onDismiss } = props
 
     const [cancelSearchJob, { loading, error }] = useMutation(CANCEL_SEARCH_JOB, {
@@ -178,11 +186,10 @@ export const CancelSearchJobModal: FC<SearchJobModalProps> = props => {
 
     return (
         <Modal position="center" aria-label="Stop search job" onDismiss={onDismiss}>
-            <H2>Do you want to stop this search job?</H2>
+            <H2>{t('stop-search-job-confirmation')}</H2>
 
             <Text className="mt-4">
-                <b>Note:</b> All query runs across all repositories and revisions will be stopped. You can re-run this
-                search job later.
+                <Trans i18nKey="stop-search-job-note" components={{ '0': <b /> }} />
             </Text>
 
             <SearchJobCard searchJob={searchJob} />
@@ -191,7 +198,7 @@ export const CancelSearchJobModal: FC<SearchJobModalProps> = props => {
 
             <footer className={styles.footer}>
                 <Button variant="secondary" outline={true} onClick={onDismiss}>
-                    Close
+                    {t('close-button')}
                 </Button>
                 <Button
                     variant="danger"
@@ -201,10 +208,11 @@ export const CancelSearchJobModal: FC<SearchJobModalProps> = props => {
                 >
                     {loading ? (
                         <>
-                            <LoadingSpinner /> Stopping
+                            <LoadingSpinner />
+                            {t('stopping-status')}
                         </>
                     ) : (
-                        <>Yes - stop this search job.</>
+                        <>{t('yes-stop-search-job')}</>
                     )}
                 </Button>
             </footer>

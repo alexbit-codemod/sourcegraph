@@ -4,6 +4,7 @@ import { mdiLink, mdiChevronDown, mdiContentCopy, mdiCheckBold } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
 import copy from 'copy-to-clipboard'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { fromEvent } from 'rxjs'
 import { filter } from 'rxjs/operators'
@@ -48,6 +49,8 @@ interface CopyPermalinkActionProps extends RepoHeaderContext, TelemetryProps, Te
  * Git commit SHA.
  */
 export const CopyPermalinkAction: React.FunctionComponent<CopyPermalinkActionProps> = props => {
+    const { t } = useTranslation('repo/actions')
+
     const { revision, commitID, actionType, repoName, telemetryService, telemetryRecorder } = props
 
     const rootUrl = window.context.externalURL
@@ -88,7 +91,7 @@ export const CopyPermalinkAction: React.FunctionComponent<CopyPermalinkActionPro
         return (
             <RepoHeaderActionMenuLink as={Link} file={true} to={permalinkURL} onSelect={onClick}>
                 <Icon aria-hidden={true} svgPath={mdiLink} />
-                <span>Permalink (with full Git commit SHA)</span>
+                <span>{t('permalink-with-full-git-commit-sha')}</span>
             </RepoHeaderActionMenuLink>
         )
     }
@@ -143,7 +146,7 @@ export const CopyPermalinkAction: React.FunctionComponent<CopyPermalinkActionPro
                             inline={false}
                             aria-hidden={true}
                         />
-                        <VisuallyHidden>Actions</VisuallyHidden>
+                        <VisuallyHidden>{t('actions')}</VisuallyHidden>
                     </MenuButton>
                 )}
                 {!isRevisionTheSameAsCommitID && (

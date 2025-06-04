@@ -1,0 +1,12 @@
+{
+  "loading-file-error-retry": "It’s taking much longer than expected to load this file. Try <0>reloading the page</0> .",
+  "view-blame-prior-to-change": "View blame prior to this change",
+  "error-message": "Error",
+  "not-found-message": "Not found",
+  "git-lfs-storage-message": "Stored with Git LFS",
+  "git-lfs-view-warning": "This file is stored in Git Large File Storage and cannot be viewed inside Sourcegraph.",
+  "view-file-link": " View file on",
+  "syntax-highlighting-timeout": "Syntax-highlighting this file took too long. ",
+  "try-again-prompt": "Try again",
+  "file-blob-label": "File blob"
+}

@@ -2,6 +2,7 @@ import type { FC } from 'react'
 
 import { useApolloClient } from '@apollo/client'
 import type { ApolloCache } from '@apollo/client/cache'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { pluralize } from '@sourcegraph/common'
@@ -28,6 +29,8 @@ interface CodeHostDeleteModalProps {
 }
 
 export const CodeHostDeleteModal: FC<CodeHostDeleteModalProps> = props => {
+    const { t } = useTranslation('setup-wizard/components/remote-repositories-step/components/code-host-delete-modal')
+
     const { codeHost, onDismiss } = props
 
     const navigate = useNavigate()
@@ -57,19 +60,22 @@ export const CodeHostDeleteModal: FC<CodeHostDeleteModalProps> = props => {
             onDismiss={onDismiss}
         >
             <H2>
-                Remove connection with <CodeHostIcon codeHostType={codeHost.kind} aria-hidden={true} /> '
-                {codeHost.displayName}'?
+                {t('remove-connection-with')}
+                <CodeHostIcon codeHostType={codeHost.kind} aria-hidden={true} /> '{codeHost.displayName}'?
             </H2>
 
             <hr className={styles.seperator} />
 
             <Text>
-                There {pluralize('is', codeHost.repoCount ?? 0, 'are')}{' '}
-                <b>
-                    {codeHost.repoCount ?? 0} {pluralize('repository', codeHost.repoCount ?? 0, 'repositories')}
-                </b>{' '}
-                synced to Sourcegraph from '{codeHost.displayName}'. If the connection is removed, these repositories
-                will no longer be synced with Sourcegraph.
+                {t('there')}
+                {pluralize('is', codeHost.repoCount ?? 0, 'are')}
+                <Trans
+                    i18nKey="repo-count-and-pluralize"
+                    values={{ codeHostRepoCount0: codeHost.repoCount ?? 0 }}
+                    components={{ '0': <b /> }}
+                />
+                {codeHost.displayName}
+                {t('connection-removed-warning')}
             </Text>
 
             <hr className={styles.seperator} />
@@ -79,14 +85,14 @@ export const CodeHostDeleteModal: FC<CodeHostDeleteModalProps> = props => {
             <div className={styles.footer}>
                 <LoaderButton
                     variant="danger"
-                    label="Yes, remove connection"
+                    label={t('yes-remove-connection')}
                     loading={loading}
                     disabled={loading}
                     alwaysShowLabel={true}
                     onClick={handleDeleteConfirm}
                 />
                 <Button variant="secondary" onClick={onDismiss}>
-                    Cancel
+                    {t('cancel')}
                 </Button>
             </div>
         </Modal>

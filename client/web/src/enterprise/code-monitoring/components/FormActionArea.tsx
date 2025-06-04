@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { useExperimentalFeatures } from '@sourcegraph/shared/src/settings/settings'
 import { Link, H3 } from '@sourcegraph/wildcard'
 
@@ -45,6 +47,8 @@ export const FormActionArea: React.FunctionComponent<React.PropsWithChildren<Act
     onActionsChange,
     monitorName,
 }) => {
+    const { t } = useTranslation('enterprise/code-monitoring/components')
+
     const [emailAction, setEmailAction] = useState<MonitorAction | undefined>(
         actions.nodes.find(action => action.__typename === 'MonitorEmail')
     )
@@ -80,8 +84,8 @@ export const FormActionArea: React.FunctionComponent<React.PropsWithChildren<Act
 
     return (
         <>
-            <H3 className="mb-1">Actions</H3>
-            <span className="text-muted">Run any number of actions in response to an event</span>
+            <H3 className="mb-1">{t('actions-title')}</H3>
+            <span className="text-muted">{t('actions-description')}</span>
 
             <EmailAction
                 disabled={disabled}
@@ -112,10 +116,10 @@ export const FormActionArea: React.FunctionComponent<React.PropsWithChildren<Act
             )}
 
             <small className="text-muted">
-                What other actions would you like to take?{' '}
-                <Link to="mailto:feedback@sourcegraph.com" target="_blank" rel="noopener">
-                    Share feedback.
-                </Link>
+                <Trans
+                    i18nKey="actions-feedback-link"
+                    components={{ '0': <Link to="mailto:feedback@sourcegraph.com" target="_blank" rel="noopener" /> }}
+                />
             </small>
         </>
     )

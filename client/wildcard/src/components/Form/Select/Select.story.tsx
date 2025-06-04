@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 
 import type { Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { H1, H2 } from '../..'
 import { BrandedStory } from '../../../stories/BrandedStory'
@@ -26,6 +27,8 @@ const config: Meta = {
 export default config
 
 const BaseSelect = (props: { id: string } & Pick<SelectProps, 'isCustomStyle' | 'isValid' | 'disabled'>) => {
+    const { t } = useTranslation('../../wildcard/src/components/Form/Select')
+
     const [selected, setSelected] = React.useState('')
 
     const handleChange = useCallback<React.ChangeEventHandler<HTMLSelectElement>>(event => {
@@ -41,47 +44,53 @@ const BaseSelect = (props: { id: string } & Pick<SelectProps, 'isCustomStyle' | 
             onChange={handleChange}
             {...props}
         >
-            <option value="">Favorite fruit</option>
-            <option value="apples">Apples</option>
-            <option value="bananas">Bananas</option>
-            <option value="oranges">Oranges</option>
+            <option value="">{t('favorite-fruit')}</option>
+            <option value="apples">{t('apples')}</option>
+            <option value="bananas">{t('bananas')}</option>
+            <option value="oranges">{t('oranges')}</option>
         </Select>
     )
 }
 
 const SelectVariants = ({ isCustomStyle }: Pick<SelectProps, 'isCustomStyle'>) => {
+    const { t } = useTranslation('../../wildcard/src/components/Form/Select')
+
     const idPrefix = isCustomStyle ? 'custom' : 'native'
     return (
         <Grid columnCount={4}>
             <div>
-                <H2>Standard</H2>
+                <H2>{t('standard')}</H2>
                 <BaseSelect id={`${idPrefix}-standard`} isCustomStyle={isCustomStyle} />
             </div>
             <div>
-                <H2>Valid</H2>
+                <H2>{t('valid')}</H2>
                 <BaseSelect id={`${idPrefix}-valid`} isCustomStyle={isCustomStyle} isValid={true} />
             </div>
             <div>
-                <H2>Invalid</H2>
+                <H2>{t('invalid')}</H2>
                 <BaseSelect id={`${idPrefix}-invalid`} isCustomStyle={isCustomStyle} isValid={false} />
             </div>
             <div>
-                <H2>Disabled</H2>
+                <H2>{t('disabled')}</H2>
                 <BaseSelect id={`${idPrefix}-disabled`} isCustomStyle={isCustomStyle} disabled={true} />
             </div>
         </Grid>
     )
 }
 
-export const SelectExamples: StoryFn = () => (
-    <>
-        <H1>Select</H1>
-        <H2>Native</H2>
-        <SelectVariants />
-        <H2>Custom</H2>
-        <SelectVariants isCustomStyle={true} />
-    </>
-)
+export const SelectExamples: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Form/Select')
+
+    return (
+        <>
+            <H1>{t('select')}</H1>
+            <H2>{t('native')}</H2>
+            <SelectVariants />
+            <H2>{t('custom')}</H2>
+            <SelectVariants isCustomStyle={true} />
+        </>
+    )
+}
 
 SelectExamples.parameters = {
     chromatic: {

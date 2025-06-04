@@ -3,6 +3,7 @@ import React, { useMemo, useState } from 'react'
 import { mdiArrowLeft, mdiFileDocumentOutline, mdiFolderOutline, mdiSourceRepository } from '@mdi/js'
 import { VSCodeProgressRing } from '@vscode/webview-ui-toolkit/react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { catchError } from 'rxjs/operators'
 
 import { fetchTreeEntries } from '@sourcegraph/shared/src/backend/repo'
@@ -31,6 +32,8 @@ export const RepoView: React.FunctionComponent<React.PropsWithChildren<RepoViewP
     instanceURL,
     setQueryState,
 }) => {
+    const { t } = useTranslation('../../vscode/src/webview/search-panel')
+
     const [directoryStack, setDirectoryStack] = useState<string[]>([])
 
     // File tree results are memoized, so going back isn't expensive.
@@ -86,12 +89,12 @@ export const RepoView: React.FunctionComponent<React.PropsWithChildren<RepoViewP
                 className="test-back-to-search-view-btn shadow-none"
             >
                 <Icon aria-hidden={true} className="mr-1" svgPath={mdiArrowLeft} />
-                Back to search view
+                {t('back-to-search-view')}
             </Button>
             {directoryStack.length > 0 && (
                 <Button variant="link" outline={true} size="sm" onClick={onPreviousDirectory} className="shadow-none">
                     <Icon aria-hidden={true} className="mr-1" svgPath={mdiArrowLeft} />
-                    Back to previous directory
+                    {t('back-to-previous-directory')}
                 </Button>
             )}
             <PageHeader
@@ -100,7 +103,7 @@ export const RepoView: React.FunctionComponent<React.PropsWithChildren<RepoViewP
             />
             {repositoryMatch.description && <Text className="mt-0 text-muted">{repositoryMatch.description}</Text>}
             <div className={classNames(styles.section)}>
-                <H4>Files and directories</H4>
+                <H4>{t('files-and-directories')}</H4>
                 {treeEntries === undefined ? (
                     <VSCodeProgressRing />
                 ) : (

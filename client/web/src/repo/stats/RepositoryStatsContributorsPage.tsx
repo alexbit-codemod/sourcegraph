@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 
 import classNames from 'classnames'
 import { escapeRegExp } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
@@ -213,6 +214,8 @@ const getUrlQuery = (spec: Partial<QuerySpec>): string => {
 
 /** A page that shows a repository's contributors. */
 export const RepositoryStatsContributorsPage: React.FunctionComponent<Props> = ({ repo, telemetryRecorder }) => {
+    const { t } = useTranslation('repo/stats')
+
     const location = useLocation()
     const navigate = useNavigate()
     const queryParameters = new URLSearchParams(location.search)
@@ -344,16 +347,16 @@ export const RepositoryStatsContributorsPage: React.FunctionComponent<Props> = (
 
     return (
         <section>
-            <PageTitle title="Contributors" />
+            <PageTitle title={t('contributors')} />
             <Card className={styles.card}>
-                <CardHeader as="header">Contributions filter</CardHeader>
+                <CardHeader as="header">{t('contributions-filter')}</CardHeader>
                 <CardBody>
                     <Form onSubmit={onSubmit}>
                         <div className={classNames(styles.row, 'form-inline')}>
                             <div className="input-group mb-2 mr-sm-2">
                                 <div className="input-group-prepend">
                                     <Label htmlFor={contributorsPageInputIds.AFTER} className="input-group-text">
-                                        Time period
+                                        {t('time-period')}
                                     </Label>
                                 </div>
                                 <Input
@@ -361,7 +364,7 @@ export const RepositoryStatsContributorsPage: React.FunctionComponent<Props> = (
                                     size={12}
                                     id={contributorsPageInputIds.AFTER}
                                     value={after || ''}
-                                    placeholder="All time"
+                                    placeholder={t('all-time')}
                                     onChange={onChange}
                                 />
                                 <div className="input-group-append">
@@ -374,28 +377,28 @@ export const RepositoryStatsContributorsPage: React.FunctionComponent<Props> = (
                                             onClick={() => updateAfter('7 days ago')}
                                             variant="secondary"
                                         >
-                                            Last 7 days
+                                            {t('last-7-days')}
                                         </Button>
                                         <Button
                                             className={classNames(spec.after === '30 days ago' && 'active')}
                                             onClick={() => updateAfter('30 days ago')}
                                             variant="secondary"
                                         >
-                                            Last 30 days
+                                            {t('last-30-days')}
                                         </Button>
                                         <Button
                                             className={classNames(spec.after === '1 year ago' && 'active')}
                                             onClick={() => updateAfter('1 year ago')}
                                             variant="secondary"
                                         >
-                                            Last year
+                                            {t('last-year')}
                                         </Button>
                                         <Button
                                             className={classNames(!spec.after && 'active')}
                                             onClick={() => updateAfter(undefined)}
                                             variant="secondary"
                                         >
-                                            All time
+                                            {t('all-time-revision')}
                                         </Button>
                                     </ButtonGroup>
                                 </div>
@@ -408,7 +411,7 @@ export const RepositoryStatsContributorsPage: React.FunctionComponent<Props> = (
                                         htmlFor={contributorsPageInputIds.REVISION_RANGE}
                                         className="input-group-text"
                                     >
-                                        Revision range
+                                        {t('revision-range')}
                                     </Label>
                                 </div>
                                 <Input
@@ -416,7 +419,7 @@ export const RepositoryStatsContributorsPage: React.FunctionComponent<Props> = (
                                     size={18}
                                     id={contributorsPageInputIds.REVISION_RANGE}
                                     value={revisionRange || ''}
-                                    placeholder="Default branch"
+                                    placeholder={t('default-branch')}
                                     onChange={onChange}
                                     autoCapitalize="off"
                                     autoCorrect="off"
@@ -427,7 +430,7 @@ export const RepositoryStatsContributorsPage: React.FunctionComponent<Props> = (
                             <div className="input-group mt-2 mr-sm-2">
                                 <div className="input-group-prepend">
                                     <Label htmlFor={contributorsPageInputIds.PATH} className="input-group-text">
-                                        Path
+                                        {t('path')}
                                     </Label>
                                 </div>
                                 <Input
@@ -435,7 +438,7 @@ export const RepositoryStatsContributorsPage: React.FunctionComponent<Props> = (
                                     size={18}
                                     id={contributorsPageInputIds.PATH}
                                     value={path || ''}
-                                    placeholder="All files"
+                                    placeholder={t('all-files')}
                                     onChange={onChange}
                                     autoCapitalize="off"
                                     autoCorrect="off"
@@ -446,10 +449,10 @@ export const RepositoryStatsContributorsPage: React.FunctionComponent<Props> = (
                             {stateDiffers && (
                                 <div className="form-group mb-0">
                                     <Button type="submit" className="mr-2 mt-2" variant="primary">
-                                        Update
+                                        {t('update')}
                                     </Button>
                                     <Button type="reset" className="mt-2" onClick={onCancel} variant="secondary">
-                                        Cancel
+                                        {t('cancel')}
                                     </Button>
                                 </div>
                             )}

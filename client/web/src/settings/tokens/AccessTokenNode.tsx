@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react'
 
 import classNames from 'classnames'
 import { parseISO } from 'date-fns'
+import { useTranslation, Trans } from 'react-i18next'
 import { lastValueFrom } from 'rxjs'
 import { map } from 'rxjs/operators'
 
@@ -79,6 +80,8 @@ export const AccessTokenNode: React.FunctionComponent<React.PropsWithChildren<Ac
     newToken,
     afterDelete,
 }) => {
+    const { t } = useTranslation('settings/tokens')
+
     const [isDeleting, setIsDeleting] = useState<boolean | Error>(false)
     const onDeleteAccessToken = useCallback(async () => {
         if (
@@ -125,22 +128,27 @@ export const AccessTokenNode: React.FunctionComponent<React.PropsWithChildren<Ac
                         <br />
                         {node.lastUsedAt ? (
                             <>
-                                Last used <Timestamp date={node.lastUsedAt} />
+                                {t('last-used-message')}
+                                <Timestamp date={node.lastUsedAt} />
                             </>
                         ) : (
                             'Never used'
                         )}
-                        , created <Timestamp date={node.createdAt} />
+                        {t('created-message')}
+                        <Timestamp date={node.createdAt} />
                         {node.subject.username !== node.creator.username && (
                             <>
-                                {' '}
-                                by <Link to={userURL(node.creator.username)}>{node.creator.username}</Link>
+                                <Trans
+                                    i18nKey="created-by-username"
+                                    values={{ nodeCreatorUsername: <>{node.creator.username}</> }}
+                                    components={{ '0': <Link to={userURL(node.creator.username)} /> }}
+                                />
                             </>
                         )}
                         {node.expiresAt !== null && (
                             <>
-                                {' '}
-                                | Expires <Timestamp date={parseISO(node.expiresAt)} />
+                                {t('expires-message')}
+                                <Timestamp date={parseISO(node.expiresAt)} />
                             </>
                         )}
                     </small>
@@ -152,7 +160,7 @@ export const AccessTokenNode: React.FunctionComponent<React.PropsWithChildren<Ac
                         disabled={isDeleting === true}
                         variant="danger"
                     >
-                        Delete
+                        {t('delete-action')}
                     </Button>
                     {isErrorLike(isDeleting) && <ErrorAlert className="mt-2" error={isDeleting} />}
                 </div>

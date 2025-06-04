@@ -1,6 +1,7 @@
 import type { FC, ReactNode } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Button, type useFieldAPI } from '@sourcegraph/wildcard'
 
@@ -37,6 +38,8 @@ export interface FormSeriesProps {
 }
 
 export const FormSeries: FC<FormSeriesProps> = props => {
+    const { t } = useTranslation('enterprise/insights/components/creation-ui/form-series')
+
     const {
         seriesField,
         showValidationErrorsOnMount,
@@ -95,7 +98,7 @@ export const FormSeries: FC<FormSeriesProps> = props => {
                     disabled={!licensed ? series.length >= 10 : false}
                     className={classNames(styles.formSeriesItem, styles.formSeriesAddButton, 'p-3')}
                 >
-                    + Add another data series
+                    {t('add-another-data-series')}
                 </Button>
             )}
         </ul>

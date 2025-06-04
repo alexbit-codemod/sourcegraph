@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 
 import { logger } from '@sourcegraph/common'
@@ -33,6 +34,8 @@ interface Props extends Pick<LegacyLayoutRouteContext, 'telemetryRecorder'> {
 }
 
 const AuthenticatedCodySubscriptionManagePage: React.FC<Props> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('cody/management/subscription/manage')
+
     const {
         loading: userCodyPlanLoading,
         error: useCodyPlanError,
@@ -69,11 +72,11 @@ const AuthenticatedCodySubscriptionManagePage: React.FC<Props> = ({ telemetryRec
 
     return (
         <Page className="d-flex flex-column">
-            <PageTitle title="Manage subscription" />
+            <PageTitle title={t('manage-subscription')} />
             <PageHeader className="my-4 d-inline-flex align-items-center">
                 <PageHeader.Heading as="h1" className="text-3xl font-medium">
                     <PageHeaderIcon name="cody-logo" className="mr-3" />
-                    <Text as="span">Manage subscription</Text>
+                    <Text as="span">{t('manage-subscription-plain')}</Text>
                 </PageHeader.Heading>
             </PageHeader>
 
@@ -83,6 +86,8 @@ const AuthenticatedCodySubscriptionManagePage: React.FC<Props> = ({ telemetryRec
 }
 
 const PageContent: React.FC = () => {
+    const { t } = useTranslation('cody/management/subscription/manage')
+
     const subscriptionQueryResult = useCurrentSubscription()
 
     if (subscriptionQueryResult.isLoading) {
@@ -90,12 +95,12 @@ const PageContent: React.FC = () => {
     }
 
     if (subscriptionQueryResult.isError) {
-        return <Alert variant="danger">Failed to fetch subscription data</Alert>
+        return <Alert variant="danger">{t('failed-fetch-subscription-data')}</Alert>
     }
 
     const subscription = subscriptionQueryResult?.data
     if (!subscription) {
-        return <Alert variant="warning">Subscription data is not available</Alert>
+        return <Alert variant="warning">{t('subscription-data-not-available')}</Alert>
     }
 
     return (

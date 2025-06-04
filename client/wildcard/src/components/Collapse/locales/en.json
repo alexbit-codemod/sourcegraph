@@ -1,0 +1,14 @@
+{
+  "controlled-collapse": "Controlled collapse",
+  "collapsable-message-1": "Collapsable",
+  "testing-quote-1": "testing this one",
+  "uncontrolled-collapse": "Uncontrolled collapse",
+  "collapsable-message-2": "Collapsable",
+  "testing-quote-2": "testing this one",
+  "open-by-default-collapse": "Open by default collapse",
+  "collapsable-message-3": "Collapsable",
+  "testing-quote-3": "testing this one",
+  "without-forced-collapse-panel": "Without forced CollapsePanel rendering",
+  "collapsable-message-4": "Collapsable",
+  "testing-quote-4": "testing this one"
+}

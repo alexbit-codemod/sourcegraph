@@ -2,6 +2,7 @@ import React, { type MouseEvent, useContext, useState } from 'react'
 
 import { mdiContentCopy } from '@mdi/js'
 import copy from 'copy-to-clipboard'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { SyntaxHighlightedSearchQuery } from '@sourcegraph/branded'
 import { useExperimentalFeatures } from '@sourcegraph/shared/src/settings/settings'
@@ -54,6 +55,8 @@ function getTemplateURL(template: Template): string {
 interface CodeInsightsTemplates extends TelemetryProps, TelemetryV2Props, React.HTMLAttributes<HTMLElement> {}
 
 export const CodeInsightsTemplates: React.FunctionComponent<React.PropsWithChildren<CodeInsightsTemplates>> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/landing/getting-started/components/code-insights-templates')
+
     const { telemetryService, telemetryRecorder, ...otherProps } = props
     const tabChangePingName = useLogEventName('InsightsGetStartedTabClick')
     const goCodeCheckerTemplates = useExperimentalFeatures(features => features.goCodeCheckerTemplates)
@@ -68,13 +71,20 @@ export const CodeInsightsTemplates: React.FunctionComponent<React.PropsWithChild
 
     return (
         <section {...otherProps}>
-            <H2 id="code-insights-templates">Templates</H2>
+            <H2 id="code-insights-templates">{t('templates-title')}</H2>
             <Text className="text-muted">
-                Some of the most popular{' '}
-                <Link to="/help/code_insights/references/common_use_cases" rel="noopener noreferrer" target="_blank">
-                    use cases
-                </Link>
-                .
+                <Trans
+                    i18nKey="popular-use-cases-description"
+                    components={{
+                        '0': (
+                            <Link
+                                to="/help/code_insights/references/common_use_cases"
+                                rel="noopener noreferrer"
+                                target="_blank"
+                            />
+                        ),
+                    }}
+                />
             </Text>
 
             <Tabs size="medium" className="mt-3" onChange={handleTabChange}>
@@ -156,6 +166,8 @@ interface TemplateCardProps extends TelemetryProps, TelemetryV2Props {
 }
 
 const TemplateCard: React.FunctionComponent<React.PropsWithChildren<TemplateCardProps>> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/landing/getting-started/components/code-insights-templates')
+
     const { template, telemetryService, telemetryRecorder } = props
     const { mode } = useContext(CodeInsightsLandingPageContext)
 
@@ -197,7 +209,7 @@ const TemplateCard: React.FunctionComponent<React.PropsWithChildren<TemplateCard
                     className="mr-auto"
                     onClick={handleUseTemplateLinkClick}
                 >
-                    Use this template
+                    {t('use-template-instruction')}
                 </Button>
             )}
         </Card>

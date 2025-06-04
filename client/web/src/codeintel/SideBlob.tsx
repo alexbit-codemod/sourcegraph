@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import type { Position } from '@sourcegraph/extension-api-classes'
 import { useQuery } from '@sourcegraph/http-client'
@@ -36,6 +37,8 @@ export interface SideBlobProps extends TelemetryProps, TelemetryV2Props {
 }
 
 export const SideBlob: FC<SideBlobProps> = props => {
+    const { t } = useTranslation('codeintel')
+
     const {
         activeURL,
         repository,
@@ -74,7 +77,8 @@ export const SideBlob: FC<SideBlobProps> = props => {
                 <LoadingSpinner inline={false} className="mx-auto my-4" />
                 <Text alignment="center" className="text-muted">
                     <i>
-                        Loading <Code>{props.file}</Code>...
+                        {t('loading-message-1')}
+                        <Code>{props.file}</Code>...
                     </i>
                 </Text>
             </>
@@ -86,7 +90,9 @@ export const SideBlob: FC<SideBlobProps> = props => {
         return (
             <div>
                 <Text className="text-danger">
-                    Loading <Code>{props.file}</Code> failed:
+                    {t('loading-message-2')}
+                    <Code>{props.file}</Code>
+                    {t('loading-failed-message')}
                 </Text>
                 <pre>{error.message}</pre>
             </div>
@@ -96,7 +102,7 @@ export const SideBlob: FC<SideBlobProps> = props => {
     const blob = data?.repository?.commit?.blob
     // If there weren't any errors and we just didn't receive any data
     if (!blob || !blob.highlight) {
-        return <>Nothing found</>
+        return <>{t('nothing-found-message')}</>
     }
 
     // TODO: display a helpful message if syntax highlighting aborted, see https://github.com/sourcegraph/sourcegraph/issues/40841

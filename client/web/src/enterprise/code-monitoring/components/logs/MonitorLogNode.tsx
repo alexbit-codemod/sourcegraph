@@ -3,6 +3,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { mdiAlertCircle, mdiCheckBold, mdiOpenInNew, mdiChevronDown, mdiChevronUp } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { Button, Icon, Link, Tooltip } from '@sourcegraph/wildcard'
@@ -21,6 +22,8 @@ export const MonitorLogNode: React.FunctionComponent<
         startOpen?: boolean
     }>
 > = ({ monitor, now, startOpen = false }) => {
+    const { t } = useTranslation('enterprise/code-monitoring/components/logs')
+
     const [expanded, setExpanded] = useState(startOpen)
 
     const toggleExpanded = useCallback(() => setExpanded(expanded => !expanded), [])
@@ -80,7 +83,7 @@ export const MonitorLogNode: React.FunctionComponent<
                             />
                         </Tooltip>
                     )}
-                    <VisuallyHidden>Monitor name:</VisuallyHidden>
+                    <VisuallyHidden>{t('monitor-name')}</VisuallyHidden>
                     {monitor.description}
                 </Button>
                 <Link
@@ -89,18 +92,19 @@ export const MonitorLogNode: React.FunctionComponent<
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    Monitor details <Icon role="img" aria-label=". Open in a new tab" svgPath={mdiOpenInNew} />
+                    {t('monitor-details-header')}
+                    <Icon role="img" aria-label=". Open in a new tab" svgPath={mdiOpenInNew} />
                 </Link>
                 <span className="text-nowrap mr-2">
-                    <VisuallyHidden>Last run</VisuallyHidden>
-                    {lastRun ? <Timestamp date={lastRun} now={now} noAbout={true} /> : <>Never</>}
+                    <VisuallyHidden>{t('last-run')}</VisuallyHidden>
+                    {lastRun ? <Timestamp date={lastRun} now={now} noAbout={true} /> : <>{t('never-run')}</>}
                 </span>
             </div>
 
             {expanded && (
                 <div className={styles.expandedRow}>
                     {monitor.trigger.events.nodes.length === 0 ? (
-                        <div>This code monitor has not been run yet.</div>
+                        <div>{t('monitor-not-run-yet')}</div>
                     ) : (
                         <ConnectionList as="ol">
                             {monitor.trigger.events.nodes.map(triggerEvent => (

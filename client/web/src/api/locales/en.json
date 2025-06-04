@@ -1,0 +1,11 @@
+{
+  "graph-ql-not-included-bundle": "GraphiQL is not included in this bundle because the environment variable",
+  "dev-web-builder-omit-slow-deps": "DEV_WEB_BUILDER_OMIT_SLOW_DEPS",
+  "environment-variable-set": " is set.",
+  "prettify-query-shortcut": "Prettify Query (Shift-Ctrl-P)",
+  "prettify-label": "Prettify",
+  "show-history": "Show History",
+  "history-label": "History",
+  "docs-label": "Docs",
+  "api-console-warning": "The API console uses <0>real production data.</0>"
+}

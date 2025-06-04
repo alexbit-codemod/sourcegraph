@@ -3,6 +3,7 @@ import React, { type FC, forwardRef, type HTMLAttributes, type PropsWithChildren
 import { mdiRefresh } from '@mdi/js'
 import { ParentSize } from '@visx/responsive'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import {
     Button,
@@ -29,6 +30,8 @@ export interface LivePreviewUpdateButtonProps {
 }
 
 const LivePreviewUpdateButton: FC<LivePreviewUpdateButtonProps> = props => {
+    const { t } = useTranslation('enterprise/insights/components/creation-ui/live-preview')
+
     const { disabled, onClick } = props
 
     return (
@@ -39,7 +42,7 @@ const LivePreviewUpdateButton: FC<LivePreviewUpdateButtonProps> = props => {
             className={styles.updateButton}
             onClick={onClick}
         >
-            Live preview
+            {t('live-preview')}
             <Icon svgPath={mdiRefresh} inline={false} aria-hidden={true} height="1rem" width="1rem" />
         </Button>
     )

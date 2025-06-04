@@ -1,6 +1,7 @@
 import React from 'react'
 
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { CardBody, Card, H3, H4, Link, Code, ProductStatusBadge } from '@sourcegraph/wildcard'
 
@@ -29,6 +30,8 @@ interface BatchChangesChangelogAlertProps {
 export const BatchChangesChangelogAlert: React.FunctionComponent<
     React.PropsWithChildren<BatchChangesChangelogAlertProps>
 > = ({ className, viewerIsAdmin }) => {
+    const { t } = useTranslation('enterprise/batches/list')
+
     // IMPORTANT!! If you add an entry, make sure to set SHOW_CHANGELOG to true!
     if (!SHOW_CHANGELOG) {
         return null
@@ -40,67 +43,70 @@ export const BatchChangesChangelogAlert: React.FunctionComponent<
         >
             <Card className={classNames(styles.batchChangesListIntroCard, 'h-100')}>
                 <CardBody>
-                    <H4 as={H3}>Batch Changes updates in version {CURRENT_VERSION}</H4>
+                    <H4 as={H3}>{t('batch-changes-updates-version', { CURRENT_VERSION })}</H4>
                     <ul className="mb-0 pl-3">
                         <li>
                             <ProductStatusBadge status="beta" className="mr-1" />
-                            Batch Changes can now{' '}
-                            <Link
-                                rel="noopener"
-                                to="/help/admin/config/batch_changes#commit-signing-for-github"
-                                target="_blank"
-                            >
-                                sign commits
-                            </Link>{' '}
-                            created on GitHub via GitHub Apps.{' '}
+                            <Trans
+                                i18nKey="batch-changes-sign-commits-github-apps"
+                                components={{
+                                    '0': (
+                                        <Link
+                                            rel="noopener"
+                                            to="/help/admin/config/batch_changes#commit-signing-for-github"
+                                            target="_blank"
+                                        />
+                                    ),
+                                }}
+                            />
+
                             {viewerIsAdmin ? (
                                 <>
-                                    {' '}
-                                    Site admins can{' '}
-                                    <Link to="/site-admin/batch-changes" target="_blank">
-                                        configure a GitHub App integration
-                                    </Link>{' '}
-                                    to enable this feature.
+                                    <Trans
+                                        i18nKey="site-admins-configure-github-app-integration"
+                                        components={{ '0': <Link to="/site-admin/batch-changes" target="_blank" /> }}
+                                    />
                                 </>
                             ) : (
                                 <>
-                                    GitHub App commit signing integrations can be configured by site admins and viewed
-                                    from{' '}
-                                    <Link to="/user/settings/batch-changes" target="_blank">
-                                        your user settings
-                                    </Link>
-                                    .
+                                    <Trans
+                                        i18nKey="github-app-commit-signing-integration-settings"
+                                        components={{ '0': <Link to="/user/settings/batch-changes" target="_blank" /> }}
+                                    />
                                 </>
                             )}
                         </li>
                         <li>
                             {/* TODO: Add link to configuring credentials docs page once it's added. */}
-                            Batch Changes now supports Gerrit. To start publishing Gerrit Changes, add your user
-                            credentials.
+                            {t('batch-changes-supports-gerrit')}
                         </li>
                         <li>
-                            Batch Changes now supports per-batch-change control for pushing to a fork of the upstream
-                            repository with the batch spec property{' '}
-                            <Link
-                                rel="noopener"
-                                to="/help/batch_changes/references/batch_spec_yaml_reference#changesettemplate-fork"
-                                target="_blank"
-                            >
-                                <Code>changesetTemplate.fork</Code>
-                            </Link>
-                            .
+                            <Trans
+                                i18nKey="batch-changes-per-batch-change-control"
+                                components={{
+                                    '0': (
+                                        <Link
+                                            rel="noopener"
+                                            to="/help/batch_changes/references/batch_spec_yaml_reference#changesettemplate-fork"
+                                            target="_blank"
+                                        />
+                                    ),
+                                }}
+                            />
                         </li>
                         <li>
-                            Branches created by Batch Changes can now be automatically deleted on the code host upon
-                            merging or closing a changeset by enabling the site config setting{' '}
-                            <Link
-                                rel="noopener"
-                                to="/help/admin/config/batch_changes#automatically-delete-branches-on-merge-close"
-                                target="_blank"
-                            >
-                                <Code>batchChanges.autoDeleteBranch</Code>
-                            </Link>
-                            .
+                            <Trans
+                                i18nKey="batch-changes-automatic-branch-deletion"
+                                components={{
+                                    '0': (
+                                        <Link
+                                            rel="noopener"
+                                            to="/help/admin/config/batch_changes#automatically-delete-branches-on-merge-close"
+                                            target="_blank"
+                                        />
+                                    ),
+                                }}
+                            />
                         </li>
                     </ul>
                 </CardBody>

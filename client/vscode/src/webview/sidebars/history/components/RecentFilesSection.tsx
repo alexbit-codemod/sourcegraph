@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react'
 
 import { mdiChevronDown, mdiChevronLeft } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { type EventLogResult, fetchRecentFileViews } from '@sourcegraph/shared/src/search'
 import { Icon, Link, H5, useObservable, Button } from '@sourcegraph/wildcard'
@@ -22,6 +23,8 @@ export const RecentFilesSection: React.FunctionComponent<React.PropsWithChildren
     authenticatedUser,
     extensionCoreAPI,
 }) => {
+    const { t } = useTranslation('../../vscode/src/webview/sidebars/history/components')
+
     const itemsToLoad = 15
     const [collapsed, setCollapsed] = useState(false)
 
@@ -60,7 +63,7 @@ export const RecentFilesSection: React.FunctionComponent<React.PropsWithChildren
                 onClick={() => setCollapsed(!collapsed)}
                 aria-label={`${collapsed ? 'Expand' : 'Collapse'} recent files`}
             >
-                <H5 className="flex-grow-1">Recent Files</H5>
+                <H5 className="flex-grow-1">{t('recent-files')}</H5>
                 <Icon aria-hidden={true} className="mr-1" svgPath={collapsed ? mdiChevronLeft : mdiChevronDown} />
             </Button>
 

@@ -1,6 +1,7 @@
 import { type FC, useCallback, useEffect, useState } from 'react'
 
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { useMutation, useQuery } from '@sourcegraph/http-client'
 import { EVENT_LOGGER } from '@sourcegraph/shared/src/telemetry/web/eventLogger'
@@ -29,6 +30,8 @@ interface Props {
 }
 
 export const RepoSettingsOptions: FC<Props> = ({ repo }) => {
+    const { t } = useTranslation('repo/settings')
+
     useEffect(() => {
         EVENT_LOGGER.logViewEvent('RepoSettings')
         // No need to use v2 telemetry here. This event is duplicative with 'repo.settings.mirror', 'view'
@@ -69,9 +72,9 @@ export const RepoSettingsOptions: FC<Props> = ({ repo }) => {
     return (
         <>
             <Container className="mb-3 repo-settings-options-page">
-                <H3>Repository name</H3>
+                <H3>{t('repository-name')}</H3>
                 <CopyableText className="mb-3" text={repo.name} size={repo.name.length} />
-                <H3>Code host connections</H3>
+                <H3>{t('code-host-connections')}</H3>
                 {loading && <LoadingSpinner />}
                 {error && <ErrorAlert error={error} />}
                 {services && services.length > 0 && (
@@ -89,11 +92,7 @@ export const RepoSettingsOptions: FC<Props> = ({ repo }) => {
                         ))}
                         {services.length > 1 && (
                             <>
-                                <Text>
-                                    This repository is mirrored by multiple code host connections. To change access,
-                                    disable, or remove this repository, the configuration must be updated on all code
-                                    host connections.
-                                </Text>
+                                <Text>{t('repository-mirror-warning')}</Text>
                                 <Button
                                     variant="primary"
                                     className={styles.button}
@@ -117,7 +116,7 @@ export const RepoSettingsOptions: FC<Props> = ({ repo }) => {
                                     disabled={excludingDisabled || (exclusionInProgress && !isExcluding)}
                                 >
                                     <span className={exclusionInProgress && isExcluding ? styles.invisibleText : ''}>
-                                        Exclude repository from all code host connections
+                                        {t('exclude-repository-warning')}
                                     </span>
                                     {exclusionInProgress && isExcluding && <LoadingSpinner className={styles.loader} />}
                                 </Button>

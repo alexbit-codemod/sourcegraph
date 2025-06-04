@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { Button, ErrorAlert } from '@sourcegraph/wildcard'
 
@@ -23,6 +24,8 @@ interface CodeInsightsCreationActionsProps {
 }
 
 export const CodeInsightsCreationActions: FC<CodeInsightsCreationActionsProps> = props => {
+    const { t } = useTranslation('enterprise/insights/components/creation-ui/creation-actions')
+
     const { mode, submitting, licensed, available, clear, errors, onCancel = noop } = props
 
     const isEditMode = mode === CodeInsightCreationMode.Edit
@@ -51,11 +54,11 @@ export const CodeInsightsCreationActions: FC<CodeInsightsCreationActionsProps> =
                 />
 
                 <Button type="button" variant="secondary" outline={true} className="mb-2 mr-auto" onClick={onCancel}>
-                    Cancel
+                    {t('cancel-button')}
                 </Button>
 
                 <Button type="reset" variant="secondary" outline={true} disabled={!clear} className="border-0">
-                    Clear all fields
+                    {t('clear-all-fields-button')}
                 </Button>
             </div>
         </footer>

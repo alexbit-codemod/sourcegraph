@@ -1,0 +1,10 @@
+{
+  "panel-title": "Panel",
+  "positions-title": "Positions",
+  "show-left-panel": "Show left panel",
+  "show-right-panel": "Show right panel",
+  "show-bottom-panel": "Show bottom panel",
+  "position-panel-content": "<0>{{position}}</0> panel content",
+  "content-index-view": "Content {{index}}1 of {{content}}",
+  "empty-panel-view": "empty panel view"
+}

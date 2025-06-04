@@ -2,6 +2,7 @@ import { useCallback, useMemo, type ChangeEventHandler, type FC } from 'react'
 
 import { mdiChevronDown, mdiChevronUp, mdiOpenInNew } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Toggle } from '@sourcegraph/branded/src/components/Toggle'
 import { UserAvatar } from '@sourcegraph/shared/src/components/UserAvatar'
@@ -103,150 +104,166 @@ export const UserNavItem: FC<UserNavItemProps> = props => {
                 <Shortcut key={`${themeSetting}-${index}`} {...keybinding} onMatch={onThemeCycle} />
             ))}
             <Menu>
-                {({ isExpanded }) => (
-                    <>
-                        <MenuButton
-                            ref={menuButtonRef}
-                            variant="link"
-                            data-testid="user-nav-item-toggle"
-                            className={classNames(
-                                'd-flex align-items-center text-decoration-none',
-                                styles.menuButton,
-                                className
-                            )}
-                            aria-label={`${isExpanded ? 'Close' : 'Open'} user profile menu`}
-                        >
-                            <div className="position-relative">
-                                <div className="align-items-center d-flex">
-                                    <UserAvatar user={authenticatedUser} className={styles.avatar} />
-                                    <Icon svgPath={isExpanded ? mdiChevronUp : mdiChevronDown} aria-hidden={true} />
-                                </div>
-                            </div>
-                        </MenuButton>
+                {({ isExpanded }) => {
+                    const { t } = useTranslation('nav')
 
-                        <MenuList
-                            position={Position.bottomEnd}
-                            className={styles.dropdownMenu}
-                            aria-label="User. Open menu"
-                        >
-                            <MenuHeader className={styles.dropdownHeader}>
-                                Signed in as <strong>@{authenticatedUser.username}</strong>
-                            </MenuHeader>
-                            <MenuDivider className={styles.dropdownDivider} />
-                            <MenuLink as={Link} to={authenticatedUser.settingsURL!}>
-                                Settings
-                            </MenuLink>
-                            {window.context.codyEnabledForCurrentUser && (
-                                <MenuLink
-                                    as={Link}
-                                    to={isSourcegraphDotCom ? CodyProRoutes.Manage : PageRoutes.CodyDashboard}
-                                >
-                                    Cody dashboard
-                                </MenuLink>
-                            )}
-                            <MenuLink as={Link} to={`/users/${props.authenticatedUser.username}/searches`}>
-                                Saved searches
-                            </MenuLink>
-                            {!isSourcegraphDotCom && window.context.ownEnabled && (
-                                <MenuLink as={Link} to="/teams">
-                                    Teams
-                                </MenuLink>
-                            )}
-                            <MenuDivider />
-                            <div className="px-2 py-1">
-                                <div className="d-flex align-items-center">
-                                    <div className="mr-2">Theme</div>
-                                    <Select
-                                        aria-label=""
-                                        isCustomStyle={true}
-                                        selectSize="sm"
-                                        data-testid="theme-toggle"
-                                        onChange={onThemeChange}
-                                        value={themeSetting}
-                                        className="mb-0 flex-1"
-                                    >
-                                        <option value={ThemeSetting.Light}>Light</option>
-                                        <option value={ThemeSetting.Dark}>Dark</option>
-                                        <option value={ThemeSetting.System}>System</option>
-                                    </Select>
+                    return (
+                        <>
+                            <MenuButton
+                                ref={menuButtonRef}
+                                variant="link"
+                                data-testid="user-nav-item-toggle"
+                                className={classNames(
+                                    'd-flex align-items-center text-decoration-none',
+                                    styles.menuButton,
+                                    className
+                                )}
+                                aria-label={`${isExpanded ? 'Close' : 'Open'} user profile menu`}
+                            >
+                                <div className="position-relative">
+                                    <div className="align-items-center d-flex">
+                                        <UserAvatar user={authenticatedUser} className={styles.avatar} />
+                                        <Icon svgPath={isExpanded ? mdiChevronUp : mdiChevronDown} aria-hidden={true} />
+                                    </div>
                                 </div>
-                                {themeSetting === ThemeSetting.System && !supportsSystemTheme && (
-                                    <div className="text-wrap">
-                                        <small>
-                                            <AnchorLink
-                                                to="https://caniuse.com/#feat=prefers-color-scheme"
-                                                className="text-warning"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                Your browser does not support the system theme.
-                                            </AnchorLink>
-                                        </small>
+                            </MenuButton>
+
+                            <MenuList
+                                position={Position.bottomEnd}
+                                className={styles.dropdownMenu}
+                                aria-label="User. Open menu"
+                            >
+                                <MenuHeader className={styles.dropdownHeader}>
+                                    <Trans i18nKey="signed-in-as-username" components={{ '0': <strong /> }} />
+                                </MenuHeader>
+                                <MenuDivider className={styles.dropdownDivider} />
+                                <MenuLink as={Link} to={authenticatedUser.settingsURL!}>
+                                    {t('settings')}
+                                </MenuLink>
+                                {window.context.codyEnabledForCurrentUser && (
+                                    <MenuLink
+                                        as={Link}
+                                        to={isSourcegraphDotCom ? CodyProRoutes.Manage : PageRoutes.CodyDashboard}
+                                    >
+                                        {t('cody-dashboard')}
+                                    </MenuLink>
+                                )}
+                                <MenuLink as={Link} to={`/users/${props.authenticatedUser.username}/searches`}>
+                                    {t('saved-searches')}
+                                </MenuLink>
+                                {!isSourcegraphDotCom && window.context.ownEnabled && (
+                                    <MenuLink as={Link} to="/teams">
+                                        {t('teams')}
+                                    </MenuLink>
+                                )}
+                                <MenuDivider />
+                                <div className="px-2 py-1">
+                                    <div className="d-flex align-items-center">
+                                        <div className="mr-2">{t('theme')}</div>
+                                        <Select
+                                            aria-label=""
+                                            isCustomStyle={true}
+                                            selectSize="sm"
+                                            data-testid="theme-toggle"
+                                            onChange={onThemeChange}
+                                            value={themeSetting}
+                                            className="mb-0 flex-1"
+                                        >
+                                            <option value={ThemeSetting.Light}>{t('light-theme')}</option>
+                                            <option value={ThemeSetting.Dark}>{t('dark-theme')}</option>
+                                            <option value={ThemeSetting.System}>{t('system-theme')}</option>
+                                        </Select>
+                                    </div>
+                                    {themeSetting === ThemeSetting.System && !supportsSystemTheme && (
+                                        <div className="text-wrap">
+                                            <small>
+                                                <AnchorLink
+                                                    to="https://caniuse.com/#feat=prefers-color-scheme"
+                                                    className="text-warning"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    {t('browser-support-system-theme')}
+                                                </AnchorLink>
+                                            </small>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {!newSearchNavigationUI && (
+                                    <div className="px-2 py-1">
+                                        <div className="d-flex align-items-center justify-content-between">
+                                            <div className="mr-2">{t('minimize-navigation')}</div>
+                                            <Toggle
+                                                value={newNavigationEnabled}
+                                                onToggle={onNewSearchNavigationChange}
+                                            />
+                                        </div>
                                     </div>
                                 )}
-                            </div>
 
-                            {!newSearchNavigationUI && (
-                                <div className="px-2 py-1">
-                                    <div className="d-flex align-items-center justify-content-between">
-                                        <div className="mr-2">Minimize navigation</div>
-                                        <Toggle value={newNavigationEnabled} onToggle={onNewSearchNavigationChange} />
+                                {process.env.NODE_ENV !== 'development' && isSourcegraphDev(authenticatedUser) && (
+                                    <div className="px-2 py-1">
+                                        <div className="d-flex align-items-center justify-content-between">
+                                            <div className="mr-2">{t('developer-mode')}</div>
+                                            <Toggle value={developerMode} onToggle={enableDevSettings} />
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
 
-                            {process.env.NODE_ENV !== 'development' && isSourcegraphDev(authenticatedUser) && (
-                                <div className="px-2 py-1">
-                                    <div className="d-flex align-items-center justify-content-between">
-                                        <div className="mr-2">Developer mode</div>
-                                        <Toggle value={developerMode} onToggle={enableDevSettings} />
-                                    </div>
-                                </div>
-                            )}
+                                {organizations.length > 0 && (
+                                    <>
+                                        <MenuDivider className={styles.dropdownDivider} />
+                                        <MenuHeader className={styles.dropdownHeader}>
+                                            {t('your-organizations')}
+                                        </MenuHeader>
+                                        {organizations.slice(0, MAX_VISIBLE_ORGS).map(org => (
+                                            <MenuLink as={Link} key={org.id} to={org.settingsURL || org.url}>
+                                                {org.displayName || org.name}
+                                            </MenuLink>
+                                        ))}
+                                        {organizations.length > MAX_VISIBLE_ORGS && (
+                                            <MenuLink as={Link} to={authenticatedUser.settingsURL!}>
+                                                {t('show-all-organizations')}
+                                            </MenuLink>
+                                        )}
+                                    </>
+                                )}
 
-                            {organizations.length > 0 && (
-                                <>
-                                    <MenuDivider className={styles.dropdownDivider} />
-                                    <MenuHeader className={styles.dropdownHeader}>Your organizations</MenuHeader>
-                                    {organizations.slice(0, MAX_VISIBLE_ORGS).map(org => (
-                                        <MenuLink as={Link} key={org.id} to={org.settingsURL || org.url}>
-                                            {org.displayName || org.name}
-                                        </MenuLink>
-                                    ))}
-                                    {organizations.length > MAX_VISIBLE_ORGS && (
-                                        <MenuLink as={Link} to={authenticatedUser.settingsURL!}>
-                                            Show all organizations
-                                        </MenuLink>
-                                    )}
-                                </>
-                            )}
-
-                            <MenuDivider className={styles.dropdownDivider} />
-                            {authenticatedUser.siteAdmin && (
-                                <MenuLink as={Link} to="/site-admin">
-                                    Site admin
+                                <MenuDivider className={styles.dropdownDivider} />
+                                {authenticatedUser.siteAdmin && (
+                                    <MenuLink as={Link} to="/site-admin">
+                                        {t('site-admin')}
+                                    </MenuLink>
+                                )}
+                                <MenuLink as={Link} to="/help" target="_blank" rel="noopener">
+                                    {t('help')}
+                                    <Icon aria-hidden={true} svgPath={mdiOpenInNew} />
                                 </MenuLink>
-                            )}
-                            <MenuLink as={Link} to="/help" target="_blank" rel="noopener">
-                                Help <Icon aria-hidden={true} svgPath={mdiOpenInNew} />
-                            </MenuLink>
-                            <MenuItem onSelect={showFeedbackModal}>Feedback</MenuItem>
-                            <MenuItem onSelect={showKeyboardShortcutsHelp}>Keyboard shortcuts</MenuItem>
-                            {authenticatedUser.session?.canSignOut && (
-                                <MenuLink as={AnchorLink} to="/-/sign-out">
-                                    Sign out
-                                </MenuLink>
-                            )}
+                                <MenuItem onSelect={showFeedbackModal}>{t('feedback')}</MenuItem>
+                                <MenuItem onSelect={showKeyboardShortcutsHelp}>{t('keyboard-shortcuts')}</MenuItem>
+                                {authenticatedUser.session?.canSignOut && (
+                                    <MenuLink as={AnchorLink} to="/-/sign-out">
+                                        {t('sign-out')}
+                                    </MenuLink>
+                                )}
 
-                            {isSourcegraphDotCom && <MenuDivider className={styles.dropdownDivider} />}
-                            {isSourcegraphDotCom && (
-                                <MenuLink as={AnchorLink} to="https://sourcegraph.com" target="_blank" rel="noopener">
-                                    About Sourcegraph <Icon aria-hidden={true} svgPath={mdiOpenInNew} />
-                                </MenuLink>
-                            )}
-                        </MenuList>
-                    </>
-                )}
+                                {isSourcegraphDotCom && <MenuDivider className={styles.dropdownDivider} />}
+                                {isSourcegraphDotCom && (
+                                    <MenuLink
+                                        as={AnchorLink}
+                                        to="https://sourcegraph.com"
+                                        target="_blank"
+                                        rel="noopener"
+                                    >
+                                        {t('about-sourcegraph')}
+                                        <Icon aria-hidden={true} svgPath={mdiOpenInNew} />
+                                    </MenuLink>
+                                )}
+                            </MenuList>
+                        </>
+                    )
+                }}
             </Menu>
         </>
     )

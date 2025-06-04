@@ -1,0 +1,9 @@
+{
+  "new-fragment": " new",
+  "monitor-trigger": "Monitor trigger",
+  "monitor-name": "Monitor name:",
+  "last-run": "Last run",
+  "monitor-details-header": "Monitor details",
+  "never-run": "Never",
+  "monitor-not-run-yet": "This code monitor has not been run yet."
+}

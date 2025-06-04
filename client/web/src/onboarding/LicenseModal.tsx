@@ -4,6 +4,7 @@ import type { ApolloQueryResult } from '@apollo/client'
 import classnames from 'classnames'
 import { format, formatDistanceToNow } from 'date-fns'
 import * as jsonc from 'jsonc-parser'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useDebouncedCallback } from 'use-debounce'
 
@@ -36,6 +37,8 @@ export const LicenseKeyModal: FC<LicenseKeyModalProps> = ({
     id,
     refetch,
 }) => {
+    const { t } = useTranslation('onboarding')
+
     const navigate = useNavigate()
 
     const [isValid, setIsValid] = useState(false)
@@ -96,12 +99,12 @@ export const LicenseKeyModal: FC<LicenseKeyModalProps> = ({
             onDismiss={() => onHandleLicenseCheck(true)}
             aria-labelledby="license-key"
         >
-            <H3 className="m-0 pb-4">Upgrade your license</H3>
-            <Text className="m-0 pb-3">Enter your license key to start your enterprise set up:</Text>
-            {error && <Alert variant="danger">License key not recognized. Please try again.</Alert>}
+            <H3 className="m-0 pb-4">{t('upgrade-license')}</H3>
+            <Text className="m-0 pb-3">{t('enter-license-key-setup')}</Text>
+            {error && <Alert variant="danger">{t('license-key-not-recognized')}</Alert>}
             {}
             <Form onSubmit={onSubmit}>
-                <Label htmlFor="license-key">License key</Label>
+                <Label htmlFor="license-key">{t('license-key')}</Label>
                 <Input
                     type="text"
                     name="license-key"
@@ -120,10 +123,10 @@ export const LicenseKeyModal: FC<LicenseKeyModalProps> = ({
                         variant="secondary"
                         disabled={isValid}
                     >
-                        Skip for now
+                        {t('skip-for-now')}
                     </Button>
                     <Button className={styles.submit} type="submit" disabled={!isValid} variant="primary">
-                        Upgrade and start set up
+                        {t('upgrade-and-start-setup')}
                         {loading && (
                             <div data-testid="action-item-spinner">
                                 <LoadingSpinner inline={false} />

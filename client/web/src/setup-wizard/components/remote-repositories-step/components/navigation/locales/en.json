@@ -1,0 +1,13 @@
+{
+  "try-fetch-again": "Try fetch again",
+  "fetching-connected-code-host": " Fetching connected code host...",
+  "choose-at-least-one-code-host-provider": "Choose at least one of the code host providers from the list.",
+  "synced": "Synced,",
+  "repositories-found": " repositories found",
+  "syncing-repositories-info": "Syncing {{codeHostRepoCount0SoFarCodeHostRepoCountPluralizeRepositoryCodeHostRepoCount0RepositoriesFound}}",
+  "so-far": ", so far",
+  "found": " found",
+  "sync-error-appeared": "Sync error appeared",
+  "connect-new-code-host": "Connect",
+  "new-code-host-appearance-info": "New code host will appear in the list as soon as you connect it"
+}

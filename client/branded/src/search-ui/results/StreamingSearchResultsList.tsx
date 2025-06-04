@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import type { Observable } from 'rxjs'
 
 import { TraceSpanProvider } from '@sourcegraph/observability-client'
@@ -125,6 +126,8 @@ export const StreamingSearchResultsList: React.FunctionComponent<
     className,
     hideFilePreviewButton = false,
 }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/results')
+
     const resultsNumber = results?.results.length || 0
     const { itemsToShow, handleBottomHit } = useItemsToShow(executedQuery, resultsNumber)
     const [rootRef, setRootRef] = useState<HTMLElement | null>(null)
@@ -295,7 +298,10 @@ export const StreamingSearchResultsList: React.FunctionComponent<
             <div
                 className={classNames(styles.focusInputMessage, showFocusInputMessage && styles.focusInputMessageShow)}
             >
-                Press <span className={styles.focusInputMessageSlash}>/</span> to focus the search input
+                <Trans
+                    i18nKey="press-slash-to-focus-search-input"
+                    components={{ '0': <span className={styles.focusInputMessageSlash} /> }}
+                />
             </div>
 
             {itemsToShow >= resultsNumber && (

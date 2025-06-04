@@ -1,6 +1,7 @@
 import { type FunctionComponent, useCallback, useMemo, useEffect } from 'react'
 
 import BarChartIcon from 'mdi-react/BarChartIcon'
+import { useTranslation } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
@@ -36,6 +37,8 @@ interface ComputeInsightCreationPageProps extends TelemetryProps, TelemetryV2Pro
 }
 
 export const ComputeInsightCreationPage: FunctionComponent<ComputeInsightCreationPageProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation/compute')
+
     const { backUrl, telemetryService, telemetryRecorder, onInsightCreateRequest, onSuccessfulCreation, onCancel } =
         props
 
@@ -93,7 +96,7 @@ export const ComputeInsightCreationPage: FunctionComponent<ComputeInsightCreatio
 
     return (
         <CodeInsightsPage>
-            <PageTitle title="Create group results insight - Code Insights" />
+            <PageTitle title={t('create-group-results-insight-code-insights')} />
 
             <PageHeader
                 className="mb-5"

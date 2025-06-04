@@ -1,5 +1,7 @@
 import React, { useCallback } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { logger } from '@sourcegraph/common'
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { Button, H3, Modal, ErrorAlert } from '@sourcegraph/wildcard'
@@ -19,6 +21,8 @@ export interface WebhookConfirmDeleteModalProps extends TelemetryV2Props {
 export const WebhookConfirmDeleteModal: React.FunctionComponent<
     React.PropsWithChildren<WebhookConfirmDeleteModalProps>
 > = ({ webhook, onCancel, afterDelete, telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin')
+
     const labelId = 'deleteWebhook'
 
     const [deleteWebhook, { loading, error }] = useDeleteWebhook()
@@ -43,17 +47,18 @@ export const WebhookConfirmDeleteModal: React.FunctionComponent<
 
     return (
         <Modal onDismiss={onCancel} aria-labelledby={labelId}>
-            <H3 id={labelId}>Delete webhook {webhook.name}?</H3>
+            <H3 id={labelId}>
+                {t('delete-webhook')}
+                {webhook.name}?
+            </H3>
 
-            <strong className="d-block text-danger my-3">
-                Removing webhooks is irreversible and all incoming webhooks will be rejected.
-            </strong>
+            <strong className="d-block text-danger my-3">{t('removal-warning-webhooks')}</strong>
 
             {error && <ErrorAlert error={error} />}
 
             <div className="d-flex justify-content-end pt-1">
                 <Button disabled={loading} className="mr-2" onClick={onCancel} outline={true} variant="secondary">
-                    Cancel
+                    {t('cancel-button')}
                 </Button>
                 <LoaderButton
                     disabled={loading}
@@ -61,7 +66,7 @@ export const WebhookConfirmDeleteModal: React.FunctionComponent<
                     variant="danger"
                     loading={loading}
                     alwaysShowLabel={true}
-                    label="Delete webhook"
+                    label={t('delete-webhook-title')}
                 />
             </div>
         </Modal>

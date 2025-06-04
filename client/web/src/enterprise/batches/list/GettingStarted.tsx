@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { mdiOpenInNew } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { Alert, Container, H2, H3, Icon, Link, Text, useReducedMotion } from '@sourcegraph/wildcard'
@@ -26,6 +27,8 @@ export const GettingStarted: React.FunctionComponent<React.PropsWithChildren<Get
     className,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/batches/list')
+
     const allowAutoplay = !useReducedMotion()
 
     return (
@@ -59,31 +62,27 @@ export const GettingStarted: React.FunctionComponent<React.PropsWithChildren<Get
                         </video>
                     </div>
                     <div className="col-12 col-md-5">
-                        <H2>Automate large-scale code changes</H2>
-                        <Text>
-                            Batch Changes makes it easy to find and change code across many repositories (or many
-                            subtrees in a big monorepo). It lets you create, update, and track pull requests to ensure
-                            the change is reviewed, tested, and safely merged everywhere.
-                        </Text>
-                        <H3>Use Batch Changes to...</H3>
+                        <H2>{t('automate-large-scale-code-changes')}</H2>
+                        <Text>{t('batch-changes-description')}</Text>
+                        <H3>{t('use-batch-changes-to')}</H3>
                         <ul>
-                            <li>Update configuration files across many repositories</li>
-                            <li>Update libraries consuming your APIs</li>
-                            <li>Rapidly fix critical security issues</li>
-                            <li>Update boilerplate code</li>
-                            <li>Pay down tech debt</li>
+                            <li>{t('update-configuration-files')}</li>
+                            <li>{t('update-libraries-consuming-apis')}</li>
+                            <li>{t('fix-critical-security-issues')}</li>
+                            <li>{t('update-boilerplate-code')}</li>
+                            <li>{t('pay-down-tech-debt')}</li>
                         </ul>
-                        <H3>Resources</H3>
+                        <H3>{t('resources')}</H3>
                         <ul>
                             <li>
                                 <Link to="/help/batch_changes" target="_blank" rel="noopener">
-                                    Documentation{' '}
+                                    {t('documentation-link')}
                                     <Icon role="img" aria-label="Open in a new tab" svgPath={mdiOpenInNew} />
                                 </Link>
                             </li>
                             <li>
                                 <Link to={productPageUrl} target="_blank" rel="noopener">
-                                    Product page{' '}
+                                    {t('product-page-link')}
                                     <Icon role="img" aria-label="Open in a new tab" svgPath={mdiOpenInNew} />
                                 </Link>
                             </li>
@@ -93,9 +92,9 @@ export const GettingStarted: React.FunctionComponent<React.PropsWithChildren<Get
             </Container>
             <div className="d-flex justify-content-start">
                 <CtaBanner
-                    bodyText="Try it yourself in less than 10 minutes (without actually pushing changes)."
-                    title={<H3>Start using Batch Changes</H3>}
-                    linkText="Read quickstart docs"
+                    bodyText={t('try-it-yourself-prompt')}
+                    title={<H3>{t('start-using-batch-changes')}</H3>}
+                    linkText={t('read-quickstart-docs')}
                     href="/help/batch_changes/quickstart"
                     icon={<BatchChangesIcon />}
                 />

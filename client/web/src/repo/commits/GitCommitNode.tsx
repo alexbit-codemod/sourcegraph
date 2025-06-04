@@ -4,6 +4,7 @@ import { mdiDotsHorizontal, mdiContentCopy, mdiFileDocument } from '@mdi/js'
 import classNames from 'classnames'
 import copy from 'copy-to-clipboard'
 import { capitalize } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { pluralize } from '@sourcegraph/common'
@@ -89,6 +90,8 @@ export const GitCommitNode: React.FunctionComponent<React.PropsWithChildren<GitC
     wrapperElement: WrapperElement = 'div',
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('repo/commits')
+
     const settings = useSettings()
 
     const [showCommitMessageBody, setShowCommitMessageBody] = useState<boolean>(false)
@@ -286,7 +289,7 @@ export const GitCommitNode: React.FunctionComponent<React.PropsWithChildren<GitC
                     as={Link}
                 >
                     <Icon className="mr-1" aria-hidden={true} svgPath={mdiFileDocument} />
-                    Browse files at @{abbreviatedRefID}
+                    {t('browse-files-at-ref-id', { abbreviatedRefID })}
                 </Button>
             </Tooltip>
             {diffModeSelector()}

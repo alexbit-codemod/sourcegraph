@@ -3,6 +3,7 @@ import * as React from 'react'
 import type * as H from 'history'
 import AlertCircleIcon from 'mdi-react/AlertCircleIcon'
 import MapSearchIcon from 'mdi-react/MapSearchIcon'
+import { useTranslation } from 'react-i18next'
 import { Route, Routes, type NavigateFunction } from 'react-router-dom'
 import { Subject, Subscription, combineLatest, merge, of, type Observable } from 'rxjs'
 import { catchError, distinctUntilChanged, map, startWith, switchMap } from 'rxjs/operators'
@@ -74,9 +75,17 @@ function queryOrganization(args: { name: string }): Observable<OrgAreaOrganizati
     )
 }
 
-const NotFoundPage: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => (
-    <HeroPage icon={MapSearchIcon} title="404: Not Found" subtitle="Sorry, the requested organization was not found." />
-)
+const NotFoundPage: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
+    const { t } = useTranslation('org/area')
+
+    return (
+        <HeroPage
+            icon={MapSearchIcon}
+            title={t('error-404-not-found')}
+            subtitle="Sorry, the requested organization was not found."
+        />
+    )
+}
 
 export interface OrgAreaRoute extends RouteV6Descriptor<OrgAreaRouteContext> {
     /** When true, the header is not rendered and the component is not wrapped in a container. */

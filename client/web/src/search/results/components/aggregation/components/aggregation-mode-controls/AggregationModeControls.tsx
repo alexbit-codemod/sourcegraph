@@ -1,6 +1,7 @@
 import type { FC, HTMLAttributes } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useDebouncedCallback } from 'use-debounce'
 
 import { SearchAggregationMode } from '@sourcegraph/shared/src/graphql-operations'
@@ -21,6 +22,8 @@ interface AggregationModeControlsProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export const AggregationModeControls: FC<AggregationModeControlsProps> = props => {
+    const { t } = useTranslation('search/results/components/aggregation/components/aggregation-mode-controls')
+
     const { mode, loading, availability = [], size, className, onModeChange, onModeHover, ...attributes } = props
 
     const debouncedOnModeHover = useDebouncedCallback(onModeHover, 1000)
@@ -76,7 +79,7 @@ export const AggregationModeControls: FC<AggregationModeControlsProps> = props =
                         disabled={!isModeAvailable(SearchAggregationMode.REPO)}
                         onClick={() => onModeChange(SearchAggregationMode.REPO)}
                     >
-                        Repository
+                        {t('repository')}
                     </Button>
                 </Tooltip>
             </div>
@@ -91,7 +94,7 @@ export const AggregationModeControls: FC<AggregationModeControlsProps> = props =
                         data-testid="file-aggregation-mode"
                         onClick={() => onModeChange(SearchAggregationMode.PATH)}
                     >
-                        File
+                        {t('file')}
                     </Button>
                 </Tooltip>
             </div>
@@ -106,7 +109,7 @@ export const AggregationModeControls: FC<AggregationModeControlsProps> = props =
                         data-testid="author-aggregation-mode"
                         onClick={() => onModeChange(SearchAggregationMode.AUTHOR)}
                     >
-                        Author
+                        {t('author')}
                     </Button>
                 </Tooltip>
             </div>
@@ -124,7 +127,7 @@ export const AggregationModeControls: FC<AggregationModeControlsProps> = props =
                         data-testid="captureGroup-aggregation-mode"
                         onClick={() => onModeChange(SearchAggregationMode.CAPTURE_GROUP)}
                     >
-                        Capture group
+                        {t('capture-group')}
                     </Button>
                 </Tooltip>
             </div>
@@ -142,7 +145,7 @@ export const AggregationModeControls: FC<AggregationModeControlsProps> = props =
                             data-testid="repoMetadata-aggregation-mode"
                             onClick={() => onModeChange(SearchAggregationMode.REPO_METADATA)}
                         >
-                            Repo metadata
+                            {t('repo-metadata')}
                         </Button>
                     </Tooltip>
                 </div>

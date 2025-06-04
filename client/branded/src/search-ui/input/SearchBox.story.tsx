@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { SearchPatternType } from '@sourcegraph/shared/src/graphql-operations'
 import { SearchMode } from '@sourcegraph/shared/src/search'
@@ -50,63 +51,67 @@ const defaultProps: SearchBoxProps = {
 
 export const SearchBoxStory: StoryFn = () => (
     <BrandedStory>
-        {props => (
-            <div>
-                <H2>Default</H2>
-                <div className="w-100 d-flex my-2">
-                    <SearchBox {...defaultProps} />
-                </div>
+        {props => {
+            const { t } = useTranslation('../../branded/src/search-ui/input')
 
-                <H2>Regexp enabled</H2>
-                <div className="w-100 d-flex my-2">
-                    <SearchBox {...defaultProps} patternType={SearchPatternType.regexp} />
-                </div>
+            return (
+                <div>
+                    <H2>{t('default')}</H2>
+                    <div className="w-100 d-flex my-2">
+                        <SearchBox {...defaultProps} />
+                    </div>
 
-                <H2>Standard enabled</H2>
-                <div className="w-100 d-flex my-2">
-                    <SearchBox {...defaultProps} patternType={SearchPatternType.standard} />
-                </div>
+                    <H2>{t('regexp-enabled')}</H2>
+                    <div className="w-100 d-flex my-2">
+                        <SearchBox {...defaultProps} patternType={SearchPatternType.regexp} />
+                    </div>
 
-                <H2>Structural enabled</H2>
-                <div className="w-100 d-flex my-2">
-                    <SearchBox {...defaultProps} patternType={SearchPatternType.structural} />
-                </div>
+                    <H2>{t('standard-enabled')}</H2>
+                    <div className="w-100 d-flex my-2">
+                        <SearchBox {...defaultProps} patternType={SearchPatternType.standard} />
+                    </div>
 
-                <H2>Default patterntype</H2>
-                <div className="w-100 d-flex my-2">
-                    <SearchBox {...defaultProps} defaultPatternType={SearchPatternType.standard} />
-                </div>
+                    <H2>{t('structural-enabled')}</H2>
+                    <div className="w-100 d-flex my-2">
+                        <SearchBox {...defaultProps} patternType={SearchPatternType.structural} />
+                    </div>
 
-                <H2>Case sensitivity enabled</H2>
-                <div className="w-100 d-flex my-2">
-                    <SearchBox {...defaultProps} caseSensitive={true} />
-                </div>
+                    <H2>{t('default-pattern-type')}</H2>
+                    <div className="w-100 d-flex my-2">
+                        <SearchBox {...defaultProps} defaultPatternType={SearchPatternType.standard} />
+                    </div>
 
-                <H2>With search contexts</H2>
-                <div className="w-100 d-flex my-2">
-                    <SearchBox {...defaultProps} showSearchContext={true} selectedSearchContextSpec="global" />
-                </div>
+                    <H2>{t('case-sensitivity-enabled')}</H2>
+                    <div className="w-100 d-flex my-2">
+                        <SearchBox {...defaultProps} caseSensitive={true} />
+                    </div>
 
-                <H2>With search contexts, user context selected</H2>
-                <div className="w-100 d-flex my-2">
-                    <SearchBox
-                        {...defaultProps}
-                        showSearchContext={true}
-                        selectedSearchContextSpec="@username/test-version-1.5"
-                    />
-                </div>
+                    <H2>{t('with-search-contexts')}</H2>
+                    <div className="w-100 d-flex my-2">
+                        <SearchBox {...defaultProps} showSearchContext={true} selectedSearchContextSpec="global" />
+                    </div>
 
-                <H2>With search contexts, disabled based on query</H2>
-                <div className="w-100 d-flex my-2">
-                    <SearchBox
-                        {...defaultProps}
-                        showSearchContext={true}
-                        queryState={{ query: 'hello context:global' }}
-                        selectedSearchContextSpec="@username"
-                    />
+                    <H2>{t('with-search-contexts-user-context-selected')}</H2>
+                    <div className="w-100 d-flex my-2">
+                        <SearchBox
+                            {...defaultProps}
+                            showSearchContext={true}
+                            selectedSearchContextSpec="@username/test-version-1.5"
+                        />
+                    </div>
+
+                    <H2>{t('with-search-contexts-disabled-based-on-query')}</H2>
+                    <div className="w-100 d-flex my-2">
+                        <SearchBox
+                            {...defaultProps}
+                            showSearchContext={true}
+                            queryState={{ query: 'hello context:global' }}
+                            selectedSearchContextSpec="@username"
+                        />
+                    </div>
                 </div>
-            </div>
-        )}
+            )
+        }}
     </BrandedStory>
 )
 

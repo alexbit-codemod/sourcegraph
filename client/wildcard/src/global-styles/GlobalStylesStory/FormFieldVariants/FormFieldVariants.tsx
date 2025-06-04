@@ -1,5 +1,7 @@
 import React, { type ReactNode } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { Checkbox, RadioButton, Select, TextArea, Input } from '../../../components'
 
 import '@storybook/addon-designs'
@@ -62,72 +64,92 @@ const WithVariants: React.FunctionComponent<React.PropsWithChildren<WithVariants
 export const FormFieldVariants: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => (
     <div className={styles.grid}>
         <WithVariantsAndMessageElements
-            field={({ className, variant, message, ...props }) => (
-                <fieldset className="form-group">
-                    <Input placeholder="Form field" className={className} {...props} />
-                    {message}
-                </fieldset>
-            )}
+            field={({ className, variant, message, ...props }) => {
+                const { t } = useTranslation('../../wildcard/src/global-styles/GlobalStylesStory/FormFieldVariants')
+
+                return (
+                    <fieldset className="form-group">
+                        <Input placeholder={t('form-field')} className={className} {...props} />
+                        {message}
+                    </fieldset>
+                )
+            }}
         />
         <WithVariants
-            field={({ className, message, variant, ...props }) => (
-                <Select
-                    isCustomStyle={true}
-                    className={className}
-                    isValid={variant === 'invalid' ? false : variant === 'valid' ? true : undefined}
-                    message={message}
-                    disabled={variant === 'disabled'}
-                    aria-label=""
-                    {...props}
-                >
-                    <option>Option A</option>
-                    <option>Option B</option>
-                    <option>Option C</option>
-                </Select>
-            )}
-        />
-        <WithVariants
-            field={({ className, message, variant, ...props }) => (
-                <fieldset className="form-group">
-                    <TextArea
-                        message={message}
-                        placeholder="This is sample content in a text area that spans four lines to see how it fits."
+            field={({ className, message, variant, ...props }) => {
+                const { t } = useTranslation('../../wildcard/src/global-styles/GlobalStylesStory/FormFieldVariants')
+
+                return (
+                    <Select
+                        isCustomStyle={true}
                         className={className}
-                        rows={4}
                         isValid={variant === 'invalid' ? false : variant === 'valid' ? true : undefined}
+                        message={message}
+                        disabled={variant === 'disabled'}
+                        aria-label=""
+                        {...props}
+                    >
+                        <option>{t('option-a')}</option>
+                        <option>{t('option-b')}</option>
+                        <option>{t('option-c')}</option>
+                    </Select>
+                )
+            }}
+        />
+        <WithVariants
+            field={({ className, message, variant, ...props }) => {
+                const { t } = useTranslation('../../wildcard/src/global-styles/GlobalStylesStory/FormFieldVariants')
+
+                return (
+                    <fieldset className="form-group">
+                        <TextArea
+                            message={message}
+                            placeholder={t('sample-content-text-area')}
+                            className={className}
+                            rows={4}
+                            isValid={variant === 'invalid' ? false : variant === 'valid' ? true : undefined}
+                            disabled={variant === 'disabled'}
+                            {...props}
+                        />
+                    </fieldset>
+                )
+            }}
+        />
+        <WithVariants
+            field={({ className, message, variant, ...props }) => {
+                const { t } = useTranslation('../../wildcard/src/global-styles/GlobalStylesStory/FormFieldVariants')
+
+                return (
+                    <Checkbox
+                        id={`inputFieldsetCheck - ${variant}`}
+                        label={t('checkbox')}
+                        className={className}
+                        name={`inputFieldsetCheck - ${variant}`}
+                        isValid={variant === 'invalid' ? false : variant === 'valid' ? true : undefined}
+                        message={message}
                         disabled={variant === 'disabled'}
                         {...props}
                     />
-                </fieldset>
-            )}
+                )
+            }}
         />
         <WithVariants
-            field={({ className, message, variant, ...props }) => (
-                <Checkbox
-                    id={`inputFieldsetCheck - ${variant}`}
-                    label="Checkbox"
-                    className={className}
-                    name={`inputFieldsetCheck - ${variant}`}
-                    isValid={variant === 'invalid' ? false : variant === 'valid' ? true : undefined}
-                    message={message}
-                    disabled={variant === 'disabled'}
-                    {...props}
-                />
-            )}
-        />
-        <WithVariants
-            field={({ className, message, variant, ...props }) => (
-                <RadioButton
-                    id={`inputFieldsetRadio - ${variant}`}
-                    className={className}
-                    name={`inputFieldsetRadio - ${variant}`}
-                    label="Radio button"
-                    isValid={variant === 'invalid' ? false : variant === 'valid' ? true : undefined}
-                    message={message}
-                    disabled={variant === 'disabled'}
-                    {...props}
-                />
-            )}
+            field={({ className, message, variant, ...props }) => {
+                const { t } = useTranslation('../../wildcard/src/global-styles/GlobalStylesStory/FormFieldVariants')
+
+                return (
+                    <RadioButton
+                        id={`inputFieldsetRadio - ${variant}`}
+                        className={className}
+                        name={`inputFieldsetRadio - ${variant}`}
+                        label={t('radio-button')}
+                        isValid={variant === 'invalid' ? false : variant === 'valid' ? true : undefined}
+                        message={message}
+                        disabled={variant === 'disabled'}
+                        {...props}
+                    />
+                )
+            }}
         />
     </div>
 )

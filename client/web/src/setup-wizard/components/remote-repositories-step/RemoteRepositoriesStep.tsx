@@ -2,6 +2,7 @@ import { type FC, type HTMLAttributes, useState, useEffect } from 'react'
 
 import { useQuery } from '@apollo/client'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { Routes, Route, matchPath, useLocation } from 'react-router-dom'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -37,6 +38,8 @@ export const RemoteRepositoriesStep: FC<RemoteRepositoriesStepProps> = ({
     progressBar = true,
     ...attributes
 }) => {
+    const { t } = useTranslation('setup-wizard/components/remote-repositories-step')
+
     const location = useLocation()
     const [codeHostToDelete, setCodeHostToDelete] = useState<CodeHostToDelete | null>(null)
     const editConnectionRouteMatch = matchPath(`${baseURL}/:codehostId/edit`, location.pathname)
@@ -59,7 +62,7 @@ export const RemoteRepositoriesStep: FC<RemoteRepositoriesStepProps> = ({
 
     return (
         <div {...attributes} className={classNames(className, styles.root)}>
-            {description && <Text className="mb-2">Connect remote code hosts where your source code lives.</Text>}
+            {description && <Text className="mb-2">{t('connect-remote-code-hosts')}</Text>}
 
             <CodeHostExternalServiceAlert />
 

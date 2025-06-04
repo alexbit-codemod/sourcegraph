@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 
 import classNames from 'classnames'
 import type * as jsonc from 'jsonc-parser'
+import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
 import { Button, Text } from '@sourcegraph/wildcard'
@@ -44,6 +45,8 @@ export const EditorActionsGroup: React.FunctionComponent<EditorActionsGroupProps
     onClick,
     actionsAvailable,
 }) => {
+    const { t } = useTranslation('settings')
+
     const [queryParameters, setSearchParams] = useSearchParams()
     const id = queryParameters.get('actionItem')
 
@@ -59,7 +62,7 @@ export const EditorActionsGroup: React.FunctionComponent<EditorActionsGroupProps
         <>
             {actions.length > 0 && (
                 <Text className="mb-1">
-                    <strong>Quick actions:</strong>
+                    <strong>{t('quick-actions')}</strong>
                 </Text>
             )}
             <div className={classNames(styles.actions, 'mb-2')}>

@@ -1,5 +1,7 @@
 import React, { useCallback } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { Button, ButtonLink, H3, Icon, Text } from '@sourcegraph/wildcard'
 
@@ -22,6 +24,8 @@ export const WebhookNode: React.FunctionComponent<React.PropsWithChildren<Webhoo
     afterDelete,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('site-admin')
+
     const IconComponent = defaultExternalServices[webhook.codeHostKind].icon
     const [showDeleteModal, setShowDeleteModal] = React.useState(false)
     const deleteWebhook = useCallback(() => {
@@ -54,10 +58,10 @@ export const WebhookNode: React.FunctionComponent<React.PropsWithChildren<Webhoo
                         className="mr-2"
                         disabled={showDeleteModal}
                     >
-                        Edit
+                        {t('edit-action')}
                     </ButtonLink>
                     <Button variant="danger" onClick={deleteWebhook} disabled={showDeleteModal}>
-                        Delete
+                        {t('delete-action')}
                     </Button>
                 </div>
             </div>

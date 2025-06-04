@@ -3,6 +3,7 @@ import React, { useCallback, useRef, useState } from 'react'
 import type { ApolloError } from '@apollo/client'
 import { mdiCheckboxBlankCircleOutline, mdiCheckCircleOutline, mdiDelete, mdiEye, mdiPlus } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { logger } from '@sourcegraph/common'
 import { useLazyQuery } from '@sourcegraph/http-client'
@@ -42,6 +43,8 @@ export const CodeHostConnectionNode: React.FunctionComponent<React.PropsWithChil
     user,
     gitHubAppKind,
 }) => {
+    const { t } = useTranslation('enterprise/batches/settings')
+
     const [checkCredError, setCheckCredError] = useState<ApolloError | undefined>()
     const ExternalServiceIcon = defaultExternalServices[node.externalServiceKind].icon
     const codeHostDisplayName = defaultExternalServices[node.externalServiceKind].defaultDisplayName
@@ -142,7 +145,7 @@ export const CodeHostConnectionNode: React.FunctionComponent<React.PropsWithChil
                                 aria-label="Changesets on this code host will
                             be created with a global token until a personal access token is added."
                             >
-                                Global token
+                                {t('global-token')}
                             </Badge>
                         )}
                     </H3>
@@ -159,7 +162,7 @@ export const CodeHostConnectionNode: React.FunctionComponent<React.PropsWithChil
                             ) : (
                                 <>
                                     <CheckButton
-                                        label={`Check credentials for ${codeHostDisplayName}`}
+                                        label={t('check-credentials-code-host', { codeHostDisplayName })}
                                         onClick={onClickCheck}
                                         loading={checkCredLoading}
                                         successMessage={checkCredData ? 'Credential is valid' : undefined}
@@ -174,7 +177,8 @@ export const CodeHostConnectionNode: React.FunctionComponent<React.PropsWithChil
                                         size="sm"
                                         ref={buttonReference}
                                     >
-                                        <Icon aria-hidden={true} svgPath={mdiDelete} /> Remove
+                                        <Icon aria-hidden={true} svgPath={mdiDelete} />
+                                        {t('remove-credentials')}
                                     </Button>
                                     {node.requiresSSH && (
                                         <Button
@@ -183,7 +187,8 @@ export const CodeHostConnectionNode: React.FunctionComponent<React.PropsWithChil
                                             variant="secondary"
                                             size="sm"
                                         >
-                                            <Icon aria-hidden={true} svgPath={mdiEye} /> View public key
+                                            <Icon aria-hidden={true} svgPath={mdiEye} />
+                                            {t('view-public-key')}
                                         </Button>
                                     )}
                                 </>
@@ -202,7 +207,8 @@ export const CodeHostConnectionNode: React.FunctionComponent<React.PropsWithChil
                                 ref={buttonReference}
                                 size="sm"
                             >
-                                <Icon aria-hidden={true} svgPath={mdiPlus} /> Add credentials
+                                <Icon aria-hidden={true} svgPath={mdiPlus} />
+                                {t('add-credentials')}
                             </Button>
                         )}
                     </div>

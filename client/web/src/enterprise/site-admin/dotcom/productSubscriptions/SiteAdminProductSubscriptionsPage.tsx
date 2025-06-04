@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 
 import { mdiPlus } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { Button, Container, Icon, Link, PageHeader } from '@sourcegraph/wildcard'
@@ -31,18 +32,20 @@ export const SiteAdminProductSubscriptionsPage: React.FunctionComponent<React.Pr
     authenticatedUser,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/site-admin/dotcom/productSubscriptions')
+
     useEffect(() => telemetryRecorder.recordEvent('admin.productSubscriptions', 'view'), [telemetryRecorder])
 
     return (
         <div className="site-admin-product-subscriptions-page">
-            <PageTitle title="Enterprise subscriptions" />
+            <PageTitle title={t('enterprise-subscriptions')} />
             <PageHeader
                 headingElement="h2"
                 path={[{ text: 'Enterprise subscriptions' }]}
                 actions={
                     <Button to="./new" variant="primary" as={Link}>
                         <Icon aria-hidden={true} svgPath={mdiPlus} />
-                        Create Enterprise subscription
+                        {t('create-enterprise-subscription')}
                     </Button>
                 }
                 className="mb-3"

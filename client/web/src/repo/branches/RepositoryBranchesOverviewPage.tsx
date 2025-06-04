@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 
 import { mdiChevronRight } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { EVENT_LOGGER } from '@sourcegraph/shared/src/telemetry/web/eventLogger'
@@ -19,6 +20,8 @@ interface Props extends RepositoryBranchesAreaPageProps, TelemetryV2Props {}
 
 /** A page with an overview of the repository's branches. */
 export const RepositoryBranchesOverviewPage: React.FunctionComponent<Props> = ({ repo, telemetryRecorder }) => {
+    const { t } = useTranslation('repo/branches')
+
     useMemo(() => {
         EVENT_LOGGER.logViewEvent('RepositoryBranchesOverview')
         telemetryRecorder.recordEvent('repo.branches', 'view')
@@ -36,38 +39,46 @@ export const RepositoryBranchesOverviewPage: React.FunctionComponent<Props> = ({
 
     return (
         <Page>
-            <PageTitle title="Branches" />
+            <PageTitle title={t('branches-label')} />
 
             <div>
                 {defaultBranch && (
                     <Card className={styles.card}>
-                        <CardHeader>Default branch</CardHeader>
+                        <CardHeader>{t('default-branch-label')}</CardHeader>
                         <ul className="list-group list-group-flush">
                             <GitReferenceNode
                                 node={defaultBranch}
-                                ariaLabel={`View this repository using ${defaultBranch.displayName} as the selected revision`}
+                                ariaLabel={t('view-repo-with-default-branch', {
+                                    defaultBranchDisplayName: defaultBranch.displayName,
+                                })}
                             />
                         </ul>
                     </Card>
                 )}
                 {activeBranches.length > 0 && (
                     <Card className={styles.card}>
-                        <CardHeader>Active branches</CardHeader>
+                        <CardHeader>{t('active-branches-label')}</CardHeader>
                         <ul className="list-group list-group-flush" data-testid="active-branches-list">
-                            {activeBranches.map((gitReference, index) => (
-                                <GitReferenceNode
-                                    key={index}
-                                    node={gitReference}
-                                    ariaLabel={`View this repository using ${gitReference.displayName} as the selected revision`}
-                                />
-                            ))}
+                            {activeBranches.map((gitReference, index) => {
+                                const { t } = useTranslation('repo/branches')
+
+                                return (
+                                    <GitReferenceNode
+                                        key={index}
+                                        node={gitReference}
+                                        ariaLabel={t('view-repo-with-git-reference', {
+                                            gitReferenceDisplayName: gitReference.displayName,
+                                        })}
+                                    />
+                                )
+                            })}
                             {hasMoreActiveBranches && (
                                 <li className="list-group-item list-group-item-action">
                                     <Link
                                         className="py-2 d-flex align-items-center"
                                         to={`/${repo.name}/-/branches/all`}
                                     >
-                                        View more branches
+                                        {t('view-more-branches-action')}
                                         <Icon aria-hidden={true} svgPath={mdiChevronRight} />
                                     </Link>
                                 </li>

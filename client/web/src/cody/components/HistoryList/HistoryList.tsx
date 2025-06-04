@@ -2,6 +2,7 @@ import { useMemo, useCallback } from 'react'
 
 import { mdiDelete } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import type { Transcript, TranscriptJSON } from '@sourcegraph/cody-shared'
@@ -27,9 +28,11 @@ export const HistoryList: React.FunctionComponent<HistoryListProps> = ({
     loadTranscriptFromHistory,
     deleteHistoryItem,
     itemClassName,
-}) =>
-    transcriptHistory.length === 0 ? (
-        <Text className="p-2 pb-0 text-muted text-center">No chats yet</Text>
+}) => {
+    const { t } = useTranslation('cody/components/HistoryList')
+
+    return transcriptHistory.length === 0 ? (
+        <Text className="p-2 pb-0 text-muted text-center">{t('no-chats-yet')}</Text>
     ) : (
         <div className="p-0 d-flex flex-column">
             {transcriptHistory.map(transcript => (
@@ -45,6 +48,7 @@ export const HistoryList: React.FunctionComponent<HistoryListProps> = ({
             ))}
         </div>
     )
+}
 
 const HistoryListItem: React.FunctionComponent<{
     currentTranscript: Transcript | null

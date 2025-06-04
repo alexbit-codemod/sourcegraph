@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { mdiCancel, mdiCheck, mdiRefresh } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Button, H1, H3, Icon, Modal, Text } from '@sourcegraph/wildcard'
 
@@ -31,6 +32,8 @@ interface SubscriptionDetailsProps {
 }
 
 export const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = props => {
+    const { t } = useTranslation('cody/management/subscription/manage')
+
     const updateCurrentSubscriptionMutation = useUpdateCurrentSubscription()
 
     const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false)
@@ -91,13 +94,13 @@ export const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = props => 
                         }
                         iconSvgPath={mdiRefresh}
                     >
-                        Renew subscription
+                        {t('renew-subscription')}
                     </LoadingIconButton>
                 ) : (
                     <>
                         <Button variant="secondary" outline={true} onClick={() => setIsConfirmationModalVisible(true)}>
                             <Icon aria-hidden={true} svgPath={mdiCancel} className="mr-1" />
-                            Cancel subscription
+                            {t('cancel-subscription')}
                         </Button>
 
                         {isConfirmationModalVisible && (
@@ -106,12 +109,12 @@ export const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = props => 
                                 onDismiss={() => setIsConfirmationModalVisible(false)}
                             >
                                 <div className="pb-3">
-                                    <H3>Are you sure?</H3>
+                                    <H3>{t('confirmation-prompt')}</H3>
                                     <Text className="mt-4">
-                                        Canceling your subscription now means that you won't be able to use Cody with
-                                        Pro features after {humanizeDate(props.subscription.currentPeriodEnd)}.
+                                        {t('cancel-subscription-warning')}
+                                        {humanizeDate(props.subscription.currentPeriodEnd)}.
                                     </Text>
-                                    <Text className="mt-4 mb-0 font-bold">Do you want to proceed?</Text>
+                                    <Text className="mt-4 mb-0 font-bold">{t('proceed-confirmation')}</Text>
                                 </div>
                                 <div className="d-flex mt-4 justify-content-end">
                                     <Button
@@ -120,7 +123,7 @@ export const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = props => 
                                         onClick={() => setIsConfirmationModalVisible(false)}
                                         className="mr-3"
                                     >
-                                        No, I've changed my mind
+                                        {t('change-mind')}
                                     </Button>
                                     <LoadingIconButton
                                         variant="primary"
@@ -134,7 +137,7 @@ export const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = props => 
                                         }
                                         iconSvgPath={mdiCheck}
                                     >
-                                        Yes, cancel
+                                        {t('confirm-cancellation')}
                                     </LoadingIconButton>
                                 </div>
                             </Modal>

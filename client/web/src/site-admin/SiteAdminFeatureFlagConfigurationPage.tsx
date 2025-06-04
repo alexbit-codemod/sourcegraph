@@ -3,6 +3,7 @@ import React, { type FunctionComponent, useCallback, useEffect, useMemo, useStat
 import { gql, useMutation } from '@apollo/client'
 import { mdiDelete, mdiFlag } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { of } from 'rxjs'
 import { catchError, map } from 'rxjs/operators'
@@ -50,6 +51,8 @@ export interface SiteAdminFeatureFlagConfigurationProps extends TelemetryProps, 
 export const SiteAdminFeatureFlagConfigurationPage: FunctionComponent<
     React.PropsWithChildren<SiteAdminFeatureFlagConfigurationProps>
 > = ({ fetchFeatureFlags = defaultFetchFeatureFlags, productVersion = window.context.version, telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin')
+
     const { name = '' } = useParams<{ name: string }>()
     const navigate = useNavigate()
     const productGitVersion = parseProductReference(productVersion)
@@ -139,7 +142,8 @@ export const SiteAdminFeatureFlagConfigurationPage: FunctionComponent<
             >
                 {createFlagLoading ? (
                     <>
-                        <LoadingSpinner /> Creating...
+                        <LoadingSpinner />
+                        {t('creating')}
                     </>
                 ) : (
                     'Create flag'
@@ -179,7 +183,8 @@ export const SiteAdminFeatureFlagConfigurationPage: FunctionComponent<
                 >
                     {updateFlagLoading ? (
                         <>
-                            <LoadingSpinner /> Updating...
+                            <LoadingSpinner />
+                            {t('updating')}
                         </>
                     ) : (
                         'Update'
@@ -202,11 +207,13 @@ export const SiteAdminFeatureFlagConfigurationPage: FunctionComponent<
                 >
                     {deleteFlagLoading ? (
                         <>
-                            <LoadingSpinner /> Deleting...
+                            <LoadingSpinner />
+                            {t('deleting')}
                         </>
                     ) : (
                         <>
-                            <Icon aria-hidden={true} svgPath={mdiDelete} /> Delete
+                            <Icon aria-hidden={true} svgPath={mdiDelete} />
+                            {t('delete')}
                         </>
                     )}
                 </Button>
@@ -219,7 +226,7 @@ export const SiteAdminFeatureFlagConfigurationPage: FunctionComponent<
     const verb = isCreateFeatureFlag ? 'Create' : 'Manage'
     return (
         <>
-            <PageTitle title={`${verb} feature flag`} />
+            <PageTitle title={t('verb-feature-flag', { verb })} />
             <Container>
                 <PageHeader
                     headingElement="h2"
@@ -264,7 +271,7 @@ export const SiteAdminFeatureFlagConfigurationPage: FunctionComponent<
                         variant="secondary"
                         onClick={() => navigate('/site-admin/feature-flags')}
                     >
-                        Cancel
+                        {t('cancel-button')}
                     </Button>
                 </div>
             </Container>
@@ -313,6 +320,8 @@ const AddFeatureFlagOverride: FunctionComponent<
         onOverrideAdded: (override: FeatureFlagOverride) => void
     }>
 > = ({ name, value, onOverrideAdded }) => {
+    const { t } = useTranslation('site-admin')
+
     const [showAddOverride, setShowAddOverride] = useState<boolean>(false)
     const [overrideValue, setOverrideValue] = useState<boolean>(!value)
     const [overrideType, setOverrideType] = useState<FeatureFlagOverrideType>('User')
@@ -369,10 +378,10 @@ const AddFeatureFlagOverride: FunctionComponent<
     return (
         <div>
             <Modal isOpen={showAddOverride} onDismiss={closeModal} aria-label="Add Feature Flag Override Modal">
-                <H3>Add feature flag override for {name}</H3>
+                <H3>{t('add-feature-flag-override', { name })}</H3>
                 <Form>
                     <Label className="w-100 mt-4">
-                        Override type
+                        {t('override-type-label')}
                         <RadioButtons
                             nodes={[
                                 {
@@ -393,7 +402,7 @@ const AddFeatureFlagOverride: FunctionComponent<
                     </Label>
                     {overrideType === 'User' && (
                         <>
-                            <Label id="add-feature-flag--user">Select user</Label>
+                            <Label id="add-feature-flag--user">{t('select-user')}</Label>
                             <UserSelect
                                 onSelect={user => setNamespaceID(user?.databaseID ?? '')}
                                 htmlID="add-feature-flag--user"
@@ -403,16 +412,16 @@ const AddFeatureFlagOverride: FunctionComponent<
                     {overrideType !== 'User' && (
                         <Input
                             inputClassName="mt-2"
-                            label={`${overrideType} ID`}
+                            label={t('override-type-id', { overrideType })}
                             type="number"
                             value={namespaceID}
                             onChange={setInputValue}
                         />
                     )}
                     <Label className="w-100">
-                        <div className="mb-2 mt-2">Value</div>
+                        <div className="mb-2 mt-2">{t('value-label')}</div>
                         <Toggle
-                            title="Value"
+                            title={t('value-string')}
                             value={overrideValue}
                             disabled={false}
                             onToggle={() => setOverrideValue(!overrideValue)}
@@ -423,21 +432,21 @@ const AddFeatureFlagOverride: FunctionComponent<
                     {error && <ErrorAlert prefix="Error adding override" error={error} />}
                     <div className="d-flex justify-content-end">
                         <Button onClick={closeModal} variant="secondary" className="mr-2">
-                            Cancel
+                            {t('cancel-button-override')}
                         </Button>
                         <LoaderButton
                             type="button"
                             variant="primary"
                             disabled={loading || namespaceID === ''}
                             onClick={() => addOverride()}
-                            label="Add override"
+                            label={t('add-override-button')}
                             loading={loading}
                         />
                     </div>
                 </Form>
             </Modal>
             <Button variant="primary" size="sm" className="mt-1 mb-2" onClick={openModal}>
-                Add override
+                {t('add-override-label')}
             </Button>
         </div>
     )
@@ -477,6 +486,8 @@ const FeatureFlagOverrideItem: FunctionComponent<
         onDelete: () => void
     }>
 > = ({ override, onUpdate, onDelete }) => {
+    const { t } = useTranslation('site-admin')
+
     const { id, value } = override
 
     const [error, setError] = useState<Error>()
@@ -526,7 +537,7 @@ const FeatureFlagOverrideItem: FunctionComponent<
             {updateOverrideLoading && <LoadingSpinner />}
             {error && <ErrorAlert prefix="Error modifying override" error={error} />}
             <Toggle
-                title="Value"
+                title={t('value-string-duplicate')}
                 value={value}
                 disabled={updateOverrideLoading}
                 onToggle={() => updateFeatureFlagOverride()}
@@ -547,7 +558,7 @@ const FeatureFlagOverrideItem: FunctionComponent<
                 className="align-self-end"
                 size="sm"
                 onClick={() => deleteFeatureFlagOverride()}
-                label="Delete Override"
+                label={t('delete-override-button')}
                 loading={deleteOverrideLoading}
                 alwaysShowLabel={true}
             />
@@ -568,6 +579,8 @@ const ManageFeatureFlag: FunctionComponent<
         setFlagValue: (flag: FeatureFlagValue) => void
     }>
 > = ({ name, type, value, overrides, onOverridesUpdate, setFlagValue }) => {
+    const { t } = useTranslation('site-admin')
+
     const addOverride = useCallback(
         (override: FeatureFlagOverride): void => {
             const newOverrides = overrides?.slice() || []
@@ -601,16 +614,16 @@ const ManageFeatureFlag: FunctionComponent<
 
     return (
         <>
-            <H3>Name</H3>
+            <H3>{t('name-label')}</H3>
             <Text>{name}</Text>
 
-            <H3>Type</H3>
+            <H3>{t('type-label')}</H3>
             <Text>{type.slice('FeatureFlag'.length)}</Text>
 
             <FeatureFlagValueSettings type={type} value={value} setFlagValue={setFlagValue} />
 
             <Collapsible
-                title={<H3>Overrides</H3>}
+                title={<H3>{t('overrides-label')}</H3>}
                 detail={
                     <FeatureFlagOverridesHeader
                         overrides={overrides || []}
@@ -655,34 +668,38 @@ const CreateFeatureFlag: React.FunctionComponent<
         value?: FeatureFlagValue
         setFlagValue: (v: FeatureFlagValue) => void
     }>
-> = ({ name, setFlagName, type, setFlagType, value, setFlagValue }) => (
-    <>
-        <Input
-            id="name"
-            value={name}
-            onChange={({ target: { value } }) => {
-                setFlagName(value)
-            }}
-            className="form-group"
-            label={<H3>Name</H3>}
-            message="Required."
-        />
+> = ({ name, setFlagName, type, setFlagType, value, setFlagValue }) => {
+    const { t } = useTranslation('site-admin')
 
-        <Select
-            id="type"
-            label={<H3>Type</H3>}
-            value={type}
-            onChange={({ target: { value } }) => setFlagType(value as FeatureFlagType)}
-            message="Required."
-        >
-            <option value="">Select flag type</option>
-            <option value="FeatureFlagRollout">Rollout</option>
-            <option value="FeatureFlagBoolean">Boolean</option>
-        </Select>
+    return (
+        <>
+            <Input
+                id="name"
+                value={name}
+                onChange={({ target: { value } }) => {
+                    setFlagName(value)
+                }}
+                className="form-group"
+                label={<H3>{t('name-label-duplicate')}</H3>}
+                message="Required."
+            />
 
-        {type && <FeatureFlagValueSettings type={type} value={value} setFlagValue={setFlagValue} />}
-    </>
-)
+            <Select
+                id="type"
+                label={<H3>{t('type-label-duplicate')}</H3>}
+                value={type}
+                onChange={({ target: { value } }) => setFlagType(value as FeatureFlagType)}
+                message="Required."
+            >
+                <option value="">{t('select-flag-type')}</option>
+                <option value="FeatureFlagRollout">{t('rollout-label')}</option>
+                <option value="FeatureFlagBoolean">{t('boolean-label')}</option>
+            </Select>
+
+            {type && <FeatureFlagValueSettings type={type} value={value} setFlagValue={setFlagValue} />}
+        </>
+    )
+}
 
 /**
  * Displays a modal for configuring the flag value as a certain type. Can be provided an
@@ -735,64 +752,77 @@ const FeatureFlagRolloutValueSettings: React.FunctionComponent<
         value: FeatureFlagRolloutValue
         update: (next: FeatureFlagRolloutValue) => void
     }>
-> = ({ value, update }) => (
-    <div className="form-group d-flex flex-column align-content-start">
-        <Input
-            type="range"
-            id="rollout-value"
-            name="rollout-value"
-            step="10"
-            min="0"
-            max="10000"
-            className="mb-0"
-            label={<H3>Value</H3>}
-            inputClassName="p-0 w-25"
-            value={value.rolloutBasisPoints}
-            onChange={({ target }) => {
-                update({ rolloutBasisPoints: parseInt(target.value, 10) })
-            }}
-            aria-describedby="feature-flag-rollout-description"
-        />
-        <div className="flex-column mt-3" id="feature-flag-rollout-description">
-            <div>{value.rolloutBasisPoints} basis points</div>
-            <div className="text-muted">
-                This feature is enabled for {Math.floor(value.rolloutBasisPoints / 100) || 0}% of users.
+> = ({ value, update }) => {
+    const { t } = useTranslation('site-admin')
+
+    return (
+        <div className="form-group d-flex flex-column align-content-start">
+            <Input
+                type="range"
+                id="rollout-value"
+                name="rollout-value"
+                step="10"
+                min="0"
+                max="10000"
+                className="mb-0"
+                label={<H3>{t('value-label-duplicate')}</H3>}
+                inputClassName="p-0 w-25"
+                value={value.rolloutBasisPoints}
+                onChange={({ target }) => {
+                    update({ rolloutBasisPoints: parseInt(target.value, 10) })
+                }}
+                aria-describedby="feature-flag-rollout-description"
+            />
+            <div className="flex-column mt-3" id="feature-flag-rollout-description">
+                <div>
+                    {value.rolloutBasisPoints}
+                    {t('basis-points')}
+                </div>
+                <div className="text-muted">
+                    {t('feature-enabled-for')}
+                    {Math.floor(value.rolloutBasisPoints / 100) || 0}
+                    {t('percent-of-users')}
+                </div>
             </div>
         </div>
-    </div>
-)
+    )
+}
 
 const FeatureFlagBooleanValueSettings: React.FunctionComponent<
     React.PropsWithChildren<{
         value: FeatureFlagBooleanValue
         update: (next: FeatureFlagBooleanValue) => void
     }>
-> = ({ value, update }) => (
-    <div className="form-group d-flex flex-column">
-        <Label htmlFor="bool-value">
-            <H3>Value</H3>
-        </Label>
-        <div className="d-flex">
-            <div>
-                <Toggle
-                    title="Value"
-                    value={value.value}
-                    onToggle={isTrue => {
-                        update({ value: isTrue })
-                    }}
-                    className="mr-2"
-                    aria-describedby="feature-flag-toggle-description"
-                />{' '}
-            </div>
-            <div className="flex-column" id="feature-flag-toggle-description">
-                <div>{value.value ? 'True' : 'False'}</div>
-                <div className="text-muted">
-                    {value.value ? 'This feature is enabled.' : 'This feature is disabled.'}
+> = ({ value, update }) => {
+    const { t } = useTranslation('site-admin')
+
+    return (
+        <div className="form-group d-flex flex-column">
+            <Label htmlFor="bool-value">
+                <H3>{t('value-label-duplicate-2')}</H3>
+            </Label>
+            <div className="d-flex">
+                <div>
+                    <Toggle
+                        title={t('value-string-duplicate-2')}
+                        value={value.value}
+                        onToggle={isTrue => {
+                            update({ value: isTrue })
+                        }}
+                        className="mr-2"
+                        aria-describedby="feature-flag-toggle-description"
+                    />{' '}
+                </div>
+                <div className="flex-column" id="feature-flag-toggle-description">
+                    <div>{value.value ? 'True' : 'False'}</div>
+                    <div className="text-muted">
+                        {value.value ? 'This feature is enabled.' : 'This feature is disabled.'}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-)
+    )
+}
 
 /**
  * Searches for potential references and renders them in a collapsible, or returns an
@@ -806,6 +836,8 @@ const ReferencesCollapsible: React.FunctionComponent<
         productGitVersion: string
     }>
 > = ({ flagName, productGitVersion }) => {
+    const { t } = useTranslation('site-admin')
+
     const references = useObservable(
         useMemo(
             () => (flagName ? getFeatureFlagReferences(flagName, productGitVersion) : of([])),
@@ -817,7 +849,7 @@ const ReferencesCollapsible: React.FunctionComponent<
     }
     return (
         <Collapsible
-            title={<H3>References</H3>}
+            title={<H3>{t('references-label')}</H3>}
             detail={`${references.length} potential feature flag ${pluralize(
                 'reference',
                 references.length

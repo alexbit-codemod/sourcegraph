@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 
 import { mdiChevronDown, mdiChevronUp } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { SyntaxHighlightedSearchQuery } from '@sourcegraph/branded'
 import { renderMarkdown } from '@sourcegraph/common'
@@ -46,6 +47,8 @@ export const UnownedResultsAlert: React.FunctionComponent<React.PropsWithChildre
     selectedSearchContextSpec,
     queryState,
 }) => {
+    const { t } = useTranslation('search/results/components')
+
     const [isCollapsed, setIsCollapsed] = useTemporarySetting('search.results.collapseUnownedResultsAlert')
 
     const unownedFilesSearchLink = useMemo(() => {
@@ -94,7 +97,7 @@ export const UnownedResultsAlert: React.FunctionComponent<React.PropsWithChildre
                         />
                     )}
                     <Text className="d-flex align-items-baseline mb-0">
-                        <span>See unowned files:</span>
+                        <span>{t('see-unowned-files')}</span>
                         <small>
                             <Button
                                 variant="secondary"

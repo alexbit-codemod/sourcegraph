@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { mdiBlockHelper, mdiCog, mdiDotsHorizontal } from '@mdi/js'
 import { isEqual } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { dataOrThrowErrors, useQuery } from '@sourcegraph/http-client'
@@ -66,6 +67,8 @@ const PackageNode: React.FunctionComponent<React.PropsWithChildren<PackageNodePr
     node,
     setFilterPackage,
 }) => {
+    const { t } = useTranslation('site-admin')
+
     const PackageIconComponent = externalRepoIcon({ serviceType: node.kind })
 
     const packageRepository = node.repository
@@ -80,7 +83,7 @@ const PackageNode: React.FunctionComponent<React.PropsWithChildren<PackageNodePr
                             <>
                                 <span>{node.name}</span>
                                 <Text className="mb-0 text-danger">
-                                    <small>This package is blocked by a filter.</small>
+                                    <small>{t('package-blocked-by-filter')}</small>
                                 </Text>
                             </>
                         ) : packageRepository ? (
@@ -92,7 +95,7 @@ const PackageNode: React.FunctionComponent<React.PropsWithChildren<PackageNodePr
                             <>
                                 <span>{node.name}</span>
                                 <Text className="mb-0 text-muted">
-                                    <small>This package has not yet been synced.</small>
+                                    <small>{t('package-not-synced')}</small>
                                 </Text>
                             </>
                         )}
@@ -112,12 +115,12 @@ const PackageNode: React.FunctionComponent<React.PropsWithChildren<PackageNodePr
                                             className="p-2"
                                         >
                                             <Icon aria-hidden={true} svgPath={mdiCog} className="mr-1" />
-                                            Settings
+                                            {t('settings-title')}
                                         </MenuLink>
                                     )}
                                 <MenuItem as={Button} onSelect={() => setFilterPackage(node)} className="p-2">
                                     <Icon aria-hidden={true} svgPath={mdiBlockHelper} className="mr-1" />
-                                    Add filter
+                                    {t('add-filter-button')}
                                 </MenuItem>
                             </MenuList>
                         </Menu>
@@ -128,7 +131,7 @@ const PackageNode: React.FunctionComponent<React.PropsWithChildren<PackageNodePr
                         {packageRepository.mirrorInfo.lastError && (
                             <div className={styles.alertWrapper}>
                                 <Alert variant="warning">
-                                    <Text className="font-weight-bold">Error syncing package:</Text>
+                                    <Text className="font-weight-bold">{t('error-syncing-package')}</Text>
                                     <Code className={styles.alertContent}>
                                         {packageRepository.mirrorInfo.lastError.replaceAll('\r', '\n')}
                                     </Code>
@@ -138,7 +141,10 @@ const PackageNode: React.FunctionComponent<React.PropsWithChildren<PackageNodePr
                         {packageRepository.mirrorInfo.isCorrupted && (
                             <div className={styles.alertWrapper}>
                                 <Alert variant="danger">
-                                    Package is corrupt. <Link to={`/${node.name}/-/settings/mirror`}>More details</Link>
+                                    <Trans
+                                        i18nKey="package-corrupt-details-link"
+                                        components={{ '0': <Link to={`/${node.name}/-/settings/mirror`} /> }}
+                                    />
                                 </Alert>
                             </div>
                         )}
@@ -165,6 +171,8 @@ export const SiteAdminPackagesPage: React.FunctionComponent<React.PropsWithChild
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('site-admin')
+
     const location = useLocation()
     const navigate = useNavigate()
     const [modalState, setModalState] = useState<PackagesModalState>({ type: null })
@@ -306,20 +314,22 @@ export const SiteAdminPackagesPage: React.FunctionComponent<React.PropsWithChild
                 <></>
             )}
             <div>
-                <PageTitle title="Packages - Admin" />
+                <PageTitle title={t('packages-admin-title')} />
                 <PageHeader
                     path={[{ text: 'Packages' }]}
                     headingElement="h2"
                     description={
                         <>
-                            Packages are synced from connected{' '}
-                            <Link to="/site-admin/external-services">code hosts</Link>.
+                            <Trans
+                                i18nKey="packages-synced-from-code-hosts"
+                                components={{ '0': <Link to="/site-admin/external-services" /> }}
+                            />
                         </>
                     }
                     className="mb-3"
                     actions={
                         <Button variant="secondary" onClick={() => setModalState({ type: 'manage' })}>
-                            Manage package filters
+                            {t('manage-package-filters-title')}
                         </Button>
                     }
                 />
@@ -329,7 +339,7 @@ export const SiteAdminPackagesPage: React.FunctionComponent<React.PropsWithChild
                     <Input
                         type="search"
                         className="flex-1"
-                        placeholder="Search packages..."
+                        placeholder={t('search-packages-placeholder')}
                         name="query"
                         value={searchValue}
                         onChange={event => setSearchValue(event.currentTarget.value)}
@@ -375,7 +385,7 @@ export const SiteAdminPackagesPage: React.FunctionComponent<React.PropsWithChild
                     {connection?.nodes && connection.totalCount !== connection.nodes.length && hasNextPage && (
                         <div>
                             <Button variant="link" size="sm" onClick={fetchMore}>
-                                Show more
+                                {t('show-more-button')}
                             </Button>
                         </div>
                     )}

@@ -1,5 +1,6 @@
 /* eslint-disable react/forbid-dom-props */
 import { createRoot } from 'react-dom/client'
+import { useTranslation } from 'react-i18next'
 
 import { Code, H2 } from '@sourcegraph/wildcard'
 
@@ -14,21 +15,25 @@ export const renderColorDebugger = (): void => {
     root.render(<ColorDebugger />)
 }
 
-const ColorDebugger = (): JSX.Element => (
-    <div
-        style={{
-            display: 'flex',
-            alignItems: 'start',
-            justifyContent: 'center',
-            margin: 20,
-        }}
-    >
-        <div>
-            <H2>IntelliJ Theme</H2>
-            <ColorPalette dark={dark.intelliJTheme} light={light.intelliJTheme} />
+const ColorDebugger = (): JSX.Element => {
+    const { t } = useTranslation('../../jetbrains/webview/src/bridge-mock')
+
+    return (
+        <div
+            style={{
+                display: 'flex',
+                alignItems: 'start',
+                justifyContent: 'center',
+                margin: 20,
+            }}
+        >
+            <div>
+                <H2>{t('intellij-theme')}</H2>
+                <ColorPalette dark={dark.intelliJTheme} light={light.intelliJTheme} />
+            </div>
         </div>
-    </div>
-)
+    )
+}
 
 const ColorPalette = ({
     dark,

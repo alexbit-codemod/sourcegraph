@@ -3,6 +3,7 @@ import React from 'react'
 import { mdiDotsVertical } from '@mdi/js'
 import classNames from 'classnames'
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { Menu, MenuButton, MenuItem, MenuList, Position, Checkbox, Icon } from '@sourcegraph/wildcard'
 
@@ -29,43 +30,47 @@ export const StandaloneInsightContextMenu: React.FunctionComponent<StandaloneIns
 
     return (
         <Menu>
-            {({ isOpen }) => (
-                <>
-                    <MenuButton
-                        data-testid="InsightContextMenuButton"
-                        className={classNames('p-1', styles.button)}
-                        aria-label="Insight options"
-                        outline={true}
-                    >
-                        <Icon
-                            className={classNames(styles.buttonIcon, { [styles.buttonIconActive]: isOpen })}
-                            svgPath={mdiDotsVertical}
-                            inline={false}
-                            aria-hidden={true}
-                            height={16}
-                            width={16}
-                        />
-                    </MenuButton>
-                    <MenuList position={Position.bottomEnd} data-testid={`context-menu.${insight.id}`}>
-                        <MenuItem
-                            role="menuitemcheckbox"
-                            data-testid="InsightContextMenuEditLink"
-                            className={classNames('d-flex align-items-center justify-content-end', styles.item)}
-                            onSelect={() => onToggleZeroYAxisMin(!zeroYAxisMin)}
-                            aria-checked={zeroYAxisMin}
+            {({ isOpen }) => {
+                const { t } = useTranslation('enterprise/insights/pages/insights/insight/components/context-menu')
+
+                return (
+                    <>
+                        <MenuButton
+                            data-testid="InsightContextMenuButton"
+                            className={classNames('p-1', styles.button)}
+                            aria-label="Insight options"
+                            outline={true}
                         >
-                            <Checkbox
-                                aria-hidden="true"
-                                checked={zeroYAxisMin}
-                                onChange={noop}
-                                tabIndex={-1}
-                                id="InsightContextMenuEditInput"
-                                label="Start Y Axis at 0"
+                            <Icon
+                                className={classNames(styles.buttonIcon, { [styles.buttonIconActive]: isOpen })}
+                                svgPath={mdiDotsVertical}
+                                inline={false}
+                                aria-hidden={true}
+                                height={16}
+                                width={16}
                             />
-                        </MenuItem>
-                    </MenuList>
-                </>
-            )}
+                        </MenuButton>
+                        <MenuList position={Position.bottomEnd} data-testid={`context-menu.${insight.id}`}>
+                            <MenuItem
+                                role="menuitemcheckbox"
+                                data-testid="InsightContextMenuEditLink"
+                                className={classNames('d-flex align-items-center justify-content-end', styles.item)}
+                                onSelect={() => onToggleZeroYAxisMin(!zeroYAxisMin)}
+                                aria-checked={zeroYAxisMin}
+                            >
+                                <Checkbox
+                                    aria-hidden="true"
+                                    checked={zeroYAxisMin}
+                                    onChange={noop}
+                                    tabIndex={-1}
+                                    id="InsightContextMenuEditInput"
+                                    label={t('start-y-axis-at-zero')}
+                                />
+                            </MenuItem>
+                        </MenuList>
+                    </>
+                )
+            }}
         </Menu>
     )
 }

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -20,6 +21,8 @@ export interface NewTeamPageProps extends TelemetryV2Props {}
 export const NewTeamPage: React.FunctionComponent<React.PropsWithChildren<NewTeamPageProps>> = ({
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('team/new')
+
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -81,13 +84,12 @@ export const NewTeamPage: React.FunctionComponent<React.PropsWithChildren<NewTea
 
     return (
         <Page className={styles.newTeamPage}>
-            <PageTitle title="New team" />
+            <PageTitle title={t('new-team-title')} />
             <PageHeader
                 path={[{ text: 'Create a new team' }]}
                 description={
                     <>
-                        A team is a group of users. See <Link to="/help/admin/teams">Teams documentation</Link> for
-                        information about configuring teams.
+                        <Trans i18nKey="team-description" components={{ '0': <Link to="/help/admin/teams" /> }} />
                     </>
                 }
                 className="mb-3"
@@ -96,10 +98,10 @@ export const NewTeamPage: React.FunctionComponent<React.PropsWithChildren<NewTea
                 <Container className="mb-3">
                     {createTeamError && <ErrorAlert className="mb-3" error={createTeamError} />}
 
-                    <Label htmlFor="new-team--name">Team name</Label>
+                    <Label htmlFor="new-team--name">{t('team-name-label')}</Label>
                     <Input
                         id="new-team--name"
-                        placeholder="engineering"
+                        placeholder={t('engineering-team-id')}
                         pattern={VALID_TEAM_NAME_REGEXP}
                         maxLength={TEAM_NAME_MAX_LENGTH}
                         required={true}
@@ -114,11 +116,11 @@ export const NewTeamPage: React.FunctionComponent<React.PropsWithChildren<NewTea
                     />
 
                     <Label htmlFor="new-team--displayname" className="mt-2">
-                        Display name
+                        {t('display-name-label')}
                     </Label>
                     <Input
                         id="new-team--displayname"
-                        placeholder="Engineering Team"
+                        placeholder={t('engineering-team-name')}
                         maxLength={TEAM_DISPLAY_NAME_MAX_LENGTH}
                         autoCorrect="off"
                         value={displayName}
@@ -127,7 +129,7 @@ export const NewTeamPage: React.FunctionComponent<React.PropsWithChildren<NewTea
                     />
 
                     <Label htmlFor="new-team--parentteam" className="mt-2">
-                        Parent team
+                        {t('parent-team-label')}
                     </Label>
                     <ParentTeamSelect
                         id="new-team--parentteam"
@@ -143,7 +145,7 @@ export const NewTeamPage: React.FunctionComponent<React.PropsWithChildren<NewTea
                     disabled={createLoading}
                     variant="primary"
                     alwaysShowLabel={true}
-                    label="Create team"
+                    label={t('create-team-title')}
                 />
             </Form>
         </Page>

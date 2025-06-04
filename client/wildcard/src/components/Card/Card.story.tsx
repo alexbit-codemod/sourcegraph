@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { H1, H2, H3, Text } from '..'
 import { BrandedStory } from '../../stories/BrandedStory'
@@ -36,45 +37,44 @@ const config: Meta = {
 
 export default config
 
-export const Simple: StoryFn = () => (
-    <>
-        <H1>Cards</H1>
-        <Text>
-            A card is a flexible and extensible content container. It includes options for headers and footers, a wide
-            variety of content, contextual background colors, and powerful display options.{' '}
-        </Text>
+export const Simple: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Card')
 
-        <H2>Examples</H2>
+    return (
+        <>
+            <H1>{t('cards-title')}</H1>
+            <Text>{t('card-description')}</Text>
 
-        <Grid className="mb-3" columnCount={1}>
-            <Card>
-                <CardBody>This is some text within a card body.</CardBody>
-            </Card>
+            <H2>{t('examples-title')}</H2>
 
-            <Card>
-                <CardBody>
-                    <CardTitle>Card title</CardTitle>
-                    <CardSubtitle>Card subtitle</CardSubtitle>
-                    <CardText>
-                        Some quick example text to build on the card title and make up the bulk of the card's content.
-                    </CardText>
-                    <Button variant="primary">Do something</Button>
-                </CardBody>
-                <CardFooter>Card footer</CardFooter>
-            </Card>
+            <Grid className="mb-3" columnCount={1}>
+                <Card>
+                    <CardBody>{t('card-body-text')}</CardBody>
+                </Card>
 
-            <Card>
-                <CardHeader>Featured</CardHeader>
-                <CardBody>
-                    <CardTitle>Special title treatment</CardTitle>
-                    <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
-                    <Button variant="primary">Do something</Button>
-                </CardBody>
-                <CardFooter>Card footer</CardFooter>
-            </Card>
-        </Grid>
-    </>
-)
+                <Card>
+                    <CardBody>
+                        <CardTitle>{t('card-title')}</CardTitle>
+                        <CardSubtitle>{t('card-subtitle')}</CardSubtitle>
+                        <CardText>{t('card-content-description')}</CardText>
+                        <Button variant="primary">{t('do-something-action')}</Button>
+                    </CardBody>
+                    <CardFooter>{t('card-footer')}</CardFooter>
+                </Card>
+
+                <Card>
+                    <CardHeader>{t('featured-title')}</CardHeader>
+                    <CardBody>
+                        <CardTitle>{t('special-title-treatment')}</CardTitle>
+                        <CardText>{t('supporting-text-lead-in')}</CardText>
+                        <Button variant="primary">{t('do-something-action-duplicate')}</Button>
+                    </CardBody>
+                    <CardFooter>{t('card-footer-duplicate')}</CardFooter>
+                </Card>
+            </Grid>
+        </>
+    )
+}
 
 const cardItem = (
     <Card as="button" className="mb-1 p-0 w-100">
@@ -90,18 +90,22 @@ const cardItem = (
     </Card>
 )
 
-export const InteractiveCard: StoryFn = () => (
-    <>
-        <H2>Interactive Cards</H2>
-        {cardItem}
+export const InteractiveCard: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Card')
 
-        <H3 className="mt-4">Cards List</H3>
+    return (
+        <>
+            <H2>{t('interactive-cards-title')}</H2>
+            {cardItem}
 
-        <div className="d-flex flex-column">
-            {cardItem}
-            {cardItem}
-            {cardItem}
-            {cardItem}
-        </div>
-    </>
-)
+            <H3 className="mt-4">{t('cards-list-title')}</H3>
+
+            <div className="d-flex flex-column">
+                {cardItem}
+                {cardItem}
+                {cardItem}
+                {cardItem}
+            </div>
+        </>
+    )
+}

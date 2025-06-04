@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
 import { mdiInformation, mdiClose, mdiDelete, mdiPencil } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { isErrorLike, asError } from '@sourcegraph/common'
@@ -36,6 +37,8 @@ export const BatchChangeDetailsActionSection: React.FunctionComponent<
     deleteBatchChange = _deleteBatchChange,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail')
+
     const showEditButton = isBatchChangesExecutionEnabled(settingsCascade)
     const navigate = useNavigate()
 
@@ -67,7 +70,8 @@ export const BatchChangeDetailsActionSection: React.FunctionComponent<
                             <Icon aria-label={isDeleting.message} svgPath={mdiInformation} />
                         </Tooltip>
                     )}
-                    <Icon aria-hidden={true} svgPath={mdiDelete} /> Delete
+                    <Icon aria-hidden={true} svgPath={mdiDelete} />
+                    {t('delete-action')}
                 </Button>
             </Tooltip>
         )
@@ -85,7 +89,8 @@ export const BatchChangeDetailsActionSection: React.FunctionComponent<
                         telemetryRecorder.recordEvent('batchChange.details', 'edit')
                     }}
                 >
-                    <Icon aria-hidden={true} svgPath={mdiPencil} /> Edit
+                    <Icon aria-hidden={true} svgPath={mdiPencil} />
+                    {t('edit-action')}
                 </Button>
             )}
             <Tooltip content="View a preview of all changes that will happen when you close this batch change.">
@@ -100,7 +105,8 @@ export const BatchChangeDetailsActionSection: React.FunctionComponent<
                         telemetryRecorder.recordEvent('batchChange.details', 'close')
                     }}
                 >
-                    <Icon aria-hidden={true} svgPath={mdiClose} /> Close
+                    <Icon aria-hidden={true} svgPath={mdiClose} />
+                    {t('close-action')}
                 </Button>
             </Tooltip>
         </div>

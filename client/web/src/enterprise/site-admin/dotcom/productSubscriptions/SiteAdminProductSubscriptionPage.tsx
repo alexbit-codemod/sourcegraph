@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 
 import { mdiPlus } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
@@ -49,6 +50,8 @@ interface Props extends TelemetryV2Props {}
 export const SiteAdminProductSubscriptionPage: React.FunctionComponent<React.PropsWithChildren<Props>> = ({
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/site-admin/dotcom/productSubscriptions')
+
     const navigate = useNavigate()
     const { subscriptionUUID = '' } = useParams<{ subscriptionUUID: string }>()
     useEffect(() => telemetryRecorder.recordEvent('admin.productSubscription', 'view'), [telemetryRecorder])
@@ -140,7 +143,7 @@ export const SiteAdminProductSubscriptionPage: React.FunctionComponent<React.Pro
     return (
         <>
             <div className="site-admin-product-subscription-page">
-                <PageTitle title="Enterprise subscription" />
+                <PageTitle title={t('enterprise-subscription')} />
                 <PageHeader
                     headingElement="h2"
                     path={[
@@ -149,45 +152,46 @@ export const SiteAdminProductSubscriptionPage: React.FunctionComponent<React.Pro
                     ]}
                     description={
                         <span className="text-muted">
-                            Created <Timestamp date={productSubscription.createdAt} />
+                            {t('created-label')}
+                            <Timestamp date={productSubscription.createdAt} />
                         </span>
                     }
                     actions={
                         <Button onClick={onArchive} disabled={archiveLoading} variant="danger">
-                            Archive
+                            {t('archive-label')}
                         </Button>
                     }
                     className="mb-3"
                 />
                 {archiveError && <ErrorAlert className="mt-2" error={archiveError} />}
 
-                <H3>Details</H3>
+                <H3>{t('details-label')}</H3>
                 <Container className="mb-3">
                     <table className="table mb-0">
                         <tbody>
                             <tr>
-                                <th className="text-nowrap">ID</th>
+                                <th className="text-nowrap">{t('id-label')}</th>
                                 <td className="w-100">{enterprisePortalID(subscriptionUUID)}</td>
                             </tr>
                             <tr>
-                                <th className="text-nowrap">Current Plan</th>
+                                <th className="text-nowrap">{t('current-plan-label')}</th>
                                 <td className="w-100">
                                     <ProductSubscriptionLabel productSubscription={productSubscription} />
                                 </td>
                             </tr>
                             <tr>
-                                <th className="text-nowrap">Account</th>
+                                <th className="text-nowrap">{t('account-label')}</th>
                                 <td className="w-100">
                                     <AccountName account={productSubscription.account} /> &mdash;{' '}
-                                    <Link to={productSubscription.url}>View as user</Link>
+                                    <Link to={productSubscription.url}>{t('view-as-user-label')}</Link>
                                 </td>
                             </tr>
                             <tr>
-                                <th className="text-nowrap">Salesforce Opportunity</th>
+                                <th className="text-nowrap">{t('salesforce-opportunity-label')}</th>
                                 <td className="w-100">
                                     {(!productSubscription.activeLicense ||
                                         productSubscription.activeLicense.info?.salesforceOpportunityID === null) && (
-                                        <span className="text-muted">None</span>
+                                        <span className="text-muted">{t('none-label')}</span>
                                     )}
                                     {productSubscription.activeLicense &&
                                         productSubscription.activeLicense.info?.salesforceOpportunityID !== null && (
@@ -196,11 +200,11 @@ export const SiteAdminProductSubscriptionPage: React.FunctionComponent<React.Pro
                                 </td>
                             </tr>
                             <tr>
-                                <th className="text-nowrap">Salesforce Subscription</th>
+                                <th className="text-nowrap">{t('salesforce-subscription-label')}</th>
                                 <td className="w-100">
                                     {(!productSubscription.activeLicense ||
                                         productSubscription.activeLicense.info?.salesforceSubscriptionID === null) && (
-                                        <span className="text-muted">None</span>
+                                        <span className="text-muted">{t('none-label-duplicate')}</span>
                                     )}
                                     {productSubscription.activeLicense &&
                                         productSubscription.activeLicense.info?.salesforceSubscriptionID !== null && (
@@ -225,9 +229,10 @@ export const SiteAdminProductSubscriptionPage: React.FunctionComponent<React.Pro
                 />
 
                 <H3 className="d-flex align-items-start">
-                    Licenses
+                    {t('licenses-label')}
                     <Button className="ml-auto" onClick={toggleShowGenerate} variant="primary">
-                        <Icon aria-hidden={true} svgPath={mdiPlus} /> New license key
+                        <Icon aria-hidden={true} svgPath={mdiPlus} />
+                        {t('new-license-key-label')}
                     </Button>
                 </H3>
                 <LicenseGenerationKeyWarning className="mb-2" />
@@ -321,11 +326,16 @@ const ProductSubscriptionLicensesConnection: React.FunctionComponent<ProductSubs
 
 const NoProductLicense: React.FunctionComponent<{
     toggleShowGenerate: () => void
-}> = ({ toggleShowGenerate }) => (
-    <>
-        <Text className="text-muted">No license key has been generated yet.</Text>
-        <Button onClick={toggleShowGenerate} variant="primary">
-            <Icon aria-hidden={true} svgPath={mdiPlus} /> New license key
-        </Button>
-    </>
-)
+}> = ({ toggleShowGenerate }) => {
+    const { t } = useTranslation('enterprise/site-admin/dotcom/productSubscriptions')
+
+    return (
+        <>
+            <Text className="text-muted">{t('no-license-key-message')}</Text>
+            <Button onClick={toggleShowGenerate} variant="primary">
+                <Icon aria-hidden={true} svgPath={mdiPlus} />
+                {t('new-license-key-label-duplicate')}
+            </Button>
+        </>
+    )
+}

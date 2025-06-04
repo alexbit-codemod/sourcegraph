@@ -1,0 +1,4 @@
+{
+  "insight-included-in-other-dashboards": "This insight is included in {{dashboardCount}} other dashboards.",
+  "changes-shared-across-instances": "Changes to this insight will be shared across all instances of this insight."
+}

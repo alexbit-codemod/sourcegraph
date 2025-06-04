@@ -1,0 +1,21 @@
+{
+  "url": "URL",
+  "save-button": "Save",
+  "edit-outgoing-webhook": "Edit outgoing webhook",
+  "edit-outgoing-webhook-description": "Edit an outgoing webhook",
+  "outgoing-webhooks-title": "Outgoing webhooks",
+  "outgoing-webhooks-description": "All configured outgoing webhooks",
+  "create-webhook-button": " Create webhook",
+  "recent-webhook-label": " recent",
+  "webhook-error-status": {
+    "true": "including {{nodeStatsErrored}} {{pluralizeErrorNodeStatsErrored}}",
+    "false": "with no errors"
+  },
+  "edit-webhook-button": " Edit",
+  "no-webhooks-created-message": "No webhooks have been created so far.",
+  "create-outgoing-webhook": "Create outgoing webhook",
+  "create-new-outgoing-webhook": "Create a new outgoing webhook",
+  "secret": "Secret",
+  "randomly-generated-alter-as-required": "Randomly generated. Alter as required.",
+  "create-action": "Create"
+}

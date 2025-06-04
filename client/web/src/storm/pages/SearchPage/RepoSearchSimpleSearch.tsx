@@ -1,6 +1,7 @@
 import { type FC, useEffect, useState } from 'react'
 
 import { mdiHelpCircleOutline } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { Icon, Select, Tooltip, Input, Button, Form, Label, H3 } from '@sourcegraph/wildcard'
 
@@ -66,6 +67,8 @@ const getQuery = ({
 }
 
 export const RepoSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUpdate, onSubmit }) => {
+    const { t } = useTranslation('storm/pages/SearchPage')
+
     const [repoPattern, setRepoPattern] = useState<string>('')
     const [repoNames, setRepoNames] = useState<string>('')
     const [useForks, setUseForks] = useState<string>('')
@@ -90,7 +93,7 @@ export const RepoSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                 <div id="repoFilterSection">
                     <div className="form-group row">
                         <Label htmlFor="repoName" className="col-4 col-form-label">
-                            Exact repository name
+                            {t('exact-repository-name')}
                             <Tooltip content="Match repository names exactly.">
                                 <Icon
                                     aria-label="hover icon for help tooltip"
@@ -105,7 +108,7 @@ export const RepoSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                                 <Input
                                     id="repoName"
                                     name="repoName"
-                                    placeholder="sourcegraph/sourcegraph"
+                                    placeholder={t('sourcegraph-repo')}
                                     type="text"
                                     onChange={event => setRepoNames(event.target.value)}
                                 />
@@ -115,7 +118,7 @@ export const RepoSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
 
                     <div className="form-group row">
                         <Label htmlFor="repoNamePatterns" className="col-4 col-form-label">
-                            Match against a name pattern
+                            {t('name-pattern-match')}
                             <Tooltip content="Use a regular expression pattern to match against repository names.">
                                 <Icon
                                     aria-label="hover icon for help tooltip"
@@ -128,7 +131,7 @@ export const RepoSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                             <Input
                                 id="repoNamePatterns"
                                 name="repoNamePatterns"
-                                placeholder="sourcegraph.*"
+                                placeholder={t('sourcegraph-pattern')}
                                 type="text"
                                 onChange={event => setRepoPattern(event.target.value)}
                             />
@@ -140,7 +143,7 @@ export const RepoSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                             <Select
                                 label={
                                     <div>
-                                        Search over repository forks?
+                                        {t('search-repository-forks')}
                                         <Tooltip content="Choose an option to include or exclude forks from the search, or search only over forks.">
                                             <Icon
                                                 aria-label="hover icon for help tooltip"
@@ -155,9 +158,9 @@ export const RepoSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                                 name="searchForks"
                                 onChange={event => setUseForks(event.target.value)}
                             >
-                                <option value="no">No</option>
-                                <option value="yes">Yes</option>
-                                <option value="only">Only forks</option>
+                                <option value="no">{t('no-option')}</option>
+                                <option value="yes">{t('yes-option')}</option>
+                                <option value="only">{t('only-forks-option')}</option>
                             </Select>
                         </div>
 
@@ -165,7 +168,7 @@ export const RepoSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                             <Select
                                 label={
                                     <div>
-                                        Search over archived repositories?
+                                        {t('search-archived-repositories')}
                                         <Tooltip content="Choose an option to include or exclude archived repos from the search, or search only over archived repos.">
                                             <Icon
                                                 aria-label="hover icon for help tooltip"
@@ -180,19 +183,19 @@ export const RepoSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                                 name="searchArchive"
                                 onChange={event => setUseArchive(event.target.value)}
                             >
-                                <option value="no">No</option>
-                                <option value="yes">Yes</option>
-                                <option value="only">Only archives</option>
+                                <option value="no">{t('no-archives-option')}</option>
+                                <option value="yes">{t('yes-archives-option')}</option>
+                                <option value="only">{t('only-archives-option')}</option>
                             </Select>
                         </div>
                     </div>
                 </div>
 
                 <hr className="mt-4 mb-4" />
-                <H3 className="mb-4">Select repositories that have contents</H3>
+                <H3 className="mb-4">{t('select-repositories-with-contents')}</H3>
                 <div className="form-group row">
                     <Label htmlFor="filePathsPattern" className="col-4 col-form-label">
-                        Contains file path
+                        {t('contains-file-path')}
                         <Tooltip content="Use a regular expression pattern to match against file paths, for example sourcegraph/.*/internal">
                             <Icon
                                 aria-label="hover icon for help tooltip"
@@ -206,7 +209,7 @@ export const RepoSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                             id="filePathsPattern"
                             name="filePathsPattern"
                             type="text"
-                            placeholder="enterprise/.*"
+                            placeholder={t('file-path-pattern')}
                             onChange={event => updatePreds('path', event.target.value)}
                         />
                     </div>
@@ -214,7 +217,7 @@ export const RepoSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
 
                 <div className="form-group row">
                     <Label htmlFor="fileContentPattern" className="col-4 col-form-label">
-                        Contains file content
+                        {t('contains-file-content')}
                         <Tooltip content="Use a regular expression pattern to match against file content, for example \w*Manager">
                             <Icon
                                 aria-label="hover icon for help tooltip"
@@ -236,7 +239,7 @@ export const RepoSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
 
                 <div className="form-group row">
                     <Label htmlFor="repoDescriptionPattern" className="col-4 col-form-label">
-                        Repository description
+                        {t('repository-description')}
                         <Tooltip content="Use a regular expression pattern to match against repository description, for example 'react library'">
                             <Icon
                                 aria-label="hover icon for help tooltip"
@@ -258,7 +261,7 @@ export const RepoSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
 
                 <div className="form-group row">
                     <Label htmlFor="repoMetadata" className="col-4 col-form-label">
-                        Repository metadata
+                        {t('repository-metadata')}
                         <Tooltip content="Match repositories that have a metadata key / value pair {key:value}. Metadata is a Sourcegraph entity that provides key:value mappings to repositories.">
                             <Icon
                                 aria-label="hover icon for help tooltip"
@@ -281,7 +284,7 @@ export const RepoSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                 <hr className="mt-4 mb-4" />
                 <div className="form-group row">
                     <Label htmlFor="searchContext" className="col-4 col-form-label">
-                        Search context
+                        {t('search-context')}
                         <Tooltip content="Only match files inside a search context. A search context is a Sourcegraph entity to provide shareable and repeatable filters, such as common sets of repositories. The global context  will search over all code on Sourcegraph.">
                             <Icon
                                 aria-label="hover icon for help tooltip"
@@ -304,7 +307,7 @@ export const RepoSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                 <div className="form-group row">
                     <div className="offset-4 col-8">
                         <Button variant="primary" name="submit" type="submit" className="btn btn-primary">
-                            Submit
+                            {t('submit-button')}
                         </Button>
                     </div>
                 </div>

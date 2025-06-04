@@ -1,0 +1,9 @@
+{
+  "auto-select-file-instructions": {
+    "true": "⌘",
+    "false": "Ctrl"
+  },
+  "find-file-sourcegraph-query": "Find a file using a Sourcegraph search query",
+  "line-input-instructions": "Enter a single line (1), a line range (1-10), or leave empty to show the entire file.",
+  "line-range-label": "Line range"
+}

@@ -1,5 +1,7 @@
 import type { FC } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
 import { type Series, useDeepMemo, ErrorAlert } from '@sourcegraph/wildcard'
@@ -41,6 +43,10 @@ interface DynamicInsightPreviewProps extends TelemetryProps, TelemetryV2Props {
 }
 
 export const DynamicInsightPreview: FC<DynamicInsightPreviewProps> = props => {
+    const { t } = useTranslation(
+        'enterprise/insights/pages/landing/getting-started/components/dynamic-code-insight-example'
+    )
+
     const { disabled, repositories, query, className, telemetryService, telemetryRecorder } = props
 
     // Compare live insight settings with deep check to avoid unnecessary
@@ -65,15 +71,19 @@ export const DynamicInsightPreview: FC<DynamicInsightPreviewProps> = props => {
 
     return (
         <LivePreviewCard className={className}>
-            <LivePreviewHeader title="In-line TODO statements" />
+            <LivePreviewHeader title={t('in-line-todo-statements')} />
             {state.status === LivePreviewStatus.Loading ? (
-                <LivePreviewLoading>Loading code insight</LivePreviewLoading>
+                <LivePreviewLoading>{t('loading-code-insight')}</LivePreviewLoading>
             ) : state.status === LivePreviewStatus.Error ? (
                 <ErrorAlert error={state.error} />
             ) : (
                 <LivePreviewChart>
-                    {parent =>
-                        state.status === LivePreviewStatus.Data ? (
+                    {parent => {
+                        const { t } = useTranslation(
+                            'enterprise/insights/pages/landing/getting-started/components/dynamic-code-insight-example'
+                        )
+
+                        return state.status === LivePreviewStatus.Data ? (
                             <SeriesChart
                                 type={SeriesBasedChartTypes.Line}
                                 width={parent.width}
@@ -94,13 +104,10 @@ export const DynamicInsightPreview: FC<DynamicInsightPreviewProps> = props => {
                                     // doesn't support inferring as component with generic.
                                     series={SERIES_MOCK_CHART as Series<unknown>[]}
                                 />
-                                <LivePreviewBanner>
-                                    The chart preview will be shown here once you have filled out the repositories and
-                                    series fields.
-                                </LivePreviewBanner>
+                                <LivePreviewBanner>{t('chart-preview-instructions')}</LivePreviewBanner>
                             </>
                         )
-                    }
+                    }}
                 </LivePreviewChart>
             )}
 

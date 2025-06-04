@@ -1,0 +1,5 @@
+{
+  "batch-changes": "Batch Changes",
+  "total-time-saved": "Total time saved",
+  "event-logs-update-notice": "All events are generated from entries in the event logs table and are updated every 24 hours."
+}

@@ -1,0 +1,15 @@
+{
+  "sign-in": "Sign in",
+  "sign-up": "Sign up",
+  "code-search": "Code Search",
+  "cody": "Cody",
+  "batch-changes": "Batch Changes",
+  "insights": "Insights",
+  "tools": " Tools",
+  "contexts": "Contexts",
+  "notebooks": "Notebooks",
+  "code-monitoring": "Code Monitoring",
+  "search-jobs": "Search Jobs",
+  "about-sourcegraph": "About Sourcegraph",
+  "sourcegraph-version": "Sourcegraph version: {{windowContextVersionUnknown}}"
+}

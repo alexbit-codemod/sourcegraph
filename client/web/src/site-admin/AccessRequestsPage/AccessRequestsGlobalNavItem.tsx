@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 
 import { mdiAccountPlus } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { pluralize } from '@sourcegraph/common'
 import { useQuery } from '@sourcegraph/http-client'
@@ -20,6 +21,8 @@ interface AccessRequestsGlobalNavItemProps {
  * Does not render anything if request access is not allowed or there are no pending requests.
  */
 export const AccessRequestsGlobalNavItem: FC<AccessRequestsGlobalNavItemProps> = props => {
+    const { t } = useTranslation('site-admin/AccessRequestsPage')
+
     const { className } = props
     const isRequestAccessAllowed = checkRequestAccessAllowed(window.context)
 
@@ -35,10 +38,12 @@ export const AccessRequestsGlobalNavItem: FC<AccessRequestsGlobalNavItemProps> =
     return (
         <ButtonLink variant="success" size="sm" to="/site-admin/account-requests" className={className}>
             <Icon svgPath={mdiAccountPlus} size="md" aria-label="Account requests icons" color="var(--success-2)" />
-            <Text className="mx-1" weight="bold" as="span">
-                {data?.accessRequests.totalCount}
-            </Text>
-            Account {pluralize('request', data?.accessRequests.totalCount)}
+            <Trans
+                i18nKey="account-access-requests-total-count"
+                values={{ dataAccessRequestsTotalCount: <>{data?.accessRequests.totalCount}</> }}
+                components={{ '0': <Text className="mx-1" weight="bold" as="span" /> }}
+            />
+            {pluralize('request', data?.accessRequests.totalCount)}
         </ButtonLink>
     )
 }

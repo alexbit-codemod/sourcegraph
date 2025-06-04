@@ -3,6 +3,7 @@ import React, { type ReactNode, useCallback, useMemo } from 'react'
 import AJV from 'ajv'
 import addFormats from 'ajv-formats'
 import { parse } from 'jsonc-parser'
+import { useTranslation } from 'react-i18next'
 
 import type { ErrorLike } from '@sourcegraph/common'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -75,6 +76,8 @@ export const ExternalServiceForm: React.FunctionComponent<React.PropsWithChildre
     additionalFormComponent,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('components/externalServices')
+
     const isLightTheme = useIsLightTheme()
     const onDisplayNameChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
         event => {
@@ -104,7 +107,7 @@ export const ExternalServiceForm: React.FunctionComponent<React.PropsWithChildre
             {error && <ErrorAlert error={error} />}
             {warning && (
                 <Alert variant="warning">
-                    <H4>Warning</H4>
+                    <H4>{t('warning-message')}</H4>
                     <ErrorMessage error={warning} />
                 </Alert>
             )}
@@ -114,7 +117,7 @@ export const ExternalServiceForm: React.FunctionComponent<React.PropsWithChildre
 
             {hideDisplayNameField || (
                 <Label className="w-100">
-                    <Text className="mb-2">Display name</Text>
+                    <Text className="mb-2">{t('display-name-label')}</Text>
                     <Input
                         id="test-external-service-form-display-name"
                         required={true}
@@ -150,9 +153,7 @@ export const ExternalServiceForm: React.FunctionComponent<React.PropsWithChildre
                     telemetryRecorder={telemetryRecorder}
                     explanation={
                         <Text className="form-text text-muted">
-                            <small>
-                                Use Ctrl+Space for completion, and hover over JSON properties for documentation.
-                            </small>
+                            <small>{t('completion-instructions')}</small>
                         </Text>
                     }
                 />
@@ -175,7 +176,7 @@ export const ExternalServiceForm: React.FunctionComponent<React.PropsWithChildre
                             to={`/site-admin/external-services/${encodeURIComponent(externalServiceID ?? '')}`}
                             variant="secondary"
                         >
-                            Cancel
+                            {t('cancel-button-label')}
                         </ButtonLink>
                     </div>
                 </div>

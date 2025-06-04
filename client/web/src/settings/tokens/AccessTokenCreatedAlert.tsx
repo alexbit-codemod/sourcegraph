@@ -1,6 +1,7 @@
 import React from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { CodeSnippet } from '@sourcegraph/branded/src/components/CodeSnippet'
 import { Alert, H5, Text } from '@sourcegraph/wildcard'
@@ -21,17 +22,21 @@ interface AccessTokenCreatedAlertProps {
 export const AccessTokenCreatedAlert: React.FunctionComponent<
     React.PropsWithChildren<AccessTokenCreatedAlertProps>
 > = ({ token, tokenSecret, className }) => {
+    const { t } = useTranslation('settings/tokens')
+
     const isSudoToken = token.scopes.includes(AccessTokenScopes.SiteAdminSudo)
     return (
         <Alert className={classNames('access-token-created-alert', className)} variant="success">
-            <Text>Copy the new access token now. You won't be able to see it again.</Text>
+            <Text>{t('copy-access-token-warning')}</Text>
             <CopyableText className="test-access-token" text={tokenSecret} size={48} secret={true}>
                 {({ isRedacted }) => {
+                    const { t } = useTranslation('settings/tokens')
+
                     const secretToDisplay = isRedacted ? tokenSecret.replaceAll(/./g, '*') : tokenSecret
                     return (
                         <>
                             <H5 className="mt-4 mb-2">
-                                <strong>Example usage</strong>
+                                <strong>{t('example-usage')}</strong>
                             </H5>
                             <CodeSnippet
                                 code={curlExampleCommand(secretToDisplay, isSudoToken)}

@@ -1,0 +1,30 @@
+{
+  "single-item": "Single item",
+  "analytics-children": "Analytics {{children}}",
+  "hours-saved-title": "Hours saved",
+  "about-statistic-title": "About this statistic",
+  "annual-projection-hours-saved": "Annual projection: <0>{{formatNumberProjectedHoursSaved}} hours</0> saved*",
+  "data-range-description": {
+    "true": "last 3 months",
+    "false": "$t('data-range-description_select_2', { \"value\": \"{{dateRangeAnalyticsDateRangeLastMonth}}\" })"
+  },
+  "data-range-description_select_2": {
+    "true": "last month",
+    "false": "last week"
+  },
+  "percentage-of-total": "% of total",
+  "minutes-per-title": "Minutes per",
+  "hours-saved-title-duplicate": "Hours saved",
+  "minutes-per-title-duplicate": "Minutes per",
+  "hours-saved-title-another": "Hours saved",
+  "about-statistic-title-duplicate": "About this statistic",
+  "annual-projection-hours-saved-duplicate": "Annual projection: <0>{{formatNumberProjectedHoursSaved}} hours</0> saved*",
+  "data-range-description-duplicate": {
+    "true": "last 3 months",
+    "false": "$t('data-range-description-duplicate_select_2', { \"value\": \"{{dateRangeAnalyticsDateRangeLastMonth}}\" })"
+  },
+  "data-range-description-duplicate_select_2": {
+    "true": "last month",
+    "false": "last week"
+  }
+}

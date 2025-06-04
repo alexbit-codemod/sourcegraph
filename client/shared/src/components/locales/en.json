@@ -1,0 +1,6 @@
+{
+  "icons-400": "Icons 400",
+  "monaco-editor-not-included": "Monaco editor is not included in this bundle because the environment variable",
+  "dev-web-builder-omit-slow-deps": "DEV_WEB_BUILDER_OMIT_SLOW_DEPS",
+  "environment-variable-set": " is set."
+}

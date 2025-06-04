@@ -4,6 +4,7 @@ import { action } from '@storybook/addon-actions'
 import type { StoryFn, Meta } from '@storybook/react'
 import classNames from 'classnames'
 import { flow } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import '@storybook/addon-designs'
 
@@ -45,39 +46,52 @@ const config: Meta = {
 
 export default config
 
-export const Alerts: StoryFn = () => (
-    <>
-        <H1>Alerts</H1>
-        <Text>
-            Provide contextual feedback messages for typical user actions with the handful of available and flexible
-            alert messages.
-        </Text>
-        <div className="mb-2">
-            {ALERT_VARIANTS.map(variant => (
-                <Alert key={variant} variant={variant}>
-                    <H4>Too many matching repositories</H4>
-                    Use a 'repo:' filter to narrow your search.
-                </Alert>
-            ))}
-            <Alert variant="info" className="d-flex align-items-center">
-                <div className="flex-grow-1">
-                    <H4>Too many matching repositories</H4>
-                    Use a 'repo:' filter to narrow your search.
-                </div>
-                <AlertLink className="mr-2" to="/" onClick={flow(preventDefault, action(classNames('link clicked')))}>
-                    Dismiss
-                </AlertLink>
-            </Alert>
+export const Alerts: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Alert')
 
-            <Alert variant="secondary" withIcon={false} className="d-flex align-items-center">
-                <div className="flex-grow-1">
-                    <H4>Too many matching repositories</H4>
-                    Use a 'repo:' filter to narrow your search.
-                </div>
-                <AlertLink className="mr-2" to="/" onClick={flow(preventDefault, action(classNames('link clicked')))}>
-                    Dismiss
-                </AlertLink>
-            </Alert>
-        </div>
-    </>
-)
+    return (
+        <>
+            <H1>{t('alerts')}</H1>
+            <Text>{t('contextual-feedback-messages')}</Text>
+            <div className="mb-2">
+                {ALERT_VARIANTS.map(variant => {
+                    const { t } = useTranslation('../../wildcard/src/components/Alert')
+
+                    return (
+                        <Alert key={variant} variant={variant}>
+                            <H4>{t('too-many-matching-repositories')}</H4>
+                            {t('repo-filter-instructions')}
+                        </Alert>
+                    )
+                })}
+                <Alert variant="info" className="d-flex align-items-center">
+                    <div className="flex-grow-1">
+                        <H4>{t('too-many-matching-repositories-duplicate')}</H4>
+                        {t('repo-filter-instructions-duplicate')}
+                    </div>
+                    <AlertLink
+                        className="mr-2"
+                        to="/"
+                        onClick={flow(preventDefault, action(classNames('link clicked')))}
+                    >
+                        {t('dismiss-button')}
+                    </AlertLink>
+                </Alert>
+
+                <Alert variant="secondary" withIcon={false} className="d-flex align-items-center">
+                    <div className="flex-grow-1">
+                        <H4>{t('too-many-matching-repositories-another')}</H4>
+                        {t('repo-filter-instructions-another')}
+                    </div>
+                    <AlertLink
+                        className="mr-2"
+                        to="/"
+                        onClick={flow(preventDefault, action(classNames('link clicked')))}
+                    >
+                        {t('dismiss-button-another')}
+                    </AlertLink>
+                </Alert>
+            </div>
+        </>
+    )
+}

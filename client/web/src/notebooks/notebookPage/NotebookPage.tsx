@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { mdiCheckCircle, mdiBookOutline } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { useStickyBox } from 'react-sticky-box'
 import type { Observable } from 'rxjs'
@@ -77,6 +78,8 @@ export const NotebookPage: React.FunctionComponent<React.PropsWithChildren<Noteb
     settingsCascade,
     platformContext,
 }) => {
+    const { t } = useTranslation('notebooks/notebookPage')
+
     const { id: notebookId } = useParams()
 
     useEffect(() => {
@@ -186,12 +189,20 @@ export const NotebookPage: React.FunctionComponent<React.PropsWithChildren<Noteb
                 <div className={styles.content}>
                     {isErrorLike(notebookOrError) && (
                         <Alert variant="danger">
-                            Error while loading the notebook: <strong>{notebookOrError.message}</strong>
+                            <Trans
+                                i18nKey="error-loading-notebook"
+                                values={{ notebookOrErrorMessage: <>{notebookOrError.message}</> }}
+                                components={{ '0': <strong /> }}
+                            />
                         </Alert>
                     )}
                     {isErrorLike(updatedNotebookOrError) && (
                         <Alert variant="danger">
-                            Error while updating the notebook: <strong>{updatedNotebookOrError.message}</strong>
+                            <Trans
+                                i18nKey="error-updating-notebook"
+                                values={{ updatedNotebookOrErrorMessage: <>{updatedNotebookOrError.message}</> }}
+                                components={{ '0': <strong /> }}
+                            />
                         </Alert>
                     )}
                     {notebookOrError === LOADING && (
@@ -241,10 +252,10 @@ export const NotebookPage: React.FunctionComponent<React.PropsWithChildren<Noteb
                             </PageHeader>
                             <small className="d-flex align-items-center mt-2 px-3">
                                 <div className="mr-2">
-                                    Created{' '}
+                                    {t('notebook-created')}
                                     {notebookOrError.creator && (
                                         <span>
-                                            by <strong>@{notebookOrError.creator.username}</strong>
+                                            <Trans i18nKey="notebook-creator" components={{ '0': <strong /> }} />
                                         </span>
                                     )}{' '}
                                     <Timestamp date={notebookOrError.createdAt} />
@@ -252,8 +263,8 @@ export const NotebookPage: React.FunctionComponent<React.PropsWithChildren<Noteb
                                 <div className="d-flex align-items-center">
                                     {latestNotebook === LOADING && (
                                         <>
-                                            <LoadingSpinner className={classNames('m-1', styles.autoSaveIndicator)} />{' '}
-                                            Autosaving notebook...
+                                            <LoadingSpinner className={classNames('m-1', styles.autoSaveIndicator)} />
+                                            {t('autosaving-notebook')}
                                         </>
                                     )}
                                     {isNotebookLoaded(latestNotebook) && (
@@ -264,10 +275,13 @@ export const NotebookPage: React.FunctionComponent<React.PropsWithChildren<Noteb
                                                 className={classNames('text-success m-1', styles.autoSaveIndicator)}
                                             />
                                             <span>
-                                                Last updated{' '}
+                                                {t('last-updated')}
                                                 {latestNotebook.updater && (
                                                     <span>
-                                                        by <strong>@{latestNotebook.updater.username}</strong>
+                                                        <Trans
+                                                            i18nKey="notebook-updater"
+                                                            components={{ '0': <strong /> }}
+                                                        />
                                                     </span>
                                                 )}
                                                 &nbsp;

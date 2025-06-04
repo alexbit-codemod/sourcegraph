@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react'
 
 import { gql, useMutation } from '@apollo/client'
 import { noop } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Input, Link } from '@sourcegraph/wildcard'
 
@@ -30,6 +31,8 @@ export const EmailAction: React.FunctionComponent<React.PropsWithChildren<Action
     monitorName,
     _testStartOpen,
 }) => {
+    const { t } = useTranslation('enterprise/code-monitoring/components/actions')
+
     const [enabled, setEnabled] = useState(action ? action.enabled : true)
 
     const toggleEmailNotificationEnabled: (enabled: boolean, saveImmediately: boolean) => void = useCallback(
@@ -103,19 +106,25 @@ export const EmailAction: React.FunctionComponent<React.PropsWithChildren<Action
     const emailNotConfiguredMessage = !emailConfigured ? (
         !action ? (
             <>
-                SMTP is not configured. Please ask your admin to{' '}
-                <Link to="/help/admin/config/email">configure email sending</Link> to enable this feature.
+                <Trans
+                    i18nKey="smtp-not-configured-email-sending"
+                    components={{ '0': <Link to="/help/admin/config/email" /> }}
+                />
             </>
         ) : (
             <>
-                SMTP is not configured, email notifications won't be sent. Please ask your admin to{' '}
-                <Link to="/help/admin/config/email">configure email sending</Link>.
+                <Trans
+                    i18nKey="smtp-not-configured-no-email-notifications"
+                    components={{ '0': <Link to="/help/admin/config/email" /> }}
+                />
             </>
         )
     ) : !userPrimaryEmail?.verified ? (
         <>
-            Please <Link to={`${authenticatedUser.settingsURL!}/emails`}>verify your email</Link> to enable this
-            feature.
+            <Trans
+                i18nKey="verify-your-email-to-enable-feature"
+                components={{ '0': <Link to={`${authenticatedUser.settingsURL!}/emails`} /> }}
+            />
         </>
     ) : undefined
 
@@ -149,15 +158,13 @@ export const EmailAction: React.FunctionComponent<React.PropsWithChildren<Action
                 <Input
                     id="code-monitoring-form-actions-recipients"
                     className="mb-2"
-                    label="Recipients"
+                    label={t('recipients-label')}
                     value={`${userPrimaryEmail?.email || ''} (you)`}
                     disabled={true}
                     autoFocus={true}
                     required={true}
                 />
-                <small className="text-muted">
-                    Code monitors are currently limited to sending emails to your primary email address.
-                </small>
+                <small className="text-muted">{t('code-monitors-email-limitations')}</small>
             </div>
         </ActionEditor>
     )

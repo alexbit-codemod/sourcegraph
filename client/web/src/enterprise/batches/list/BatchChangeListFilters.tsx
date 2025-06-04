@@ -2,6 +2,7 @@ import { type FC, useCallback, useId, useState } from 'react'
 
 import classNames from 'classnames'
 import { upperFirst } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import {
     H3,
@@ -30,6 +31,8 @@ interface BatchChangeListFiltersProps {
 }
 
 export const BatchChangeListFilters: FC<BatchChangeListFiltersProps> = props => {
+    const { t } = useTranslation('enterprise/batches/list')
+
     const { filters, selectedFilters, onFiltersChange, className } = props
 
     const id = useId()
@@ -56,7 +59,7 @@ export const BatchChangeListFilters: FC<BatchChangeListFiltersProps> = props => 
     return (
         <Label htmlFor={id} className={classNames(className, styles.root)}>
             <H4 as={H3} className="mb-0 mr-2">
-                Status
+                {t('status-label')}
             </H4>
 
             <MultiCombobox
@@ -71,7 +74,7 @@ export const BatchChangeListFilters: FC<BatchChangeListFiltersProps> = props => 
                     value={searchTerm}
                     autoCorrect="false"
                     autoComplete="off"
-                    placeholder="Select filter..."
+                    placeholder={t('select-filter-placeholder')}
                     onChange={event => setSearchTerm(event.target.value)}
                 />
 
@@ -86,7 +89,7 @@ export const BatchChangeListFilters: FC<BatchChangeListFiltersProps> = props => 
 
                     {suggestions.length === 0 && (
                         <MultiComboboxEmptyList>
-                            {!searchTerm ? <>All filters are selected</> : <>No options</>}
+                            {!searchTerm ? <>{t('all-filters-selected-message')}</> : <>{t('no-options-message')}</>}
                         </MultiComboboxEmptyList>
                     )}
                 </MultiComboboxPopover>

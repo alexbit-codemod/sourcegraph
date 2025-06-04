@@ -2,6 +2,7 @@ import React, { type FC, useEffect, useState } from 'react'
 
 import { mdiChevronDown, mdiChevronUp, mdiLock } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { useMutation, useQuery } from '@sourcegraph/http-client'
@@ -59,6 +60,8 @@ interface UpdateMirrorRepositoryActionContainerProps {
 }
 
 const UpdateMirrorRepositoryActionContainer: FC<UpdateMirrorRepositoryActionContainerProps> = props => {
+    const { t } = useTranslation('repo/settings')
+
     const [updateRepo] = useMutation<UpdateMirrorRepositoryResult, UpdateMirrorRepositoryVariables>(
         UPDATE_MIRROR_REPOSITORY,
         { variables: { repository: props.repo.id } }
@@ -85,7 +88,8 @@ const UpdateMirrorRepositoryActionContainer: FC<UpdateMirrorRepositoryActionCont
         )
         buttonLabel = (
             <span>
-                <LoadingSpinner /> Cloning...
+                <LoadingSpinner />
+                {t('cloning-in-progress')}
             </span>
         )
         buttonDisabled = true
@@ -95,8 +99,12 @@ const UpdateMirrorRepositoryActionContainer: FC<UpdateMirrorRepositoryActionCont
         title = (
             <>
                 <div>
-                    Last refreshed:{' '}
-                    {props.repo.mirrorInfo.updatedAt ? <Timestamp date={props.repo.mirrorInfo.updatedAt} /> : 'unknown'}{' '}
+                    {t('last-refreshed')}
+                    {props.repo.mirrorInfo.updatedAt ? (
+                        <Timestamp date={props.repo.mirrorInfo.updatedAt} />
+                    ) : (
+                        'unknown'
+                    )}{' '}
                 </div>
             </>
         )
@@ -104,14 +112,20 @@ const UpdateMirrorRepositoryActionContainer: FC<UpdateMirrorRepositoryActionCont
             <>
                 {updateSchedule && (
                     <div>
-                        Next scheduled update <Timestamp date={updateSchedule.due} /> (position{' '}
-                        {updateSchedule.index + 1} out of {updateSchedule.total} in the schedule)
+                        {t('next-scheduled-update')}
+                        <Timestamp date={updateSchedule.due} />
+                        {t('scheduled-update-position', { updateScheduleIndex1: updateSchedule.index + 1 })}
+                        {updateSchedule.total}
+                        {t('scheduled-update-info')}
                     </div>
                 )}
                 {props.repo.mirrorInfo.updateQueue && !props.repo.mirrorInfo.updateQueue.updating && (
                     <div>
-                        Queued for update (position {props.repo.mirrorInfo.updateQueue.index + 1} out of{' '}
-                        {props.repo.mirrorInfo.updateQueue.total} in the queue)
+                        {t('queued-for-update', {
+                            propsRepoMirrorInfoUpdateQueueIndex1: props.repo.mirrorInfo.updateQueue.index + 1,
+                        })}
+                        {props.repo.mirrorInfo.updateQueue.total}
+                        {t('queue-position-info')}
                     </div>
                 )}
             </>
@@ -137,7 +151,7 @@ const UpdateMirrorRepositoryActionContainer: FC<UpdateMirrorRepositoryActionCont
             buttonLabel={buttonLabel}
             buttonDisabled={buttonDisabled || props.disabled}
             buttonSubtitle={props.disabledReason}
-            flashText="Added to queue"
+            flashText={t('added-to-queue')}
             info={info}
             run={run}
         />
@@ -152,6 +166,8 @@ interface CheckMirrorRepositoryConnectionActionContainerProps {
 const CheckMirrorRepositoryConnectionActionContainer: FC<
     CheckMirrorRepositoryConnectionActionContainerProps
 > = props => {
+    const { t } = useTranslation('repo/settings')
+
     const [checkConnection, { data, loading, error }] = useMutation<
         CheckMirrorRepositoryConnectionResult,
         CheckMirrorRepositoryConnectionVariables
@@ -171,9 +187,9 @@ const CheckMirrorRepositoryConnectionActionContainer: FC<
 
     return (
         <BaseActionContainer
-            title="Check connection to remote repository"
+            title={t('check-connection-remote-repo')}
             titleAs="h3"
-            description={<span>Diagnose problems cloning or updating from the remote repository.</span>}
+            description={<span>{t('diagnose-cloning-problems')}</span>}
             action={
                 <Button
                     disabled={loading}
@@ -182,7 +198,7 @@ const CheckMirrorRepositoryConnectionActionContainer: FC<
                     }}
                     variant="primary"
                 >
-                    Check connection
+                    {t('check-connection')}
                 </Button>
             }
             details={
@@ -190,18 +206,19 @@ const CheckMirrorRepositoryConnectionActionContainer: FC<
                     {error && <ErrorAlert className={styles.alert} error={error} />}
                     {loading && (
                         <Alert className={classNames('mb-0', styles.alert)} variant="primary">
-                            <LoadingSpinner /> Checking connection...
+                            <LoadingSpinner />
+                            {t('checking-connection')}
                         </Alert>
                     )}
                     {data &&
                         !loading &&
                         (data.checkMirrorRepositoryConnection.error === null ? (
                             <Alert className={classNames('mb-0', styles.alert)} variant="success">
-                                The remote repository is reachable.
+                                {t('remote-repo-reachable')}
                             </Alert>
                         ) : (
                             <Alert className={classNames('mb-0', styles.alert)} variant="danger">
-                                <Text>The remote repository is unreachable. Logs follow.</Text>
+                                <Text>{t('remote-repo-unreachable')}</Text>
                                 <div>
                                     <pre className={styles.log}>
                                         <Code>{data.checkMirrorRepositoryConnection.error}</Code>
@@ -222,10 +239,12 @@ interface CorruptionLogProps {
 }
 
 const CorruptionLogsContainer: FC<CorruptionLogProps> = props => {
+    const { t } = useTranslation('repo/settings')
+
     const health = props.repo.mirrorInfo.isCorrupted ? (
         <>
             <Alert className={classNames('mb-0', styles.alert)} variant="danger">
-                The repository is corrupt, check the log entries below for more info and consider recloning.
+                {t('repository-corrupt-warning')}
             </Alert>
             <br />
         </>
@@ -247,14 +266,14 @@ const CorruptionLogsContainer: FC<CorruptionLogProps> = props => {
 
     return (
         <BaseActionContainer
-            title="Repository corruption"
+            title={t('repository-corruption')}
             titleAs="h3"
-            description={<span>Recent corruption events that have been detected on this repository.</span>}
+            description={<span>{t('recent-corruption-events')}</span>}
             className="mb-0"
             details={
                 <div className="flex-1">
                     {health}
-                    {!hasLogs && <Text className="mt-3 text-muted text-center mb-0">No corruption history</Text>}
+                    {!hasLogs && <Text className="mt-3 text-muted text-center mb-0">{t('no-corruption-history')}</Text>}
                     {hasLogs && (
                         <Collapse isOpen={isOpened} onOpenChange={setIsOpened}>
                             <CollapseHeader
@@ -265,7 +284,7 @@ const CorruptionLogsContainer: FC<CorruptionLogProps> = props => {
                                 className="w-100 my-2"
                                 disabled={!hasLogs}
                             >
-                                Show corruption history
+                                {t('show-corruption-history')}
                                 <Icon
                                     aria-hidden={true}
                                     svgPath={isOpened ? mdiChevronUp : mdiChevronDown}
@@ -296,6 +315,8 @@ export const RepoSettingsMirrorPage: FC<RepoSettingsMirrorPageProps> = ({
     disablePolling = false,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('repo/settings')
+
     useEffect(() => {
         EVENT_LOGGER.logPageView('RepoSettingsMirror')
         telemetryRecorder.recordEvent('repo.settings.mirror', 'view')
@@ -323,7 +344,7 @@ export const RepoSettingsMirrorPage: FC<RepoSettingsMirrorPageProps> = ({
 
     return (
         <>
-            <PageTitle title="Mirror settings" />
+            <PageTitle title={t('mirror-settings')} />
             <PageHeader path={[{ text: 'Mirroring and cloning' }]} headingElement="h2" className="mb-3" />
             <RepoSettingsOptions repo={repo} />
             <Container className="repo-settings-mirror-page">
@@ -331,25 +352,22 @@ export const RepoSettingsMirrorPage: FC<RepoSettingsMirrorPageProps> = ({
 
                 <div className="form-group">
                     <Label>
-                        {' '}
-                        Remote repository URL{' '}
-                        <small className="text-muted">
-                            <Icon aria-hidden={true} svgPath={mdiLock} className="text-warning" /> Only visible to site
-                            admins
-                        </small>
+                        <Trans i18nKey="remote-repo-url-info" components={{ '0': <small className="text-muted" /> }} />
                     </Label>
                     <Input value={repo.mirrorInfo.remoteURL || '(unknown)'} readOnly={true} className="mb-0" />
                     {repo.viewerCanAdminister && (
                         <small className="form-text text-muted">
-                            Configure repository mirroring in{' '}
-                            <Link to="/site-admin/external-services">code host connections</Link>.
+                            <Trans
+                                i18nKey="configure-repo-mirroring"
+                                components={{ '0': <Link to="/site-admin/external-services" /> }}
+                            />
                         </small>
                     )}
                 </div>
                 {repo.mirrorInfo.lastError && (
                     <Alert variant="warning">
                         {/* TODO: This should not be a list item, but it was before this was refactored. */}
-                        <li className="d-flex w-100">Error updating repo:</li>
+                        <li className="d-flex w-100">{t('error-updating-repo')}</li>
                         <li className="d-flex w-100">{repo.mirrorInfo.lastError}</li>
                     </Alert>
                 )}
@@ -362,15 +380,16 @@ export const RepoSettingsMirrorPage: FC<RepoSettingsMirrorPageProps> = ({
                     disabledReason={typeof reachable === 'boolean' && !reachable ? 'Not reachable' : undefined}
                 />
                 <ActionContainer
-                    title="Reclone repository"
+                    title={t('reclone-repository')}
                     titleAs="h3"
                     description={
                         <div>
-                            This will delete the repository from disk and reclone it.
+                            {t('reclone-warning')}
                             <div className="mt-2">
-                                <span className="font-weight-bold text-danger">WARNING</span>: This can take a long
-                                time, depending on how large the repository is. The repository will be unsearchable
-                                while the reclone is in progress.
+                                <Trans
+                                    i18nKey="reclone-long-process-warning"
+                                    components={{ '0': <span className="font-weight-bold text-danger" /> }}
+                                />
                             </div>
                         </div>
                     }
@@ -378,14 +397,15 @@ export const RepoSettingsMirrorPage: FC<RepoSettingsMirrorPageProps> = ({
                     buttonLabel={
                         repo.mirrorInfo.cloneInProgress ? (
                             <span>
-                                <LoadingSpinner /> Cloning...
+                                <LoadingSpinner />
+                                {t('cloning-in-progress-warning')}
                             </span>
                         ) : (
                             'Reclone'
                         )
                     }
                     buttonDisabled={repo.mirrorInfo.cloneInProgress}
-                    flashText="Recloning repo"
+                    flashText={t('recloning-repo')}
                     run={async () => {
                         await recloneRepository()
                     }}
@@ -396,27 +416,32 @@ export const RepoSettingsMirrorPage: FC<RepoSettingsMirrorPageProps> = ({
                 />
                 {reachable === false && (
                     <Alert variant="info">
-                        Problems cloning or updating this repository?
+                        {t('problems-cloning-repo')}
                         <ul className={styles.steps}>
                             <li className={styles.step}>
-                                Inspect the <strong>Check connection</strong> error log output to see why the remote
-                                repository is not reachable.
+                                <Trans i18nKey="inspect-connection-error-log" components={{ '0': <strong /> }} />
                             </li>
                             <li className={styles.step}>
-                                <Code weight="bold">No ECDSA host key is known ... Host key verification failed?</Code>{' '}
-                                See{' '}
-                                <Link to="/help/admin/repo/auth#ssh-authentication-config-keys-known-hosts">
-                                    SSH repository authentication documentation
-                                </Link>{' '}
-                                for how to provide an SSH <Code>known_hosts</Code> file with the remote host's SSH host
-                                key.
+                                <Code weight="bold">{t('host-key-verification-failed')}</Code>
+                                <Trans
+                                    i18nKey="ssh-authentication-documentation"
+                                    components={{
+                                        '0': (
+                                            <Link to="/help/admin/repo/auth#ssh-authentication-config-keys-known-hosts" />
+                                        ),
+                                    }}
+                                />
+                                <Code>{t('known-hosts-file')}</Code>
+                                {t('ssh-host-key-info')}
                             </li>
                             <li className={styles.step}>
-                                Consult <Link to="/help/admin/repo/add">Sourcegraph repositories documentation</Link>{' '}
-                                for resolving other authentication issues (such as HTTPS certificates and SSH keys).
+                                <Trans
+                                    i18nKey="sourcegraph-repo-authentication-issues"
+                                    components={{ '0': <Link to="/help/admin/repo/add" /> }}
+                                />
                             </li>
                             <li className={styles.step}>
-                                <FeedbackText headerText="Questions?" />
+                                <FeedbackText headerText={t('questions')} />
                             </li>
                         </ul>
                     </Alert>

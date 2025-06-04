@@ -1,0 +1,7 @@
+{
+  "from-label": "From",
+  "insight-view-title": "{{insightViewTitle}} insight",
+  "percent-complete": "{{percentComplete}}% completed",
+  "series-query-label": "Series query:",
+  "show-errors-log": "Show errors log"
+}

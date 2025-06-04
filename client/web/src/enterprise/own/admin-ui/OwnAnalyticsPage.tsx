@@ -1,5 +1,7 @@
 import { useEffect, type FC } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { useQuery } from '@sourcegraph/http-client'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -25,6 +27,8 @@ interface OwnCoverageDatum {
 interface OwnAnalyticsPageProps extends TelemetryV2Props {}
 
 export const OwnAnalyticsPage: FC<OwnAnalyticsPageProps> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('enterprise/own/admin-ui')
+
     const { data, loading, error } = useQuery<GetOwnSignalConfigurationsResult>(GET_OWN_JOB_CONFIGURATIONS, {})
     const enabled =
         data?.ownSignalConfigurations.some(
@@ -39,13 +43,15 @@ export const OwnAnalyticsPage: FC<OwnAnalyticsPageProps> = ({ telemetryRecorder 
         <>
             {loading && <LoadingSpinner />}
             {error && <ErrorAlert prefix="Error finding out if own analytics are enabled" error={error} />}
-            <AnalyticsPageTitle>Code ownership</AnalyticsPageTitle>
+            <AnalyticsPageTitle>{t('code-ownership')}</AnalyticsPageTitle>
             {enabled ? <OwnAnalyticsPanel /> : <OwnEnableAnalytics />}
         </>
     )
 }
 
 const OwnAnalyticsPanel: FC = () => {
+    const { t } = useTranslation('enterprise/own/admin-ui')
+
     const { data, loading, error } = useQuery<GetInstanceOwnStatsResult>(GET_INSTANCE_OWN_STATS, {})
 
     const totalFiles = data?.instanceOwnershipStats.totalFiles || 0
@@ -81,7 +87,8 @@ const OwnAnalyticsPanel: FC = () => {
 
     const lastUpdatedAt = data?.instanceOwnershipStats.updatedAt && (
         <>
-            Last generated: <Timestamp date={data.instanceOwnershipStats.updatedAt} />
+            {t('last-generated')}
+            <Timestamp date={data.instanceOwnershipStats.updatedAt} />
         </>
     )
 
@@ -119,7 +126,7 @@ const OwnAnalyticsPanel: FC = () => {
                         )}
                     </Card>
                     <Text className="font-italic text-center mt-2">
-                        Data is generated periodically from CODEOWNERS files and repository contents.{' '}
+                        {t('data-generation-info')}
                         {lastUpdatedAt && lastUpdatedAt}
                     </Text>
                 </>
@@ -128,9 +135,12 @@ const OwnAnalyticsPanel: FC = () => {
     )
 }
 
-const OwnEnableAnalytics: FC = () => (
-    <Alert variant="info">
-        Analytics is not enabled, please <Link to="/site-admin/own-signal-page">enable code ownership analytics</Link>{' '}
-        job first to see code ownership stats.
-    </Alert>
-)
+const OwnEnableAnalytics: FC = () => {
+    const { t } = useTranslation('enterprise/own/admin-ui')
+
+    return (
+        <Alert variant="info">
+            <Trans i18nKey="analytics-not-enabled" components={{ '0': <Link to="/site-admin/own-signal-page" /> }} />
+        </Alert>
+    )
+}

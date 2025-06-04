@@ -1,0 +1,18 @@
+{
+  "cards-title": "Cards",
+  "card-description": "A card is a flexible and extensible content container. It includes options for headers and footers, a wide variety of content, contextual background colors, and powerful display options.",
+  "examples-title": "Examples",
+  "card-body-text": "This is some text within a card body.",
+  "card-title": "Card title",
+  "card-subtitle": "Card subtitle",
+  "card-content-description": "Some quick example text to build on the card title and make up the bulk of the card's content.",
+  "do-something-action": "Do something",
+  "card-footer": "Card footer",
+  "featured-title": "Featured",
+  "special-title-treatment": "Special title treatment",
+  "supporting-text-lead-in": "With supporting text below as a natural lead-in to additional content.",
+  "do-something-action-duplicate": "Do something",
+  "card-footer-duplicate": "Card footer",
+  "interactive-cards-title": "Interactive Cards",
+  "cards-list-title": "Cards List"
+}

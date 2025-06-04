@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
 import { Navigate, useLocation } from 'react-router-dom'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -42,6 +43,8 @@ export const SignUpPage: React.FunctionComponent<React.PropsWithChildren<SignUpP
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('auth')
+
     const location = useLocation()
     const query = new URLSearchParams(location.search)
     const invitedBy = query.get('invitedBy')
@@ -128,7 +131,7 @@ export const SignUpPage: React.FunctionComponent<React.PropsWithChildren<SignUpP
 
     return (
         <>
-            <PageTitle title="Sign up" />
+            <PageTitle title={t('sign-up')} />
             <AuthPageWrapper
                 title="Welcome to Sourcegraph"
                 description={
@@ -137,12 +140,15 @@ export const SignUpPage: React.FunctionComponent<React.PropsWithChildren<SignUpP
                 sourcegraphDotComMode={context.sourcegraphDotComMode}
                 className={styles.wrapper}
             >
-                {context.sourcegraphDotComMode && <Text className="pt-1 pb-2">Start searching public code now</Text>}
+                {context.sourcegraphDotComMode && <Text className="pt-1 pb-2">{t('start-searching-public-code')}</Text>}
                 <Container>
                     <SignUpForm context={context} onSignUp={handleSignUp} telemetryRecorder={telemetryRecorder} />
                 </Container>
                 <Text className="text-center mt-3">
-                    Already have an account? <Link to={`/sign-in${location.search}`}>Sign in</Link>
+                    <Trans
+                        i18nKey="already-have-an-account-sign-in"
+                        components={{ '0': <Link to={`/sign-in${location.search}`} /> }}
+                    />
                 </Text>
             </AuthPageWrapper>
         </>

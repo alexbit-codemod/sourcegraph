@@ -1,0 +1,17 @@
+{
+  "input-raw": "Input raw",
+  "input-valid": "Input valid",
+  "testing-this-one-1": "testing this one",
+  "input-loading": "Input loading",
+  "loading-status-input": "loading status input",
+  "input-error": "Input error",
+  "error-status-input": "error status input",
+  "disabled-input": "Disabled input",
+  "disable-status-input": "disable status input",
+  "input-small": "Input small",
+  "testing-this-one-2": "testing this one",
+  "custom-label-layout": "Custom label layout",
+  "field-with-custom-label-layout": "Field with custom label layout",
+  "hint-regular-expressions-filters": "Hint: you can use regular expressions within each of the available filters",
+  "datapoints-backfilled-info": "Datapoints will be automatically backfilled using the list of repositories resulting from today’s search. Future data points will use the list refreshed for every snapshot."
+}

@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 
 import AlertCircleIcon from 'mdi-react/AlertCircleIcon'
 import SourceRepositoryIcon from 'mdi-react/SourceRepositoryIcon'
+import { useTranslation, Trans } from 'react-i18next'
 
 import type { ErrorLike } from '@sourcegraph/common'
 import {
@@ -69,6 +70,8 @@ export const RepoContainerError: React.FunctionComponent<React.PropsWithChildren
 }
 
 export const CloneInProgressPage: React.FunctionComponent<React.PropsWithChildren<RepoContainerErrorProps>> = props => {
+    const { t } = useTranslation('repo')
+
     const { repoName, viewerCanAdminister, repoFetchError, telemetryRecorder } = props
 
     useEffect(() => telemetryRecorder.recordEvent('repo.error.cloneInProgress', 'view'), [telemetryRecorder])
@@ -77,13 +80,16 @@ export const CloneInProgressPage: React.FunctionComponent<React.PropsWithChildre
             icon={SourceRepositoryIcon}
             title={displayRepoName(repoName)}
             className="repository-cloning-in-progress-page"
-            subtitle={<Text>Cloning in progress</Text>}
+            subtitle={<Text>{t('cloning-in-progress')}</Text>}
             detail={
                 <>
                     <Code>{(repoFetchError as CloneInProgressError).progress}</Code>
                     {viewerCanAdminister && (
                         <Text className="mt-4">
-                            <Link to={`${repoName}/-/settings`}>Go to settings</Link> to view details
+                            <Trans
+                                i18nKey="go-to-settings-link"
+                                components={{ '0': <Link to={`${repoName}/-/settings`} /> }}
+                            />
                         </Text>
                     )}
                 </>
@@ -96,18 +102,20 @@ export const CloneInProgressPage: React.FunctionComponent<React.PropsWithChildre
 export const RevisionNotFoundErrorPage: React.FunctionComponent<
     React.PropsWithChildren<Pick<RepoContainerErrorProps, 'repoName' | 'viewerCanAdminister' | 'telemetryRecorder'>>
 > = props => {
+    const { t } = useTranslation('repo')
+
     const { repoName, viewerCanAdminister, telemetryRecorder } = props
 
     useEffect(() => telemetryRecorder.recordEvent('repo.error.revisionNotFound', 'view'), [telemetryRecorder])
     return (
         <HeroPage
             icon={RepoQuestionIcon}
-            title="Empty repository"
+            title={t('empty-repository-message')}
             detail={
                 <>
                     {viewerCanAdminister && (
                         <Text>
-                            <Link to={`${repoName}/-/settings`}>Go to settings</Link>
+                            <Link to={`${repoName}/-/settings`}>{t('go-to-settings')}</Link>
                         </Text>
                     )}
                 </>
@@ -119,8 +127,16 @@ export const RevisionNotFoundErrorPage: React.FunctionComponent<
 export const OtherRepoErrorPage: React.FunctionComponent<
     React.PropsWithChildren<Pick<RepoContainerErrorProps, 'repoFetchError' | 'telemetryRecorder'>>
 > = props => {
+    const { t } = useTranslation('repo')
+
     const { repoFetchError, telemetryRecorder } = props
 
     useEffect(() => telemetryRecorder.recordEvent('repo.error.other', 'view'), [telemetryRecorder])
-    return <HeroPage icon={AlertCircleIcon} title="Error" subtitle={<ErrorMessage error={repoFetchError} />} />
+    return (
+        <HeroPage
+            icon={AlertCircleIcon}
+            title={t('error-message')}
+            subtitle={<ErrorMessage error={repoFetchError} />}
+        />
+    )
 }

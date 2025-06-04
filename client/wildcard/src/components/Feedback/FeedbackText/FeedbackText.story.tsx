@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { H1, Text } from '../..'
 import { BrandedStory } from '../../../stories/BrandedStory'
@@ -20,12 +21,16 @@ const config: Meta = {
 
 export default config
 
-export const FeedbackTextExample: StoryFn = () => (
-    <>
-        <H1>FeedbackText</H1>
-        <Text>This is an example of a feedback with a header</Text>
-        <FeedbackText headerText="This is a header text" />
-        <Text>This is an example of a feedback with a footer</Text>
-        <FeedbackText footerText="This is a footer text" />
-    </>
-)
+export const FeedbackTextExample: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Feedback/FeedbackText')
+
+    return (
+        <>
+            <H1>FeedbackText</H1>
+            <Text>{t('feedback-example-with-header')}</Text>
+            <FeedbackText headerText={t('header-text-example')} />
+            <Text>{t('feedback-example-with-footer')}</Text>
+            <FeedbackText footerText={t('footer-text-example')} />
+        </>
+    )
+}

@@ -2,6 +2,7 @@ import { type FC, useCallback, useEffect, useState } from 'react'
 
 import { mdiWebhook } from '@mdi/js'
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { useMutation, useQuery } from '@sourcegraph/http-client'
@@ -99,6 +100,8 @@ interface EditFormProps {
 }
 
 const EditForm: FC<EditFormProps> = ({ onSave, webhook }) => {
+    const { t } = useTranslation('site-admin/outbound-webhooks')
+
     const [url, setURL] = useState(webhook.url)
     const [eventTypes, setEventTypes] = useState<Set<string>>(
         new Set(webhook.eventTypes.map(eventType => eventType?.eventType ?? '').filter(eventType => eventType !== ''))
@@ -126,7 +129,7 @@ const EditForm: FC<EditFormProps> = ({ onSave, webhook }) => {
         <>
             {error && <ErrorAlert error={error} />}
             <Form>
-                <Input label="URL" required={true} value={url} onChange={event => setURL(event.target.value)} />
+                <Input label={t('url')} required={true} value={url} onChange={event => setURL(event.target.value)} />
                 <EventTypes className="border-top pt-2" values={eventTypes} onChange={setEventTypes} />
                 <SubmitButton
                     onClick={() => {
@@ -134,7 +137,7 @@ const EditForm: FC<EditFormProps> = ({ onSave, webhook }) => {
                     }}
                     state={loading ? 'loading' : eventTypes.size === 0 ? 'disabled' : undefined}
                 >
-                    Save
+                    {t('save-button')}
                 </SubmitButton>
             </Form>
         </>
@@ -147,22 +150,26 @@ interface HeaderProps {
     url?: string
 }
 
-const Header: FC<HeaderProps> = ({ id, onDeleted, url }) => (
-    <>
-        <PageTitle title="Edit outgoing webhook" />
-        <PageHeader
-            path={[
-                { icon: mdiWebhook },
-                { to: '/site-admin/webhooks/outgoing', text: 'Outgoing webhooks' },
-                {
-                    to: `/site-admin/webhooks/outgoing/${id}`,
-                    text: url || 'Edit',
-                },
-            ]}
-            headingElement="h2"
-            description="Edit an outgoing webhook"
-            className="mb-3"
-            actions={<DeleteButton id={id} onDeleted={onDeleted} />}
-        />
-    </>
-)
+const Header: FC<HeaderProps> = ({ id, onDeleted, url }) => {
+    const { t } = useTranslation('site-admin/outbound-webhooks')
+
+    return (
+        <>
+            <PageTitle title={t('edit-outgoing-webhook')} />
+            <PageHeader
+                path={[
+                    { icon: mdiWebhook },
+                    { to: '/site-admin/webhooks/outgoing', text: 'Outgoing webhooks' },
+                    {
+                        to: `/site-admin/webhooks/outgoing/${id}`,
+                        text: url || 'Edit',
+                    },
+                ]}
+                headingElement="h2"
+                description={t('edit-outgoing-webhook-description')}
+                className="mb-3"
+                actions={<DeleteButton id={id} onDeleted={onDeleted} />}
+            />
+        </>
+    )
+}

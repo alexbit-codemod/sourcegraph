@@ -3,6 +3,7 @@ import React, { type FunctionComponent, useCallback, useEffect, useMemo, useStat
 import { mdiOpenInNew, mdiCheckCircle, mdiChevronUp, mdiChevronDown, mdiAlertOctagram, mdiContentCopy } from '@mdi/js'
 import classNames from 'classnames'
 import { parseISO, formatDistance } from 'date-fns'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Toggle } from '@sourcegraph/branded/src/components/Toggle'
 import { useQuery, useMutation } from '@sourcegraph/http-client'
@@ -47,6 +48,8 @@ interface Props extends TelemetryProps, TelemetryV2Props {}
 const capitalize = (text: string): string => (text && text[0].toUpperCase() + text.slice(1)) || ''
 
 const SiteUpdateCheck: React.FC = () => {
+    const { t } = useTranslation('site-admin')
+
     const { data, loading, error } = useQuery<SiteUpdateCheckResult, SiteUpdateCheckVariables>(SITE_UPDATE_CHECK, {})
     const autoUpdateCheckingEnabled = window.context.site['update.channel'] === 'release'
 
@@ -57,7 +60,8 @@ const SiteUpdateCheck: React.FC = () => {
             {data && (
                 <>
                     <Text className="mb-1">
-                        Version {data.site.productVersion}{' '}
+                        {t('version-info')}
+                        {data.site.productVersion}{' '}
                         <small className="text-muted">
                             (
                             <Link to="https://sourcegraph.com/changelog" target="_blank" rel="noopener">
@@ -71,7 +75,8 @@ const SiteUpdateCheck: React.FC = () => {
                     <div>
                         {data.site.updateCheck.pending && (
                             <Alert className={styles.alert} variant="primary">
-                                <LoadingSpinner /> Checking for updates... (reload in a few seconds)
+                                <LoadingSpinner />
+                                {t('checking-for-updates')}
                             </Alert>
                         )}
                         {data.site.updateCheck.errorMessage && (
@@ -90,7 +95,8 @@ const SiteUpdateCheck: React.FC = () => {
                                         rel="noopener"
                                         className="ml-1"
                                     >
-                                        Update available to version {data.site.updateCheck.updateVersionAvailable}{' '}
+                                        {t('update-available')}
+                                        {data.site.updateCheck.updateVersionAvailable}{' '}
                                         <Icon aria-hidden={true} svgPath={mdiOpenInNew} />
                                     </AnchorLink>
                                 ) : (
@@ -100,7 +106,7 @@ const SiteUpdateCheck: React.FC = () => {
                                             className="text-success mr-1"
                                             svgPath={mdiCheckCircle}
                                         />
-                                        Up to date
+                                        {t('up-to-date')}
                                     </span>
                                 )}
                                 <span className={classNames('text-muted pl-2 ml-2', styles.lastChecked)}>
@@ -121,17 +127,21 @@ const SiteUpdateCheck: React.FC = () => {
             )}
 
             <small>
-                {autoUpdateCheckingEnabled
-                    ? 'Automatically checking for updates.'
-                    : 'Automatic checking for updates disabled.'}{' '}
-                Change <Code>update.channel</Code> in <Link to="/site-admin/configuration">site configuration</Link> to{' '}
-                {autoUpdateCheckingEnabled ? 'disable' : 'enable'} automatic checking.
+                {t('auto-update-checking-status', { autoUpdateCheckingEnabled })}
+                <Code>update.channel</Code>
+                <Trans
+                    i18nKey="change-site-configuration"
+                    values={{ autoUpdateCheckingEnabled }}
+                    components={{ '0': <Link to="/site-admin/configuration" /> }}
+                />
             </small>
         </>
     )
 }
 
 const SiteUpgradeReadiness: FunctionComponent = () => {
+    const { t } = useTranslation('site-admin')
+
     const { data, loading, error, refetch } = useQuery<SiteUpgradeReadinessResult, SiteUpgradeReadinessVariables>(
         SITE_UPGRADE_READINESS,
         {}
@@ -175,11 +185,11 @@ const SiteUpgradeReadiness: FunctionComponent = () => {
             {data && !loading && (
                 <>
                     <div className="d-flex flex-row justify-content-between">
-                        <H3>Automatic Upgrade State</H3>
+                        <H3>{t('automatic-upgrade-state')}</H3>
                         <div>
                             <Label>
                                 <Toggle
-                                    title="Enable Auto Upgrade"
+                                    title={t('enable-auto-upgrade')}
                                     value={autoUpgradeEnabled}
                                     onToggle={handleToggle}
                                     className="mr-2"
@@ -197,39 +207,52 @@ const SiteUpgradeReadiness: FunctionComponent = () => {
                     <div>
                         {data?.site.upgradeReadiness.schemaDrift.length > 0 ? (
                             <span>
-                                <Icon aria-hidden={true} svgPath={mdiAlertOctagram} className="text-danger" /> Schema
-                                drift is detected. Please resolve schema drift before attempting an upgrade.
+                                <Icon aria-hidden={true} svgPath={mdiAlertOctagram} className="text-danger" />
+                                {t('schema-drift-detected')}
                                 <br />
-                                <br /> Learn more about the migrator{' '}
-                                <Link to="/help/admin/updates/migrator/migrator-operations">upgrade command</Link>.
+                                <br />
+                                <Trans
+                                    i18nKey="learn-more-migrator"
+                                    components={{ '0': <Link to="/help/admin/updates/migrator/migrator-operations" /> }}
+                                />
                             </span>
                         ) : data?.site.upgradeReadiness.requiredOutOfBandMigrations.length > 0 ? (
                             <span>
-                                Some oob migrations must complete before a multi version upgrade can finish. Learn more
-                                at the <Link to="/site-admin/migrations?filters=pending">migrations</Link> page, and
-                                reach out to{' '}
-                                <Link to="mailto:support@sourcegraph.com" target="_blank" rel="noopener noreferrer">
-                                    Sourcegraph support
-                                </Link>{' '}
-                                for clarifications.
+                                <Trans
+                                    i18nKey="oob-migrations-completion"
+                                    components={{
+                                        '0': <Link to="/site-admin/migrations?filters=pending" />,
+                                        '1': (
+                                            <Link
+                                                to="mailto:support@sourcegraph.com"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            />
+                                        ),
+                                    }}
+                                />
                                 <br />
-                                <br /> Learn more about the migrator{' '}
-                                <Link to="/help/admin/updates/migrator/migrator-operations">upgrade command</Link>.
+                                <br />
+                                <Trans
+                                    i18nKey="learn-more-migrator-duplicate"
+                                    components={{ '0': <Link to="/help/admin/updates/migrator/migrator-operations" /> }}
+                                />
                             </span>
                         ) : (
                             <span>
-                                This instance is prepared for a multiversion upgrade. If automatic upgrades are enabled
-                                the migrator upgrade command will now infer to and from versions.
+                                {t('prepared-for-multiversion-upgrade')}
                                 <br />
                                 <br />
-                                Learn more about the migrator{' '}
-                                <Link to="/help/admin/updates/migrator/migrator-operations">upgrade command</Link>.
+                                <Trans
+                                    i18nKey="learn-more-migrator-duplicate-2"
+                                    components={{ '0': <Link to="/help/admin/updates/migrator/migrator-operations" /> }}
+                                />
                             </span>
                         )}
                     </div>
                     <hr className="my-3" />
                     <div className="d-flex flex-row justify-content-between">
-                        <H3>Schema drift</H3>
+                        <H3>{t('schema-drift')}</H3>
 
                         <div>
                             {data.site.upgradeReadiness.schemaDrift.length > 0 && (
@@ -240,7 +263,7 @@ const SiteUpgradeReadiness: FunctionComponent = () => {
                                     aria-label="export schema drift"
                                     className="mr-2"
                                 >
-                                    Export
+                                    {t('export-action')}
                                 </Button>
                             )}
                             <Button
@@ -249,7 +272,7 @@ const SiteUpgradeReadiness: FunctionComponent = () => {
                                 size="sm"
                                 aria-label="refresh drift check"
                             >
-                                Refresh
+                                {t('refresh-action')}
                             </Button>
                         </div>
                     </div>
@@ -257,11 +280,18 @@ const SiteUpgradeReadiness: FunctionComponent = () => {
                         <Collapse isOpen={isExpanded} onOpenChange={setIsExpanded} openByDefault={false}>
                             <Alert className={classNames('mb-0', styles.alert)} variant="danger">
                                 <span>
-                                    There are schema drifts detected, please contact{' '}
-                                    <Link to="mailto:support@sourcegraph.com" target="_blank" rel="noopener noreferrer">
-                                        Sourcegraph support
-                                    </Link>{' '}
-                                    for assistance.
+                                    <Trans
+                                        i18nKey="schema-drift-assistance"
+                                        components={{
+                                            '0': (
+                                                <Link
+                                                    to="mailto:support@sourcegraph.com"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                />
+                                            ),
+                                        }}
+                                    />
                                 </span>
                             </Alert>
                             <CollapseHeader
@@ -270,7 +300,7 @@ const SiteUpgradeReadiness: FunctionComponent = () => {
                                 outline={true}
                                 className="p-0 m-0 mt-2 mb-2 border-0 w-100 font-weight-normal d-flex justify-content-between align-items-center"
                             >
-                                <H4 className="m-0">View drift output</H4>
+                                <H4 className="m-0">{t('view-drift-output')}</H4>
                                 <Icon
                                     aria-hidden={true}
                                     svgPath={isExpanded ? mdiChevronUp : mdiChevronDown}
@@ -280,92 +310,101 @@ const SiteUpgradeReadiness: FunctionComponent = () => {
                             </CollapseHeader>
 
                             <CollapsePanel>
-                                {data.site.upgradeReadiness.schemaDrift.map(summary => (
-                                    <div key={summary.name} className={styles.container}>
-                                        <div className={styles.tableContainer}>
-                                            <div className={styles.table}>
-                                                <div className={styles.label}>Problem:</div>
-                                                <div>{summary.problem}</div>
-                                            </div>
-                                            <div className={styles.table}>
-                                                <div className={styles.label}>Solution:</div>
-                                                <div>{capitalize(summary.solution)}</div>
-                                            </div>
-                                            <div className={styles.table}>
-                                                <div className={styles.label}>Hint:</div>
-                                                <div>
-                                                    {summary.urlHint ? (
-                                                        <Link to={summary.urlHint}>
-                                                            See Sourcegraph query for potential fix
-                                                        </Link>
-                                                    ) : (
-                                                        'Not Applicable'
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className={styles.outputContainer}>
-                                            <div className={styles.infoContainer}>
-                                                <div className={styles.label}>Current Delta:</div>
-                                                <div>
-                                                    <LogOutput
-                                                        text={summary.diff ? summary.diff : 'None'}
-                                                        logDescription="The object diff"
-                                                    />
-                                                </div>
-                                            </div>
+                                {data.site.upgradeReadiness.schemaDrift.map(summary => {
+                                    const { t } = useTranslation('site-admin')
 
-                                            <div className={styles.infoContainer}>
-                                                <div className="d-flex flex-row justify-content-between">
-                                                    <div className={styles.label}>Suggested statements to repair:</div>
-                                                    <Button
-                                                        onClick={async () => {
-                                                            if (summary.statements) {
-                                                                await navigator.clipboard.writeText(
-                                                                    summary.statements.join('\n')
-                                                                )
+                                    return (
+                                        <div key={summary.name} className={styles.container}>
+                                            <div className={styles.tableContainer}>
+                                                <div className={styles.table}>
+                                                    <div className={styles.label}>{t('problem-label')}</div>
+                                                    <div>{summary.problem}</div>
+                                                </div>
+                                                <div className={styles.table}>
+                                                    <div className={styles.label}>{t('solution-label')}</div>
+                                                    <div>{capitalize(summary.solution)}</div>
+                                                </div>
+                                                <div className={styles.table}>
+                                                    <div className={styles.label}>{t('hint-label')}</div>
+                                                    <div>
+                                                        {summary.urlHint ? (
+                                                            <Link to={summary.urlHint}>
+                                                                {t('sourcegraph-query-fix')}
+                                                            </Link>
+                                                        ) : (
+                                                            'Not Applicable'
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className={styles.outputContainer}>
+                                                <div className={styles.infoContainer}>
+                                                    <div className={styles.label}>{t('current-delta')}</div>
+                                                    <div>
+                                                        <LogOutput
+                                                            text={summary.diff ? summary.diff : 'None'}
+                                                            logDescription={t('object-diff')}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className={styles.infoContainer}>
+                                                    <div className="d-flex flex-row justify-content-between">
+                                                        <div className={styles.label}>
+                                                            {t('suggested-statements-repair')}
+                                                        </div>
+                                                        <Button
+                                                            onClick={async () => {
+                                                                if (summary.statements) {
+                                                                    await navigator.clipboard.writeText(
+                                                                        summary.statements.join('\n')
+                                                                    )
+                                                                }
+
+                                                                return null
+                                                            }}
+                                                            variant="primary"
+                                                            size="sm"
+                                                            aria-label="copy sql statements to repair"
+                                                            className="mb-1"
+                                                        >
+                                                            <Icon aria-hidden={true} svgPath={mdiContentCopy} />
+                                                        </Button>
+                                                    </div>
+                                                    <div>
+                                                        <LogOutput
+                                                            text={
+                                                                summary.statements
+                                                                    ? summary.statements.join('\n')
+                                                                    : 'None'
                                                             }
-
-                                                            return null
-                                                        }}
-                                                        variant="primary"
-                                                        size="sm"
-                                                        aria-label="copy sql statements to repair"
-                                                        className="mb-1"
-                                                    >
-                                                        <Icon aria-hidden={true} svgPath={mdiContentCopy} />
-                                                    </Button>
-                                                </div>
-                                                <div>
-                                                    <LogOutput
-                                                        text={
-                                                            summary.statements ? summary.statements.join('\n') : 'None'
-                                                        }
-                                                        logDescription="SQL statements to repair"
-                                                    />
+                                                            logDescription={t('sql-statements-repair')}
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    )
+                                })}
                             </CollapsePanel>
                         </Collapse>
                     ) : (
                         <Text>
                             <Alert className={classNames('mb-0', styles.alert)} variant="success">
-                                There is no schema drift detected.
+                                {t('no-schema-drift')}
                             </Alert>
                         </Text>
                     )}
                     <hr className="my-3" />
-                    <H3>Required out-of-band migrations</H3>
+                    <H3>{t('required-oob-migrations')}</H3>
                     {data.site.upgradeReadiness.requiredOutOfBandMigrations.length > 0 ? (
                         <>
                             <span>
                                 <Alert className={classNames('mb-0', styles.alert)} variant="warning">
-                                    There are pending out-of-band migrations that need to complete, please go to{' '}
-                                    <Link to="/site-admin/migrations?filters=pending">migrations</Link> to check
-                                    details.
+                                    <Trans
+                                        i18nKey="pending-oob-migrations"
+                                        components={{ '0': <Link to="/site-admin/migrations?filters=pending" /> }}
+                                    />
                                 </Alert>
                             </span>
                             <ul className="mt-2 pl-3">
@@ -377,7 +416,7 @@ const SiteUpgradeReadiness: FunctionComponent = () => {
                     ) : (
                         <Text>
                             <Alert className={classNames('mb-0', styles.alert)} variant="success">
-                                There are no pending out-of-band migrations that need to complete.
+                                {t('no-pending-oob-migrations')}
                             </Alert>
                         </Text>
                     )}
@@ -392,6 +431,8 @@ const SiteUpgradeReadiness: FunctionComponent = () => {
  * A page displaying information about available updates for the Sourcegraph instance. As well as the readiness status of the instance for upgrade.
  */
 export const SiteAdminUpdatesPage: React.FC<Props> = ({ telemetryService, telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin')
+
     useMemo(() => {
         telemetryService.logViewEvent('SiteAdminUpdates')
         telemetryRecorder.recordEvent('admin.updates', 'view')
@@ -399,7 +440,7 @@ export const SiteAdminUpdatesPage: React.FC<Props> = ({ telemetryService, teleme
 
     return (
         <div>
-            <PageTitle title="Updates - Admin" />
+            <PageTitle title={t('updates-admin')} />
 
             <PageHeader path={[{ text: 'Updates' }]} headingElement="h2" className="mb-3" />
             <Container className="mb-3">

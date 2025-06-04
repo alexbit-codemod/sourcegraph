@@ -1,5 +1,7 @@
 import React, { useCallback } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { logger } from '@sourcegraph/common'
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { Button, H3, Modal, ErrorAlert } from '@sourcegraph/wildcard'
@@ -22,6 +24,8 @@ export const DeleteTeamModal: React.FunctionComponent<React.PropsWithChildren<De
     afterDelete,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('team/list')
+
     const labelId = 'deleteTeam'
 
     const [deleteTeam, { loading, error }] = useDeleteTeam()
@@ -46,17 +50,18 @@ export const DeleteTeamModal: React.FunctionComponent<React.PropsWithChildren<De
 
     return (
         <Modal onDismiss={onCancel} aria-labelledby={labelId}>
-            <H3 id={labelId}>Delete team {team.name}?</H3>
+            <H3 id={labelId}>
+                {t('delete-team')}
+                {team.name}?
+            </H3>
 
-            <strong className="d-block text-danger my-3">
-                Removing teams is irreversible and will cascade to existing child teams.
-            </strong>
+            <strong className="d-block text-danger my-3">{t('removing-teams-warning')}</strong>
 
             {error && <ErrorAlert error={error} />}
 
             <div className="d-flex justify-content-end pt-1">
                 <Button disabled={loading} className="mr-2" onClick={onCancel} outline={true} variant="secondary">
-                    Cancel
+                    {t('cancel-button')}
                 </Button>
                 <LoaderButton
                     disabled={loading}
@@ -64,7 +69,7 @@ export const DeleteTeamModal: React.FunctionComponent<React.PropsWithChildren<De
                     variant="danger"
                     loading={loading}
                     alwaysShowLabel={true}
-                    label="Delete team"
+                    label={t('delete-team-label')}
                 />
             </div>
         </Modal>

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo } from 'react'
 
 import { mdiChevronRight } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { forkJoin, of, type Observable } from 'rxjs'
 import { catchError, map, mergeMap } from 'rxjs/operators'
 
@@ -135,6 +136,8 @@ const filters: Filter[] = [
 export const SiteAdminFeatureFlagsPage: React.FunctionComponent<
     React.PropsWithChildren<SiteAdminFeatureFlagsPageProps>
 > = ({ fetchFeatureFlags = defaultFetchFeatureFlags, productVersion = window.context.version, telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin')
+
     // Try to parse out a git rev based on the product version, otherwise just fall back
     // to main.
     const productGitVersion = parseProductReference(productVersion)
@@ -198,35 +201,37 @@ export const SiteAdminFeatureFlagsPage: React.FunctionComponent<
 
     return (
         <>
-            <PageTitle title="Feature flags - Admin" />
+            <PageTitle title={t('feature-flags-admin')} />
 
             <PageHeader
                 headingElement="h2"
                 path={[{ text: 'Feature flags' }]}
                 description={
                     <>
-                        Feature flags, as opposed to experimental features, are intended to be strictly short-lived.
-                        They are designed to be useful for A/B testing, and the values of all active feature flags are
-                        added to every event log for the purpose of analytics. To learn more, refer to{' '}
-                        <Link target="_blank" rel="noopener noreferrer" to="/help/dev/how-to/use_feature_flags">
-                            How to use feature flags
-                        </Link>
-                        .
+                        <Trans
+                            i18nKey="feature-flags-description"
+                            components={{
+                                '0': (
+                                    <Link
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        to="/help/dev/how-to/use_feature_flags"
+                                    />
+                                ),
+                            }}
+                        />
                     </>
                 }
                 className={classNames(styles.pageHeader, 'mb-3')}
                 actions={
                     <ButtonLink variant="primary" to="./configuration/new">
-                        Create feature flag
+                        {t('create-feature-flag')}
                     </ButtonLink>
                 }
             />
 
             {isSourcegraphCloudManagedFeatureFlagsWarningShown && (
-                <Alert variant="info">
-                    Feature flag settings are managed by Sourcegraph and will be overridden by updates. Contact support
-                    for help.
-                </Alert>
+                <Alert variant="info">{t('feature-flag-settings-management')}</Alert>
             )}
 
             <Container>

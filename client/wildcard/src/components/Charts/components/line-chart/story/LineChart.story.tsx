@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import type { Meta, StoryFn } from '@storybook/react'
 import { ParentSize } from '@visx/responsive'
+import { useTranslation } from 'react-i18next'
 import { ResizableBox } from 'react-resizable'
 
 import { BrandedStory } from '../../../../../stories/BrandedStory'
@@ -52,19 +53,18 @@ export const LineChartsDemo: StoryFn = () => (
 )
 
 const PlainChartExample = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Charts/components/line-chart/story')
+
     const [active, setActive] = useState(false)
 
     return (
         <section style={{ flexBasis: 0 }}>
-            <H2>Plain chart</H2>
+            <H2>{t('plain-chart')}</H2>
 
-            <Text>
-                A standard example of the line chart. The static dataset has a fixed size (400 x 400). The
-                active/focused line is pulled in front of other non-active lines. (synthetic z-index for SVG elements).
-            </Text>
+            <Text>{t('line-chart-standard-example')}</Text>
 
             <Button variant="primary" size="sm" className="mb-2" onClick={() => setActive(!active)}>
-                Start Y axis at zero
+                {t('start-y-axis-zero')}
             </Button>
 
             <LineChart width={400} height={400} zeroYAxisMin={active} series={FLAT_SERIES} />
@@ -72,33 +72,36 @@ const PlainChartExample = () => {
     )
 }
 
-const FlatChartExample = () => (
-    <section style={{ flexBasis: 0 }}>
-        <H2>Flat chart</H2>
+const FlatChartExample = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Charts/components/line-chart/story')
 
-        <Text>
-            A standard example of the line chart but with fully flat datasets, try to navigate with arrows keyboard
-            navigation.
-        </Text>
+    return (
+        <section style={{ flexBasis: 0 }}>
+            <H2>{t('flat-chart')}</H2>
 
-        <LineChart width={400} height={400} series={FLAT_XY_SERIES} />
-    </section>
-)
+            <Text>{t('line-chart-flat-datasets')}</Text>
+
+            <LineChart width={400} height={400} series={FLAT_XY_SERIES} />
+        </section>
+    )
+}
 
 const PlainStackedChartExample = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Charts/components/line-chart/story')
+
     const [active, setActive] = useState(false)
 
     return (
         <section style={{ flexBasis: 0 }}>
-            <H2>Plain stacked chart</H2>
+            <H2>{t('plain-stacked-chart')}</H2>
 
             <Text>
-                <Badge variant="merged">Experimental</Badge> Stacked line chart. Each series value is calculated based
-                on the previous series in the series array.
+                <Badge variant="merged">{t('experimental')}</Badge>
+                {t('stacked-line-chart-description')}
             </Text>
 
             <Button variant="primary" size="sm" className="mb-2" onClick={() => setActive(!active)}>
-                Start Y axis at zero
+                {t('start-y-axis-zero-2')}
             </Button>
 
             <LineChart stacked={true} width={400} height={400} series={STANDARD_SERIES} zeroYAxisMin={active} />
@@ -106,62 +109,69 @@ const PlainStackedChartExample = () => {
     )
 }
 
-const ResponsiveChartExample = () => (
-    <section style={{ flexBasis: 0 }}>
-        <H2>Responsive chart</H2>
+const ResponsiveChartExample = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Charts/components/line-chart/story')
 
-        <Text style={{ maxWidth: 400, minWidth: 400 }}>
-            SVG charts always require width and height values. In order to track parent size you can use ParentSize
-            helper. Try to resize the following chart (drag any corner of the chart block).
-            <br />
-            <br />
-            Note: Resize logic comes from react-resize package and not from this chart package.
-        </Text>
+    return (
+        <section style={{ flexBasis: 0 }}>
+            <H2>{t('responsive-chart')}</H2>
 
-        <ResizableBox width={400} height={400} axis="both" minConstraints={[200, 200]} className="p-3">
-            <ParentSize debounceTime={0}>
-                {parent => <LineChart width={parent.width} height={parent.height} series={STANDARD_SERIES} />}
-            </ParentSize>
-        </ResizableBox>
-    </section>
-)
+            <Text style={{ maxWidth: 400, minWidth: 400 }}>
+                {t('svg-chart-resize')}
+                <br />
+                <br />
+                {t('resize-logic-note')}
+            </Text>
 
-const WithLegendExample = () => (
-    <section style={{ flexBasis: 0 }}>
-        <H2>Line chart with legend</H2>
+            <ResizableBox width={400} height={400} axis="both" minConstraints={[200, 200]} className="p-3">
+                <ParentSize debounceTime={0}>
+                    {parent => <LineChart width={parent.width} height={parent.height} series={STANDARD_SERIES} />}
+                </ParentSize>
+            </ResizableBox>
+        </section>
+    )
+}
 
-        <Text>
-            The following chart layout (chart and legend blocks) has a fixed size of 400x400. Chart size is calculated
-            (Chart = ParentSize - LegendSize).
-        </Text>
+const WithLegendExample = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Charts/components/line-chart/story')
 
-        <div className="d-flex flex-column" style={{ width: 400, height: 400 }}>
-            <ParentSize className="flex-1">
-                {({ width, height }) => <LineChart width={width} height={height} series={STANDARD_SERIES} />}
-            </ParentSize>
-            <LegendList className="mt-2">
-                {STANDARD_SERIES.map(line => (
-                    <LegendItem key={line.id} color={getLineColor(line)} name={line.name} />
-                ))}
-            </LegendList>
-        </div>
-    </section>
-)
+    return (
+        <section style={{ flexBasis: 0 }}>
+            <H2>{t('line-chart-with-legend')}</H2>
 
-const WithHugeDataExample = () => (
-    <section style={{ flexBasis: 0 }}>
-        <H2>With unaligned by (x and y axes) data series</H2>
+            <Text>{t('chart-layout-fixed-size')}</Text>
 
-        <Text>
-            It's a possible situation when some series has fewer points than others on the chart. In this case, we just
-            show only existing points in the tooltip.
-        </Text>
+            <div className="d-flex flex-column" style={{ width: 400, height: 400 }}>
+                <ParentSize className="flex-1">
+                    {({ width, height }) => <LineChart width={width} height={height} series={STANDARD_SERIES} />}
+                </ParentSize>
+                <LegendList className="mt-2">
+                    {STANDARD_SERIES.map(line => (
+                        <LegendItem key={line.id} color={getLineColor(line)} name={line.name} />
+                    ))}
+                </LegendList>
+            </div>
+        </section>
+    )
+}
 
-        <LineChart width={400} height={400} series={SERIES_WITH_HUGE_DATA} />
-    </section>
-)
+const WithHugeDataExample = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Charts/components/line-chart/story')
+
+    return (
+        <section style={{ flexBasis: 0 }}>
+            <H2>{t('unaligned-data-series')}</H2>
+
+            <Text>{t('tooltip-existing-points')}</Text>
+
+            <LineChart width={400} height={400} series={SERIES_WITH_HUGE_DATA} />
+        </section>
+    )
+}
 
 const WithZeroOneDataExample = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Charts/components/line-chart/story')
+
     const SERIES: Series<StandardDatum>[] = [
         {
             id: 'series_001',
@@ -178,11 +188,11 @@ const WithZeroOneDataExample = () => {
 
     return (
         <section style={{ flexBasis: 0 }}>
-            <H2>Short datasets</H2>
+            <H2>{t('short-datasets')}</H2>
 
             <Text>
-                <Badge variant="warning">Should be improved</Badge> Currently, line charts and axis components may not
-                handle short datasets properly. This is something that we want to improve in the future.
+                <Badge variant="warning">{t('improvement-needed')}</Badge>
+                {t('line-charts-short-datasets-issue')}
             </Text>
 
             <LineChart width={400} height={400} series={SERIES} />
@@ -190,22 +200,28 @@ const WithZeroOneDataExample = () => {
     )
 }
 
-const StackedWithDataMissingValues = () => (
-    <section style={{ flexBasis: 0 }}>
-        <H2>Unaligned stacked datasets</H2>
+const StackedWithDataMissingValues = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Charts/components/line-chart/story')
 
-        <Text>
-            <Badge variant="merged">Experimental</Badge> In case some datasets are unaligned, the stacked value will
-            take the closest points of previous data series, interpolate values and apply a synthetically calculated
-            value as a basis for the current series point.
-            <br />
-            <Code>
-                ---- X ---- <br />
-                -----|----- <br />
-                --S--D--E-- <br />X = D (interpolation between S and E) + X (value)
-            </Code>
-        </Text>
+    return (
+        <section style={{ flexBasis: 0 }}>
+            <H2>{t('unaligned-stacked-datasets')}</H2>
 
-        <LineChart stacked={true} width={400} height={400} series={UNALIGNED_SERIES} />
-    </section>
-)
+            <Text>
+                <Badge variant="merged">{t('experimental-2')}</Badge>
+                {t('interpolation-unaligned-datasets')}
+                <br />
+                <Code>
+                    {t('x-axis-label')}
+                    <br />
+                    -----|----- <br />
+                    {t('series-labels')}
+                    <br />
+                    {t('interpolation-formula')}
+                </Code>
+            </Text>
+
+            <LineChart stacked={true} width={400} height={400} series={UNALIGNED_SERIES} />
+        </section>
+    )
+}

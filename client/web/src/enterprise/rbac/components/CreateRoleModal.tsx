@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import {
@@ -45,6 +46,8 @@ export const CreateRoleModal: React.FunctionComponent<React.PropsWithChildren<Cr
     allPermissions,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/rbac/components')
+
     const labelId = 'createRole'
 
     const [createRole, { loading, error }] = useCreateRole(afterCreate)
@@ -71,13 +74,13 @@ export const CreateRoleModal: React.FunctionComponent<React.PropsWithChildren<Cr
     const isButtonDisabled = nameInput.input.value.trimStart().length === 0 || formAPI.submitting
     return (
         <Modal onDismiss={onCancel} aria-labelledby={labelId}>
-            <H3 id={labelId}>Add new role</H3>
-            <Text>Enter a unique, descriptive name for the role.</Text>
+            <H3 id={labelId}>{t('add-new-role')}</H3>
+            <Text>{t('enter-unique-role-name')}</Text>
 
             <Form onSubmit={handleSubmit} ref={ref}>
                 <Label className="w-100">
                     <Text alignment="left" className="mb-2">
-                        Role name
+                        {t('role-name-label')}
                     </Text>
 
                     <Input
@@ -106,7 +109,7 @@ export const CreateRoleModal: React.FunctionComponent<React.PropsWithChildren<Cr
 
                 <div className="d-flex justify-content-end">
                     <Button disabled={loading} className="mr-2" onClick={onCancel} outline={true} variant="secondary">
-                        Cancel
+                        {t('cancel-button')}
                     </Button>
                     <LoaderButton
                         type="submit"
@@ -114,7 +117,7 @@ export const CreateRoleModal: React.FunctionComponent<React.PropsWithChildren<Cr
                         loading={formAPI.submitting}
                         variant="primary"
                         alwaysShowLabel={true}
-                        label="Create"
+                        label={t('create-button')}
                     />
                 </div>
             </Form>

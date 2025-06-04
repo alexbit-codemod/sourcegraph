@@ -1,0 +1,19 @@
+{
+  "viewing-settings-org-name": "Viewing settings for <0>{{propsOrgName}}</0>",
+  "org-settings-apply-to-members": "Organization settings apply to all members. User settings override organization settings.",
+  "error-404-not-found": "404: Not Found",
+  "delete-organization-confirmation": "Delete organization?",
+  "delete-organization-warning_nested_1": " from Sourcegraph.",
+  "delete-organization-warning_nested_0": "You are going to delete",
+  "delete-organization-warning": "This cannot be undone. Deleting an organization removes all of its resources.",
+  "type-organization-name-to-confirm": "Please type the organization’s name to continue",
+  "delete-this-organization": " Delete this organization",
+  "toggle-menu-visibility": {
+    "true": "Hide",
+    "false": "Show"
+  },
+  "viewing-settings-for-organization": "Viewing settings for <0>{{orgName}}</0>",
+  "organization-label": "Organization",
+  "delete-organization": "Delete this organization",
+  "confirm-delete-organization": "Delete this organization"
+}

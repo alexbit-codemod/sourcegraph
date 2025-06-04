@@ -2,23 +2,32 @@ import { useState } from 'react'
 
 import { action } from '@storybook/addon-actions'
 import type { Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { Label } from '@sourcegraph/wildcard'
 import { BrandedStory } from '@sourcegraph/wildcard/src/stories'
 
 import { Toggle } from './Toggle'
 
-const ToggleExample: typeof Toggle = ({ value, disabled, onToggle }) => (
-    <div className="d-flex align-items-baseline mb-2">
-        <Toggle value={value} onToggle={onToggle} disabled={disabled} title="Hello" className="mr-2" />
-        <div>
-            <Label className="mb-0">
-                {disabled ? 'Disabled ' : ''}Toggle {value ? 'on' : 'off'}
-            </Label>
-            <small className="field-message mt-0">This is helper text as needed</small>
+const ToggleExample: typeof Toggle = ({ value, disabled, onToggle }) => {
+    const { t } = useTranslation('../../branded/src/components')
+
+    return (
+        <div className="d-flex align-items-baseline mb-2">
+            <Toggle
+                value={value}
+                onToggle={onToggle}
+                disabled={disabled}
+                title={t('greeting-hello')}
+                className="mr-2"
+            />
+            <div>
+                <Label className="mb-0">{t('toggle-status', { disabled, value })}</Label>
+                <small className="field-message mt-0">{t('helper-text')}</small>
+            </div>
         </div>
-    </div>
-)
+    )
+}
 const onToggle = action('onToggle')
 
 const config: Meta = {

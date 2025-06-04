@@ -2,6 +2,7 @@ import React from 'react'
 
 import classNames from 'classnames'
 import { snakeCase } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { type ErrorLike, isErrorLike } from '@sourcegraph/common'
 import { isHTTPAuthError } from '@sourcegraph/http-client'
@@ -52,6 +53,8 @@ export const ViewOnSourcegraphButton: React.FunctionComponent<
     className,
     iconClassName,
 }) => {
+    const { t } = useTranslation('../../browser/src/shared/code-hosts/shared')
+
     className = classNames('open-on-sourcegraph', className)
     const mutedIconClassName = classNames(styles.iconMuted, iconClassName)
     const commonProps: Partial<SourcegraphIconButtonProps> = {
@@ -99,7 +102,7 @@ export const ViewOnSourcegraphButton: React.FunctionComponent<
                 {...commonErrorCaseProps}
                 iconClassName={mutedIconClassName}
                 href={url}
-                label="Error"
+                label={t('error-message')}
                 title={repoExistsOrError.message}
                 ariaLabel={repoExistsOrError.message}
             />
@@ -117,9 +120,9 @@ export const ViewOnSourcegraphButton: React.FunctionComponent<
                 {...commonProps}
                 href={url} // Still link to the repository (which will show a not found page, and can link to further actions)
                 iconClassName={mutedIconClassName}
-                label="Repository not found"
-                title={`The repository does not exist on the configured Sourcegraph instance ${sourcegraphURL}`}
-                ariaLabel={`The repository does not exist on the configured Sourcegraph instance ${sourcegraphURL}`}
+                label={t('repository-not-found')}
+                title={t('repository-does-not-exist-sourcegraph', { sourcegraphURL })}
+                ariaLabel={t('repository-does-not-exist-sourcegraph-duplicate', { sourcegraphURL })}
             />
         )
     }
@@ -134,8 +137,8 @@ export const ViewOnSourcegraphButton: React.FunctionComponent<
         <SourcegraphIconButton
             {...commonProps}
             href={url}
-            title="View repository on Sourcegraph"
-            ariaLabel="View repository on Sourcegraph"
+            title={t('view-repository-sourcegraph')}
+            ariaLabel={t('view-repository-sourcegraph-duplicate')}
         />
     )
 }
@@ -146,13 +149,19 @@ interface ConfigureSourcegraphButtonProps extends Partial<SourcegraphIconButtonP
 
 export const ConfigureSourcegraphButton: React.FunctionComponent<
     React.PropsWithChildren<ConfigureSourcegraphButtonProps>
-> = ({ onConfigureSourcegraphClick, codeHostType, ...commonProps }) => (
-    <SourcegraphIconButton
-        {...commonProps}
-        href={commonProps.href || new URL(snakeCase(codeHostType), 'https://sourcegraph.com/docs/integration/').href}
-        onClick={onConfigureSourcegraphClick}
-        label="Configure Sourcegraph"
-        title="Set up Sourcegraph for search and code navigation on private repositories"
-        ariaLabel="Set up Sourcegraph for search and code navigation on private repositories"
-    />
-)
+> = ({ onConfigureSourcegraphClick, codeHostType, ...commonProps }) => {
+    const { t } = useTranslation('../../browser/src/shared/code-hosts/shared')
+
+    return (
+        <SourcegraphIconButton
+            {...commonProps}
+            href={
+                commonProps.href || new URL(snakeCase(codeHostType), 'https://sourcegraph.com/docs/integration/').href
+            }
+            onClick={onConfigureSourcegraphClick}
+            label={t('configure-sourcegraph')}
+            title={t('setup-sourcegraph-private-repositories')}
+            ariaLabel={t('setup-sourcegraph-private-repositories-duplicate')}
+        />
+    )
+}

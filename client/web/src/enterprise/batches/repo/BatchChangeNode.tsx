@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { Link, Button, H2 } from '@sourcegraph/wildcard'
@@ -29,6 +30,8 @@ export const BatchChangeNode: React.FunctionComponent<React.PropsWithChildren<Ba
     now = () => new Date(),
     ...props
 }) => {
+    const { t } = useTranslation('enterprise/batches/repo')
+
     const [node, setNode] = useState(initialNode)
     useEffect(() => {
         setNode(initialNode)
@@ -39,7 +42,8 @@ export const BatchChangeNode: React.FunctionComponent<React.PropsWithChildren<Ba
             <div className={classNames(styles.nodeFullWidth, 'text-center mt-2')}>
                 <small>
                     <span>
-                        {node.changesets.totalCount} changesets total (showing first {MAX_CHANGESETS_COUNT})
+                        {node.changesets.totalCount}
+                        {t('changesets-total-summary', { MAX_CHANGESETS_COUNT })}
                     </span>
                 </small>
                 <Button
@@ -51,7 +55,7 @@ export const BatchChangeNode: React.FunctionComponent<React.PropsWithChildren<Ba
                     size="sm"
                     as={Link}
                 >
-                    See all
+                    {t('see-all-button')}
                 </Button>
             </div>
         ) : null
@@ -83,7 +87,8 @@ export const BatchChangeNode: React.FunctionComponent<React.PropsWithChildren<Ba
                         </Link>
                     </H2>
                     <small className="text-muted d-sm-block">
-                        created <Timestamp date={node.createdAt} now={now} />
+                        {t('created-label')}
+                        <Timestamp date={node.createdAt} now={now} />
                     </small>
                 </div>
             </div>

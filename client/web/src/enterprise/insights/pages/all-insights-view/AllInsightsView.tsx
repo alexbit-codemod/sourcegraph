@@ -1,6 +1,7 @@
 import { useEffect, type FC } from 'react'
 
 import { mdiPlus } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { isDefined } from '@sourcegraph/common'
 import { dataOrThrowErrors } from '@sourcegraph/http-client'
@@ -24,6 +25,8 @@ import styles from './AllInsightsView.module.scss'
 interface AllInsightsViewProps extends TelemetryProps, TelemetryV2Props {}
 
 export const AllInsightsView: FC<AllInsightsViewProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/all-insights-view')
+
     const { connection, loading, hasNextPage, error, fetchMore } = useShowMorePagination<
         GetAllInsightConfigurationsResult,
         GetAllInsightConfigurationsVariables,
@@ -64,19 +67,23 @@ export const AllInsightsView: FC<AllInsightsViewProps> = props => {
             <footer className={styles.footer}>
                 {hasNextPage && (
                     <Button variant="secondary" outline={true} disabled={loading} onClick={fetchMore}>
-                        Show more
+                        {t('show-more')}
                     </Button>
                 )}
                 <span className={styles.paginationInfo}>
-                    {connection.totalCount ?? 0} <b>insights</b> total{' '}
-                    {hasNextPage && <>(showing first {insights.length})</>}
+                    <Trans
+                        i18nKey="total-insights-count"
+                        values={{ connectionTotalCount0: connection.totalCount ?? 0 }}
+                        components={{ '0': <b /> }}
+                    />
+                    {hasNextPage && <>{t('showing-first-insights', { insightsLength: insights.length })}</>}
                 </span>
             </footer>
         </div>
     ) : (
         <Card as={Link} to="/insights/create" className={styles.emptyCard}>
             <Icon svgPath={mdiPlus} inline={false} aria-hidden={true} height="2rem" width="2rem" />
-            <span>It seems that you don't have any insights yet, you can create your first insight from here.</span>
+            <span>{t('no-insights-message')}</span>
         </Card>
     )
 }

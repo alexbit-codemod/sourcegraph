@@ -1,5 +1,7 @@
 import * as React from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { gql } from '@sourcegraph/http-client'
 import { Link } from '@sourcegraph/wildcard'
 
@@ -31,14 +33,18 @@ export const productSubscriptionFragment = gql`
     }
 `
 
-export const ProductSubscriptionNodeHeader: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => (
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Plan</th>
-        </tr>
-    </thead>
-)
+export const ProductSubscriptionNodeHeader: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
+    const { t } = useTranslation('enterprise/dotcom/productSubscriptions')
+
+    return (
+        <thead>
+            <tr>
+                <th>{t('identifier')}</th>
+                <th>{t('subscription-plan')}</th>
+            </tr>
+        </thead>
+    )
+}
 
 export interface ProductSubscriptionNodeProps {
     node: ProductSubscriptionFields

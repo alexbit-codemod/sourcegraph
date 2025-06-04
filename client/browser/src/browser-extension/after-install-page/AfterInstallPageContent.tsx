@@ -2,6 +2,7 @@ import React, { type VideoHTMLAttributes } from 'react'
 
 import { mdiOpenInNew, mdiGithub, mdiCheck, mdiGitlab, mdiBitbucket, mdiLock, mdiBookOpenPageVariant } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { SourcegraphLogo } from '@sourcegraph/branded/src/components/SourcegraphLogo'
 import { PhabricatorIcon } from '@sourcegraph/shared/src/components/icons'
@@ -48,6 +49,8 @@ interface AfterInstallPageContentProps {
 }
 
 export const AfterInstallPageContent: React.FC<AfterInstallPageContentProps> = props => {
+    const { t } = useTranslation('../../browser/src/browser-extension/after-install-page')
+
     // Safari does not support the search shortcut. So don't show the feature.
     const isSafari = getPlatformName() === 'safari-extension'
     const showSearchShortcut = !isSafari
@@ -59,36 +62,32 @@ export const AfterInstallPageContent: React.FC<AfterInstallPageContentProps> = p
                     <SourcegraphLogo className={styles.sourcegraphLogo} />
                 </Link>
                 <Link to="https://sourcegraph.com/docs/integration/browser_extension" target="_blank" rel="noopener">
-                    Browser extension docs <Icon aria-hidden={true} svgPath={mdiOpenInNew} />
+                    {t('browser-extension-docs')}
+                    <Icon aria-hidden={true} svgPath={mdiOpenInNew} />
                 </Link>
             </div>
 
             <div className="container mt-3">
-                <H1>🎉 You’ve just installed the Sourcegraph browser extension!</H1>
-                <Text className="lead mb-0">
-                    We’ve gathered the most important information that will get your started:
-                </Text>
+                <H1>{t('extension-installed-message')}</H1>
+                <Text className="lead mb-0">{t('important-information-started')}</Text>
             </div>
 
             <section className="border-bottom py-5">
                 <div className="container">
-                    <H2 className="mb-4">How do I use the extension?</H2>
+                    <H2 className="mb-4">{t('how-to-use-extension')}</H2>
                     <div className="row">
                         <div className="col-md-6">
-                            <H3>Code navigation on your code host</H3>
-                            <Text>
-                                Sourcegraph browser extension adds code navigation to files and diffs on GitHub, GitHub
-                                Enterprise, GitLab, Phabricator, Bitbucket Server, and Gerrit.
-                            </Text>
+                            <H3>{t('code-navigation-code-host')}</H3>
+                            <Text>{t('sourcegraph-extension-navigation-info')}</Text>
                             <Video {...props} name="CodeIntelligenceOnCodeHost" width={1760} height={1060} />
                         </div>
                         {showSearchShortcut && (
                             <div className="col-md-6 mt-4 mt-md-0">
-                                <H3>Search shortcut in the URL location bar</H3>
+                                <H3>{t('search-shortcut-url-bar')}</H3>
                                 <Text>
-                                    Type <Code>src</Code>
-                                    <kbd>tab</kbd> in the address bar of your browser to search for queries on
-                                    Sourcegraph.
+                                    {t('type-src')}
+                                    <Code>{t('src-key')}</Code>
+                                    <Trans i18nKey="search-queries-sourcegraph" components={{ '0': <kbd /> }} />
                                 </Text>
                                 <Video {...props} name="BrowserShortcut" width={1196} height={720} />
                             </div>
@@ -101,56 +100,68 @@ export const AfterInstallPageContent: React.FC<AfterInstallPageContentProps> = p
                 <div className="container">
                     <div className="row">
                         <div className="col-md-6 d-flex flex-column">
-                            <H2 className="mb-4">Make it work on your codehost</H2>
+                            <H2 className="mb-4">{t('make-it-work-codehost')}</H2>
                             <div className="bg-2 rounded p-3 mb-3 d-flex flex-column justify-content-center">
                                 <H3 className={classNames('mb-3', styles.codeHostTitles)}>
-                                    <Icon className={styles.codeHostLogo} aria-hidden={true} svgPath={mdiGithub} />{' '}
-                                    github.com
+                                    <Icon className={styles.codeHostLogo} aria-hidden={true} svgPath={mdiGithub} />
+                                    {t('github-url')}
                                 </H3>
                                 <Text className="m-0">
-                                    <Icon aria-hidden={true} svgPath={mdiCheck} /> No action required.Your extension
-                                    works here by default.
+                                    <Icon aria-hidden={true} svgPath={mdiCheck} />
+                                    {t('no-action-required-extension')}
                                 </Text>
                             </div>
                             <div className="bg-2 rounded p-3 d-flex flex-column justify-content-center">
                                 <H3 className={classNames('d-flex flex-wrap', styles.codeHostTitles)}>
                                     <div className="mr-5 mb-3">
-                                        <Icon className={styles.codeHostLogo} aria-hidden={true} svgPath={mdiGithub} />{' '}
-                                        GitHub Enterprise
+                                        <Icon className={styles.codeHostLogo} aria-hidden={true} svgPath={mdiGithub} />
+                                        {t('github-enterprise-url')}
                                     </div>
                                     <div className="mr-5 mb-3">
-                                        <Icon className={styles.codeHostLogo} aria-hidden={true} svgPath={mdiGitlab} />{' '}
-                                        GitLab
+                                        <Icon className={styles.codeHostLogo} aria-hidden={true} svgPath={mdiGitlab} />
+                                        {t('gitlab-url')}
                                     </div>
                                     <div className="mr-5 mb-3">
                                         <Icon
                                             className={styles.codeHostLogo}
                                             aria-hidden={true}
                                             svgPath={mdiBitbucket}
-                                        />{' '}
-                                        Bitbucket Server
+                                        />
+                                        {t('bitbucket-server-url')}
                                     </div>
                                     <div className="mr-5 mb-3">
-                                        <Icon className={styles.codeHostLogo} as={PhabricatorIcon} aria-hidden={true} />{' '}
-                                        Phabricator
+                                        <Icon className={styles.codeHostLogo} as={PhabricatorIcon} aria-hidden={true} />
+                                        {t('phabricator-url')}
                                     </div>
                                 </H3>
-                                <Text>Your extension needs explicit permissions to your code host:</Text>
+                                <Text>{t('explicit-permissions-required')}</Text>
                                 <ol className="m-0">
-                                    <li>Navigate to any page on your code host.</li>
+                                    <li>{t('navigate-to-code-host')}</li>
                                     <li>
-                                        Click the{' '}
-                                        <q>
-                                            <strong>Grant permissions</strong>
-                                        </q>{' '}
-                                        button.
+                                        <Trans
+                                            i18nKey="grant-permissions-button"
+                                            values={{
+                                                strongGrantPermissionsStrong: (
+                                                    <>
+                                                        <strong>Grant permissions</strong>
+                                                    </>
+                                                ),
+                                            }}
+                                            components={{ '0': <q /> }}
+                                        />
                                     </li>
                                     <li>
-                                        Click{' '}
-                                        <q>
-                                            <strong>Allow</strong>
-                                        </q>{' '}
-                                        in the permissions request popup.
+                                        <Trans
+                                            i18nKey="allow-permissions-popup"
+                                            values={{
+                                                strongAllowStrong: (
+                                                    <>
+                                                        <strong>Allow</strong>
+                                                    </>
+                                                ),
+                                            }}
+                                            components={{ '0': <q /> }}
+                                        />
                                     </li>
                                 </ol>
                             </div>
@@ -166,43 +177,52 @@ export const AfterInstallPageContent: React.FC<AfterInstallPageContentProps> = p
                 <div className="container">
                     <div className="row">
                         <div className="col-md-6 d-flex flex-column">
-                            <H2 className="mb-4">Make it work for private code</H2>
-                            <Text>By default, the browser extension works only for public code.</Text>
+                            <H2 className="mb-4">{t('make-it-work-private-code')}</H2>
+                            <Text>{t('extension-public-code-only')}</Text>
                             <div className="d-flex align-items-center">
                                 <div className="bg-3 rounded-circle p-2">
                                     <Icon aria-hidden={true} svgPath={mdiLock} />
                                 </div>
                                 <Text className="m-0 ml-3">
-                                    To use the browser extension with your private repositories, you need to set up a{' '}
-                                    <strong>private Sourcegraph instance</strong> and connect the extension to it.
+                                    <Trans
+                                        i18nKey="setup-private-sourcegraph-instance"
+                                        components={{ '0': <strong /> }}
+                                    />
                                 </Text>
                             </div>
                             <div className="bg-2 rounded p-3 mt-4 d-flex flex-column justify-content-around">
-                                <Text>Follow these instructions:</Text>
+                                <Text>{t('follow-instructions')}</Text>
                                 <ol className="m-0 d-flex flex-column justify-content-around">
                                     <li>
-                                        <strong>Install Sourcegraph</strong> (
-                                        <Link
-                                            to="https://sourcegraph.com/docs/admin/install"
-                                            target="_blank"
-                                            rel="noopener"
-                                        >
-                                            visit our docs for instructions
-                                        </Link>
-                                        ).Skip this step if you already have a private Sourcegraph instance.
+                                        <Trans
+                                            i18nKey="install-sourcegraph-instructions"
+                                            components={{
+                                                '0': <strong />,
+                                                '1': (
+                                                    <Link
+                                                        to="https://sourcegraph.com/docs/admin/install"
+                                                        target="_blank"
+                                                        rel="noopener"
+                                                    />
+                                                ),
+                                            }}
+                                        />
                                     </li>
                                     <li>
-                                        Click the Sourcegraph extension icon in the browser toolbar to{' '}
-                                        <Link to="./options.html" rel="noopener" target="_blank">
-                                            open the settings page
-                                        </Link>
-                                        .
+                                        <Trans
+                                            i18nKey="open-settings-page"
+                                            components={{
+                                                '0': <Link to="./options.html" rel="noopener" target="_blank" />,
+                                            }}
+                                        />
                                     </li>
                                     <li>
-                                        Enter the <strong>URL</strong> (including the protocol) of your Sourcegraph
-                                        instance (such as <q>https://sourcegraph.example.com</q>).
+                                        <Trans
+                                            i18nKey="enter-sourcegraph-url"
+                                            components={{ '0': <strong />, '1': <q /> }}
+                                        />
                                     </li>
-                                    <li>Make sure a green checkmark appears in the input field.</li>
+                                    <li>{t('checkmark-input-field')}</li>
                                 </ol>
                             </div>
                         </div>
@@ -215,21 +235,24 @@ export const AfterInstallPageContent: React.FC<AfterInstallPageContentProps> = p
 
             <section className="py-5">
                 <div className="container">
-                    <H2 className="mb-4">Additional resources</H2>
+                    <H2 className="mb-4">{t('additional-resources')}</H2>
                     <div className="d-flex w-100 align-items-center">
                         <div className="bg-3 rounded-circle p-2">
                             <Icon aria-hidden={true} svgPath={mdiBookOpenPageVariant} />
                         </div>
                         <Text className="m-0 ml-3">
-                            Read the{' '}
-                            <Link
-                                to="https://sourcegraph.com/docs/integration/browser_extension"
-                                rel="noopener"
-                                target="_blank"
-                            >
-                                Sourcegraph docs
-                            </Link>{' '}
-                            to learn more about how we respect your privacy, troubleshooting and extension features.
+                            <Trans
+                                i18nKey="read-sourcegraph-docs"
+                                components={{
+                                    '0': (
+                                        <Link
+                                            to="https://sourcegraph.com/docs/integration/browser_extension"
+                                            rel="noopener"
+                                            target="_blank"
+                                        />
+                                    ),
+                                }}
+                            />
                         </Text>
                     </div>
                 </div>

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 
 import { mdiWebhook, mdiMapSearch, mdiPlus } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
@@ -30,6 +31,8 @@ export const SiteAdminWebhooksPage: React.FunctionComponent<React.PropsWithChild
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('site-admin')
+
     useEffect(() => {
         telemetryService.logPageView('SiteAdminWebhooks')
         telemetryRecorder.recordEvent('admin.webhooks', 'view')
@@ -39,11 +42,11 @@ export const SiteAdminWebhooksPage: React.FunctionComponent<React.PropsWithChild
     const headerTotals = useWebhookPageHeader()
     return (
         <div className="site-admin-webhooks-page">
-            <PageTitle title="Incoming webhooks" />
+            <PageTitle title={t('incoming-webhooks-title')} />
             <PageHeader
                 path={[{ icon: mdiWebhook }, { to: '/site-admin/webhooks/incoming', text: 'Incoming webhooks' }]}
                 headingElement="h2"
-                description="Use incoming webhooks to notify Sourcegraph of code changes or changeset events."
+                description={t('incoming-webhooks-description')}
                 className="mb-3"
                 actions={
                     <ButtonLink
@@ -51,7 +54,8 @@ export const SiteAdminWebhooksPage: React.FunctionComponent<React.PropsWithChild
                         className="test-create-webhook"
                         variant="primary"
                     >
-                        <Icon aria-hidden={true} svgPath={mdiPlus} /> Create webhook
+                        <Icon aria-hidden={true} svgPath={mdiPlus} />
+                        {t('create-webhook-action')}
                     </ButtonLink>
                 }
             />
@@ -62,12 +66,12 @@ export const SiteAdminWebhooksPage: React.FunctionComponent<React.PropsWithChild
                         <PerformanceGauge
                             count={headerTotals.totalErrors}
                             countClassName={headerTotals.totalErrors > 0 ? 'text-danger' : ''}
-                            label="error"
+                            label={t('error-message')}
                         />
                         <PerformanceGauge
                             count={headerTotals.totalNoEvents}
                             countClassName={headerTotals.totalNoEvents > 0 ? 'text-warning' : ''}
-                            label="no event"
+                            label={t('no-event-message')}
                         />
                     </div>
                 )}
@@ -106,9 +110,13 @@ export const SiteAdminWebhooksPage: React.FunctionComponent<React.PropsWithChild
     )
 }
 
-const EmptyList: React.FunctionComponent<React.PropsWithChildren<{}>> = () => (
-    <div className="text-muted text-center mb-3 w-100">
-        <Icon className="icon" svgPath={mdiMapSearch} inline={false} aria-hidden={true} />
-        <div className="pt-2">No webhooks have been created so far.</div>
-    </div>
-)
+const EmptyList: React.FunctionComponent<React.PropsWithChildren<{}>> = () => {
+    const { t } = useTranslation('site-admin')
+
+    return (
+        <div className="text-muted text-center mb-3 w-100">
+            <Icon className="icon" svgPath={mdiMapSearch} inline={false} aria-hidden={true} />
+            <div className="pt-2">{t('no-webhooks-created-message')}</div>
+        </div>
+    )
+}

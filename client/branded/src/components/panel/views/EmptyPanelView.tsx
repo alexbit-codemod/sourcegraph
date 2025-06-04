@@ -2,6 +2,7 @@ import React from 'react'
 
 import { mdiCancel } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Icon } from '@sourcegraph/wildcard'
 
@@ -12,13 +13,16 @@ interface EmptyPanelViewProps {
 }
 
 export const EmptyPanelView: React.FunctionComponent<React.PropsWithChildren<EmptyPanelViewProps>> = props => {
+    const { t } = useTranslation('../../branded/src/components/panel/views')
+
     const { className, children } = props
 
     return (
         <div className={classNames(styles.emptyPanel, className)}>
             {children || (
                 <>
-                    <Icon className="mr-2" aria-hidden={true} svgPath={mdiCancel} /> Nothing to show here
+                    <Icon className="mr-2" aria-hidden={true} svgPath={mdiCancel} />
+                    {t('nothing-to-show-here')}
                 </>
             )}
         </div>

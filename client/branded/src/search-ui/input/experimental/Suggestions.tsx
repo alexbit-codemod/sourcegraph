@@ -2,6 +2,7 @@ import React, { type MouseEvent, useMemo, useState, useCallback, useLayoutEffect
 
 import { mdiInformationOutline } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { isSafari } from '@sourcegraph/common'
 import { SearchPatternType } from '@sourcegraph/shared/src/graphql-operations'
@@ -168,12 +169,14 @@ const Footer: FC<{ option: Option }> = ({ option }) => (
 )
 
 const ActionInfo: FC<{ action: Action; shortcut: string }> = ({ action, shortcut }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/input/experimental')
+
     let info: Renderable = action.info ?? null
     switch (action.type) {
         case 'completion': {
             info = (
                 <>
-                    <strong>add</strong> to your query
+                    <Trans i18nKey="add-to-query" components={{ '0': <strong /> }} />
                 </>
             )
             break
@@ -181,7 +184,7 @@ const ActionInfo: FC<{ action: Action; shortcut: string }> = ({ action, shortcut
         case 'goto': {
             info = (
                 <>
-                    <strong>go to</strong> the suggestion
+                    <Trans i18nKey="go-to-suggestion" components={{ '0': <strong /> }} />
                 </>
             )
             break
@@ -189,7 +192,7 @@ const ActionInfo: FC<{ action: Action; shortcut: string }> = ({ action, shortcut
         case 'command': {
             info = (
                 <>
-                    <strong>execute</strong> the command
+                    <Trans i18nKey="execute-command" components={{ '0': <strong /> }} />
                 </>
             )
             break
@@ -198,7 +201,11 @@ const ActionInfo: FC<{ action: Action; shortcut: string }> = ({ action, shortcut
 
     return (
         <>
-            Press <kbd>{shortcutDisplayName(shortcut)}</kbd> to {info}.
+            <Trans
+                i18nKey="press-shortcut-to-info"
+                values={{ shortcutDisplayNameShortcut: <>{shortcutDisplayName(shortcut)}</>, info }}
+                components={{ '0': <kbd /> }}
+            />
         </>
     )
 }

@@ -13,6 +13,7 @@ import classNames from 'classnames'
 import BarChartIcon from 'mdi-react/BarChartIcon'
 import MagnifyIcon from 'mdi-react/MagnifyIcon'
 import ToolsIcon from 'mdi-react/ToolsIcon'
+import { useTranslation } from 'react-i18next'
 import { useLocation, type RouteObject } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 
@@ -135,6 +136,8 @@ export const GlobalNavbar: React.FunctionComponent<React.PropsWithChildren<Globa
     showFeedbackModal,
     ...props
 }) => {
+    const { t } = useTranslation('nav')
+
     const location = useLocation()
 
     const routeMatch = useRoutesMatch(props.routes)
@@ -234,11 +237,11 @@ export const GlobalNavbar: React.FunctionComponent<React.PropsWithChildren<Globa
                                         size="sm"
                                         as={Link}
                                     >
-                                        Sign in
+                                        {t('sign-in')}
                                     </Button>
                                     {!isSourcegraphDotCom && window.context?.allowSignup && (
                                         <ButtonLink to="/sign-up" variant="primary" size="sm">
-                                            Sign up
+                                            {t('sign-up')}
                                         </ButtonLink>
                                     )}
                                 </div>
@@ -287,6 +290,8 @@ export interface InlineNavigationPanelProps {
 }
 
 export const InlineNavigationPanel: FC<InlineNavigationPanelProps> = props => {
+    const { t } = useTranslation('nav')
+
     const {
         showSearchContext,
         showSearchJobs,
@@ -334,7 +339,7 @@ export const InlineNavigationPanel: FC<InlineNavigationPanelProps> = props => {
     const searchItem = (
         <NavItem icon={MagnifyIcon} key="search">
             <NavLink variant={navLinkVariant} to={PageRoutes.Search}>
-                Code Search
+                {t('code-search')}
             </NavLink>
         </NavItem>
     )
@@ -343,7 +348,7 @@ export const InlineNavigationPanel: FC<InlineNavigationPanelProps> = props => {
     const codyItem = window.context?.codyEnabledOnInstance ? (
         <NavItem icon={() => <CodyLogoWrapper />} key="cody">
             <NavLink variant={navLinkVariant} to={linkForCodyNavItem(isSourcegraphDotCom)}>
-                Cody
+                {t('cody')}
             </NavLink>
         </NavItem>
     ) : null
@@ -358,7 +363,7 @@ export const InlineNavigationPanel: FC<InlineNavigationPanelProps> = props => {
             {showCodeInsights && (
                 <NavItem icon={BarChartIcon}>
                     <NavLink variant={navLinkVariant} to="/insights">
-                        Insights
+                        {t('insights')}
                     </NavLink>
                 </NavItem>
             )}
@@ -366,7 +371,7 @@ export const InlineNavigationPanel: FC<InlineNavigationPanelProps> = props => {
             {isSourcegraphDotCom && (
                 <NavItem>
                     <NavLink variant={navLinkVariant} to="https://sourcegraph.com" external={true}>
-                        About Sourcegraph
+                        {t('about-sourcegraph')}
                     </NavLink>
                 </NavItem>
             )}

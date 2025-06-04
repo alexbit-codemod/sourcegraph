@@ -1,5 +1,7 @@
 import { type FC, type ReactNode, useEffect, useCallback, useMemo } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { shortcutDisplayName } from '@sourcegraph/shared/src/keyboardShortcuts'
 import { Shortcut } from '@sourcegraph/shared/src/react-shortcuts'
 import { FilterType, resolveFilter } from '@sourcegraph/shared/src/search/query/filters'
@@ -49,6 +51,8 @@ export const NewSearchFilters: FC<NewSearchFiltersProps> = ({
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/results/filters')
+
     const [selectedFilters, setSelectedFilters, serializeFiltersURL] = useUrlFilters()
 
     const hasNoFilters = useMemo(() => {
@@ -127,14 +131,19 @@ export const NewSearchFilters: FC<NewSearchFiltersProps> = ({
         <div className={styles.scrollWrapper}>
             <div className={styles.filterPanelHeader}>
                 <H3 as={H1} className="px-2 py-1">
-                    Filter results
+                    {t('filter-results')}
                 </H3>
                 {selectedFilters.length !== 0 && (
                     <div className={styles.resetButton}>
                         <Shortcut held={['Alt']} ordered={['Backspace']} onMatch={() => setSelectedFilters([])} />
                         <Button variant="link" size="sm" onClick={() => setSelectedFilters([])} className="p-0 m-0">
-                            Reset all
-                            <kbd className={styles.keybind}>{shortcutDisplayName('Alt+Backspace')}</kbd>
+                            <Trans
+                                i18nKey="reset-all"
+                                values={{
+                                    shortcutDisplayNameAltBackspace: <>{shortcutDisplayName('Alt+Backspace')}</>,
+                                }}
+                                components={{ '0': <kbd className={styles.keybind} /> }}
+                            />
                         </Button>
                     </div>
                 )}
@@ -156,7 +165,7 @@ export const NewSearchFilters: FC<NewSearchFiltersProps> = ({
                 )}
 
                 <SearchDynamicFilter
-                    title="By repository"
+                    title={t('by-repository')}
                     filterKind={FilterKind.Repository}
                     filters={filters}
                     selectedFilters={selectedFilters}
@@ -166,7 +175,7 @@ export const NewSearchFilters: FC<NewSearchFiltersProps> = ({
                 />
 
                 <SearchDynamicFilter
-                    title="By language"
+                    title={t('by-language')}
                     filterKind={FilterKind.Language}
                     filters={filters}
                     selectedFilters={selectedFilters}
@@ -176,7 +185,7 @@ export const NewSearchFilters: FC<NewSearchFiltersProps> = ({
                 />
 
                 <SearchDynamicFilter
-                    title="By symbol kind"
+                    title={t('by-symbol-kind')}
                     filterKind={FilterKind.SymbolKind}
                     filters={filters}
                     selectedFilters={selectedFilters}
@@ -186,7 +195,7 @@ export const NewSearchFilters: FC<NewSearchFiltersProps> = ({
                 />
 
                 <SearchDynamicFilter
-                    title="By author"
+                    title={t('by-author')}
                     filterKind={FilterKind.Author}
                     filters={filters}
                     selectedFilters={selectedFilters}
@@ -196,7 +205,7 @@ export const NewSearchFilters: FC<NewSearchFiltersProps> = ({
                 />
 
                 <SearchDynamicFilter
-                    title="By commit date"
+                    title={t('by-commit-date')}
                     filterKind={FilterKind.CommitDate}
                     filters={filters}
                     selectedFilters={selectedFilters}
@@ -206,7 +215,7 @@ export const NewSearchFilters: FC<NewSearchFiltersProps> = ({
                 />
 
                 <SearchDynamicFilter
-                    title="By file"
+                    title={t('by-file')}
                     filterKind={FilterKind.File}
                     filters={filters}
                     selectedFilters={selectedFilters}
@@ -215,7 +224,7 @@ export const NewSearchFilters: FC<NewSearchFiltersProps> = ({
                 />
 
                 <SearchDynamicFilter
-                    title="Snippets"
+                    title={t('snippets')}
                     filterKind={FilterKind.Snippet}
                     filters={snippetFilters}
                     selectedFilters={selectedFilters}
@@ -242,7 +251,7 @@ export const NewSearchFilters: FC<NewSearchFiltersProps> = ({
                         content="Moves all your applied filters from this panel into the query bar at the top and resets selected options from this panel."
                     >
                         <Button variant="secondary" outline={true} onClick={handleApplyButtonFilters}>
-                            Move filters to the query
+                            {t('move-filters-to-query')}
                             <Icon as={ArrowBendIcon} aria-hidden={true} className={styles.moveIcon} />
                         </Button>
                     </Tooltip>

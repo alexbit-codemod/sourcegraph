@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { BrandedStory } from '../../../../stories/BrandedStory'
 import { H2, Text } from '../../../Typography'
@@ -69,26 +70,27 @@ const LANGUAGE_USAGE_DATA: LanguageUsageDatum[] = [
     },
 ]
 
-const PlainPieChartExample = () => (
-    <section style={{ flexBasis: 0 }}>
-        <H2>Plain pie chart</H2>
+const PlainPieChartExample = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Charts/components/pie-chart')
 
-        <Text>
-            Standard PieChart example. All pie chart parts (arcs) are focusable if links for the pie chart are provided
-            through the getDatumLink prop.
-        </Text>
+    return (
+        <section style={{ flexBasis: 0 }}>
+            <H2>{t('plain-pie-chart')}</H2>
 
-        <PieChart<LanguageUsageDatum>
-            width={400}
-            height={400}
-            data={LANGUAGE_USAGE_DATA}
-            getDatumName={getName}
-            getDatumValue={getValue}
-            getDatumColor={getColor}
-            getDatumLink={getLink}
-        />
-    </section>
-)
+            <Text>{t('standard-pie-chart-example')}</Text>
+
+            <PieChart<LanguageUsageDatum>
+                width={400}
+                height={400}
+                data={LANGUAGE_USAGE_DATA}
+                getDatumName={getName}
+                getDatumValue={getValue}
+                getDatumColor={getColor}
+                getDatumLink={getLink}
+            />
+        </section>
+    )
+}
 
 const MANY_LANGUAGES_DATA: LanguageUsageDatum[] = [
     {
@@ -141,24 +143,24 @@ const MANY_LANGUAGES_DATA: LanguageUsageDatum[] = [
     },
 ]
 
-const ManyGroupsPieChartExample = () => (
-    <section style={{ flexBasis: 0 }}>
-        <H2>Many arcs example</H2>
+const ManyGroupsPieChartExample = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Charts/components/pie-chart')
 
-        <Text>
-            The pie chart supports bringing in the front hovered/focused arc element annotation tooltip. In the case of
-            many arcs, it might be useful, but we suggest keeping the number of arcs small and group small value groups
-            in one "Other" group.
-        </Text>
+    return (
+        <section style={{ flexBasis: 0 }}>
+            <H2>{t('many-arcs-example')}</H2>
 
-        <PieChart<LanguageUsageDatum>
-            width={400}
-            height={400}
-            data={MANY_LANGUAGES_DATA}
-            getDatumName={getName}
-            getDatumValue={getValue}
-            getDatumColor={getColor}
-            getDatumLink={getLink}
-        />
-    </section>
-)
+            <Text>{t('tooltip-for-many-arcs')}</Text>
+
+            <PieChart<LanguageUsageDatum>
+                width={400}
+                height={400}
+                data={MANY_LANGUAGES_DATA}
+                getDatumName={getName}
+                getDatumValue={getValue}
+                getDatumColor={getColor}
+                getDatumLink={getLink}
+            />
+        </section>
+    )
+}

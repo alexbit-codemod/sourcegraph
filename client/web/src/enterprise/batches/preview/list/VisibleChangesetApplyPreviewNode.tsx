@@ -9,6 +9,7 @@ import {
     mdiChevronRight,
 } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import type { Maybe } from '@sourcegraph/shared/src/graphql-operations'
 import { Button, Link, Alert, Icon, Tabs, TabList, TabPanels, TabPanel, Tab, H3, Tooltip } from '@sourcegraph/wildcard'
@@ -49,6 +50,8 @@ export interface VisibleChangesetApplyPreviewNodeProps {
 export const VisibleChangesetApplyPreviewNode: React.FunctionComponent<
     React.PropsWithChildren<VisibleChangesetApplyPreviewNodeProps>
 > = ({ node, authenticatedUser, selectable, queryChangesetSpecFileDiffs, expandChangesetDescriptions = false }) => {
+    const { t } = useTranslation('enterprise/batches/preview/list')
+
     const [isExpanded, setIsExpanded] = useState(expandChangesetDescriptions)
     const toggleIsExpanded = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
         event => {
@@ -118,7 +121,7 @@ export const VisibleChangesetApplyPreviewNode: React.FunctionComponent<
                         <Tooltip content="The commit message changed">
                             <Icon aria-label="The commit message changed" svgPath={mdiCardTextOutline} />
                         </Tooltip>
-                        <span className="text-nowrap">Message</span>
+                        <span className="text-nowrap">{t('message')}</span>
                     </div>
                 )}
                 {node.delta.diffChanged && (
@@ -135,7 +138,7 @@ export const VisibleChangesetApplyPreviewNode: React.FunctionComponent<
                             />
                         </Tooltip>
                         <span className="text-nowrap" aria-hidden={true}>
-                            Diff
+                            {t('diff')}
                         </span>
                     </div>
                 )}
@@ -149,7 +152,7 @@ export const VisibleChangesetApplyPreviewNode: React.FunctionComponent<
                         <Tooltip content="The commit author details changed">
                             <Icon aria-label="The commit author details changed" svgPath={mdiAccountEdit} />
                         </Tooltip>
-                        <span className="text-nowrap">Author</span>
+                        <span className="text-nowrap">{t('author')}</span>
                     </div>
                 )}
             </div>
@@ -171,8 +174,8 @@ export const VisibleChangesetApplyPreviewNode: React.FunctionComponent<
                 outline={true}
                 variant="secondary"
             >
-                <Icon aria-hidden={true} svgPath={isExpanded ? mdiChevronDown : mdiChevronRight} />{' '}
-                {isExpanded ? 'Hide' : 'Show'} details
+                <Icon aria-hidden={true} svgPath={isExpanded ? mdiChevronDown : mdiChevronRight} />
+                {t('toggle-details', { isExpanded })}
             </Button>
             {isExpanded && (
                 <>
@@ -204,6 +207,8 @@ const SelectBox: React.FunctionComponent<
         }
     }>
 > = ({ node, selectable }) => {
+    const { t } = useTranslation('enterprise/batches/preview/list')
+
     const isPublishableResult = useMemo(() => checkPublishability(node), [node])
 
     const toggleSelected = useCallback((): void => {
@@ -240,7 +245,7 @@ const SelectBox: React.FunctionComponent<
         <div className="d-flex p-2 align-items-center">
             {input}
             {isPublishableResult.publishable ? (
-                <span className="pl-2 d-block d-sm-none text-nowrap">Modify publication state</span>
+                <span className="pl-2 d-block d-sm-none text-nowrap">{t('modify-publication-state')}</span>
             ) : null}
         </div>
     )
@@ -255,11 +260,19 @@ const ExpandedSection: React.FunctionComponent<
         queryChangesetSpecFileDiffs?: typeof _queryChangesetSpecFileDiffs
     }>
 > = ({ node, authenticatedUser, queryChangesetSpecFileDiffs }) => {
+    const { t } = useTranslation('enterprise/batches/preview/list')
+
     if (node.targets.__typename === 'VisibleApplyPreviewTargetsDetach') {
         return (
             <Alert className="mb-0" variant="info">
-                When run, the changeset <strong>{node.targets.changeset.title}</strong> in repo{' '}
-                <strong>{node.targets.changeset.repository.name}</strong> will be removed from this batch change.
+                <Trans
+                    i18nKey="changeset-removal-notice"
+                    values={{
+                        nodeTargetsChangesetTitle: <>{node.targets.changeset.title}</>,
+                        nodeTargetsChangesetRepositoryName: <>{node.targets.changeset.repository.name}</>,
+                    }}
+                    components={{ '0': <strong />, '1': <strong /> }}
+                />
             </Alert>
         )
     }
@@ -267,8 +280,18 @@ const ExpandedSection: React.FunctionComponent<
     if (node.targets.changesetSpec.description.__typename === 'ExistingChangesetReference') {
         return (
             <Alert className="mb-0" variant="info">
-                When run, the changeset with ID <strong>{node.targets.changesetSpec.description.externalID}</strong>{' '}
-                will be imported from <strong>{node.targets.changesetSpec.description.baseRepository.name}</strong>.
+                <Trans
+                    i18nKey="changeset-import-notice"
+                    values={{
+                        nodeTargetsChangesetSpecDescriptionExternalId: (
+                            <>{node.targets.changesetSpec.description.externalID}</>
+                        ),
+                        nodeTargetsChangesetSpecDescriptionBaseRepositoryName: (
+                            <>{node.targets.changesetSpec.description.baseRepository.name}</>
+                        ),
+                    }}
+                    components={{ '0': <strong />, '1': <strong /> }}
+                />
             </Alert>
         )
     }
@@ -278,7 +301,7 @@ const ExpandedSection: React.FunctionComponent<
             <TabList>
                 <Tab>
                     <span className="text-content" data-tab-content="Changed files">
-                        Changed files
+                        {t('changed-files-title')}
                     </span>
                     {node.delta.diffChanged && (
                         <Tooltip content="Changes in this tab">
@@ -295,7 +318,7 @@ const ExpandedSection: React.FunctionComponent<
 
                 <Tab>
                     <span className="text-content" data-tab-content="Description">
-                        Description
+                        {t('description-title')}
                     </span>
                     {(node.delta.titleChanged || node.delta.bodyChanged) && (
                         <Tooltip content="Changes in this tab">
@@ -312,7 +335,7 @@ const ExpandedSection: React.FunctionComponent<
 
                 <Tab>
                     <span className="text-content" data-tab-content="Commits">
-                        Commits
+                        {t('commits-title')}
                     </span>
                     {(node.delta.authorEmailChanged ||
                         node.delta.authorNameChanged ||
@@ -331,12 +354,7 @@ const ExpandedSection: React.FunctionComponent<
             </TabList>
             <TabPanels>
                 <TabPanel className="pt-3">
-                    {node.delta.diffChanged && (
-                        <Alert variant="warning">
-                            The files in this changeset have been altered from the previous version. These changes will
-                            be pushed to the target branch.
-                        </Alert>
-                    )}
+                    {node.delta.diffChanged && <Alert variant="warning">{t('changeset-alteration-notice')}</Alert>}
                     <ChangesetSpecFileDiffConnection
                         spec={node.targets.changesetSpec.id}
                         queryChangesetSpecFileDiffs={queryChangesetSpecFileDiffs}
@@ -360,7 +378,7 @@ const ExpandedSection: React.FunctionComponent<
                     <H3>
                         {node.targets.changesetSpec.description.title}{' '}
                         <small>
-                            by{' '}
+                            {t('by-label')}
                             <PersonLink
                                 person={
                                     node.targets.__typename === 'VisibleApplyPreviewTargetsUpdate' &&
@@ -390,6 +408,8 @@ const ExpandedSection: React.FunctionComponent<
 const ChangesetSpecTitle: React.FunctionComponent<
     React.PropsWithChildren<{ spec: VisibleChangesetApplyPreviewFields }>
 > = ({ spec }) => {
+    const { t } = useTranslation('enterprise/batches/preview/list')
+
     // Identify the title and external ID/URL, if the changeset spec has them, depending on the type
     let externalID: Maybe<string> = null
     let externalURL: Maybe<{ url: string }> = null
@@ -398,7 +418,12 @@ const ChangesetSpecTitle: React.FunctionComponent<
     if (spec.targets.__typename === 'VisibleApplyPreviewTargetsAttach') {
         // An import changeset does not display a regular title
         if (spec.targets.changesetSpec.description.__typename === 'ExistingChangesetReference') {
-            return <H3>Import changeset #{spec.targets.changesetSpec.description.externalID}</H3>
+            return (
+                <H3>
+                    {t('import-changeset-number')}
+                    {spec.targets.changesetSpec.description.externalID}
+                </H3>
+            )
         }
 
         title = spec.targets.changesetSpec.description.title

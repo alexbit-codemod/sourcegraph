@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react'
 
 import { mdiAccount } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { logger, pluralize } from '@sourcegraph/common'
@@ -33,6 +34,8 @@ export const HistoryAndOwnBar: React.FunctionComponent<Props> = ({
     enableOwnershipPanel,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('repo/blob/own')
+
     const navigate = useNavigate()
 
     const openOwnershipPanel = useCallback(() => {
@@ -68,7 +71,7 @@ export const HistoryAndOwnBar: React.FunctionComponent<Props> = ({
     const errorDiv = (
         <div className={styles.wrapper}>
             <Alert variant="danger" className="mb-0 py-1" aria-live="polite">
-                Error getting history and ownership details about this file.
+                {t('error-getting-history-ownership-details')}
             </Alert>
         </div>
     )
@@ -104,12 +107,15 @@ export const HistoryAndOwnBar: React.FunctionComponent<Props> = ({
                 <Tooltip content="Show ownership details" placement="left">
                     <Button className={styles.own} onClick={openOwnershipPanel}>
                         <div className={styles.ownBranding}>
-                            <Icon svgPath={mdiAccount} aria-hidden="true" className={styles.ownIcon} /> Own
+                            <Icon svgPath={mdiAccount} aria-hidden="true" className={styles.ownIcon} />
+                            {t('own-label')}
                         </div>
 
                         <div className={styles.ownItems}>
                             {ownership.nodes.length === 0 && (
-                                <div className={classNames(styles.ownItem, styles.ownItemEmpty)}>No owner found</div>
+                                <div className={classNames(styles.ownItem, styles.ownItemEmpty)}>
+                                    {t('no-owner-found')}
+                                </div>
                             )}
 
                             {ownership.nodes.slice(0, 2).map((ownership, index) => (
@@ -139,7 +145,9 @@ export const HistoryAndOwnBar: React.FunctionComponent<Props> = ({
                                 </div>
                             ))}
                             {ownership.totalCount > 2 ? (
-                                <div className={styles.ownMore}>+{ownership.totalCount - 2} more</div>
+                                <div className={styles.ownMore}>
+                                    {t('more-ownership-count', { ownershipTotalCount2: ownership.totalCount - 2 })}
+                                </div>
                             ) : (
                                 contributorsCount > 0 && (
                                     <div className={styles.ownMore}>

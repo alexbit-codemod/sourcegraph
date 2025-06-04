@@ -1,4 +1,5 @@
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { Text } from '@sourcegraph/wildcard'
 
@@ -20,28 +21,44 @@ export default config
 
 export const Inline: StoryFn = () => (
     <WebStory>
-        {() => (
-            <Text>
-                <LoaderButton loading={true} label="loader button" variant="primary" />
-            </Text>
-        )}
+        {() => {
+            const { t } = useTranslation('components')
+
+            return (
+                <Text>
+                    <LoaderButton loading={true} label={t('loader-button-primary')} variant="primary" />
+                </Text>
+            )
+        }}
     </WebStory>
 )
 
 export const Block: StoryFn = () => (
-    <WebStory>{() => <LoaderButton loading={true} label="loader button" display="block" variant="primary" />}</WebStory>
+    <WebStory>
+        {() => {
+            const { t } = useTranslation('components')
+
+            return (
+                <LoaderButton loading={true} label={t('loader-button-secondary')} display="block" variant="primary" />
+            )
+        }}
+    </WebStory>
 )
 
 export const WithLabel: StoryFn = () => (
     <WebStory>
-        {() => (
-            <LoaderButton
-                alwaysShowLabel={true}
-                loading={true}
-                label="loader button"
-                display="block"
-                variant="primary"
-            />
-        )}
+        {() => {
+            const { t } = useTranslation('components')
+
+            return (
+                <LoaderButton
+                    alwaysShowLabel={true}
+                    loading={true}
+                    label={t('loader-button-tertiary')}
+                    display="block"
+                    variant="primary"
+                />
+            )
+        }}
     </WebStory>
 )

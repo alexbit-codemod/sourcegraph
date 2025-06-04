@@ -5,6 +5,7 @@ import classNames from 'classnames'
 import BarChartIcon from 'mdi-react/BarChartIcon'
 import MagnifyIcon from 'mdi-react/MagnifyIcon'
 import ToolsIcon from 'mdi-react/ToolsIcon'
+import { useTranslation } from 'react-i18next'
 import { NavLink, useLocation, useNavigate, useSearchParams, type RouteObject } from 'react-router-dom'
 import shallow from 'zustand/shallow'
 
@@ -266,6 +267,8 @@ interface SignInUpButtonsProps {
 }
 
 const SignInUpButtons: FC<SignInUpButtonsProps> = props => {
+    const { t } = useTranslation('nav/new-global-navigation')
+
     const { isSourcegraphDotCom } = props
     const location = useLocation()
 
@@ -279,11 +282,11 @@ const SignInUpButtons: FC<SignInUpButtonsProps> = props => {
                 outline={true}
                 className="mr-1"
             >
-                Sign in
+                {t('sign-in')}
             </Button>
             {!isSourcegraphDotCom && window.context?.allowSignup && (
                 <ButtonLink to="/sign-up" variant="primary" size="sm">
-                    Sign up
+                    {t('sign-up')}
                 </ButtonLink>
             )}
         </div>
@@ -302,6 +305,8 @@ interface SidebarNavigationProps {
 }
 
 const SidebarNavigation: FC<SidebarNavigationProps> = props => {
+    const { t } = useTranslation('nav/new-global-navigation')
+
     const {
         showSearchContext,
         showSearchJobs,
@@ -335,7 +340,7 @@ const SidebarNavigation: FC<SidebarNavigationProps> = props => {
             <nav className={styles.sidebarNavigationNav}>
                 <ul className={styles.sidebarNavigationList}>
                     <NavItemLink url={PageRoutes.Search} icon={MagnifyIcon} onClick={handleNavigationClick}>
-                        Code Search
+                        {t('code-search')}
                     </NavItemLink>
 
                     {window.context?.codyEnabledOnInstance && (
@@ -344,19 +349,19 @@ const SidebarNavigation: FC<SidebarNavigationProps> = props => {
                             icon={CodyLogo}
                             onClick={handleNavigationClick}
                         >
-                            Cody
+                            {t('cody')}
                         </NavItemLink>
                     )}
 
                     {showBatchChanges && (
                         <NavItemLink url="/batch-changes" icon={BatchChangesIconNav} onClick={handleNavigationClick}>
-                            Batch Changes
+                            {t('batch-changes')}
                         </NavItemLink>
                     )}
 
                     {showCodeInsights && (
                         <NavItemLink url="/insights" icon={BarChartIcon} onClick={handleNavigationClick}>
-                            Insights
+                            {t('insights')}
                         </NavItemLink>
                     )}
 
@@ -367,7 +372,8 @@ const SidebarNavigation: FC<SidebarNavigationProps> = props => {
                         showCodeInsights) && (
                         <li className={classNames(styles.navItem, styles.navItemNested)}>
                             <span className={styles.navGroupTitle}>
-                                <Icon as={ToolsIcon} className={styles.icon} aria-hidden={true} /> Tools
+                                <Icon as={ToolsIcon} className={styles.icon} aria-hidden={true} />
+                                {t('tools')}
                             </span>
 
                             <ul
@@ -375,22 +381,22 @@ const SidebarNavigation: FC<SidebarNavigationProps> = props => {
                             >
                                 {showSearchContext && (
                                     <NavItemLink url={PageRoutes.Contexts} onClick={handleNavigationClick}>
-                                        Contexts
+                                        {t('contexts')}
                                     </NavItemLink>
                                 )}
                                 {showSearchNotebook && (
                                     <NavItemLink url={PageRoutes.Notebooks} onClick={handleNavigationClick}>
-                                        Notebooks
+                                        {t('notebooks')}
                                     </NavItemLink>
                                 )}
                                 {showCodeMonitoring && (
                                     <NavItemLink url="/code-monitoring" onClick={handleNavigationClick}>
-                                        Code Monitoring
+                                        {t('code-monitoring')}
                                     </NavItemLink>
                                 )}
                                 {showSearchJobs && (
                                     <NavItemLink url={PageRoutes.SearchJobs} onClick={handleNavigationClick}>
-                                        Search Jobs
+                                        {t('search-jobs')}
                                     </NavItemLink>
                                 )}
                             </ul>
@@ -399,7 +405,7 @@ const SidebarNavigation: FC<SidebarNavigationProps> = props => {
 
                     {isSourcegraphDotCom && (
                         <NavItemLink url="https://sourcegraph.com" external={true} onClick={handleNavigationClick}>
-                            About Sourcegraph
+                            {t('about-sourcegraph')}
                         </NavItemLink>
                     )}
                 </ul>
@@ -409,7 +415,9 @@ const SidebarNavigation: FC<SidebarNavigationProps> = props => {
                 {process.env.NODE_ENV === 'development' && (
                     <DeveloperSettingsGlobalNavItem className={styles.developerLink} />
                 )}
-                <Text className={styles.version}>Sourcegraph version: {window.context.version ?? 'unknown'}</Text>
+                <Text className={styles.version}>
+                    {t('sourcegraph-version', { windowContextVersionUnknown: window.context.version ?? 'unknown' })}
+                </Text>
             </footer>
         </Modal>
     )

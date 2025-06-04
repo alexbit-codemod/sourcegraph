@@ -1,6 +1,7 @@
 import { type FunctionComponent, useEffect, useState } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import styles from './HubSpotForm.module.scss'
 
@@ -245,6 +246,8 @@ export const HubSpotForm: FunctionComponent<HubSpotFormProps> = ({
     userEmail,
     userId,
 }) => {
+    const { t } = useTranslation('marketing/components')
+
     const [formCreated, setFormCreated] = useState<boolean>(false)
     const [scriptsLoaded, setScriptsLoaded] = useState<boolean>(false)
     const [loadError, setLoadError] = useState<boolean>(false)
@@ -313,7 +316,7 @@ export const HubSpotForm: FunctionComponent<HubSpotFormProps> = ({
     ])
 
     if (loadError) {
-        return <div>Error loading form</div>
+        return <div>{t('error-loading-form')}</div>
         // return a minimal React element on failure to load the hubspot script
     }
     return <div id="form-target" data-testid="hubspot-form-container" className={classNames(styles.container)} />

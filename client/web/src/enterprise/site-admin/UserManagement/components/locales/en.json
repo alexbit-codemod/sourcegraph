@@ -1,0 +1,8 @@
+{
+  "manage-roles-for-user": "Manage roles for <0>{{userUsername}}</0>",
+  "roles-permissions-info": "Roles determine which permissions are granted to this user. <0>View roles settings</0> to manage available roles and permissions. Note that system roles cannot be revoked or assigned via this modal.",
+  "search-roles-placeholder": "Search roles...",
+  "navigate-results-instructions": "Press <0>↑</0><1>↓</1> to navigate through results",
+  "cancel-action": "Cancel",
+  "update-button": "Update"
+}

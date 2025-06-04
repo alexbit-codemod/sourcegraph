@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react'
 
 import { mdiChevronRight, mdiCircleOffOutline } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { useQuery } from '@sourcegraph/http-client'
 import { RepoLink } from '@sourcegraph/shared/src/components/RepoLink'
@@ -88,6 +89,8 @@ export const GlobalDashboardPage: React.FunctionComponent<GlobalDashboardPagePro
     indexingEnabled = window.context?.codeIntelAutoIndexingEnabled,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/codeintel/dashboard/pages')
+
     useEffect(() => {
         telemetryService.logPageView('CodeIntelGlobalDashboard')
         telemetryRecorder.recordEvent('admin.codeIntel.dashboard', 'view')
@@ -155,7 +158,7 @@ export const GlobalDashboardPage: React.FunctionComponent<GlobalDashboardPagePro
                 headingElement="h2"
                 path={[
                     {
-                        text: <>Code intelligence summary</>,
+                        text: <>{t('code-intelligence-summary')}</>,
                     },
                 ]}
                 className="mb-3"
@@ -168,12 +171,9 @@ export const GlobalDashboardPage: React.FunctionComponent<GlobalDashboardPagePro
                 {data.codeIntelSummary.repositoriesWithErrors &&
                     data.codeIntelSummary.repositoriesWithErrors.nodes.length > 0 && (
                         <div className={styles.details}>
-                            <H3 className="px-3">Repositories with errors</H3>
+                            <H3 className="px-3">{t('repositories-with-errors')}</H3>
 
-                            <Text className="px-3 text-muted">
-                                The following repositories have failures on the most recent attempt to automatically
-                                index or process precise code intelligence index.
-                            </Text>
+                            <Text className="px-3 text-muted">{t('repositories-failures-summary')}</Text>
 
                             <ul className={styles.detailsList}>
                                 {data.codeIntelSummary.repositoriesWithErrors.nodes.map(({ repository, count }) => (
@@ -192,16 +192,12 @@ export const GlobalDashboardPage: React.FunctionComponent<GlobalDashboardPagePro
                     data.codeIntelSummary.repositoriesWithConfiguration &&
                     data.codeIntelSummary.repositoriesWithConfiguration.nodes.length > 0 && (
                         <div className={styles.details}>
-                            <H3 className="px-3">Repositories with suggestions</H3>
+                            <H3 className="px-3">{t('repositories-with-suggestions')}</H3>
+
+                            <Text className="px-3 text-muted">{t('auto-indexing-jobs-inference')}</Text>
 
                             <Text className="px-3 text-muted">
-                                We have inferred auto-indexing jobs for the following repositories.
-                            </Text>
-
-                            <Text className="px-3 text-muted">
-                                The repositories in this list are ordered by their <strong>searched-based</strong> code
-                                navigation activity (and increasing precise coverage on these repositories will have the
-                                biggest impact on current users).
+                                <Trans i18nKey="repository-activity-impact-summary" components={{ '0': <strong /> }} />
                             </Text>
 
                             <ul className={styles.detailsList}>
@@ -220,8 +216,10 @@ export const GlobalDashboardPage: React.FunctionComponent<GlobalDashboardPagePro
                     )
                 ) : (
                     <div className="text-center p-2">
-                        <Link to="/help/code_navigation/how-to/enable_auto_indexing">Enable auto-indexing</Link> to
-                        automatically create and upload a precise index for your source code.
+                        <Trans
+                            i18nKey="enable-auto-indexing-link"
+                            components={{ '0': <Link to="/help/code_navigation/how-to/enable_auto_indexing" /> }}
+                        />
                     </div>
                 )}
             </Container>

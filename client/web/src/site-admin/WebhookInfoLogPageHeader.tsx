@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 
 import { mdiAlertCircle } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { useQuery } from '@sourcegraph/http-client'
 import { Button, Icon } from '@sourcegraph/wildcard'
@@ -25,6 +26,8 @@ export const WebhookInfoLogPageHeader: React.FunctionComponent<React.PropsWithCh
     onlyErrors,
     onSetOnlyErrors: onSetErrors,
 }) => {
+    const { t } = useTranslation('site-admin')
+
     const onErrorToggle = useCallback(() => onSetErrors(!onlyErrors), [onlyErrors, onSetErrors])
 
     const { data } = useQuery<WebhookByIDLogPageHeaderResult>(WEBHOOK_BY_ID_LOG_PAGE_HEADER, {
@@ -38,7 +41,7 @@ export const WebhookInfoLogPageHeader: React.FunctionComponent<React.PropsWithCh
                 <PerformanceGauge
                     count={errorCount}
                     countClassName={errorCount > 0 ? 'text-danger' : undefined}
-                    label="recent error"
+                    label={t('recent-error')}
                 />
             </div>
             <div className={styles.button}>
@@ -48,7 +51,7 @@ export const WebhookInfoLogPageHeader: React.FunctionComponent<React.PropsWithCh
                         aria-hidden={true}
                         svgPath={mdiAlertCircle}
                     />
-                    <span className="ml-1">Show errors</span>
+                    <span className="ml-1">{t('show-errors')}</span>
                 </Button>
             </div>
         </div>

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Toggle } from '@sourcegraph/branded/src/components/Toggle'
 import { isErrorLike } from '@sourcegraph/common'
@@ -69,6 +70,8 @@ export const ActionEditor: React.FunctionComponent<React.PropsWithChildren<Actio
     children,
     _testStartOpen = false,
 }) => {
+    const { t } = useTranslation('enterprise/code-monitoring/components/actions')
+
     const [expanded, setExpanded] = useState(_testStartOpen)
 
     // Focus card (or edit button) when collapsing the card.
@@ -142,7 +145,7 @@ export const ActionEditor: React.FunctionComponent<React.PropsWithChildren<Actio
                             />
                         </div>
                         <span id={`code-monitoring-${idName}-include-results-toggle`}>
-                            Include search results in sent message
+                            {t('include-search-results-in-sent-message')}
                         </span>
                     </div>
 
@@ -209,7 +212,7 @@ export const ActionEditor: React.FunctionComponent<React.PropsWithChildren<Actio
                             disabled={!canSubmit}
                             variant="secondary"
                         >
-                            Continue
+                            {t('continue-action')}
                         </Button>
                         <Button
                             onClick={cancelHandler}
@@ -217,7 +220,7 @@ export const ActionEditor: React.FunctionComponent<React.PropsWithChildren<Actio
                             variant="secondary"
                             data-testid={`cancel-action-${idName}`}
                         >
-                            Cancel
+                            {t('cancel-action')}
                         </Button>
                         {canDelete && (
                             <>
@@ -228,7 +231,7 @@ export const ActionEditor: React.FunctionComponent<React.PropsWithChildren<Actio
                                     variant="danger"
                                     data-testid={`delete-action-${idName}`}
                                 >
-                                    Delete
+                                    {t('delete-action')}
                                 </Button>
                             </>
                         )}
@@ -252,7 +255,7 @@ export const ActionEditor: React.FunctionComponent<React.PropsWithChildren<Actio
                 >
                     <div className="d-flex flex-wrap justify-content-between align-items-center w-100">
                         <div>
-                            <VisuallyHidden>Edit action: </VisuallyHidden>
+                            <VisuallyHidden>{t('edit-action-label')}</VisuallyHidden>
                             <div className={classNames('font-weight-bold', !completed && styles.cardLink)}>{title}</div>
                             {completed ? (
                                 <span
@@ -277,7 +280,7 @@ export const ActionEditor: React.FunctionComponent<React.PropsWithChildren<Actio
                                     />
                                 </div>
                                 <Button variant="link" className="p-0" ref={editLink}>
-                                    Edit
+                                    {t('edit-action')}
                                 </Button>
                             </div>
                         )}

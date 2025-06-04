@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import { mdiArrowLeftBoldBoxOutline } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import { asError, type ErrorLike, isErrorLike, logger } from '@sourcegraph/common'
@@ -256,6 +257,8 @@ interface ResetPasswordPageProps extends TelemetryV2Props {
  * of the account whose password to reset, and (2) complete the flow by providing the password-reset code.
  */
 export const ResetPasswordPage: React.FunctionComponent<ResetPasswordPageProps> = props => {
+    const { t } = useTranslation('auth')
+
     const location = useLocation()
 
     React.useEffect(() => {
@@ -265,7 +268,7 @@ export const ResetPasswordPage: React.FunctionComponent<ResetPasswordPageProps> 
 
     let body: JSX.Element
     if (props.authenticatedUser) {
-        body = <Alert variant="danger">Authenticated users may not perform password reset.</Alert>
+        body = <Alert variant="danger">{t('authenticated-users-password-reset')}</Alert>
     } else if (props.context.resetPasswordEnabled) {
         const searchParameters = new URLSearchParams(location.search)
         if (searchParameters.has('code') || searchParameters.has('userID')) {
@@ -284,22 +287,18 @@ export const ResetPasswordPage: React.FunctionComponent<ResetPasswordPageProps> 
                     />
                 )
             } else {
-                body = <Alert variant="danger">The password reset link you followed is invalid.</Alert>
+                body = <Alert variant="danger">{t('invalid-password-reset-link')}</Alert>
             }
         } else {
             body = <ResetPasswordInitForm telemetryRecorder={props.telemetryRecorder} />
         }
     } else {
-        body = (
-            <Alert variant="warning">
-                Password reset is disabled. Ask a site administrator to manually reset your password.
-            </Alert>
-        )
+        body = <Alert variant="warning">{t('password-reset-disabled-admin-assistance')}</Alert>
     }
 
     return (
         <>
-            <PageTitle title="Reset your password" />
+            <PageTitle title={t('reset-your-password')} />
             <AuthPageWrapper
                 title="Reset your password"
                 sourcegraphDotComMode={props.context.sourcegraphDotComMode}

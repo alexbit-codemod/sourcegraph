@@ -3,6 +3,7 @@ import { type FC, useState } from 'react'
 import { gql, useQuery } from '@apollo/client'
 import { mdiGithub } from '@mdi/js'
 import { identity } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import {
     ErrorAlert,
@@ -44,6 +45,8 @@ interface GithubOrganizationsPickerProps {
 }
 
 export const GithubOrganizationsPicker: FC<GithubOrganizationsPickerProps> = props => {
+    const { t } = useTranslation('setup-wizard/components/remote-repositories-step/components/code-hosts/github')
+
     const { token, disabled, organizations, externalServiceId, onChange } = props
     const [searchTerm, setSearchTerm] = useState('')
 
@@ -77,12 +80,12 @@ export const GithubOrganizationsPicker: FC<GithubOrganizationsPickerProps> = pro
             <MultiComboboxInput
                 value={searchTerm}
                 disabled={disabled}
-                placeholder="Search organization"
+                placeholder={t('search-organization')}
                 status={loading ? 'loading' : 'initial'}
                 onChange={event => setSearchTerm(event.target.value)}
             />
             <small className="d-block text-muted pl-2 mt-2">
-                Pick at least one organization and we clone all repositories that this organization has
+                {t('pick-at-least-one-organization-clone-repositories')}
             </small>
 
             <MultiComboboxList items={filteredSuggestions} className="mt-2">
@@ -134,6 +137,8 @@ interface GithubRepositoriesPickerProps {
 }
 
 export const GithubRepositoriesPicker: FC<GithubRepositoriesPickerProps> = props => {
+    const { t } = useTranslation('setup-wizard/components/remote-repositories-step/components/code-hosts/github')
+
     const { token, disabled, repositories, externalServiceId, onChange } = props
 
     const [searchTerm, setSearchTerm] = useState('')
@@ -177,12 +182,12 @@ export const GithubRepositoriesPicker: FC<GithubRepositoriesPickerProps> = props
         >
             <MultiComboboxInput
                 value={searchTerm}
-                placeholder="Search repository"
+                placeholder={t('search-repository')}
                 disabled={disabled}
                 status={loading ? 'loading' : 'initial'}
                 onChange={event => setSearchTerm(event.target.value)}
             />
-            <small className="d-block text-muted pl-2 mt-2">Pick at least one repository</small>
+            <small className="d-block text-muted pl-2 mt-2">{t('pick-at-least-one-repository')}</small>
 
             <MultiComboboxList
                 renderEmptyList={true}

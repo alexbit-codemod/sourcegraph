@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 
 import { useApolloClient } from '@apollo/client'
+import { useTranslation, Trans } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import { logger } from '@sourcegraph/common'
@@ -20,6 +21,8 @@ export const SiteAdminRepositoriesPage: React.FunctionComponent<React.PropsWithC
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('site-admin')
+
     const location = useLocation()
 
     useEffect(() => {
@@ -40,11 +43,10 @@ export const SiteAdminRepositoriesPage: React.FunctionComponent<React.PropsWithC
 
     return (
         <div className="site-admin-repositories-page">
-            <PageTitle title="Repositories - Admin" />
+            <PageTitle title={t('repositories-admin-title')} />
             {showRepositoriesAddedBanner && (
                 <Alert variant="success" as="p">
-                    Syncing repositories. It may take a few moments to clone and index each repository. Repository
-                    statuses are displayed below.
+                    {t('syncing-repositories-message')}
                 </Alert>
             )}
             <PageHeader
@@ -52,14 +54,17 @@ export const SiteAdminRepositoriesPage: React.FunctionComponent<React.PropsWithC
                 headingElement="h2"
                 description={
                     <>
-                        Repositories are synced from connected{' '}
-                        <Link
-                            to="/site-admin/external-services"
-                            data-testid="test-repositories-code-host-connections-link"
-                        >
-                            code host connections
-                        </Link>
-                        .
+                        <Trans
+                            i18nKey="repositories-synced-from-code-hosts"
+                            components={{
+                                '0': (
+                                    <Link
+                                        to="/site-admin/external-services"
+                                        data-testid="test-repositories-code-host-connections-link"
+                                    />
+                                ),
+                            }}
+                        />
                     </>
                 }
                 className="mb-3"

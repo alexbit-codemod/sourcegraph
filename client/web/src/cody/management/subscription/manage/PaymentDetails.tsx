@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { mdiCheck } from '@mdi/js'
 import { CardNumberElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
+import { useTranslation } from 'react-i18next'
 
 import { logger } from '@sourcegraph/common'
 import { Button, Form, Grid, H3, Text } from '@sourcegraph/wildcard'
@@ -68,6 +69,8 @@ interface PaymentMethodFormProps {
 }
 
 const PaymentMethodForm: React.FC<PaymentMethodFormProps> = props => {
+    const { t } = useTranslation('cody/management/subscription/manage')
+
     const stripe = useStripe()
     const elements = useElements()
 
@@ -117,7 +120,7 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = props => {
 
     return (
         <>
-            <H3>Edit credit card</H3>
+            <H3>{t('edit-credit-card')}</H3>
 
             <Form onSubmit={handleSubmit} onReset={props.onReset} className={styles.paymentMethodForm}>
                 <StripeCardDetails onFocus={() => setIsErrorVisible(false)} />
@@ -126,7 +129,7 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = props => {
 
                 <div className="mt-4 d-flex justify-content-end">
                     <Button type="reset" variant="secondary" outline={true}>
-                        Cancel
+                        {t('cancel-button')}
                     </Button>
                     <LoadingIconButton
                         type="submit"
@@ -136,7 +139,7 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = props => {
                         isLoading={isLoading}
                         iconSvgPath={mdiCheck}
                     >
-                        Save
+                        {t('save-button')}
                     </LoadingIconButton>
                 </div>
             </Form>

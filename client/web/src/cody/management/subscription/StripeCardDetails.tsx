@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 
 import { CardNumberElement, CardExpiryElement, CardCvcElement } from '@stripe/react-stripe-js'
 import type { StripeCardElementOptions } from '@stripe/stripe-js'
+import { useTranslation } from 'react-i18next'
 
 import { useTheme, Theme } from '@sourcegraph/shared/src/theme'
 import { Label, Text, Grid } from '@sourcegraph/wildcard'
@@ -35,25 +36,27 @@ interface StripeCardDetailsProps {
 }
 
 export const StripeCardDetails: React.FC<StripeCardDetailsProps> = ({ onFocus, className }) => {
+    const { t } = useTranslation('cody/management/subscription')
+
     const getOptions = useCardElementOptions()
 
     return (
         <div className={className}>
             <div>
                 <Label className="d-block font-medium text-sm">
-                    <Text className="mb-1">Card number</Text>
+                    <Text className="mb-1">{t('card-number')}</Text>
                     <CardNumberElement options={getOptions('number')} onFocus={onFocus} />
                 </Label>
             </div>
 
             <Grid columnCount={2} className="mt-3 mb-0 pb-3 font-medium text-sm">
                 <Label className="d-block">
-                    <Text className="mb-1">Expiry date</Text>
+                    <Text className="mb-1">{t('expiry-date')}</Text>
                     <CardExpiryElement options={getOptions('expiry')} onFocus={onFocus} />
                 </Label>
 
                 <Label className="d-block font-medium text-sm">
-                    <Text className="mb-1">CVC</Text>
+                    <Text className="mb-1">{t('cvc-code')}</Text>
                     <CardCvcElement options={getOptions('cvc')} onFocus={onFocus} />
                 </Label>
             </Grid>

@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { mdiChevronDown, mdiContentCopy } from '@mdi/js'
 import classNames from 'classnames'
 import copy from 'copy-to-clipboard'
+import { useTranslation, Trans } from 'react-i18next'
 import { map } from 'rxjs/operators'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
@@ -72,6 +73,8 @@ const filters: Filter[] = [
 export const SiteAdminSlowRequestsPage: React.FunctionComponent<
     React.PropsWithChildren<SiteAdminSlowRequestsPageProps>
 > = ({ telemetryService, telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin')
+
     useEffect(() => {
         telemetryService.logPageView('SiteAdminSlowRequests')
         telemetryRecorder.recordEvent('admin.slowRequests', 'view')
@@ -96,36 +99,32 @@ export const SiteAdminSlowRequestsPage: React.FunctionComponent<
 
     return (
         <div className="site-admin-slow-requests-page">
-            <PageTitle title="Slow requests - Admin" />
+            <PageTitle title={t('slow-requests-admin-title')} />
             <PageHeader
                 path={[{ text: 'Slow requests' }]}
                 headingElement="h2"
-                description={
-                    <>
-                        This is the log of recent slow GraphQL requests received by the Sourcegraph instance. Handy for
-                        seeing what's happening between clients and our API.
-                    </>
-                }
+                description={<>{t('slow-requests-log-description')}</>}
                 className="mb-3"
             />
 
             <Text>
-                The <Icon aria-label="Copy cURL command" svgPath={mdiContentCopy} /> button will copy the GraphQL
-                request as a cURL command in your clipboard. You will need to have $ACCESS_TOKEN set in your environment
-                or to replace it in the copied command.
+                {t('slow-requests-log-prefix')}
+                <Icon aria-label="Copy cURL command" svgPath={mdiContentCopy} />
+                {t('copy-request-button-description')}
             </Text>
 
             <Text>
-                Slow requests capture is configured through <Link to="/site-admin/configuration">site config</Link>:
+                <Trans
+                    i18nKey="slow-requests-capture-configuration"
+                    components={{ '0': <Link to="/site-admin/configuration" /> }}
+                />
             </Text>
             <ul>
                 <li>
-                    Minimum duration for a GraphQL request to be considered slow{' '}
-                    <strong>observability.logSlowGraphQLRequests</strong>
+                    <Trans i18nKey="minimum-duration-slow-graphql-requests" components={{ '0': <strong /> }} />
                 </li>
                 <li>
-                    Maximum count of captured requests to keep{' '}
-                    <strong>observability.captureSlowGraphQLRequestsLimit</strong>
+                    <Trans i18nKey="maximum-captured-requests-limit" components={{ '0': <strong /> }} />
                 </li>
             </ul>
 
@@ -147,6 +146,8 @@ export const SiteAdminSlowRequestsPage: React.FunctionComponent<
 }
 
 const SlowRequestNode: React.FunctionComponent<{ node: React.PropsWithChildren<SlowRequest> }> = ({ node }) => {
+    const { t } = useTranslation('site-admin')
+
     const roundedSecond = Number(node.duration.toFixed(2))
     const [copied, setCopied] = useState(false)
 
@@ -199,15 +200,15 @@ const SlowRequestNode: React.FunctionComponent<{ node: React.PropsWithChildren<S
                 <SimplePopover label="More info">
                     <small className={styles.moreInfo}>
                         <Text>
-                            <strong>Name: </strong>
+                            <strong>{t('request-name-label')}</strong>
                             {node.name}
                         </Text>
                         <Text>
-                            <strong>User: </strong>
+                            <strong>{t('request-user-label')}</strong>
                             {node.user?.username}
                         </Text>
                         <Text>
-                            <strong>Date/time started: </strong>
+                            <strong>{t('request-date-time-label')}</strong>
                             <Timestamp date={node.start} preferAbsolute={true} noAbout={true} />
                         </Text>
                         <Text>
@@ -215,15 +216,15 @@ const SlowRequestNode: React.FunctionComponent<{ node: React.PropsWithChildren<S
                             {roundedSecond.toFixed(2)} second{roundedSecond === 1 ? '' : 's'}
                         </Text>
                         <Text>
-                            <strong>Errors: </strong>
+                            <strong>{t('request-errors-label')}</strong>
                             {node.errors.length > 0 ? node.errors : 'none'}
                         </Text>
                         <Text>
-                            <strong>Variables: </strong>
+                            <strong>{t('request-variables-label')}</strong>
                             <pre>{node.variables}</pre>
                         </Text>
                         <Text>
-                            <strong>Query: </strong>
+                            <strong>{t('request-query-label')}</strong>
                             <pre>{node.query}</pre>
                         </Text>
                     </small>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { mdiArchive } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { pluralize } from '@sourcegraph/common'
@@ -13,6 +14,8 @@ export interface ChangesetsArchivedNoticeProps {}
 export const ChangesetsArchivedNotice: React.FunctionComponent<
     React.PropsWithChildren<ChangesetsArchivedNoticeProps>
 > = () => {
+    const { t } = useTranslation('enterprise/batches/detail')
+
     const location = useLocation()
     const navigate = useNavigate()
 
@@ -46,8 +49,8 @@ export const ChangesetsArchivedNotice: React.FunctionComponent<
                     <Icon aria-hidden={true} className="icon mr-2" svgPath={mdiArchive} />
                 </div>
                 <div className="flex-grow-1">
-                    {archivedCount} {pluralize('changeset', archivedCount)} {pluralize('has', archivedCount, 'have')}{' '}
-                    been <Link to="?tab=archived">archived</Link>.
+                    {archivedCount} {pluralize('changeset', archivedCount)} {pluralize('has', archivedCount, 'have')}
+                    <Trans i18nKey="been-archived-link" components={{ '0': <Link to="?tab=archived" /> }} />
                 </div>
             </div>
         </DismissibleAlert>

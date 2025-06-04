@@ -1,0 +1,16 @@
+{
+  "permissions-updated-successfully": "Permissions successfully updated.",
+  "update-button-label": "Update",
+  "system-label": "System",
+  "delete-role": "Delete role",
+  "confirm-delete-role_nested_1": "\"",
+  "confirm-delete-role_nested_0": "\"",
+  "confirm-delete-role": "Delete the role <0>{$t('confirm-delete-role_nested_0', {  })}</0><0>{$t('confirm-delete-role_nested_1', {  })}</0>? Once deleted, any user previously assigned this role will lose any permissions associated with it that are not also granted by their other roles.",
+  "cancel-action": "Cancel",
+  "delete-button": "Delete",
+  "add-new-role": "Add new role",
+  "enter-unique-role-name": "Enter a unique, descriptive name for the role.",
+  "role-name-label": "Role name",
+  "cancel-button": "Cancel",
+  "create-button": "Create"
+}

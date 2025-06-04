@@ -1,5 +1,6 @@
 import { type FunctionComponent, useEffect, useState } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -20,6 +21,8 @@ export interface CodeIntelRepositoryIndexConfigurationPageProps extends Telemetr
 export const CodeIntelRepositoryIndexConfigurationPage: FunctionComponent<
     CodeIntelRepositoryIndexConfigurationPageProps
 > = ({ repo, authenticatedUser, telemetryService, telemetryRecorder, ...props }) => {
+    const { t } = useTranslation('enterprise/codeintel/configuration/pages')
+
     useEffect(() => {
         telemetryService.logViewEvent('CodeIntelRepositoryIndexConfiguration')
         telemetryRecorder.recordEvent('repo.codeIntel.indexConfig', 'view')
@@ -41,23 +44,23 @@ export const CodeIntelRepositoryIndexConfigurationPage: FunctionComponent<
 
     return (
         <>
-            <PageTitle title="Code graph data repository index configuration" />
+            <PageTitle title={t('code-graph-data-repository-index-configuration-title')} />
             <CodeIntelConfigurationPageHeader>
                 <PageHeader
                     headingElement="h2"
                     path={[
                         {
-                            text: <>Code graph data repository index configuration</>,
+                            text: <>{t('code-graph-data-repository-index-configuration-title-alt')}</>,
                         },
                     ]}
                     description={
                         <>
-                            Provide explicit index job configuration to customize how this repository is indexed. See
-                            the{' '}
-                            <Link to="/help/code_navigation/references/auto_indexing_configuration">
-                                reference guide
-                            </Link>{' '}
-                            for more information.
+                            <Trans
+                                i18nKey="index-job-configuration-description"
+                                components={{
+                                    '0': <Link to="/help/code_navigation/references/auto_indexing_configuration" />,
+                                }}
+                            />
                         </>
                     }
                     className="mb-3"
@@ -66,10 +69,10 @@ export const CodeIntelRepositoryIndexConfigurationPage: FunctionComponent<
             <Tabs size="large" index={activeTabIndex} lazy={true}>
                 <TabList>
                     <Tab as={Link} to="?tab=form" key="form" className="text-decoration-none">
-                        Form
+                        {t('form-label')}
                     </Tab>
                     <Tab as={Link} to="?tab=raw" key="raw" className="text-decoration-none">
-                        Raw
+                        {t('raw-label')}
                     </Tab>
                 </TabList>
                 <TabPanels className="mb-3">

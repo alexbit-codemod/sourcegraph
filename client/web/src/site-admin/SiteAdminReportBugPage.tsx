@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo } from 'react'
 
 import { mapValues, values } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 
 import type { ExternalServiceKind } from '@sourcegraph/shared/src/graphql-operations'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -116,34 +117,33 @@ export const SiteAdminReportBugPage: React.FunctionComponent<React.PropsWithChil
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('site-admin')
+
     useEffect(() => telemetryRecorder.recordEvent('admin.reportBug', 'view'), [telemetryRecorder])
 
     const isLightTheme = useIsLightTheme()
     const allConfig = useObservable(useMemo(fetchAllConfigAndSettings, []))
     return (
         <div>
-            <PageTitle title="Report a bug - Admin" />
-            <H2>Report a bug</H2>
+            <PageTitle title={t('report-a-bug-admin')} />
+            <H2>{t('report-a-bug')}</H2>
             <Text>
-                <Link
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    to="https://github.com/sourcegraph/sourcegraph/issues/new?assignees=&labels=&template=bug_report.md&title="
-                >
-                    Create an issue on the public issue tracker
-                </Link>
-                , and include a description of the bug along with the info below (with secrets redacted). If the report
-                contains sensitive information that should not be public, email the report to{' '}
-                <Link target="_blank" rel="noopener noreferrer" to="mailto:support@sourcegraph.com">
-                    support@sourcegraph.com
-                </Link>{' '}
-                instead.
+                <Trans
+                    i18nKey="create-issue-public-tracker"
+                    components={{
+                        '0': (
+                            <Link
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                to="https://github.com/sourcegraph/sourcegraph/issues/new?assignees=&labels=&template=bug_report.md&title="
+                            />
+                        ),
+                        '1': <Link target="_blank" rel="noopener noreferrer" to="mailto:support@sourcegraph.com" />,
+                    }}
+                />
             </Text>
             <Alert variant="warning">
-                <div>
-                    Please redact any secrets before sharing, whether on the public issue tracker or with
-                    support@sourcegraph.com.
-                </div>
+                <div>{t('redact-secrets-before-sharing')}</div>
             </Alert>
             {allConfig === undefined ? (
                 <LoadingSpinner className="mt-2" />

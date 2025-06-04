@@ -1,6 +1,7 @@
 import React from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { FilterLink, type RevisionsProps, TabIndex } from '@sourcegraph/branded'
 import { styles } from '@sourcegraph/branded/src/search-ui/results/sidebar/SearchFilterSection'
@@ -63,6 +64,8 @@ const RevisionList: React.FunctionComponent<React.PropsWithChildren<RevisionList
     pluralNoun,
     query,
 }) => {
+    const { t } = useTranslation('search/results/sidebar')
+
     const { connection, fetchMore, hasNextPage, loading, error } = useShowMorePagination<
         SearchSidebarGitRefsResult,
         SearchSidebarGitRefsVariables,
@@ -95,7 +98,7 @@ const RevisionList: React.FunctionComponent<React.PropsWithChildren<RevisionList
     if (error || !connection || connection.error) {
         return (
             <Text className={classNames('text-muted', styles.sidebarSectionNoResults)}>
-                <span className="text-muted">Unable to fetch repository revisions.</span>
+                <span className="text-muted">{t('unable-to-fetch-repo-revisions')}</span>
             </Text>
         )
     }
@@ -125,11 +128,12 @@ const RevisionList: React.FunctionComponent<React.PropsWithChildren<RevisionList
             {(connection.totalCount ?? 0) > DEFAULT_FIRST ? (
                 <Text className={classNames('text-muted d-flex', styles.sidebarSectionFooter)}>
                     <small className="flex-1" data-testid="summary">
-                        {connection?.nodes.length} of {connection?.totalCount} {pluralNoun}
+                        {t('connection-nodes-length', { connectionNodesLength: connection?.nodes.length })}
+                        {connection?.totalCount} {pluralNoun}
                     </small>
                     {hasNextPage ? (
                         <Button className={styles.sidebarSectionButtonLink} onClick={fetchMore} variant="link">
-                            Show more
+                            {t('show-more-button')}
                         </Button>
                     ) : null}
                 </Text>

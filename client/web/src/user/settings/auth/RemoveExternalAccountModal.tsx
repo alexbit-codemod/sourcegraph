@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { lastValueFrom } from 'rxjs'
 
 import { asError, type ErrorLike } from '@sourcegraph/common'
@@ -37,6 +38,8 @@ export const RemoveExternalAccountModal: React.FunctionComponent<
         isOpen: boolean
     }>
 > = ({ id, name, onDidRemove, onDidCancel, onDidError, isOpen }) => {
+    const { t } = useTranslation('user/settings/auth')
+
     const [isLoading, setIsLoading] = useState(false)
 
     const onAccountRemove = useCallback<React.FormEventHandler<HTMLFormElement>>(
@@ -64,12 +67,11 @@ export const RemoveExternalAccountModal: React.FunctionComponent<
             isOpen={isOpen}
         >
             <H3 id={`heading--disconnect-${name}`} className="text-danger mb-4">
-                Disconnect {name}?
+                {t('disconnect-confirmation', { name })}
             </H3>
             <Form onSubmit={onAccountRemove}>
                 <div id={`description--disconnect-${name}`} className="form-group mb-4">
-                    You are about to remove the sign in connection with {name}. After removing it, you won’t be able to
-                    use {name} to sign in to Sourcegraph.
+                    {t('remove-signin-connection-warning', { name })}
                 </div>
                 <div className="d-flex justify-content-end">
                     <Button
@@ -79,10 +81,10 @@ export const RemoveExternalAccountModal: React.FunctionComponent<
                         outline={true}
                         variant="secondary"
                     >
-                        Cancel
+                        {t('cancel-button')}
                     </Button>
                     <Button type="submit" disabled={isLoading} variant="danger">
-                        Yes, disconnect {name}
+                        {t('yes-disconnect', { name })}
                     </Button>
                 </div>
             </Form>

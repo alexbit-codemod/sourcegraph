@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { useQuery } from '@sourcegraph/http-client'
 import { H3, Text, Code, Card, LoadingSpinner, ErrorAlert } from '@sourcegraph/wildcard'
@@ -27,6 +29,8 @@ export interface CodeownersIngestedFile {
 export const RepositoryOwnPageContents: React.FunctionComponent<
     Pick<RepositoryOwnAreaPageProps, 'repo' | 'authenticatedUser' | 'telemetryRecorder'>
 > = ({ repo, authenticatedUser, telemetryRecorder }) => {
+    const { t } = useTranslation('enterprise/own')
+
     const isAdmin = authenticatedUser?.siteAdmin
 
     const { data, error, loading } = useQuery<GetIngestedCodeownersResult, GetIngestedCodeownersVariables>(
@@ -52,7 +56,8 @@ export const RepositoryOwnPageContents: React.FunctionComponent<
     if (loading) {
         return (
             <div className="container d-flex justify-content-center mt-3">
-                <LoadingSpinner /> Loading...
+                <LoadingSpinner />
+                {t('loading-message')}
             </div>
         )
     }
@@ -67,8 +72,10 @@ export const RepositoryOwnPageContents: React.FunctionComponent<
                 <div>
                     <H3>{isAdmin ? 'Upload a CODEOWNERS file' : 'Ask your site admin to upload a CODEOWNERS file'}</H3>
                     <Text>
-                        {!isAdmin && 'A site admin can manually upload a CODEOWNERS file for this repository. '} Each
-                        owner must be either a Sourcegraph username, a Sourcegraph team name, or an email address.
+                        {t('admin-upload-codeowners-info', {
+                            isAdminASiteAdminCanManuallyUploadACodeownersFileForThisRepository:
+                                !isAdmin && 'A site admin can manually upload a CODEOWNERS file for this repository. ',
+                        })}
                     </Text>
 
                     {isAdmin && (
@@ -85,22 +92,22 @@ export const RepositoryOwnPageContents: React.FunctionComponent<
 
                 <div className={styles.or}>
                     <div className={styles.orLine} />
-                    <div className="py-2">or</div>
+                    <div className="py-2">{t('or-word')}</div>
                     <div className={styles.orLine} />
                 </div>
 
                 <div>
-                    <H3>Commit a CODEOWNERS file</H3>
+                    <H3>{t('commit-codeowners-file')}</H3>
                     <Text>
-                        Add a <Code>CODEOWNERS</Code> file to the root of this repository. Owners must be{' '}
-                        {getCodeHostName(repo)} usernames or email addresses.
+                        {t('add-a-codeowners-file')}
+                        <Code>{t('codeowners-file')}</Code>
+                        {t('owners-username-email')}
+                        {getCodeHostName(repo)}
+                        {t('usernames-email-addresses')}
                     </Text>
                     {codeownersIngestedFile && (
                         <Text className={styles.commitWarning}>
-                            <em>
-                                Any committed CODEOWNERS file in this repository will be ignored unless the uploaded
-                                file is deleted.
-                            </em>
+                            <em>{t('ignored-codeowners-file-warning')}</em>
                         </Text>
                     )}
                 </div>
@@ -108,10 +115,10 @@ export const RepositoryOwnPageContents: React.FunctionComponent<
 
             {codeownersIngestedFile && (
                 <div className="mt-5">
-                    <H3>Uploaded CODEOWNERS file</H3>
+                    <H3>{t('uploaded-codeowners-file')}</H3>
                     <div className="d-flex align-items-baseline justify-content-between">
                         <Text>
-                            The following CODEOWNERS file was uploaded to Sourcegraph{' '}
+                            {t('uploaded-codeowners-file-info')}
                             <Timestamp date={codeownersIngestedFile.updatedAt} />.
                         </Text>
                         {isAdmin && (

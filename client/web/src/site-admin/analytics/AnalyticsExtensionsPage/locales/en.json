@@ -1,0 +1,15 @@
+{
+  "search-extensions": "Search extensions",
+  "total-time-saved": "Total time saved",
+  "suggestions": "Suggestions",
+  "percentage-users-installed-extension": "% of users have installed the",
+  "vs-code-extension-promotion": "VS Code extension",
+  "installation-value-promotion": " . Promote installation to increase the value.",
+  "percentage-users-installed-jetbrains-plugin": "% of users have installed the",
+  "jetbrains-plugin-promotion": "JetBrains plugin",
+  "installation-value-promotion-jetbrains": " . Promote installation to increase the value.",
+  "percentage-users-installed-browser-extension": "% of users have installed the",
+  "browser-extension-promotion": "browser extension",
+  "installation-value-promotion-browser": " . Promote installation to increase the value.",
+  "event-logs-update-notice": "All events are generated from entries in the event logs table and are updated every 24 hours."
+}

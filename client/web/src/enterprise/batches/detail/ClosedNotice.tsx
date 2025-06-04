@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { Alert } from '@sourcegraph/wildcard'
 
 import type { BatchChangeFields } from '../../../graphql-operations'
@@ -13,14 +15,15 @@ export const ClosedNotice: React.FunctionComponent<React.PropsWithChildren<Close
     closedAt,
     className,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail')
+
     if (!closedAt) {
         return null
     }
 
     return (
         <Alert className={className} variant="info">
-            Information on this page may be out of date because changesets that only exist in closed batch changes are
-            not synced with the code host.
+            {t('information-page-out-of-date')}
         </Alert>
     )
 }

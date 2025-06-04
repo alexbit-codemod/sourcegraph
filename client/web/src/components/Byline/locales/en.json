@@ -1,0 +1,9 @@
+{
+  "created-by-link": "  by <0>{{createdByUsername}}</0>",
+  "by-space": "by",
+  "updated-by-link": "Updated by <0>{{updatedByUsername}}</0><1>|</1>",
+  "last-synced": "Last synced",
+  "updated": "Updated",
+  "by-space-updated": "by",
+  "created": "Created"
+}

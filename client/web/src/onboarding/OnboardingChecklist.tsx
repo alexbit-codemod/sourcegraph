@@ -2,6 +2,7 @@ import { type FC, useCallback, useState } from 'react'
 
 import { mdiAlertCircle, mdiChevronDown, mdiCheckCircle, mdiCheckCircleOutline } from '@mdi/js'
 import classnames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { useTemporarySetting } from '@sourcegraph/shared/src/settings/temporary/useTemporarySetting'
 import {
@@ -24,6 +25,8 @@ import type { ChecklistItem } from './types'
 import styles from './OnboardingChecklist.module.scss'
 
 export const OnboardingChecklist: FC = (): JSX.Element => {
+    const { t } = useTranslation('onboarding')
+
     const [hasCompletedLicenseCheck, setHasCompletedLicenseCheck] = useTemporarySetting(
         'admin.hasCompletedLicenseCheck',
         false
@@ -56,7 +59,7 @@ export const OnboardingChecklist: FC = (): JSX.Element => {
             <Popover isOpen={isDropdownOpen} onOpenChange={toggleDropdownOpen}>
                 <PopoverTrigger data-testid="onboard-setup" type="button" className={styles.button}>
                     <Icon aria-hidden={true} size="md" svgPath={mdiAlertCircle} />
-                    <span data-testid="onboard-dropdown">Setup</span>
+                    <span data-testid="onboard-dropdown">{t('setup-title')}</span>
                     <Icon aria-hidden={true} svgPath={mdiChevronDown} />
                 </PopoverTrigger>
                 <PopoverContent className={styles.container} position={Position.bottom}>
@@ -98,25 +101,29 @@ const OnboardingChecklistItem: FC<OnboardingChecklistItemProps> = ({
     title,
     description,
     link,
-}): JSX.Element => (
-    <li className={styles.item}>
-        <div className={styles.wrapper}>
-            <Icon
-                aria-hidden={true}
-                svgPath={isComplete ? mdiCheckCircle : mdiCheckCircleOutline}
-                className={classnames({ [styles.checked]: isComplete })}
-            />
-            <div className={styles.content}>
-                <H4>{title}</H4>
-                {!isComplete && (
-                    <>
-                        <Text>{description}</Text>
-                        <Link to={link} target="_blank" rel="noopener">
-                            Configure now
-                        </Link>{' '}
-                    </>
-                )}
+}): JSX.Element => {
+    const { t } = useTranslation('onboarding')
+
+    return (
+        <li className={styles.item}>
+            <div className={styles.wrapper}>
+                <Icon
+                    aria-hidden={true}
+                    svgPath={isComplete ? mdiCheckCircle : mdiCheckCircleOutline}
+                    className={classnames({ [styles.checked]: isComplete })}
+                />
+                <div className={styles.content}>
+                    <H4>{title}</H4>
+                    {!isComplete && (
+                        <>
+                            <Text>{description}</Text>
+                            <Link to={link} target="_blank" rel="noopener">
+                                {t('configure-now')}
+                            </Link>{' '}
+                        </>
+                    )}
+                </div>
             </div>
-        </div>
-    </li>
-)
+        </li>
+    )
+}

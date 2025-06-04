@@ -2,6 +2,7 @@ import React, { useMemo, useEffect } from 'react'
 
 import classNames from 'classnames'
 import { startCase } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { useQuery } from '@sourcegraph/http-client'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -25,6 +26,8 @@ import styles from './index.module.scss'
 interface Props extends TelemetryV2Props {}
 
 export const AnalyticsSearchPage: React.FC<Props> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin/analytics/AnalyticsSearchPage')
+
     const { dateRange, aggregation, grouping } = useChartFilters({ name: 'Search', telemetryRecorder })
     const { data, error, loading } = useQuery<SearchStatisticsResult, SearchStatisticsVariables>(SEARCH_STATISTICS, {
         variables: {
@@ -187,7 +190,7 @@ export const AnalyticsSearchPage: React.FC<Props> = ({ telemetryRecorder }) => {
 
     return (
         <>
-            <AnalyticsPageTitle>Search</AnalyticsPageTitle>
+            <AnalyticsPageTitle>{t('search-label')}</AnalyticsPageTitle>
 
             <Card className="p-3">
                 <div className="d-flex justify-content-end align-items-stretch mb-2 text-nowrap">
@@ -213,29 +216,27 @@ export const AnalyticsSearchPage: React.FC<Props> = ({ telemetryRecorder }) => {
                         </div>
                     </div>
                 )}
-                <H2 className="my-3">Total time saved</H2>
+                <H2 className="my-3">{t('total-time-saved')}</H2>
                 {calculatorProps && <TimeSavedCalculatorGroup {...calculatorProps} />}
                 <div className={styles.suggestionBox}>
-                    <H4 className="my-3">Suggestions</H4>
+                    <H4 className="my-3">{t('suggestions-label')}</H4>
                     <div className={classNames(styles.border, 'mb-3')} />
                     <ul className="mb-3 pl-3">
                         <Text as="li">
-                            Promote the{' '}
+                            {t('promote-editor-extension')}
                             <AnchorLink to="/help/integration/editor" target="_blank">
-                                editor extension
-                            </AnchorLink>{' '}
-                            and{' '}
+                                {t('editor-extension-description')}
+                            </AnchorLink>
+                            {t('and-space')}
                             <AnchorLink to="/help/cli" target="_blank">
-                                src CLI
-                            </AnchorLink>{' '}
-                            to your users to allow them to search where they work.
+                                {t('src-cli-description')}
+                            </AnchorLink>
+                            {t('search-where-they-work')}
                         </Text>
                     </ul>
                 </div>
             </Card>
-            <Text className="font-italic text-center mt-2">
-                All events are generated from entries in the event logs table and are updated every 24 hours.
-            </Text>
+            <Text className="font-italic text-center mt-2">{t('event-logs-update-info')}</Text>
         </>
     )
 }

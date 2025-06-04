@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -30,6 +31,8 @@ const SEARCH_PARAM_KEY = 'query'
 export const SiteAdminLicenseKeyLookupPage: React.FunctionComponent<React.PropsWithChildren<Props>> = ({
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/site-admin/dotcom/productSubscriptions')
+
     useEffect(() => telemetryRecorder.recordEvent('admin.licenseKeyLookup', 'view'), [telemetryRecorder])
 
     const [searchParams, setSearchParams] = useSearchParams()
@@ -49,11 +52,11 @@ export const SiteAdminLicenseKeyLookupPage: React.FunctionComponent<React.PropsW
 
     return (
         <div className="site-admin-product-subscriptions-page">
-            <PageTitle title="Enterprise subscriptions" />
+            <PageTitle title={t('enterprise-subscriptions')} />
             <PageHeader
                 path={[{ text: 'License key lookup' }]}
                 headingElement="h2"
-                description="Find matching licenses and their associated enterprise subscriptions"
+                description={t('find-matching-licenses-description')}
                 className="mb-3"
             />
             <ConnectionContainer>
@@ -64,7 +67,7 @@ export const SiteAdminLicenseKeyLookupPage: React.FunctionComponent<React.PropsW
                             const search = event.target.value
                             setSearch(search)
                         }}
-                        inputPlaceholder="Enter a partial license key to find matches"
+                        inputPlaceholder={t('partial-license-key-search')}
                         inputClassName="mb-0"
                         formClassName="mb-0"
                     />
@@ -101,7 +104,7 @@ export const SiteAdminLicenseKeyLookupPage: React.FunctionComponent<React.PropsW
                                         noSummaryIfAllNodesVisible={true}
                                         emptyElement={
                                             <div className="w-100 text-center text-muted">
-                                                No matching license key found
+                                                {t('no-matching-license-key-found')}
                                             </div>
                                         }
                                         className="mb-0"

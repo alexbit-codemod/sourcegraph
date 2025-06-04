@@ -11,6 +11,7 @@ import {
 
 import classNames from 'classnames'
 import { parse as parseJSONC } from 'jsonc-parser'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { modify } from '@sourcegraph/common'
 import { gql, useLazyQuery } from '@sourcegraph/http-client'
@@ -112,6 +113,8 @@ interface GithubConnectFormProps extends TelemetryProps, TelemetryV2Props {
  * configuration UI.
  */
 export const GithubConnectForm: FC<GithubConnectFormProps> = props => {
+    const { t } = useTranslation('setup-wizard/components/remote-repositories-step/components/code-hosts/github')
+
     const { initialValues, externalServiceId, telemetryService, telemetryRecorder, children, onChange, onSubmit } =
         props
 
@@ -158,10 +161,10 @@ export const GithubConnectForm: FC<GithubConnectFormProps> = props => {
         >
             <TabList wrapperClassName={styles.tabList}>
                 <Tab index={GithubConnectFormTab.Form} className={styles.tab} onClick={onTabClick}>
-                    Settings
+                    {t('settings-title')}
                 </Tab>
                 <Tab index={GithubConnectFormTab.JSONC} className={styles.tab} onClick={onTabClick}>
-                    JSONC editor
+                    {t('jsonc-editor-title')}
                 </Tab>
             </TabList>
             <TabPanels className={styles.tabPanels}>
@@ -203,6 +206,8 @@ interface GithubFormViewProps {
 }
 
 function GithubFormView(props: GithubFormViewProps): ReactElement {
+    const { t } = useTranslation('setup-wizard/components/remote-repositories-step/components/code-hosts/github')
+
     const { isTabActive, form, displayNameField, configurationField, externalServiceId } = props
 
     const accessTokenAsyncValidator = useAccessTokenValidator({ externalServiceId })
@@ -265,22 +270,31 @@ function GithubFormView(props: GithubFormViewProps): ReactElement {
     // Fragment to avoid nesting since it's rendered within TabPanel fieldset
     return (
         <>
-            <Input label="Display name" placeholder="Github (Personal)" {...getDefaultInputProps(displayNameField)} />
+            <Input
+                label={t('display-name-label')}
+                placeholder={t('github-personal-label')}
+                {...getDefaultInputProps(displayNameField)}
+            />
 
             <Input
-                label="Access token"
-                placeholder="Input your access token"
+                label={t('access-token-label')}
+                placeholder={t('input-access-token-placeholder')}
                 description={
                     <>
-                        Create GitHub access token classic (
-                        <Link
-                            to="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#personal-access-tokens-classic"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            instructions
-                        </Link>
-                        ) with <b>repo</b> or <b>public_repo</b> scope.
+                        <Trans
+                            i18nKey="create-github-access-token-instructions"
+                            components={{
+                                '0': (
+                                    <Link
+                                        to="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#personal-access-tokens-classic"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    />
+                                ),
+                                '1': <b />,
+                                '2': <b />,
+                            }}
+                        />
                     </>
                 }
                 type="password"
@@ -295,7 +309,7 @@ function GithubFormView(props: GithubFormViewProps): ReactElement {
                 <Checkbox
                     id="all-repos"
                     name="repositories"
-                    label="Add all my repositories"
+                    label={t('add-all-repositories-option')}
                     message="Will add all repositories affiliated with the token"
                     checked={isAffiliatedRepositories}
                     onChange={handleAffiliatedModeChange}

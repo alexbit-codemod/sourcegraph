@@ -3,6 +3,7 @@ import { type FunctionComponent, useMemo, useCallback, useState } from 'react'
 import { mdiCheck } from '@mdi/js'
 import classNames from 'classnames'
 import { intlFormatDistance } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { H2, Text, Badge, Button, Modal, H3 } from '@sourcegraph/wildcard'
@@ -42,6 +43,8 @@ export const TeamMemberList: FunctionComponent<TeamMemberListProps> = ({
     isAdmin,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('cody/team')
+
     const [actionResult, setActionResult] = useState<{ message: string; isError: boolean } | null>(null)
     const updateTeamMemberMutation = useUpdateTeamMember()
     const cancelInviteMutation = useCancelInvite()
@@ -195,7 +198,7 @@ export const TeamMemberList: FunctionComponent<TeamMemberListProps> = ({
                         onClick={dismissModal}
                         className="mr-3"
                     >
-                        Cancel
+                        {t('cancel-button')}
                     </Button>
                     <LoadingIconButton
                         variant="danger"
@@ -217,133 +220,149 @@ export const TeamMemberList: FunctionComponent<TeamMemberListProps> = ({
                 <CodyAlert variant={actionResult.isError ? 'error' : 'greenSuccess'}>{actionResult.message}</CodyAlert>
             )}
             <CodyContainer className={classNames('p-4 border bg-1 d-flex flex-column')}>
-                <H2 className="text-lg font-semibold mb-2">Team members</H2>
-                <Text className="text-sm text-gray-500 mb-4">Manage invited and active users</Text>
+                <H2 className="text-lg font-semibold mb-2">{t('team-members-title')}</H2>
+                <Text className="text-sm text-gray-500 mb-4">{t('manage-users-description')}</Text>
                 <ul className={classNames(styles.teamMemberList, 'list-none pl-0')}>
-                    {teamMembers.map(member => (
-                        <li key={member.accountId} className="d-contents">
-                            <div className="align-content-center">
-                                <div className="d-flex flex-row">
-                                    {member.avatarUrl ? (
-                                        <img
-                                            src={member.avatarUrl}
-                                            alt="avatar"
-                                            width="40"
-                                            height="40"
-                                            className={classNames(styles.avatar)}
-                                        />
-                                    ) : (
-                                        <div className={classNames(styles.avatar, styles.avatarPlaceholder)} />
-                                    )}
-                                    <div className="d-flex flex-column justify-content-center ml-2">
-                                        {member.displayName && <strong>{member.displayName}</strong>}
-                                        <Text className="mb-0">{member.email}</Text>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="align-content-center">
-                                {member.role === 'admin' && (
-                                    <Badge variant="primary" className="text-uppercase">
-                                        admin
-                                    </Badge>
-                                )}
-                            </div>
-                            <div />
-                            {isAdmin ? (
-                                member.role === 'admin' ? (
-                                    <>
-                                        <div />
-                                        <div className="align-content-center text-center">
-                                            <Button
-                                                variant="link"
-                                                onClick={() => setConfirmationModal({ action: 'revokeAdmin', member })}
-                                                className="ml-2"
-                                                disabled={adminCount < 2}
-                                            >
-                                                Revoke admin
-                                            </Button>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <>
-                                        <div className="align-content-center text-center">
-                                            <Button
-                                                variant="link"
-                                                onClick={() => updateRole(member.accountId, 'admin')}
-                                                className="ml-2"
-                                            >
-                                                Make admin
-                                            </Button>
-                                        </div>
-                                        <div className="align-content-center text-center">
-                                            <Button
-                                                variant="link"
-                                                onClick={() => setConfirmationModal({ action: 'removeMember', member })}
-                                                className="ml-2"
-                                            >
-                                                Remove
-                                            </Button>
-                                        </div>
-                                    </>
-                                )
-                            ) : (
-                                <>
-                                    <div />
-                                    <div />
-                                </>
-                            )}
-                        </li>
-                    ))}
-                    {invites
-                        .filter(invite => invite.status === 'sent')
-                        .map(invite => (
-                            <li key={invite.id} className="d-contents">
+                    {teamMembers.map(member => {
+                        const { t } = useTranslation('cody/team')
+
+                        return (
+                            <li key={member.accountId} className="d-contents">
                                 <div className="align-content-center">
                                     <div className="d-flex flex-row">
-                                        <div className={classNames(styles.avatar, styles.avatarPlaceholder)} />
+                                        {member.avatarUrl ? (
+                                            <img
+                                                src={member.avatarUrl}
+                                                alt={t('avatar-label')}
+                                                width="40"
+                                                height="40"
+                                                className={classNames(styles.avatar)}
+                                            />
+                                        ) : (
+                                            <div className={classNames(styles.avatar, styles.avatarPlaceholder)} />
+                                        )}
                                         <div className="d-flex flex-column justify-content-center ml-2">
-                                            <Text className="mb-0">{invite.email}</Text>
+                                            {member.displayName && <strong>{member.displayName}</strong>}
+                                            <Text className="mb-0">{member.email}</Text>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="align-content-center">
-                                    <Badge variant="secondary" className="mr-2 text-uppercase">
-                                        invited
-                                    </Badge>
-                                    {invite.role === 'admin' && (
+                                    {member.role === 'admin' && (
                                         <Badge variant="primary" className="text-uppercase">
-                                            admin
+                                            {t('admin-label')}
                                         </Badge>
                                     )}
                                 </div>
-                                <div className="align-content-center">
-                                    <em>Invite sent {formatInviteDate(invite.sentAt)}</em>
-                                </div>
-                                {isAdmin && (
+                                <div />
+                                {isAdmin ? (
+                                    member.role === 'admin' ? (
+                                        <>
+                                            <div />
+                                            <div className="align-content-center text-center">
+                                                <Button
+                                                    variant="link"
+                                                    onClick={() =>
+                                                        setConfirmationModal({ action: 'revokeAdmin', member })
+                                                    }
+                                                    className="ml-2"
+                                                    disabled={adminCount < 2}
+                                                >
+                                                    {t('revoke-admin-button')}
+                                                </Button>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="align-content-center text-center">
+                                                <Button
+                                                    variant="link"
+                                                    onClick={() => updateRole(member.accountId, 'admin')}
+                                                    className="ml-2"
+                                                >
+                                                    {t('make-admin-button')}
+                                                </Button>
+                                            </div>
+                                            <div className="align-content-center text-center">
+                                                <Button
+                                                    variant="link"
+                                                    onClick={() =>
+                                                        setConfirmationModal({ action: 'removeMember', member })
+                                                    }
+                                                    className="ml-2"
+                                                >
+                                                    {t('remove-button')}
+                                                </Button>
+                                            </div>
+                                        </>
+                                    )
+                                ) : (
                                     <>
-                                        <div className="align-content-center text-center">
-                                            <Button
-                                                variant="link"
-                                                onClick={() => revokeInvite(invite.id)}
-                                                className="ml-2"
-                                            >
-                                                Revoke
-                                            </Button>
-                                        </div>
-                                        <div className="align-content-center text-center">
-                                            <Button
-                                                variant="secondary"
-                                                size="sm"
-                                                onClick={() => resendInvite(invite.id)}
-                                                className="ml-2"
-                                            >
-                                                Re-send invite
-                                            </Button>
-                                        </div>
+                                        <div />
+                                        <div />
                                     </>
                                 )}
                             </li>
-                        ))}
+                        )
+                    })}
+                    {invites
+                        .filter(invite => invite.status === 'sent')
+                        .map(invite => {
+                            const { t } = useTranslation('cody/team')
+
+                            return (
+                                <li key={invite.id} className="d-contents">
+                                    <div className="align-content-center">
+                                        <div className="d-flex flex-row">
+                                            <div className={classNames(styles.avatar, styles.avatarPlaceholder)} />
+                                            <div className="d-flex flex-column justify-content-center ml-2">
+                                                <Text className="mb-0">{invite.email}</Text>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="align-content-center">
+                                        <Badge variant="secondary" className="mr-2 text-uppercase">
+                                            {t('invited-label')}
+                                        </Badge>
+                                        {invite.role === 'admin' && (
+                                            <Badge variant="primary" className="text-uppercase">
+                                                {t('admin-status-label')}
+                                            </Badge>
+                                        )}
+                                    </div>
+                                    <div className="align-content-center">
+                                        <em>
+                                            {t('invite-sent-message', {
+                                                formatInviteDateInviteSentAt: formatInviteDate(invite.sentAt),
+                                            })}
+                                        </em>
+                                    </div>
+                                    {isAdmin && (
+                                        <>
+                                            <div className="align-content-center text-center">
+                                                <Button
+                                                    variant="link"
+                                                    onClick={() => revokeInvite(invite.id)}
+                                                    className="ml-2"
+                                                >
+                                                    {t('revoke-button')}
+                                                </Button>
+                                            </div>
+                                            <div className="align-content-center text-center">
+                                                <Button
+                                                    variant="secondary"
+                                                    size="sm"
+                                                    onClick={() => resendInvite(invite.id)}
+                                                    className="ml-2"
+                                                >
+                                                    {t('resend-invite-button')}
+                                                </Button>
+                                            </div>
+                                        </>
+                                    )}
+                                </li>
+                            )
+                        })}
                 </ul>
 
                 {renderConfirmActionModal()}

@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { H2 } from '@sourcegraph/wildcard'
 
@@ -19,19 +20,23 @@ const meta: Meta = {
 
 export default meta
 
-export const InsightCards: StoryFn = () => (
-    <section className="row">
-        <article className="col-sm-4">
-            <H2>Search Insight Card</H2>
-            <SearchInsightCard />
-        </article>
-        <article className="col-sm-4">
-            <H2>Language Stats Insight Card</H2>
-            <LangStatsInsightCard />
-        </article>
-        <article className="col-sm-4">
-            <H2>Capture Group Insight Card</H2>
-            <CaptureGroupInsightCard />
-        </article>
-    </section>
-)
+export const InsightCards: StoryFn = () => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation/intro/cards')
+
+    return (
+        <section className="row">
+            <article className="col-sm-4">
+                <H2>{t('search-insight-card')}</H2>
+                <SearchInsightCard />
+            </article>
+            <article className="col-sm-4">
+                <H2>{t('language-stats-insight-card')}</H2>
+                <LangStatsInsightCard />
+            </article>
+            <article className="col-sm-4">
+                <H2>{t('capture-group-insight-card')}</H2>
+                <CaptureGroupInsightCard />
+            </article>
+        </section>
+    )
+}

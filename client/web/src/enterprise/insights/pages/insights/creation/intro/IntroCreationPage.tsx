@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { useExperimentalFeatures } from '@sourcegraph/shared/src/settings/settings'
@@ -24,6 +25,8 @@ interface IntroCreationPageProps extends TelemetryProps, TelemetryV2Props {}
 
 /** Displays intro page for insights creation UI. */
 export const IntroCreationPage: React.FunctionComponent<React.PropsWithChildren<IntroCreationPageProps>> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation/intro')
+
     const { telemetryService, telemetryRecorder } = props
 
     const navigate = useNavigate()
@@ -61,15 +64,15 @@ export const IntroCreationPage: React.FunctionComponent<React.PropsWithChildren<
 
     return (
         <CodeInsightsPage className={styles.container}>
-            <PageTitle title="Create insight - Code Insights" />
+            <PageTitle title={t('create-insight-code-insights')} />
             <PageHeader
                 path={[{ icon: CodeInsightsIcon }, { text: 'Create new code insight' }]}
                 description={
                     <>
-                        Insights analyze your code based on any search query.{' '}
-                        <Link to="/help/code_insights" target="_blank" rel="noopener">
-                            Learn more
-                        </Link>
+                        <Trans
+                            i18nKey="insights-analyze-code"
+                            components={{ '0': <Link to="/help/code_insights" target="_blank" rel="noopener" /> }}
+                        />
                     </>
                 }
                 className={styles.header}
@@ -99,10 +102,18 @@ export const IntroCreationPage: React.FunctionComponent<React.PropsWithChildren<
                 />
 
                 <div className={styles.info}>
-                    Not sure which insight type to choose? Learn more about the{' '}
-                    <Link to="/help/code_insights/references/common_use_cases" target="_blank" rel="noopener">
-                        use cases.
-                    </Link>
+                    <Trans
+                        i18nKey="choose-insight-type-learn-more"
+                        components={{
+                            '0': (
+                                <Link
+                                    to="/help/code_insights/references/common_use_cases"
+                                    target="_blank"
+                                    rel="noopener"
+                                />
+                            ),
+                        }}
+                    />
                 </div>
             </div>
         </CodeInsightsPage>

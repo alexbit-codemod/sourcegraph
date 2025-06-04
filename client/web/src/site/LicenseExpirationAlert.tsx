@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react'
 
 import classNames from 'classnames'
 import { formatDistanceStrict } from 'date-fns'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { Link } from '@sourcegraph/wildcard'
@@ -25,6 +26,8 @@ export const LicenseExpirationAlert: React.FunctionComponent<React.PropsWithChil
     className,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('site')
+
     useEffect(() => telemetryRecorder.recordEvent('alert.licenseExpiration', 'view'), [telemetryRecorder])
     const onClickRenewCTA = useCallback(
         () => telemetryRecorder.recordEvent('alert.licenseExpiration.RenewCTA', 'click'),
@@ -41,20 +44,34 @@ export const LicenseExpirationAlert: React.FunctionComponent<React.PropsWithChil
             variant="warning"
             className={classNames('align-items-center', className)}
         >
-            The license for this Sourcegraph instance{' '}
-            {
-                isProductLicenseExpired(expiresAt)
-                    ? 'expired ' + formatRelativeExpirationDate(expiresAt) // 'Expired two months ago'
-                    : 'will expire in ' + formatDistanceStrict(expiresAt, Date.now()) // 'Will expire in two months'
-            }
-            .&nbsp;
-            <Link className="site-alert__link" to="/site-admin/license" onClick={onClickRenewCTA}>
-                <span className="underline">Renew now</span>
-            </Link>
-            &nbsp;or&nbsp;
-            <Link className="site-alert__link" to="https://sourcegraph.com/contact" onClick={onClickContactCTA}>
-                <span className="underline">contact Sourcegraph</span>
-            </Link>
+            <Trans
+                i18nKey="license-expiration-notice"
+                values={{
+                    formatRelativeExpirationDateExpiresAt: formatRelativeExpirationDate(expiresAt),
+                    formatDistanceStrictExpiresAtDateNow: formatDistanceStrict(expiresAt, Date.now()),
+                    isProductLicenseExpiredExpiresAt: isProductLicenseExpired(expiresAt),
+                    spanClassNameUnderlineRenewNowSpan: (
+                        <>
+                            <span className="underline">Renew now</span>
+                        </>
+                    ),
+                    spanClassNameUnderlineContactSourcegraphSpan: (
+                        <>
+                            <span className="underline">contact Sourcegraph</span>
+                        </>
+                    ),
+                }}
+                components={{
+                    '0': <Link className="site-alert__link" to="/site-admin/license" onClick={onClickRenewCTA} />,
+                    '1': (
+                        <Link
+                            className="site-alert__link"
+                            to="https://sourcegraph.com/contact"
+                            onClick={onClickContactCTA}
+                        />
+                    ),
+                }}
+            />
         </DismissibleAlert>
     )
 }

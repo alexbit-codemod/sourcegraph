@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 import classNames from 'classnames'
 import { range } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { EVENT_LOGGER } from '@sourcegraph/shared/src/telemetry/web/eventLogger'
@@ -17,6 +18,8 @@ interface SurveyRatingRadio extends TelemetryV2Props {
 }
 
 export const SurveyRatingRadio: React.FunctionComponent<React.PropsWithChildren<SurveyRatingRadio>> = props => {
+    const { t } = useTranslation('marketing/components')
+
     const [focusedIndex, setFocusedIndex] = useState<number | null>(props.score || null)
 
     const handleFocus = (index: number): void => {
@@ -69,8 +72,8 @@ export const SurveyRatingRadio: React.FunctionComponent<React.PropsWithChildren<
                 )
             })}
             <div id="survey-rating-scale" className={radioStyles.ratingScale}>
-                <small>Not likely at all</small>
-                <small>Very likely</small>
+                <small>{t('not-likely-at-all')}</small>
+                <small>{t('very-likely')}</small>
             </div>
         </fieldset>
     )

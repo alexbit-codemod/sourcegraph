@@ -2,6 +2,7 @@ import React, { type FC, useRef, useState, useEffect, useMemo } from 'react'
 
 import { mdiFileDocumentOutline, mdiFolderOutline } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { NoopEditor } from '@sourcegraph/cody-shared'
@@ -118,6 +119,8 @@ interface RenderedReadmeFileProps {
     entryUrl: string
 }
 const RenderedReadmeFile: React.FC<RenderedReadmeFileProps> = ({ blob, entryUrl }) => {
+    const { t } = useTranslation('repo/tree')
+
     const renderedFileRef = useRef<HTMLDivElement>(null)
     const { bottom } = useElementObscuredArea(renderedFileRef)
     return (
@@ -134,7 +137,7 @@ const RenderedReadmeFile: React.FC<RenderedReadmeFileProps> = ({ blob, entryUrl 
                 <>
                     <div className={styles.readmeFader} />
                     <Link to={entryUrl} className={styles.readmeMoreLink}>
-                        View full README
+                        {t('view-full-readme')}
                     </Link>
                 </>
             )}
@@ -155,6 +158,8 @@ export interface FilePanelProps {
 }
 
 export const FilesCard: FC<FilePanelProps> = ({ entries, historyEntries, className }) => {
+    const { t } = useTranslation('repo/tree')
+
     const settings = useSettings()
     const preferAbsoluteTimestamps = Boolean(settings?.['history.preferAbsoluteTimestamps'])
     const hasHistoryEntries = historyEntries && historyEntries.length > 0
@@ -172,17 +177,17 @@ export const FilesCard: FC<FilePanelProps> = ({ entries, historyEntries, classNa
         <Card as="table" className={classNames(className, styles.files)}>
             <thead>
                 <CardHeader as="tr">
-                    <th className={styles.fileNameColumn}>File</th>
+                    <th className={styles.fileNameColumn}>{t('file')}</th>
                     {hasHistoryEntries && (
                         <>
-                            <th>Last commit message</th>
+                            <th>{t('last-commit-message')}</th>
                             <th
                                 className={classNames(
                                     styles.commitDateColumn,
                                     preferAbsoluteTimestamps && styles.absolute
                                 )}
                             >
-                                Last commit date
+                                {t('last-commit-date')}
                             </th>
                         </>
                     )}

@@ -1,0 +1,13 @@
+{
+  "profile-title": "Profile",
+  "started-using-sourcegraph": "  started using Sourcegraph",
+  "contact-support-to-delete-account": "<0>Contact support</0>  to delete your account.",
+  "save-button": "Save",
+  "user-profile-updated": "User profile updated.",
+  "username-label": "Username",
+  "username-requirements-description": "A username consists of letters, numbers, hyphens (-), dots (.), underscore (_) and may not begin or end with a dot, nor begin with a hyphen.",
+  "display-name-label": "Display name",
+  "display-name-placeholder": "Display name",
+  "avatar-photo-url-label": "URL to avatar photo",
+  "avatar-url-label": "Avatar URL"
+}

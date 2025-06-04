@@ -1,6 +1,7 @@
 import React from 'react'
 
 import type { ApolloError } from '@apollo/client'
+import { useTranslation } from 'react-i18next'
 
 import { Alert, Button } from '@sourcegraph/wildcard'
 
@@ -40,35 +41,42 @@ export const SurveyUseCaseToast: React.FunctionComponent<SurveyUseCaseFormToastP
     onChangeEmail,
     authenticatedUser,
     error,
-}) => (
-    <Toast
-        toastBodyClassName={styles.toastBody}
-        toastContentClassName="mt-0"
-        cta={
-            <SurveyUseCaseForm
-                authenticatedUser={authenticatedUser}
-                otherUseCase={otherUseCase}
-                onChangeOtherUseCase={onChangeOtherUseCase}
-                better={better}
-                onChangeBetter={onChangeBetter}
-                email={email}
-                onChangeEmail={onChangeEmail}
-            />
-        }
-        footer={
-            <>
-                {error && (
-                    <div className="d-flex">
-                        <Alert variant="danger">Error: {error.message}</Alert>
+}) => {
+    const { t } = useTranslation('marketing/toast')
+
+    return (
+        <Toast
+            toastBodyClassName={styles.toastBody}
+            toastContentClassName="mt-0"
+            cta={
+                <SurveyUseCaseForm
+                    authenticatedUser={authenticatedUser}
+                    otherUseCase={otherUseCase}
+                    onChangeOtherUseCase={onChangeOtherUseCase}
+                    better={better}
+                    onChangeBetter={onChangeBetter}
+                    email={email}
+                    onChangeEmail={onChangeEmail}
+                />
+            }
+            footer={
+                <>
+                    {error && (
+                        <div className="d-flex">
+                            <Alert variant="danger">
+                                {t('error-message')}
+                                {error.message}
+                            </Alert>
+                        </div>
+                    )}
+                    <div className="d-flex justify-content-end">
+                        <Button variant="primary" size="sm" onClick={onDone} disabled={isSubmitting}>
+                            {t('done-message')}
+                        </Button>
                     </div>
-                )}
-                <div className="d-flex justify-content-end">
-                    <Button variant="primary" size="sm" onClick={onDone} disabled={isSubmitting}>
-                        Done
-                    </Button>
-                </div>
-            </>
-        }
-        onDismiss={onDismiss}
-    />
-)
+                </>
+            }
+            onDismiss={onDismiss}
+        />
+    )
+}

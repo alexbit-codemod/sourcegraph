@@ -2,6 +2,7 @@ import React, { useCallback, useState, type FC, useEffect } from 'react'
 
 import { mdiAlertCircle, mdiChevronDown, mdiChevronLeft, mdiInformationOutline, mdiMagnify } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { pluralize, renderMarkdown } from '@sourcegraph/common'
@@ -107,6 +108,8 @@ interface StreamingProgressSkippedPopoverProps extends TelemetryProps, Telemetry
 }
 
 export const StreamingProgressSkippedPopover: FC<StreamingProgressSkippedPopoverProps> = props => {
+    const { t } = useTranslation('../../branded/src/search-ui/results/progress')
+
     const { query, progress, isSearchJobsEnabled, onSearchAgain, telemetryService, telemetryRecorder } = props
 
     const [selectedSuggestedSearches, setSelectedSuggestedSearches] = useState(new Set<string>())
@@ -137,7 +140,7 @@ export const StreamingProgressSkippedPopover: FC<StreamingProgressSkippedPopover
     return (
         <>
             <Text className={classNames('mx-3 mt-3', isSearchJobsEnabled && 'mb-0')}>
-                Found {limitHit(progress) ? 'more than ' : ''}
+                {t('found-more-than', { limitHitProgress: limitHit(progress) })}
                 {progress.matchCount} {pluralize('result', progress.matchCount)}
                 {progress.repositoriesCount !== undefined
                     ? ` from ${progress.repositoriesCount} ${pluralize(
@@ -184,11 +187,13 @@ interface SkippedReasonsProps {
 }
 
 const SkippedReasons: FC<SkippedReasonsProps> = props => {
+    const { t } = useTranslation('../../branded/src/search-ui/results/progress')
+
     const { items } = props
 
     return (
         <>
-            {items.length > 0 && <H3 className="mx-3">Some results skipped:</H3>}
+            {items.length > 0 && <H3 className="mx-3">{t('some-results-skipped')}</H3>}
             {items.map((skipped, index) => (
                 <SkippedMessage
                     key={skipped.reason}
@@ -211,45 +216,49 @@ const SlimSkippedReasons: FC<SkippedReasonsProps> = props => {
     return (
         <div className={styles.streamingSkippedItem}>
             <Collapse openByDefault={items.length === 1}>
-                {({ isOpen }) => (
-                    <>
-                        <CollapseHeader
-                            as={Button}
-                            outline={true}
-                            variant="primary"
-                            className={classNames(styles.button, 'p-2 w-100 bg-transparent border-0')}
-                        >
-                            <H4 className="d-flex align-items-center mb-0 w-100">
-                                <Icon
-                                    aria-label="Information"
-                                    svgPath={mdiInformationOutline}
-                                    className={classNames(styles.icon, 'flex-shrink-0')}
-                                />
+                {({ isOpen }) => {
+                    const { t } = useTranslation('../../branded/src/search-ui/results/progress')
 
-                                <span className="flex-grow-1 text-left">Why was the limit reached?</span>
+                    return (
+                        <>
+                            <CollapseHeader
+                                as={Button}
+                                outline={true}
+                                variant="primary"
+                                className={classNames(styles.button, 'p-2 w-100 bg-transparent border-0')}
+                            >
+                                <H4 className="d-flex align-items-center mb-0 w-100">
+                                    <Icon
+                                        aria-label="Information"
+                                        svgPath={mdiInformationOutline}
+                                        className={classNames(styles.icon, 'flex-shrink-0')}
+                                    />
 
-                                <Icon
-                                    aria-hidden={true}
-                                    className={classNames('flex-shrink-0', styles.chevron)}
-                                    svgPath={isOpen ? mdiChevronDown : mdiChevronLeft}
-                                />
-                            </H4>
-                        </CollapseHeader>
+                                    <span className="flex-grow-1 text-left">{t('limit-reached-question')}</span>
 
-                        <CollapsePanel className={styles.nestedCollapseReasons}>
-                            {items.map((skipped, index) => (
-                                <SkippedMessage
-                                    key={skipped.reason}
-                                    skipped={skipped}
-                                    // Start with first item open, but only if it's not info severity or if there's only one item
-                                    startOpen={index === 0 && (skipped.severity !== 'info' || items.length === 1)}
-                                />
-                            ))}
-                        </CollapsePanel>
+                                    <Icon
+                                        aria-hidden={true}
+                                        className={classNames('flex-shrink-0', styles.chevron)}
+                                        svgPath={isOpen ? mdiChevronDown : mdiChevronLeft}
+                                    />
+                                </H4>
+                            </CollapseHeader>
 
-                        {!isOpen && <div className={classNames(styles.bottomBorderSpacer, 'mt-1')} />}
-                    </>
-                )}
+                            <CollapsePanel className={styles.nestedCollapseReasons}>
+                                {items.map((skipped, index) => (
+                                    <SkippedMessage
+                                        key={skipped.reason}
+                                        skipped={skipped}
+                                        // Start with first item open, but only if it's not info severity or if there's only one item
+                                        startOpen={index === 0 && (skipped.severity !== 'info' || items.length === 1)}
+                                    />
+                                ))}
+                            </CollapsePanel>
+
+                            {!isOpen && <div className={classNames(styles.bottomBorderSpacer, 'mt-1')} />}
+                        </>
+                    )
+                }}
             </Collapse>
         </div>
     )
@@ -264,11 +273,13 @@ interface SkippedItemsSearchProps {
 }
 
 const SkippedItemsSearch: FC<SkippedItemsSearchProps> = props => {
+    const { t } = useTranslation('../../branded/src/search-ui/results/progress')
+
     const { slim, items, disabled, onSearchSettingsChange, onSubmit } = props
 
     return (
         <Form className={classNames('px-3', { 'pb-3': !slim })} onSubmit={onSubmit} data-testid="popover-form">
-            <div className="mb-2 mt-3">Search again:</div>
+            <div className="mb-2 mt-3">{t('search-again')}</div>
             <div className="form-check">
                 {items.map(
                     (skipped, index) =>
@@ -300,7 +311,7 @@ const SkippedItemsSearch: FC<SkippedItemsSearchProps> = props => {
                 data-testid="skipped-popover-form-submit-btn"
             >
                 <Icon aria-hidden={true} className="mr-1" svgPath={mdiMagnify} />
-                {slim ? <>Modify and re-run</> : <>Search again</>}
+                {slim ? <>{t('modify-and-re-run')}</> : <>{t('search-again-duplicate')}</>}
             </Button>
         </Form>
     )
@@ -344,6 +355,8 @@ interface ExhaustiveSearchMessageProps extends TelemetryProps, TelemetryV2Props 
 }
 
 export const ExhaustiveSearchMessage: FC<ExhaustiveSearchMessageProps> = props => {
+    const { t } = useTranslation('../../branded/src/search-ui/results/progress')
+
     const { query, telemetryService, telemetryRecorder } = props
     const navigate = useNavigate()
     const [createSearchJob, { loading, error }] = useMutation(CREATE_SEARCH_JOB)
@@ -372,7 +385,7 @@ export const ExhaustiveSearchMessage: FC<ExhaustiveSearchMessageProps> = props =
     return (
         <section className={styles.exhaustiveSearch}>
             <header className={styles.exhaustiveSearchHeader}>
-                <Text className="m-0">Create a search job:</Text>
+                <Text className="m-0">{t('create-search-job')}</Text>
                 <ProductStatusBadge status="beta" />
             </header>
 
@@ -383,7 +396,7 @@ export const ExhaustiveSearchMessage: FC<ExhaustiveSearchMessageProps> = props =
             )}
 
             <Text className={classNames(validationError && 'text-muted', styles.exhaustiveSearchText)}>
-                Search jobs exhaustively returns all matches of a query. Results can be downloaded in JSON Lines format.
+                {t('search-jobs-explanation')}
             </Text>
 
             {error && <ErrorAlert error={error} className="mt-3" />}
@@ -396,12 +409,13 @@ export const ExhaustiveSearchMessage: FC<ExhaustiveSearchMessageProps> = props =
             >
                 {loading ? (
                     <>
-                        <LoadingSpinner /> Starting search job
+                        <LoadingSpinner />
+                        {t('starting-search-job')}
                     </>
                 ) : (
                     <>
                         <Icon aria-hidden={true} svgPath={mdiMagnify} />
-                        Create a search job
+                        {t('create-search-job-header')}
                     </>
                 )}
             </Button>

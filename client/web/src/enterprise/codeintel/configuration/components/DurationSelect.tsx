@@ -2,6 +2,7 @@ import { type FunctionComponent, useState } from 'react'
 
 import classNames from 'classnames'
 import { intervalToDuration, formatDuration } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import { Select, Input } from '@sourcegraph/wildcard'
 
@@ -30,6 +31,8 @@ export const DurationSelect: FunctionComponent<DurationSelectProps> = ({
     durationValues = defaultDurationValues,
     className,
 }) => {
+    const { t } = useTranslation('enterprise/codeintel/configuration/components')
+
     const customValueInHours = toInt(value || '') || 0
     const customValueMilliseconds = customValueInHours * MS_IN_HOURS
     const durationHint = formatDuration(intervalToDuration({ start: 0, end: customValueMilliseconds }))
@@ -60,7 +63,7 @@ export const DurationSelect: FunctionComponent<DurationSelectProps> = ({
                         </option>
                     ))}
 
-                    <option value="custom">Custom</option>
+                    <option value="custom">{t('custom-label')}</option>
                 </Select>
                 {isCustom && (
                     <>
@@ -75,7 +78,11 @@ export const DurationSelect: FunctionComponent<DurationSelectProps> = ({
                         />
 
                         <div className="input-group-append">
-                            <span className="input-group-text">hour{customValueInHours !== 1 && <>s</>}</span>
+                            <span className="input-group-text">
+                                {t('custom-hour-pluralization', {
+                                    customValueInHours1S: customValueInHours !== 1 && <>s</>,
+                                })}
+                            </span>
                         </div>
                     </>
                 )}
@@ -84,13 +91,13 @@ export const DurationSelect: FunctionComponent<DurationSelectProps> = ({
                 <div className="text-right">
                     &nbsp;
                     {customValueInHours === null ? (
-                        <small className="text-danger">Please supply a value.</small>
+                        <small className="text-danger">{t('value-required')}</small>
                     ) : durationHint.match(`^${customValueInHours} hours?$`) ? (
                         <></>
                     ) : customValueInHours <= 0 ? (
-                        <small className="text-danger">Please supply a positive value.</small>
+                        <small className="text-danger">{t('positive-value-required')}</small>
                     ) : customValueInHours > maxDuration ? (
-                        <small className="text-danger">Please supply a value no greater than {maxDuration}.</small>
+                        <small className="text-danger">{t('max-duration-exceeded', { maxDuration })}</small>
                     ) : (
                         <small className="text-muted">{durationHint}</small>
                     )}

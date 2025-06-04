@@ -4,6 +4,7 @@ import React, { useCallback, useMemo } from 'react'
 
 import { mdiCodeBrackets, mdiFormatLetterCase, mdiLightningBolt, mdiRegex } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { QueryInputToggle } from '@sourcegraph/branded/src/search-ui/input/toggles/QueryInputToggle'
 import { isErrorLike } from '@sourcegraph/common'
@@ -48,6 +49,8 @@ export interface JetBrainsTogglesProps
 export const JetBrainsToggles: React.FunctionComponent<React.PropsWithChildren<JetBrainsTogglesProps>> = (
     props: JetBrainsTogglesProps
 ) => {
+    const { t } = useTranslation('../../jetbrains/webview/src/search/input')
+
     const {
         navbarSearchQuery,
         patternType,
@@ -131,7 +134,7 @@ export const JetBrainsToggles: React.FunctionComponent<React.PropsWithChildren<J
             {patternType === SearchPatternType.lucky ? (
                 <>
                     <QueryInputToggle
-                        title="Expert mode"
+                        title={t('expert-mode')}
                         isActive={false}
                         onToggle={toggleExpertMode}
                         iconSvgPath={mdiLightningBolt}
@@ -143,7 +146,7 @@ export const JetBrainsToggles: React.FunctionComponent<React.PropsWithChildren<J
             ) : (
                 <>
                     <QueryInputToggle
-                        title="Case sensitivity"
+                        title={t('case-sensitivity')}
                         isActive={caseSensitive}
                         onToggle={toggleCaseSensitivity}
                         iconSvgPath={mdiFormatLetterCase}
@@ -168,7 +171,7 @@ export const JetBrainsToggles: React.FunctionComponent<React.PropsWithChildren<J
                         ]}
                     />
                     <QueryInputToggle
-                        title="Regular expression"
+                        title={t('regular-expression')}
                         isActive={patternType === SearchPatternType.regexp}
                         onToggle={toggleRegexp}
                         iconSvgPath={mdiRegex}
@@ -185,7 +188,7 @@ export const JetBrainsToggles: React.FunctionComponent<React.PropsWithChildren<J
                     />
                     {!structuralSearchDisabled && (
                         <QueryInputToggle
-                            title="Structural search"
+                            title={t('structural-search')}
                             className={classNames(styles.toggle, 'test-structural-search-toggle')}
                             isActive={patternType === SearchPatternType.structural}
                             onToggle={toggleStructuralSearch}
@@ -203,7 +206,7 @@ export const JetBrainsToggles: React.FunctionComponent<React.PropsWithChildren<J
                     )}
                     {luckySearchEnabled && (
                         <QueryInputToggle
-                            title="Expert mode"
+                            title={t('expert-mode-duplicate')}
                             isActive={true}
                             onToggle={toggleExpertMode}
                             iconSvgPath={mdiLightningBolt}

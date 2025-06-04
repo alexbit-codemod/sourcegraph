@@ -1,5 +1,7 @@
 import React, { useCallback } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { useMutation } from '@sourcegraph/http-client'
 import { Button, Modal, Text, ErrorAlert, H3, AnchorLink, Alert } from '@sourcegraph/wildcard'
 
@@ -19,6 +21,8 @@ export const RemoveGitHubAppModal: React.FunctionComponent<React.PropsWithChildr
     onCancel,
     afterDelete,
 }) => {
+    const { t } = useTranslation('components/gitHubApps')
+
     const labelId = 'removeGitHubApp'
     const [deleteGitHubApp, { loading, error }] = useMutation<DeleteGitHubAppResult, DeleteGitHubAppVariables>(
         DELETE_GITHUB_APP_BY_ID_QUERY
@@ -31,29 +35,30 @@ export const RemoveGitHubAppModal: React.FunctionComponent<React.PropsWithChildr
 
     return (
         <Modal onDismiss={onCancel} aria-labelledby={labelId}>
-            <H3 className="mb-3">Remove the GitHub App "{app.name}"?</H3>
+            <H3 className="mb-3">
+                {t('remove-github-app-intro')}
+                {app.name}"?
+            </H3>
             {error && <ErrorAlert error={error} />}
-            <Alert variant="warning">
-                This will remove the App from Sourcegraph, but it will still exist on GitHub.
-            </Alert>
-            <Text>While not necessary, if you wish to completely remove the App on GitHub, you must:</Text>
+            <Alert variant="warning">{t('remove-github-app-warning')}</Alert>
+            <Text>{t('remove-github-app-complete-instructions')}</Text>
             <ul>
-                <li>Uninstall it from the individual user(s) or organization(s) where it is installed, and/or</li>
+                <li>{t('uninstall-app-instructions')}</li>
                 <li>
                     {/* TODO: We could route this directly to the Advanced settings page once we can distinguish organization apps from user apps. */}
-                    Delete the App entirely.
+                    {t('delete-app-instructions')}
                 </li>
             </ul>
 
             <Text>
                 <AnchorLink to={app.appURL} target="_blank" rel="noopener noreferrer">
-                    View the App on GitHub
-                </AnchorLink>{' '}
-                to uninstall or delete it. You must be an owner of the App on GitHub in order to perform these actions.
+                    {t('view-app-on-github')}
+                </AnchorLink>
+                {t('uninstall-or-delete-app-warning')}
             </Text>
             <div className="d-flex justify-content-end pt-1">
                 <Button disabled={loading} className="mr-2" onClick={onCancel} outline={true} variant="secondary">
-                    Cancel
+                    {t('cancel-action')}
                 </Button>
                 <LoaderButton
                     disabled={loading}
@@ -61,7 +66,7 @@ export const RemoveGitHubAppModal: React.FunctionComponent<React.PropsWithChildr
                     variant="danger"
                     loading={loading}
                     alwaysShowLabel={true}
-                    label="Remove GitHub App"
+                    label={t('remove-github-app-title')}
                 />
             </div>
         </Modal>

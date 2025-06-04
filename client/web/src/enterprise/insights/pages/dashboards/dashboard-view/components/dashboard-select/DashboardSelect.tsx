@@ -3,6 +3,7 @@ import { type ButtonHTMLAttributes, type ChangeEvent, type FC, forwardRef, useMe
 import classNames from 'classnames'
 import ChevronDownIcon from 'mdi-react/ChevronDownIcon'
 import ChevronUpIcon from 'mdi-react/ChevronUpIcon'
+import { useTranslation } from 'react-i18next'
 
 import {
     Button,
@@ -123,6 +124,8 @@ interface DashboardSelectContentProps {
 }
 
 const DashboardSelectContent: FC<DashboardSelectContentProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/dashboards/dashboard-view/components/dashboard-select')
+
     const { dashboard: currentDashboard, dashboards, onSelect } = props
 
     const { licensed } = useUiFeatures()
@@ -166,7 +169,7 @@ const DashboardSelectContent: FC<DashboardSelectContentProps> = props => {
                 variant="small"
                 autoFocus={true}
                 spellCheck={false}
-                placeholder="Find a dashboard..."
+                placeholder={t('find-dashboard-placeholder')}
                 aria-label="Find a dashboard"
                 inputClassName={styles.comboboxInput}
                 className={styles.comboboxInputContainer}
@@ -216,10 +219,10 @@ const DashboardSelectContent: FC<DashboardSelectContentProps> = props => {
                 {filteredDashboards.length === 0 && (
                     <div className={styles.noResultsFound}>
                         <Text as="span" className="text-muted">
-                            No dashboards found.
+                            {t('no-dashboards-found')}
                         </Text>
                         <Button as={Link} variant="link" to="/insights/add-dashboard">
-                            Create a dashboard
+                            {t('create-dashboard-action')}
                         </Button>
                     </div>
                 )}
@@ -229,8 +232,8 @@ const DashboardSelectContent: FC<DashboardSelectContentProps> = props => {
                         <hr />
 
                         <div className={classNames(styles.limitedAccess)}>
-                            <H3>Limited access</H3>
-                            <Text>Unlock for unlimited custom dashboards.</Text>
+                            <H3>{t('limited-access-notice')}</H3>
+                            <Text>{t('unlock-unlimited-dashboards')}</Text>
                         </div>
                     </div>
                 )}

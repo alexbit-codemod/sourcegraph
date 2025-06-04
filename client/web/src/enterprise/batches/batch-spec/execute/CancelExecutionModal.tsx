@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { Button, Modal, H3 } from '@sourcegraph/wildcard'
 
 import { LoaderButton } from '../../../../components/LoaderButton'
@@ -22,22 +24,26 @@ export const CancelExecutionModal: React.FunctionComponent<React.PropsWithChildr
     confirmLabel = 'Cancel execution',
     onCancel,
     onConfirm,
-}) => (
-    <Modal isOpen={isOpen} position="center" aria-labelledby="modal-header">
-        <H3 id="modal-header">{modalHeader}</H3>
-        {modalBody}
-        <div className="d-flex justify-content-end">
-            <Button className="mr-2" onClick={onCancel} outline={true} variant="secondary">
-                Go back
-            </Button>
-            <LoaderButton
-                onClick={onConfirm}
-                disabled={isLoading}
-                variant="danger"
-                loading={isLoading}
-                alwaysShowLabel={true}
-                label={confirmLabel}
-            />
-        </div>
-    </Modal>
-)
+}) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/execute')
+
+    return (
+        <Modal isOpen={isOpen} position="center" aria-labelledby="modal-header">
+            <H3 id="modal-header">{modalHeader}</H3>
+            {modalBody}
+            <div className="d-flex justify-content-end">
+                <Button className="mr-2" onClick={onCancel} outline={true} variant="secondary">
+                    {t('go-back')}
+                </Button>
+                <LoaderButton
+                    onClick={onConfirm}
+                    disabled={isLoading}
+                    variant="danger"
+                    loading={isLoading}
+                    alwaysShowLabel={true}
+                    label={confirmLabel}
+                />
+            </div>
+        </Modal>
+    )
+}

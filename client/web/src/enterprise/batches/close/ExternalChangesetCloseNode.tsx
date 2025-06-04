@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react'
 
 import { mdiChevronDown, mdiChevronUp } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Button, Icon, ErrorAlert } from '@sourcegraph/wildcard'
 
@@ -28,6 +29,8 @@ export interface ExternalChangesetCloseNodeProps {
 export const ExternalChangesetCloseNode: React.FunctionComponent<
     React.PropsWithChildren<ExternalChangesetCloseNodeProps>
 > = ({ node, willClose, viewerCanAdminister, queryExternalChangesetWithFileDiffs }) => {
+    const { t } = useTranslation('enterprise/batches/close')
+
     const [isExpanded, setIsExpanded] = useState(false)
     const toggleIsExpanded = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
         event => {
@@ -87,8 +90,8 @@ export const ExternalChangesetCloseNode: React.FunctionComponent<
                 outline={true}
                 variant="secondary"
             >
-                <Icon aria-hidden={true} svgPath={isExpanded ? mdiChevronUp : mdiChevronDown} />{' '}
-                {isExpanded ? 'Hide' : 'Show'} details
+                <Icon aria-hidden={true} svgPath={isExpanded ? mdiChevronUp : mdiChevronDown} />
+                {t('toggle-details', { isExpanded })}
             </Button>
             {isExpanded && (
                 <div className={classNames(styles.externalChangesetCloseNodeExpandedSection, 'p-2')}>

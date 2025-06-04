@@ -1,0 +1,6 @@
+{
+  "plain-pie-chart": "Plain pie chart",
+  "standard-pie-chart-example": "Standard PieChart example. All pie chart parts (arcs) are focusable if links for the pie chart are provided through the getDatumLink prop.",
+  "many-arcs-example": "Many arcs example",
+  "tooltip-for-many-arcs": "The pie chart supports bringing in the front hovered/focused arc element annotation tooltip. In the case of many arcs, it might be useful, but we suggest keeping the number of arcs small and group small value groups in one \"Other\" group."
+}

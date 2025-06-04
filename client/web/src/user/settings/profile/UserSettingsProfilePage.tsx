@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { gql } from '@sourcegraph/http-client'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -34,6 +36,8 @@ export const UserSettingsProfilePage: React.FunctionComponent<React.PropsWithChi
     user,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('user/settings/profile')
+
     useEffect(() => {
         telemetryRecorder.recordEvent('settings.profile', 'view')
         EVENT_LOGGER.logViewEvent('UserProfile')
@@ -41,7 +45,7 @@ export const UserSettingsProfilePage: React.FunctionComponent<React.PropsWithChi
 
     return (
         <div>
-            <PageTitle title="Profile" />
+            <PageTitle title={t('profile-title')} />
             <PageHeader
                 path={[{ text: 'Profile' }]}
                 headingElement="h2"
@@ -53,8 +57,9 @@ export const UserSettingsProfilePage: React.FunctionComponent<React.PropsWithChi
                             </>
                         ) : (
                             user.username
-                        )}{' '}
-                        started using Sourcegraph <Timestamp date={user.createdAt} />.
+                        )}
+                        {t('started-using-sourcegraph')}
+                        <Timestamp date={user.createdAt} />.
                     </>
                 }
                 className={styles.heading}
@@ -68,10 +73,18 @@ export const UserSettingsProfilePage: React.FunctionComponent<React.PropsWithChi
                     after={
                         window.context.sourcegraphDotComMode && (
                             <Text className="mt-4">
-                                <Link to="mailto:support@sourcegraph.com" target="_blank" rel="noopener noreferrer">
-                                    Contact support
-                                </Link>{' '}
-                                to delete your account.
+                                <Trans
+                                    i18nKey="contact-support-to-delete-account"
+                                    components={{
+                                        '0': (
+                                            <Link
+                                                to="mailto:support@sourcegraph.com"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            />
+                                        ),
+                                    }}
+                                />
                             </Text>
                         )
                     }

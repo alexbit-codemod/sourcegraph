@@ -1,5 +1,7 @@
 import type { FunctionComponent } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 
 import type { PreciseIndexFields } from '../../../../graphql-operations'
@@ -9,31 +11,40 @@ export interface CodeIntelLastUpdatedProps {
     now?: () => Date
 }
 
-export const PreciseIndexLastUpdated: FunctionComponent<CodeIntelLastUpdatedProps> = ({ index, now }) =>
-    index.processingFinishedAt ? (
+export const PreciseIndexLastUpdated: FunctionComponent<CodeIntelLastUpdatedProps> = ({ index, now }) => {
+    const { t } = useTranslation('enterprise/codeintel/indexes/components')
+
+    return index.processingFinishedAt ? (
         <span>
-            Completed <Timestamp date={index.processingFinishedAt} now={now} noAbout={true} />
+            {t('completed-status')}
+            <Timestamp date={index.processingFinishedAt} now={now} noAbout={true} />
         </span>
     ) : index.processingStartedAt ? (
         <span>
-            Processing started <Timestamp date={index.processingStartedAt} now={now} noAbout={true} />
+            {t('processing-started')}
+            <Timestamp date={index.processingStartedAt} now={now} noAbout={true} />
         </span>
     ) : index.uploadedAt ? (
         <span>
-            Uploaded <Timestamp date={index.uploadedAt} now={now} noAbout={true} />
+            {t('uploaded-status')}
+            <Timestamp date={index.uploadedAt} now={now} noAbout={true} />
         </span>
     ) : index.indexingFinishedAt ? (
         <span>
-            Indexed <Timestamp date={index.indexingFinishedAt} now={now} noAbout={true} />
+            {t('indexed-status')}
+            <Timestamp date={index.indexingFinishedAt} now={now} noAbout={true} />
         </span>
     ) : index.indexingStartedAt ? (
         <span>
-            Indexing started <Timestamp date={index.indexingStartedAt} now={now} noAbout={true} />
+            {t('indexing-started')}
+            <Timestamp date={index.indexingStartedAt} now={now} noAbout={true} />
         </span>
     ) : index.queuedAt ? (
         <span>
-            Queued <Timestamp date={index.queuedAt} now={now} noAbout={true} />
+            {t('queued-status')}
+            <Timestamp date={index.queuedAt} now={now} noAbout={true} />
         </span>
     ) : (
         <></>
     )
+}

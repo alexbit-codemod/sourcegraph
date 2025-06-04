@@ -1,5 +1,6 @@
 import { type FunctionComponent, useContext, useEffect, useMemo } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -21,6 +22,8 @@ import styles from './CodeInsightIndependentPage.module.scss'
 interface CodeInsightIndependentPage extends TelemetryProps, TelemetryV2Props {}
 
 export const CodeInsightIndependentPage: FunctionComponent<CodeInsightIndependentPage> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/insight')
+
     const { telemetryService, telemetryRecorder } = props
 
     const { insightId } = useParams()
@@ -43,7 +46,7 @@ export const CodeInsightIndependentPage: FunctionComponent<CodeInsightIndependen
 
     return (
         <CodeInsightsPage className={styles.root}>
-            <PageTitle title={`${insight.title} - Code Insights`} />
+            <PageTitle title={t('insight-title-code-insights', { insightTitle: insight.title })} />
             <PageHeader
                 path={[{ to: '/insights/all', icon: CodeInsightsIcon }, { text: insight.title }]}
                 actions={

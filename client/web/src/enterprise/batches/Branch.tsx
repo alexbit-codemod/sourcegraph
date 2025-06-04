@@ -3,6 +3,7 @@ import React from 'react'
 import { mdiSourceFork, mdiAccountQuestion } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Badge, Icon, type BadgeProps, Tooltip } from '@sourcegraph/wildcard'
 
@@ -54,18 +55,22 @@ export const BranchMerge: React.FunctionComponent<React.PropsWithChildren<Branch
     baseRef,
     forkTarget,
     headRef,
-}) => (
-    // Relative positioning needed to avoid VisuallyHidden creating a double layer scrollbar in Chrome.
-    // Related bug: https://bugs.chromium.org/p/chromium/issues/detail?id=1154640#c15
-    <div className="d-block d-sm-inline-block position-relative">
-        <VisuallyHidden>Request to merge commit into</VisuallyHidden>
-        <Branch name={baseRef} />
-        <Icon as="span" inline={false} className="p-1" aria-label="from">
-            &larr;
-        </Icon>
-        <Branch name={headRef} forkTarget={forkTarget} />
-    </div>
-)
+}) => {
+    const { t } = useTranslation('enterprise/batches')
+
+    return (
+        // Relative positioning needed to avoid VisuallyHidden creating a double layer scrollbar in Chrome.
+        // Related bug: https://bugs.chromium.org/p/chromium/issues/detail?id=1154640#c15
+        <div className="d-block d-sm-inline-block position-relative">
+            <VisuallyHidden>{t('request-to-merge-commit')}</VisuallyHidden>
+            <Branch name={baseRef} />
+            <Icon as="span" inline={false} className="p-1" aria-label="from">
+                &larr;
+            </Icon>
+            <Branch name={headRef} forkTarget={forkTarget} />
+        </div>
+    )
+}
 
 interface BranchNamespaceProps {
     target: ForkTarget

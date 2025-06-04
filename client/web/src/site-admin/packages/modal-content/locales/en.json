@@ -1,0 +1,8 @@
+{
+  "behavior": "Behavior",
+  "ecosystem": "Ecosystem",
+  "package-filter": "Package filter",
+  "version-filter": "Version filter",
+  "no-package-filters-found": "No package filters found",
+  "close-button": "Close"
+}

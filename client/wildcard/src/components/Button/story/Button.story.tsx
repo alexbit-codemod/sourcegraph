@@ -3,6 +3,7 @@ import { useState } from 'react'
 import type { Meta, StoryFn } from '@storybook/react'
 import classNames from 'classnames'
 import SearchIcon from 'mdi-react/SearchIcon'
+import { useTranslation } from 'react-i18next'
 
 import { H1, H2, Text, Tooltip, ButtonLink, Code } from '../..'
 import { BrandedStory } from '../../../stories/BrandedStory'
@@ -37,11 +38,15 @@ const config: Meta = {
 
 export default config
 
-export const Simple: StoryFn = (args = {}) => (
-    <Button variant={args.variant} size={args.size} disabled={args.disabled} outline={args.outline}>
-        Click me!
-    </Button>
-)
+export const Simple: StoryFn = (args = {}) => {
+    const { t } = useTranslation('../../wildcard/src/components/Button/story')
+
+    return (
+        <Button variant={args.variant} size={args.size} disabled={args.disabled} outline={args.outline}>
+            {t('click-me')}
+        </Button>
+    )
+}
 Simple.argTypes = {
     variant: {
         name: 'Variant',
@@ -67,55 +72,59 @@ Simple.args = {
     outline: false,
 }
 
-export const AllButtons: StoryFn = () => (
-    <div className="pb-3">
-        <H1>Buttons</H1>
-        <H2>Variants</H2>
-        <ButtonVariants variants={BUTTON_VARIANTS} />
-        <H2>Outline</H2>
-        <ButtonVariants variants={['primary', 'secondary', 'danger']} outline={true} />
-        <H2>Icons</H2>
-        <Text>We can use icons with our buttons.</Text>
-        <ButtonVariants variants={['danger']} icon={SearchIcon} />
-        <ButtonVariants variants={['danger']} icon={SearchIcon} outline={true} />
-        <H2>Smaller</H2>
-        <Text>We can make our buttons smaller.</Text>
-        <ButtonVariants variants={['primary']} size="sm" outline={true} />
-        <H2>Links</H2>
-        <Text>Links can be made to look like buttons.</Text>
-        <ButtonLink
-            variant="secondary"
-            to="https://example.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mb-3"
-        >
-            I am a link
-        </ButtonLink>
-        <Text>Buttons can be made to look like links.</Text>
-        <ButtonVariants variants={['link']} />
-        <H2>Button Display</H2>
-        <Button className="mb-3" size="sm" variant="secondary" display="inline">
-            Inline
-        </Button>
-        <Button size="sm" variant="secondary" display="block">
-            Block
-        </Button>
+export const AllButtons: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Button/story')
 
-        <H2>Tooltips</H2>
-        <Text>Buttons can have tooltips.</Text>
-        <Tooltip content="Some extra context on the button.">
-            <Button variant="primary" className="mr-3">
-                Enabled
+    return (
+        <div className="pb-3">
+            <H1>{t('buttons')}</H1>
+            <H2>{t('variants')}</H2>
+            <ButtonVariants variants={BUTTON_VARIANTS} />
+            <H2>{t('outline')}</H2>
+            <ButtonVariants variants={['primary', 'secondary', 'danger']} outline={true} />
+            <H2>{t('icons')}</H2>
+            <Text>{t('icons-with-buttons')}</Text>
+            <ButtonVariants variants={['danger']} icon={SearchIcon} />
+            <ButtonVariants variants={['danger']} icon={SearchIcon} outline={true} />
+            <H2>{t('smaller-buttons')}</H2>
+            <Text>{t('make-buttons-smaller')}</Text>
+            <ButtonVariants variants={['primary']} size="sm" outline={true} />
+            <H2>{t('links')}</H2>
+            <Text>{t('links-as-buttons')}</Text>
+            <ButtonLink
+                variant="secondary"
+                to="https://example.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mb-3"
+            >
+                {t('link-example')}
+            </ButtonLink>
+            <Text>{t('buttons-as-links')}</Text>
+            <ButtonVariants variants={['link']} />
+            <H2>{t('button-display')}</H2>
+            <Button className="mb-3" size="sm" variant="secondary" display="inline">
+                {t('inline-button')}
             </Button>
-        </Tooltip>
-        <Tooltip content="Some extra context on why the button is disabled.">
-            <Button variant="primary" disabled={true}>
-                Disabled
+            <Button size="sm" variant="secondary" display="block">
+                {t('block-button')}
             </Button>
-        </Tooltip>
-    </div>
-)
+
+            <H2>{t('tooltips')}</H2>
+            <Text>{t('buttons-with-tooltips')}</Text>
+            <Tooltip content="Some extra context on the button.">
+                <Button variant="primary" className="mr-3">
+                    {t('enabled-state')}
+                </Button>
+            </Tooltip>
+            <Tooltip content="Some extra context on why the button is disabled.">
+                <Button variant="primary" disabled={true}>
+                    {t('disabled-state')}
+                </Button>
+            </Tooltip>
+        </div>
+    )
+}
 
 AllButtons.parameters = {
     chromatic: {
@@ -127,82 +136,91 @@ AllButtons.parameters = {
 type ButtonSizesType = typeof BUTTON_SIZES[number] | undefined
 
 export const Group: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Button/story')
+
     const [active, setActive] = useState<'Left' | 'Middle' | 'Right'>('Left')
     const buttonSizes: ButtonSizesType[] = ['lg', undefined, 'sm']
 
     return (
         <>
-            <H1>Button groups</H1>
+            <H1>{t('button-groups')}</H1>
 
-            <H2>Example</H2>
+            <H2>{t('example')}</H2>
             <div className="mb-2">
-                <Text>
-                    Button groups have no styles on their own, they just group buttons together. This means they can be
-                    used to group any other semantic or outline button variant.
-                </Text>
+                <Text>{t('button-groups-description')}</Text>
                 <div className="mb-2">
                     <ButtonGroup aria-label="Basic example">
-                        <Button variant="secondary">Left</Button>
-                        <Button variant="secondary">Middle</Button>
-                        <Button variant="secondary">Right</Button>
-                    </ButtonGroup>{' '}
-                    Example with secondary buttons
+                        <Button variant="secondary">{t('left-alignment')}</Button>
+                        <Button variant="secondary">{t('middle-alignment')}</Button>
+                        <Button variant="secondary">{t('right-alignment')}</Button>
+                    </ButtonGroup>
+                    {t('example-secondary-buttons')}
                 </div>
                 <div className="mb-2">
                     <ButtonGroup aria-label="Basic example">
                         <Button outline={true} variant="secondary">
-                            Left
+                            {t('left-example')}
                         </Button>
                         <Button outline={true} variant="secondary">
-                            Middle
+                            {t('middle-example')}
                         </Button>
                         <Button outline={true} variant="secondary">
-                            Right
+                            {t('right-example')}
                         </Button>
-                    </ButtonGroup>{' '}
-                    Example with secondary outline buttons
+                    </ButtonGroup>
+                    {t('example-secondary-outline-buttons')}
                 </div>
                 <div className="mb-2">
                     <ButtonGroup aria-label="Basic example">
                         <Button outline={true} variant="primary">
-                            Left
+                            {t('left-outline-example')}
                         </Button>
                         <Button outline={true} variant="primary">
-                            Middle
+                            {t('middle-outline-example')}
                         </Button>
                         <Button outline={true} variant="primary">
-                            Right
+                            {t('right-outline-example')}
                         </Button>
-                    </ButtonGroup>{' '}
-                    Example with primary outline buttons
+                    </ButtonGroup>
+                    {t('example-primary-outline-buttons')}
                 </div>
             </div>
 
-            <H2 className="mt-3">Sizing</H2>
+            <H2 className="mt-3">{t('sizing')}</H2>
             <Text>
-                Just like buttons, button groups have <Code>sm</Code> and <Code>lg</Code> size variants.
+                {t('button-groups-sizing')}
+                <Code>{t('small-size')}</Code>
+                {t('and')}
+                <Code>{t('large-size')}</Code>
+                {t('size-variants')}
             </Text>
             <div className="mb-2">
-                {buttonSizes.map(size => (
-                    <div key={size} className="mb-2">
-                        <ButtonGroup aria-label="Sizing example">
-                            <Button size={size} outline={true} variant="primary">
-                                Left
-                            </Button>
-                            <Button size={size} outline={true} variant="primary">
-                                Middle
-                            </Button>
-                            <Button size={size} outline={true} variant="primary">
-                                Right
-                            </Button>
-                        </ButtonGroup>
-                    </div>
-                ))}
+                {buttonSizes.map(size => {
+                    const { t } = useTranslation('../../wildcard/src/components/Button/story')
+
+                    return (
+                        <div key={size} className="mb-2">
+                            <ButtonGroup aria-label="Sizing example">
+                                <Button size={size} outline={true} variant="primary">
+                                    {t('left-group')}
+                                </Button>
+                                <Button size={size} outline={true} variant="primary">
+                                    {t('middle-group')}
+                                </Button>
+                                <Button size={size} outline={true} variant="primary">
+                                    {t('right-group')}
+                                </Button>
+                            </ButtonGroup>
+                        </div>
+                    )
+                })}
             </div>
 
-            <H2 className="mt-3">Active state</H2>
+            <H2 className="mt-3">{t('active-state')}</H2>
             <Text>
-                The <Code>active</Code> class can be used to craft toggles out of button groups.
+                {t('active-class')}
+                <Code>{t('active')}</Code>
+                {t('active-toggle-description')}
             </Text>
             <div className="mb-2">
                 <ButtonGroup aria-label="Basic example">
@@ -218,8 +236,8 @@ export const Group: StoryFn = () => {
                             {option}
                         </Button>
                     ))}
-                </ButtonGroup>{' '}
-                Example with secondary outline buttons
+                </ButtonGroup>
+                {t('example-secondary-outline-buttons')}
             </div>
             <div className="mb-2">
                 <ButtonGroup aria-label="Basic example">
@@ -235,8 +253,8 @@ export const Group: StoryFn = () => {
                             {option}
                         </Button>
                     ))}
-                </ButtonGroup>{' '}
-                Example with primary outline buttons
+                </ButtonGroup>
+                {t('example-primary-outline-buttons')}
             </div>
             <div className="mb-2">
                 <ButtonGroup aria-label="Basic example">
@@ -251,8 +269,8 @@ export const Group: StoryFn = () => {
                             {option}
                         </Button>
                     ))}
-                </ButtonGroup>{' '}
-                Example with secondary buttons
+                </ButtonGroup>
+                {t('example-secondary-buttons')}
             </div>
             <div className="mb-2">
                 <ButtonGroup aria-label="Basic example">
@@ -267,8 +285,8 @@ export const Group: StoryFn = () => {
                             {option}
                         </Button>
                     ))}
-                </ButtonGroup>{' '}
-                Example with primary buttons
+                </ButtonGroup>
+                {t('example-primary-buttons')}
             </div>
             <div className="mb-2">
                 <ButtonGroup aria-label="Basic example">
@@ -283,11 +301,11 @@ export const Group: StoryFn = () => {
                             {option}
                         </Button>
                     ))}
-                </ButtonGroup>{' '}
-                Example with link buttons
+                </ButtonGroup>
+                {t('example-link-buttons')}
             </div>
 
-            <H2 className="mt-3">With Tooltips</H2>
+            <H2 className="mt-3">{t('with-tooltips')}</H2>
             <div className="mb-2">
                 <ButtonGroup aria-label="With Tooltips">
                     {(['Left', 'Middle', 'Right'] as const).map(option => (
@@ -302,8 +320,8 @@ export const Group: StoryFn = () => {
                             </Button>
                         </Tooltip>
                     ))}
-                </ButtonGroup>{' '}
-                Example with enabled buttons
+                </ButtonGroup>
+                {t('example-enabled-buttons')}
             </div>
             <div className="mb-2">
                 <ButtonGroup aria-label="With Tooltips (Disabled Buttons)">
@@ -320,8 +338,8 @@ export const Group: StoryFn = () => {
                             </Button>
                         </Tooltip>
                     ))}
-                </ButtonGroup>{' '}
-                Example with disabled buttons
+                </ButtonGroup>
+                {t('example-disabled-buttons')}
             </div>
         </>
     )

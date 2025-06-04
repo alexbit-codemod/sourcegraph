@@ -1,6 +1,7 @@
 import { useCallback, type FC } from 'react'
 
 import { capitalize } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import type { AuthenticatedUser } from '@sourcegraph/shared/src/auth'
@@ -32,6 +33,8 @@ export const BatchChangesCreateGitHubAppPage: FC<BatchChangesCreateGitHubAppPage
     authenticatedUser,
     externalServiceURL,
 }) => {
+    const { t } = useTranslation('enterprise/batches/settings')
+
     const location = useLocation()
     const searchParams = new URLSearchParams(location.search)
     const baseURL = externalServiceURL || searchParams.get('baseURL')
@@ -91,11 +94,10 @@ export const BatchChangesCreateGitHubAppPage: FC<BatchChangesCreateGitHubAppPage
             pageTitle={pageTitle}
             headerDescription={
                 <>
-                    Register a GitHub App to enable Sourcegraph{' '}
-                    {isGitHubAppKindCredential ? 'create' : 'sign commits for'} Batch Change changesets on your behalf.
+                    {t('register-github-app-batch-change', { isGitHubAppKindCredential })}
                     {/* TODO (@BolajiOlajide/@bahrmichael) update link here for credential github app */}
                     <Link to="/help/admin/config/batch_changes#commit-signing-for-github" className="ml-1">
-                        See how GitHub App configuration works.
+                        {t('github-app-configuration-overview')}
                     </Link>
                 </>
             }

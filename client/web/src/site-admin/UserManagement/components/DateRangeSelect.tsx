@@ -13,6 +13,7 @@ import {
     endOfDay,
     subMonths,
 } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import {
     Button,
@@ -53,6 +54,8 @@ export const DateRangeSelect: React.FunctionComponent<DateRangeSelectProps> = ({
     className,
     defaultIsOpen = false,
 }) => {
+    const { t } = useTranslation('site-admin/UserManagement/components')
+
     const predefinedDates: [Date, Date, string][] = useMemo(() => {
         const now = new Date()
 
@@ -180,15 +183,15 @@ export const DateRangeSelect: React.FunctionComponent<DateRangeSelectProps> = ({
                                 onClick={handleClear}
                             >
                                 <Icon aria-hidden={true} className="mr-1" svgPath={mdiClose} />
-                                Clear
+                                {t('clear-button')}
                             </Button>
                         </div>
                         <div>
                             <Button size="sm" className="mr-2" variant="secondary" onClick={handleCancel}>
-                                Cancel
+                                {t('cancel-button')}
                             </Button>
                             <Button size="sm" variant="primary" onClick={handleApply} disabled={isApplyButtonDisabled}>
-                                Apply
+                                {t('apply-button')}
                             </Button>
                         </div>
                     </div>

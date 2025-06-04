@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import type { Settings } from '@sourcegraph/shared/src/schema/settings.schema'
 import type { SettingsCascadeProps } from '@sourcegraph/shared/src/settings/settings'
 import { Link, PageHeader } from '@sourcegraph/wildcard'
@@ -35,21 +37,25 @@ export const CreateBatchChangePage: React.FunctionComponent<React.PropsWithChild
     settingsCascade,
     headingElement,
     ...props
-}) =>
-    isBatchChangesExecutionEnabled(settingsCascade) ? (
+}) => {
+    const { t } = useTranslation('enterprise/batches/create')
+
+    return isBatchChangesExecutionEnabled(settingsCascade) ? (
         <NewBatchChangePageContent settingsCascade={settingsCascade} {...props} />
     ) : (
         <Page>
-            <PageTitle title="Create batch change" />
+            <PageTitle title={t('create-batch-change-title')} />
             <PageHeader
                 path={[{ icon: BatchChangesIcon, text: 'Create batch change' }]}
                 headingElement={headingElement}
                 description={
                     <>
-                        Follow these steps to create a Batch Change. Need help? View the{' '}
-                        <Link to="/help/batch_changes" rel="noopener noreferrer" target="_blank">
-                            documentation.
-                        </Link>
+                        <Trans
+                            i18nKey="create-batch-change-steps"
+                            components={{
+                                '0': <Link to="/help/batch_changes" rel="noopener noreferrer" target="_blank" />,
+                            }}
+                        />
                     </>
                 }
                 className="mb-3"
@@ -57,17 +63,20 @@ export const CreateBatchChangePage: React.FunctionComponent<React.PropsWithChild
             <OldBatchChangePageContent />
         </Page>
     )
+}
 
 const TABS_CONFIG: TabsConfig[] = [{ key: 'configuration', isEnabled: true }]
 
 const NewBatchChangePageContent: React.FunctionComponent<
     React.PropsWithChildren<Omit<CreateBatchChangePageProps, 'headingElement'>>
 > = ({ settingsCascade, initialNamespaceID }) => {
+    const { t } = useTranslation('enterprise/batches/create')
+
     const { renderTemplate: insightRenderTemplate, insightTitle } = useInsightTemplates(settingsCascade)
     const { renderTemplate: searchRenderTemplate, searchQuery } = useSearchTemplate()
     return (
         <div className={layoutStyles.pageContainer}>
-            <PageTitle title="Create new batch change" />
+            <PageTitle title={t('create-new-batch-change-title')} />
             {searchQuery && <SearchTemplatesBanner className="mb-5" />}
             {insightTitle && <InsightTemplatesBanner insightTitle={insightTitle} type="create" className="mb-5" />}
             <div className={layoutStyles.headerContainer}>

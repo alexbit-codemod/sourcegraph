@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState, type PropsWithChildren } from 'r
 
 import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { isErrorLike, type ErrorLike } from '@sourcegraph/common'
 import {
@@ -40,6 +41,8 @@ export const SearchContextsList: React.FunctionComponent<SearchContextsListProps
     platformContext,
     setAlert,
 }) => {
+    const { t } = useTranslation('enterprise/searchContexts')
+
     const queryConnection = useCallback(
         (args: Partial<ListSearchContextsVariables>) => {
             const { namespace, orderBy, descending } = args as {
@@ -192,8 +195,8 @@ export const SearchContextsList: React.FunctionComponent<SearchContextsListProps
             pluralNoun="search contexts"
             cursorPaging={true}
             inputClassName={classNames(styles.filterInput)}
-            inputPlaceholder="Find a context..."
-            inputAriaLabel="Find a context..."
+            inputPlaceholder={t('find-a-context')}
+            inputAriaLabel={t('find-a-context-duplicate')}
             formClassName={styles.filtersForm}
             onUpdate={onUpdateContexts}
         />
@@ -204,22 +207,26 @@ const SearchContextsTableWrapper: React.FunctionComponent<PropsWithChildren<{}>>
     <div className={styles.tableWrapper}>{children}</div>
 )
 
-const SearchContextsTableHeader: React.FunctionComponent = () => (
-    <thead>
-        <tr>
-            <th>
-                <VisuallyHidden>Starred</VisuallyHidden>
-            </th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Contents</th>
-            <th>Last updated</th>
-            <th>
-                <VisuallyHidden>Tags</VisuallyHidden>
-            </th>
-            <th>
-                <VisuallyHidden>Actions</VisuallyHidden>
-            </th>
-        </tr>
-    </thead>
-)
+const SearchContextsTableHeader: React.FunctionComponent = () => {
+    const { t } = useTranslation('enterprise/searchContexts')
+
+    return (
+        <thead>
+            <tr>
+                <th>
+                    <VisuallyHidden>{t('starred')}</VisuallyHidden>
+                </th>
+                <th>{t('name')}</th>
+                <th>{t('description')}</th>
+                <th>{t('contents')}</th>
+                <th>{t('last-updated')}</th>
+                <th>
+                    <VisuallyHidden>{t('tags')}</VisuallyHidden>
+                </th>
+                <th>
+                    <VisuallyHidden>{t('actions')}</VisuallyHidden>
+                </th>
+            </tr>
+        </thead>
+    )
+}

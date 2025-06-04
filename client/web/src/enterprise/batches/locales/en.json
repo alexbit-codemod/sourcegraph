@@ -1,0 +1,27 @@
+{
+  "reflector": "reflektor",
+  "actions-header": "Actions",
+  "rollout-windows-note": "Note: Rollout windows have been set up by the admin. This means that some of the selected changesets won't be processed until a time in the future.",
+  "no-credentials-configured": "You don't have credentials configured for",
+  "credentials-required-to-publish-changesets": "Credentials are required to publish changesets on code hosts. Configure them in your <0>batch changes user settings</0>  to publish changesets from this batch change.",
+  "awesome-batch-change-impact": "This is an awesome batch change. It will do great things to your codebase.",
+  "request-to-merge-commit": "Request to merge commit into",
+  "created-or-updated-batch-change": {
+    "true": "created",
+    "false": "updated"
+  },
+  "applying-batch-spec": " by applying the following batch spec:",
+  "batch-specs-title": "Batch specs",
+  "batch-specs-description": "All batch specs that currently exist.",
+  "state-label": "State",
+  "batch-spec-label": "Batch spec",
+  "execution-time-label": "Execution time",
+  "no-batch-specs-message": "No batch specs have been created so far.",
+  "created-by-username": " Created by <0>{{nodeCreatorUsername}}</0>",
+  "created-by-username-repeated": "Created by <0>{{nodeCreatorUsername}}</0>",
+  "input-spec": "Input spec",
+  "error-fetching-file-content": "Error fetching file content:",
+  "download-file": "   Download file",
+  "error-fetching-file-content-repeated": "Error fetching file content:",
+  "invalid-batch-spec-workspace-file": "Not a valid BatchSpecWorkspaceFile"
+}

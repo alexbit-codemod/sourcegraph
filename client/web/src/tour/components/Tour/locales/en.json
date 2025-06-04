@@ -1,0 +1,6 @@
+{
+  "experimental-feature": "Experimental",
+  "completed-count-summary": "{{completedCount}} of {{totalCount}} completed",
+  "dont-show-again": "Don't show again",
+  "completed-status": "Completed"
+}

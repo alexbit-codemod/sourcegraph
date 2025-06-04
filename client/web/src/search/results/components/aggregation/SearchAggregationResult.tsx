@@ -1,6 +1,7 @@
 import { type FC, type HTMLAttributes, useEffect, useState } from 'react'
 
 import { mdiArrowCollapse } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
@@ -52,6 +53,8 @@ export const V2SearchAggregationModeTypes: { [key in SearchAggregationMode]: num
 }
 
 export const SearchAggregationResult: FC<SearchAggregationResultProps> = props => {
+    const { t } = useTranslation('search/results/components/aggregation')
+
     const { query, patternType, caseSensitive, onQuerySubmit, telemetryService, telemetryRecorder, ...attributes } =
         props
 
@@ -139,7 +142,7 @@ export const SearchAggregationResult: FC<SearchAggregationResultProps> = props =
         <section {...attributes}>
             <Card as={CardBody} className={styles.card}>
                 <header className={styles.header}>
-                    <H2 className="m-0">Group results by</H2>
+                    <H2 className="m-0">{t('group-results-by')}</H2>
                     <Button
                         variant="secondary"
                         outline={true}
@@ -147,12 +150,13 @@ export const SearchAggregationResult: FC<SearchAggregationResultProps> = props =
                         onClick={handleCollapseClick}
                     >
                         <Icon aria-hidden={true} className="mr-1" svgPath={mdiArrowCollapse} />
-                        Collapse
+                        {t('collapse-button')}
                     </Button>
                 </header>
 
                 <span className="mb-3 text-muted">
-                    Aggregation is based on results with no count limitation (<Code>count:all</Code>).
+                    {t('aggregation-no-count-limit')}
+                    <Code>{t('count-all')}</Code>).
                 </span>
 
                 <div className={styles.controls}>

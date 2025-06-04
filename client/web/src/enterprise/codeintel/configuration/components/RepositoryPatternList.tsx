@@ -3,6 +3,7 @@ import { type FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { mdiDelete, mdiPlus } from '@mdi/js'
 import classNames from 'classnames'
 import { debounce } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import {
     Alert,
@@ -35,6 +36,8 @@ export const RepositoryPatternList: FunctionComponent<RepositoryPatternListProps
     repositoryPatterns,
     setRepositoryPatterns,
 }) => {
+    const { t } = useTranslation('enterprise/codeintel/configuration/components')
+
     const [autoFocusIndex, setAutoFocusIndex] = useState(-1)
 
     const addRepositoryPattern = (): void => {
@@ -95,7 +98,7 @@ export const RepositoryPatternList: FunctionComponent<RepositoryPatternListProps
 
             {repositoryPatterns.length === 0 && (
                 <Button variant="secondary" aria-label="Add a repository pattern" onClick={addRepositoryPattern}>
-                    Add Repository Pattern
+                    {t('add-repository-pattern')}
                 </Button>
             )}
 
@@ -113,6 +116,8 @@ interface RepositoryListProps {
 }
 
 const RepositoryList: FunctionComponent<RepositoryListProps> = ({ repositoryPatterns }) => {
+    const { t } = useTranslation('enterprise/codeintel/configuration/components')
+
     const [repositoryFetchLimit, setRepositoryFetchLimit] = useState(DEFAULT_FETCH_LIMIT)
     const {
         previewResult: preview,
@@ -142,7 +147,7 @@ const RepositoryList: FunctionComponent<RepositoryListProps> = ({ repositoryPatt
     return preview.repositories.length === 0 ? (
         <>
             {!(repositoryPatterns.length === 1 && repositoryPatterns[0] === '') && (
-                <Alert variant="warning">This set of repository patterns does not match any repository.</Alert>
+                <Alert variant="warning">{t('no-matching-repositories')}</Alert>
             )}
         </>
     ) : (
@@ -150,36 +155,53 @@ const RepositoryList: FunctionComponent<RepositoryListProps> = ({ repositoryPatt
             {preview.totalMatches > preview.totalCount && (
                 <Alert variant="warning">
                     <Text weight="medium" className="mb-1">
-                        Too many matching repositories
+                        {t('too-many-matching-repositories')}
                     </Text>
-                    {preview.totalMatches} repositories are matched by this filter. The maximum{' '}
+                    {preview.totalMatches}
+                    {t('repositories-matched-by-filter')}
                     <Code as={Link} to="/site-admin/configuration">
                         codeIntelAutoIndexing.policyRepositoryMatchLimit
-                    </Code>{' '}
-                    setting is {preview.limit} repositories.
+                    </Code>
+                    {t('setting-is')}
+                    {preview.limit}
+                    {t('repositories')}
                 </Alert>
             )}
             <div className="d-flex justify-content-between">
                 <span>
                     {preview.totalCount === 1 ? (
-                        <>{preview.totalCount} repository matches</>
+                        <>
+                            {preview.totalCount}
+                            {t('repository-matches')}
+                        </>
                     ) : (
-                        <>{preview.totalCount} repositories match</>
+                        <>
+                            {preview.totalCount}
+                            {t('repositories-match')}
+                        </>
                     )}{' '}
                     {repositoryPatterns.filter(pattern => pattern !== '').length === 1 ? (
-                        <>this pattern</>
+                        <>{t('this-pattern')}</>
                     ) : (
-                        <>these {repositoryPatterns.filter(pattern => pattern !== '').length} patterns</>
+                        <>
+                            {t('number-of-patterns', {
+                                repositoryPatternsFilterPatternPatternLength: repositoryPatterns.filter(
+                                    pattern => pattern !== ''
+                                ).length,
+                            })}
+                        </>
                     )}
                     {preview.repositories.length < preview.totalCount && (
-                        <> (showing only {preview.repositories.length})</>
+                        <>{t('showing-repositories', { previewRepositoriesLength: preview.repositories.length })}</>
                     )}
                     :
                 </span>
                 {preview.repositories.length < preview.totalCount && (
                     <Button variant="link" className="p-0" onClick={() => setRepositoryFetchLimit(nextFetchLimit)}>
-                        Show {nextFetchLimit === preview.totalCount && 'all '}
-                        {nextFetchLimit} repositories
+                        {t('show-all-or-limited-repositories', {
+                            nextFetchLimitPreviewTotalCountAll: nextFetchLimit === preview.totalCount && 'all ',
+                            nextFetchLimit,
+                        })}
                     </Button>
                 )}
             </div>

@@ -1,6 +1,7 @@
 import React from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { CardBody, Card, H3, Text, Heading } from '@sourcegraph/wildcard'
 
@@ -35,22 +36,26 @@ export const ProductCertificate: React.FunctionComponent<React.PropsWithChildren
     detail,
     footer,
     className = '',
-}) => (
-    <Card className={className} data-testid="product-certificate">
-        <CardBody className="d-flex align-items-center">
-            <img
-                className={classNames(styles.logo, 'mr-1', 'p-2')}
-                src="/.assets/img/sourcegraph-mark.svg?v2"
-                alt="Sourcegraph logo"
-            />
-            <div>
-                <Heading as="h3" styleAs="h2" className="font-weight-normal mb-1">
-                    {title}
-                </Heading>
-                {subtitle && <H3 className="text-muted font-weight-normal">{subtitle}</H3>}
-                {detail && <Text className="text-muted mb-0">{detail}</Text>}
-            </div>
-        </CardBody>
-        {footer && <div className={styles.footer}>{footer}</div>}
-    </Card>
-)
+}) => {
+    const { t } = useTranslation('enterprise/productSubscription')
+
+    return (
+        <Card className={className} data-testid="product-certificate">
+            <CardBody className="d-flex align-items-center">
+                <img
+                    className={classNames(styles.logo, 'mr-1', 'p-2')}
+                    src="/.assets/img/sourcegraph-mark.svg?v2"
+                    alt={t('sourcegraph-logo')}
+                />
+                <div>
+                    <Heading as="h3" styleAs="h2" className="font-weight-normal mb-1">
+                        {title}
+                    </Heading>
+                    {subtitle && <H3 className="text-muted font-weight-normal">{subtitle}</H3>}
+                    {detail && <Text className="text-muted mb-0">{detail}</Text>}
+                </div>
+            </CardBody>
+            {footer && <div className={styles.footer}>{footer}</div>}
+        </Card>
+    )
+}

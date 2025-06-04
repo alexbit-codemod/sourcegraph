@@ -3,6 +3,7 @@ import React, { useEffect, useState, useCallback, useMemo, type FC } from 'react
 import { useApolloClient } from '@apollo/client'
 import { mdiCog, mdiConnection, mdiDelete } from '@mdi/js'
 import MapSearchIcon from 'mdi-react/MapSearchIcon'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Subject } from 'rxjs'
 
@@ -45,11 +46,21 @@ interface Props extends TelemetryProps, TelemetryV2Props {
     queryExternalServiceSyncJobs?: typeof _queryExternalServiceSyncJobs
 }
 
-const NotFoundPage: FC = () => (
-    <HeroPage icon={MapSearchIcon} title="404: Not Found" subtitle="Sorry, the requested code host was not found." />
-)
+const NotFoundPage: FC = () => {
+    const { t } = useTranslation('components/externalServices')
+
+    return (
+        <HeroPage
+            icon={MapSearchIcon}
+            title={t('error-404-not-found')}
+            subtitle="Sorry, the requested code host was not found."
+        />
+    )
+}
 
 export const ExternalServicePage: FC<Props> = props => {
+    const { t } = useTranslation('components/externalServices')
+
     const {
         telemetryService,
         telemetryRecorder,
@@ -136,10 +147,12 @@ export const ExternalServicePage: FC<Props> = props => {
     const renderExternalService = (externalService: ExternalServiceFieldsWithConfig): JSX.Element => {
         let externalServiceAvailabilityStatus
         if (loading) {
-            externalServiceAvailabilityStatus = <Alert variant="waiting">Checking code host connection status...</Alert>
+            externalServiceAvailabilityStatus = (
+                <Alert variant="waiting">{t('checking-code-host-connection-status')}</Alert>
+            )
         } else if (!error) {
             if (checkConnectionNode?.__typename === 'ExternalServiceAvailable') {
-                externalServiceAvailabilityStatus = <Alert variant="success">Code host is reachable.</Alert>
+                externalServiceAvailabilityStatus = <Alert variant="success">{t('code-host-reachable')}</Alert>
             } else if (checkConnectionNode?.__typename === 'ExternalServiceUnavailable') {
                 externalServiceAvailabilityStatus = (
                     <ErrorAlert
@@ -188,7 +201,7 @@ export const ExternalServicePage: FC<Props> = props => {
                                         loading={loading}
                                         alwaysShowLabel={true}
                                         icon={<Icon aria-hidden={true} svgPath={mdiConnection} />}
-                                        label="Test connection"
+                                        label={t('test-connection')}
                                     />
                                 </Tooltip>
                             </div>
@@ -237,15 +250,14 @@ export const ExternalServicePage: FC<Props> = props => {
                 <Container className="mb-3">
                     {isErrorLike(isDeleting) && <ErrorAlert error={isDeleting} />}
                     {externalServiceAvailabilityStatus}
-                    <H2>Information</H2>
+                    <H2>{t('information')}</H2>
                     {externalService.unrestricted && (
                         <Alert variant="warning">
-                            <H3>All repositories will be unrestricted</H3>
-                            This code host connection does not have authorization configured. Any repositories added by
-                            this code host will be accessible by all users on the instance, even if another code host
-                            connection with authorization syncs the same repository. See{' '}
-                            <Link to="/help/admin/permissions#getting-started">the documentation</Link> for instructions
-                            on configuring authorization.
+                            <H3>{t('all-repositories-unrestricted')}</H3>
+                            <Trans
+                                i18nKey="code-host-connection-authorization-warning"
+                                components={{ '0': <Link to="/help/admin/permissions#getting-started" /> }}
+                            />
                         </Alert>
                     )}
                     {externalServiceCategory && (
@@ -259,7 +271,7 @@ export const ExternalServicePage: FC<Props> = props => {
                             {...externalServiceCategory}
                         />
                     )}
-                    <H2>Configuration</H2>
+                    <H2>{t('configuration')}</H2>
                     {externalServiceCategory && (
                         <DynamicallyImportedMonacoSettingsEditor
                             value={externalService.config}
@@ -276,9 +288,9 @@ export const ExternalServicePage: FC<Props> = props => {
                     )}
                 </Container>
                 <div className="d-flex mb-2 align-items-baseline justify-content-between">
-                    <H2 className="mb-0">Recent sync jobs</H2>
+                    <H2 className="mb-0">{t('recent-sync-jobs')}</H2>
                     <LoaderButton
-                        label="Trigger manual sync"
+                        label={t('trigger-manual-sync')}
                         alwaysShowLabel={true}
                         variant="secondary"
                         onClick={triggerSync}
@@ -303,9 +315,11 @@ export const ExternalServicePage: FC<Props> = props => {
     return (
         <div className={styles.externalServicePage}>
             {externalService ? (
-                <PageTitle title={`Code host - ${externalService.displayName}`} />
+                <PageTitle
+                    title={t('code-host-display-name', { externalServiceDisplayName: externalService.displayName })}
+                />
             ) : (
-                <PageTitle title="Code host" />
+                <PageTitle title={t('code-host')} />
             )}
             {mergedError && <ErrorAlert className="mb-3" error={fetchError} />}
             {!fetchLoading && !externalService && !fetchError && <NotFoundPage />}

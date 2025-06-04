@@ -2,6 +2,7 @@ import { type ChangeEvent, useId, useState, type FC } from 'react'
 
 import classNames from 'classnames'
 import { identity, upperFirst } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { BackfillQueueOrderBy, InsightQueueItemState } from '@sourcegraph/shared/src/graphql-operations'
 import {
@@ -37,6 +38,8 @@ interface CodeInsightsFiltersPickerProps {
 }
 
 export const CodeInsightsJobStatusPicker: FC<CodeInsightsFiltersPickerProps> = props => {
+    const { t } = useTranslation('enterprise/insights/admin-ui/components/job-filters')
+
     const { selectedFilters, className, onFiltersChange } = props
 
     const filterInputId = useId()
@@ -50,7 +53,7 @@ export const CodeInsightsJobStatusPicker: FC<CodeInsightsFiltersPickerProps> = p
     return (
         <Label htmlFor={filterInputId} className={classNames(styles.statusFilter, className)}>
             <H4 as={H3} className="mb-0">
-                Status:
+                {t('status-label')}
             </H4>
 
             <MultiCombobox
@@ -64,7 +67,7 @@ export const CodeInsightsJobStatusPicker: FC<CodeInsightsFiltersPickerProps> = p
                     id={filterInputId}
                     autoCorrect="false"
                     autoComplete="off"
-                    placeholder="Select filter..."
+                    placeholder={t('select-filter-placeholder')}
                     value={filterInput}
                     onChange={event => setFilterInput(event.target.value)}
                 />
@@ -84,7 +87,7 @@ export const CodeInsightsJobStatusPicker: FC<CodeInsightsFiltersPickerProps> = p
 
                     {suggestions.length === 0 && (
                         <MultiComboboxEmptyList>
-                            {!filterInput ? <>All filters are selected</> : <>No options</>}
+                            {!filterInput ? <>{t('all-filters-selected-message')}</> : <>{t('no-options-message')}</>}
                         </MultiComboboxEmptyList>
                     )}
                 </MultiComboboxPopover>
@@ -100,6 +103,8 @@ interface CodeInsightsOrderPickerProps {
 }
 
 export const CodeInsightsJobsOrderPicker: FC<CodeInsightsOrderPickerProps> = props => {
+    const { t } = useTranslation('enterprise/insights/admin-ui/components/job-filters')
+
     const { order, className, onOrderChange } = props
 
     const handleSelect = (event: ChangeEvent<HTMLSelectElement>): void => {
@@ -118,8 +123,8 @@ export const CodeInsightsJobsOrderPicker: FC<CodeInsightsOrderPickerProps> = pro
             labelClassName="flex-shrink-0"
             onChange={handleSelect}
         >
-            <option value={BackfillQueueOrderBy.STATE}>State</option>
-            <option value={BackfillQueueOrderBy.QUEUE_POSITION}>Queue position</option>
+            <option value={BackfillQueueOrderBy.STATE}>{t('state-label')}</option>
+            <option value={BackfillQueueOrderBy.QUEUE_POSITION}>{t('queue-position-label')}</option>
         </Select>
     )
 }

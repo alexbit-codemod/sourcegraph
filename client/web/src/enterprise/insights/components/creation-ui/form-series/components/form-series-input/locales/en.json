@@ -1,0 +1,17 @@
+{
+  "name-label": "Name",
+  "example-function-component": "Example: Function component",
+  "search-query": "Search query",
+  "example-regexp-pattern": "Example: patternType:regexp const\\s\\w+:\\s(React\\.)?FunctionComponent",
+  "do-not-include": "Do not include",
+  "context-label": "context:",
+  "repo-label": "repo:",
+  "or-label": " or",
+  "rev-label": "rev:",
+  "filters-note": " filters; if needed,",
+  "repo-label-duplicate": "repo:",
+  "automatic-addition-note": " will be added automatically.",
+  "color-label": "Color",
+  "done-message": "Done",
+  "cancel-message": "Cancel"
+}

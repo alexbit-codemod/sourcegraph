@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
 
 import { mdiChevronDown, mdiChevronUp } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 import type { Subject } from 'rxjs'
 
 import { Timestamp, TimestampFormat } from '@sourcegraph/branded/src/components/Timestamp'
@@ -35,6 +36,8 @@ export const ExternalServiceSyncJobNode: React.FunctionComponent<ExternalService
     node,
     onUpdate,
 }) => {
+    const { t } = useTranslation('components/externalServices')
+
     const [cancelExternalServiceSync, { error: cancelSyncJobError, loading: cancelSyncJobLoading }] =
         useCancelExternalServiceSync()
 
@@ -114,7 +117,7 @@ export const ExternalServiceSyncJobNode: React.FunctionComponent<ExternalService
                     {node.startedAt === null && 'Not started yet.'}
                     {node.startedAt !== null && (
                         <>
-                            Started at{' '}
+                            {t('started-at')}
                             <Timestamp
                                 date={node.startedAt}
                                 preferAbsolute={true}
@@ -128,7 +131,7 @@ export const ExternalServiceSyncJobNode: React.FunctionComponent<ExternalService
                     {node.finishedAt === null && 'Not finished yet.'}
                     {node.finishedAt !== null && (
                         <>
-                            Finished at{' '}
+                            {t('finished-at')}
                             <Timestamp
                                 date={node.finishedAt}
                                 preferAbsolute={true}
@@ -141,8 +144,8 @@ export const ExternalServiceSyncJobNode: React.FunctionComponent<ExternalService
                 <div className="flex-shrink-0 flex-grow-1 mr-1">
                     {node.startedAt && (
                         <>
-                            {node.finishedAt === null && <>Running for </>}
-                            {node.finishedAt !== null && <>Ran for </>}
+                            {node.finishedAt === null && <>{t('running-for')}</>}
+                            {node.finishedAt !== null && <>{t('ran-for')}</>}
                             <Duration
                                 start={node.startedAt}
                                 end={node.finishedAt ?? undefined}
@@ -155,7 +158,7 @@ export const ExternalServiceSyncJobNode: React.FunctionComponent<ExternalService
                 </div>
                 {EXTERNAL_SERVICE_SYNC_RUNNING_STATUSES.has(node.state) && (
                     <LoaderButton
-                        label="Cancel"
+                        label={t('cancel-button')}
                         alwaysShowLabel={true}
                         variant="danger"
                         outline={true}

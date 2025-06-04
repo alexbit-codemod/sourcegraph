@@ -13,6 +13,7 @@ import {
     mdiSourceRepository,
 } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Subject } from 'rxjs'
 
@@ -52,6 +53,8 @@ export const CodeIntelConfigurationPage: FunctionComponent<CodeIntelConfiguratio
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/codeintel/configuration/pages')
+
     useEffect(() => {
         telemetryService.logViewEvent('CodeIntelConfiguration')
         if (repo) {
@@ -120,7 +123,8 @@ export const CodeIntelConfigurationPage: FunctionComponent<CodeIntelConfiguratio
                     {
                         text: repo ? (
                             <>
-                                Code graph data configuration for <RepoLink repoName={repo.name} to={null} />
+                                {t('code-graph-data-configuration')}
+                                <RepoLink repoName={repo.name} to={null} />
                             </>
                         ) : (
                             'Global code graph data configuration'
@@ -129,8 +133,9 @@ export const CodeIntelConfigurationPage: FunctionComponent<CodeIntelConfiguratio
                 ]}
                 description={
                     <>
-                        Rules that control{indexingEnabled && <> auto-indexing and</>} data retention behavior of code
-                        graph data.
+                        {t('rules-that-control')}
+                        {indexingEnabled && <>{t('auto-indexing')}</>}
+                        {t('data-retention-behavior')}
                     </>
                 }
                 actions={authenticatedUser?.siteAdmin && <CreatePolicyButtons repo={repo} />}
@@ -142,13 +147,15 @@ export const CodeIntelConfigurationPage: FunctionComponent<CodeIntelConfiguratio
 
             {authenticatedUser?.siteAdmin && repo && (
                 <Container className="mb-2">
-                    View <Link to="/site-admin/code-graph/configuration">additional configuration policies</Link> that
-                    do not affect this repository.
+                    <Trans
+                        i18nKey="additional-configuration-policies"
+                        components={{ '0': <Link to="/site-admin/code-graph/configuration" /> }}
+                    />
                 </Container>
             )}
 
             <Container className="mb-3 pb-3">
-                <H3>Custom policies</H3>
+                <H3>{t('custom-policies')}</H3>
                 <FilteredConnection<
                     CodeIntelligenceConfigurationPolicyFields,
                     Omit<UnprotectedPoliciesNodeProps, 'node'>
@@ -199,7 +206,7 @@ export const CodeIntelConfigurationPage: FunctionComponent<CodeIntelConfiguratio
             </Container>
 
             <Container className="mb-3">
-                <H3>Default policies</H3>
+                <H3>{t('default-policies')}</H3>
                 <FilteredConnection<CodeIntelligenceConfigurationPolicyFields, Omit<PoliciesNodeProps, 'node'>>
                     listComponent="div"
                     listClassName={classNames(styles.grid, 'mb-3')}
@@ -340,51 +347,65 @@ interface RepositoryAndGitObjectDescriptionProps {
     policy: CodeIntelligenceConfigurationPolicyFields
 }
 
-const RepositoryAndGitObjectDescription: FunctionComponent<RepositoryAndGitObjectDescriptionProps> = ({ policy }) => (
-    <div>
-        {!policy.repository ? (
-            <Tooltip content="This policy may apply to more than one repository.">
-                <Icon
-                    svgPath={mdiEarth}
-                    inline={true}
-                    aria-label="This policy may apply to more than one repository."
-                    className="mr-2"
-                />
-            </Tooltip>
-        ) : (
-            <Tooltip content="This policy applies to a specific repository.">
-                <Icon
-                    svgPath={mdiSourceRepository}
-                    inline={true}
-                    aria-label="This policy applies to a specific repository."
-                    className="mr-2"
-                />
-            </Tooltip>
-        )}
+const RepositoryAndGitObjectDescription: FunctionComponent<RepositoryAndGitObjectDescriptionProps> = ({ policy }) => {
+    const { t } = useTranslation('enterprise/codeintel/configuration/pages')
 
-        <span>
-            Applies to <GitObjectDescription policy={policy} /> of <RepositoryDescription policy={policy} />.
-        </span>
-    </div>
-)
+    return (
+        <div>
+            {!policy.repository ? (
+                <Tooltip content="This policy may apply to more than one repository.">
+                    <Icon
+                        svgPath={mdiEarth}
+                        inline={true}
+                        aria-label="This policy may apply to more than one repository."
+                        className="mr-2"
+                    />
+                </Tooltip>
+            ) : (
+                <Tooltip content="This policy applies to a specific repository.">
+                    <Icon
+                        svgPath={mdiSourceRepository}
+                        inline={true}
+                        aria-label="This policy applies to a specific repository."
+                        className="mr-2"
+                    />
+                </Tooltip>
+            )}
+
+            <span>
+                {t('applies-to')}
+                <GitObjectDescription policy={policy} />
+                {t('of')}
+                <RepositoryDescription policy={policy} />.
+            </span>
+        </div>
+    )
+}
 
 interface GitObjectDescriptionProps {
     policy: CodeIntelligenceConfigurationPolicyFields
 }
 
 const GitObjectDescription: FunctionComponent<GitObjectDescriptionProps> = ({ policy }) => {
+    const { t } = useTranslation('enterprise/codeintel/configuration/pages')
+
     if (policy.type === GitObjectType.GIT_COMMIT) {
         if (policy.pattern === 'HEAD') {
             return (
                 <>
-                    <Badge variant="outlineSecondary">HEAD</Badge> (tip of default branch)
+                    <Badge variant="outlineSecondary">{t('head-tip-default-branch')}</Badge>
+                    {t('commit-pattern')}
                 </>
             )
         }
 
         return (
             <Badge variant="outlineSecondary">
-                commit <span className="text-monospace">{policy.pattern}</span>
+                <Trans
+                    i18nKey="branches-matching-pattern"
+                    values={{ policyPattern: <>{policy.pattern}</> }}
+                    components={{ '0': <span className="text-monospace" /> }}
+                />
             </Badge>
         )
     }
@@ -393,24 +414,32 @@ const GitObjectDescription: FunctionComponent<GitObjectDescriptionProps> = ({ po
         if (policy.pattern !== '*') {
             return (
                 <Badge variant="outlineSecondary">
-                    branches matching <span className="text-monospace">{policy.pattern}</span>
+                    <Trans
+                        i18nKey="all-branches"
+                        values={{ policyPattern: <>{policy.pattern}</> }}
+                        components={{ '0': <span className="text-monospace" /> }}
+                    />
                 </Badge>
             )
         }
 
-        return <Badge variant="outlineSecondary">all branches</Badge>
+        return <Badge variant="outlineSecondary">{t('tags-matching-pattern')}</Badge>
     }
 
     if (policy.type === GitObjectType.GIT_TAG) {
         if (policy.pattern !== '*') {
             return (
                 <Badge variant="outlineSecondary">
-                    tags matching <span className="text-monospace">{policy.pattern}</span>
+                    <Trans
+                        i18nKey="all-tags"
+                        values={{ policyPattern: <>{policy.pattern}</> }}
+                        components={{ '0': <span className="text-monospace" /> }}
+                    />
                 </Badge>
             )
         }
 
-        return <Badge variant="outlineSecondary">all tags</Badge>
+        return <Badge variant="outlineSecondary">{t('repositories')}</Badge>
     }
 
     return <></>
@@ -421,6 +450,8 @@ interface RepositoryDescriptionProps {
 }
 
 const RepositoryDescription: FunctionComponent<RepositoryDescriptionProps> = ({ policy }) => {
+    const { t } = useTranslation('enterprise/codeintel/configuration/pages')
+
     if (policy.repository) {
         return (
             <Badge variant="outlineSecondary">
@@ -432,100 +463,118 @@ const RepositoryDescription: FunctionComponent<RepositoryDescriptionProps> = ({ 
     if (policy.repositoryPatterns) {
         return (
             <Badge variant="outlineSecondary">
-                repositories{' '}
-                {policy.repositoryPatterns.map((pattern, index) => (
-                    <React.Fragment key={pattern}>
-                        {index !== 0 && (index === (policy.repositoryPatterns || []).length - 1 ? <>, or </> : <>, </>)}
-                        <span key={pattern} className="text-monospace">
-                            {pattern}
-                        </span>
-                    </React.Fragment>
-                ))}
+                {t('or')}
+                {policy.repositoryPatterns.map((pattern, index) => {
+                    const { t } = useTranslation('enterprise/codeintel/configuration/pages')
+
+                    return (
+                        <React.Fragment key={pattern}>
+                            {index !== 0 &&
+                                (index === (policy.repositoryPatterns || []).length - 1 ? (
+                                    <>{t('all-repositories')}</>
+                                ) : (
+                                    <>, </>
+                                ))}
+                            <span key={pattern} className="text-monospace">
+                                {pattern}
+                            </span>
+                        </React.Fragment>
+                    )
+                })}
             </Badge>
         )
     }
 
-    return <Badge variant="outlineSecondary">all repositories</Badge>
+    return <Badge variant="outlineSecondary">{t('index-matching-branches')}</Badge>
 }
 
 interface AutoIndexingDescriptionProps {
     policy: CodeIntelligenceConfigurationPolicyFields
 }
 
-const AutoIndexingDescription: FunctionComponent<AutoIndexingDescriptionProps> = ({ policy }) => (
-    <div>
-        <Tooltip content="This policy affects auto-indexing.">
-            <Icon
-                svgPath={mdiDatabaseClock}
-                inline={true}
-                aria-label="This policy affects auto-indexing."
-                className="mr-2"
-            />
-        </Tooltip>
+const AutoIndexingDescription: FunctionComponent<AutoIndexingDescriptionProps> = ({ policy }) => {
+    const { t } = useTranslation('enterprise/codeintel/configuration/pages')
 
-        <span>
-            Index{' '}
-            {policy.type === GitObjectType.GIT_TREE ? (
-                <>
-                    <Badge variant="outlineSecondary">
-                        {policy.indexIntermediateCommits ? 'all commits' : 'the tip'}
-                    </Badge>{' '}
-                    of matching branches
-                </>
-            ) : (
-                'all matching commits'
-            )}
-            {policy.indexCommitMaxAgeHours && (
-                <>
-                    {' '}
-                    younger than{' '}
-                    <Badge variant="outlineSecondary">
-                        <Duration hours={policy.indexCommitMaxAgeHours} />
-                    </Badge>
-                </>
-            )}{' '}
-            .
-        </span>
-    </div>
-)
+    return (
+        <div>
+            <Tooltip content="This policy affects auto-indexing.">
+                <Icon
+                    svgPath={mdiDatabaseClock}
+                    inline={true}
+                    aria-label="This policy affects auto-indexing."
+                    className="mr-2"
+                />
+            </Tooltip>
+
+            <span>
+                {t('younger-than')}
+                {policy.type === GitObjectType.GIT_TREE ? (
+                    <>
+                        <Badge variant="outlineSecondary">
+                            {policy.indexIntermediateCommits ? 'all commits' : 'the tip'}
+                        </Badge>
+                        {t('keep-precise-indexes')}
+                    </>
+                ) : (
+                    'all matching commits'
+                )}
+                {policy.indexCommitMaxAgeHours && (
+                    <>
+                        {t('for-after-upload')}
+                        <Badge variant="outlineSecondary">
+                            <Duration hours={policy.indexCommitMaxAgeHours} />
+                        </Badge>
+                    </>
+                )}{' '}
+                .
+            </span>
+        </div>
+    )
+}
 
 interface RetentionDescriptionProps {
     policy: CodeIntelligenceConfigurationPolicyFields
 }
 
-const RetentionDescription: FunctionComponent<RetentionDescriptionProps> = ({ policy }) => (
-    <div>
-        <Tooltip content="This policy affects data retention.">
-            <Icon
-                svgPath={mdiDeleteClock}
-                inline={true}
-                aria-label="This policy affects data retention."
-                className="mr-2"
-            />
-        </Tooltip>
+const RetentionDescription: FunctionComponent<RetentionDescriptionProps> = ({ policy }) => {
+    const { t } = useTranslation('enterprise/codeintel/configuration/pages')
 
-        <span>
-            Keep precise indexes providing intelligence for{' '}
-            {policy.type === GitObjectType.GIT_TREE ? (
-                <>
-                    <Badge variant="outlineSecondary">
-                        {policy.retainIntermediateCommits ? 'any commit' : 'the tip'}
-                    </Badge>{' '}
-                    of matching branches
-                </>
-            ) : (
-                <>matching commits</>
-            )}{' '}
-            <Badge variant="outlineSecondary">
-                {policy.retentionDurationHours ? (
+    return (
+        <div>
+            <Tooltip content="This policy affects data retention.">
+                <Icon
+                    svgPath={mdiDeleteClock}
+                    inline={true}
+                    aria-label="This policy affects data retention."
+                    className="mr-2"
+                />
+            </Tooltip>
+
+            <span>
+                {t('matching-commits')}
+                {policy.type === GitObjectType.GIT_TREE ? (
                     <>
-                        for <Duration hours={policy.retentionDurationHours} /> after upload
+                        <Badge variant="outlineSecondary">
+                            {policy.retainIntermediateCommits ? 'any commit' : 'the tip'}
+                        </Badge>
+                        {t('')}
                     </>
                 ) : (
-                    'indefinitely'
-                )}
-            </Badge>
-            .
-        </span>
-    </div>
-)
+                    <>{t('')}</>
+                )}{' '}
+                <Badge variant="outlineSecondary">
+                    {policy.retentionDurationHours ? (
+                        <>
+                            {t('of-matching-branches')}
+                            <Duration hours={policy.retentionDurationHours} />
+                            {t('')}
+                        </>
+                    ) : (
+                        'indefinitely'
+                    )}
+                </Badge>
+                .
+            </span>
+        </div>
+    )
+}

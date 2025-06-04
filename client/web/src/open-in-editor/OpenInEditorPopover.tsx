@@ -3,6 +3,7 @@ import React, { useCallback } from 'react'
 import { mdiClose } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Button, H3, Icon, Input, Link, Select, Text, Form, Code } from '@sourcegraph/wildcard'
 
@@ -26,6 +27,8 @@ export interface OpenInEditorPopoverProps {
 export const OpenInEditorPopover: React.FunctionComponent<
     React.PropsWithChildren<OpenInEditorPopoverProps>
 > = props => {
+    const { t } = useTranslation('open-in-editor')
+
     const { editorSettings, togglePopover } = props
 
     const [selectedEditorId, setSelectedEditorId] = React.useState<EditorId>(editorSettings?.editorIds?.[0] || '')
@@ -63,7 +66,7 @@ export const OpenInEditorPopover: React.FunctionComponent<
     return (
         <div className={styles.openInEditorPopover}>
             <Button className={styles.close} onClick={togglePopover}>
-                <VisuallyHidden>Close</VisuallyHidden>
+                <VisuallyHidden>{t('close-button')}</VisuallyHidden>
                 <Icon svgPath={mdiClose} inline={false} aria-hidden={true} />
             </Button>
             {(!areValidSettingsSaved ? renderForm : renderDone)()}
@@ -73,19 +76,16 @@ export const OpenInEditorPopover: React.FunctionComponent<
     function renderForm(): React.ReactNode {
         return (
             <>
-                <H3>Set your preferred editor</H3>
-                <Text>
-                    Open this and other files directly in your editor. Set your path and editor to get started. Update
-                    any time in your user settings.
-                </Text>
+                <H3>{t('preferred-editor-setting')}</H3>
+                <Text>{t('editor-integration-instructions')}</Text>
 
                 <Form onSubmit={onSubmit} noValidate={true}>
                     <Input
                         id="OpenInEditorForm-projectPath"
                         type="text"
-                        label="Default projects path"
+                        label={t('default-projects-path-label')}
                         name="projectPath"
-                        placeholder="/Users/username/projects"
+                        placeholder={t('default-projects-path-example')}
                         required={true}
                         autoCorrect="off"
                         autoCapitalize="off"
@@ -96,19 +96,28 @@ export const OpenInEditorPopover: React.FunctionComponent<
                         className={classNames('mr-sm-2')}
                     />
                     <aside className="small text-muted">
-                        The directory that contains your repository checkouts. For example, if this repository is
-                        checked out to <Code>/Users/username/projects/cody</Code>, then set your default projects path
-                        to <Code>/Users/username/projects</Code>.
+                        {t('repository-checkout-directory-instructions')}
+                        <Code>{t('example-repository-path')}</Code>
+                        {t('set-default-projects-path-instructions')}
+                        <Code>{t('default-projects-path')}</Code>.
                     </aside>
                     <Select
                         id="OpenInEditorForm-editor"
                         label="Editor"
                         message={
                             <>
-                                Use a different editor?{' '}
-                                <Link to="/help/integration/open_in_editor" target="_blank" rel="noreferrer noopener">
-                                    Set up another editor
-                                </Link>
+                                <Trans
+                                    i18nKey="alternative-editor-setup-link"
+                                    components={{
+                                        '0': (
+                                            <Link
+                                                to="/help/integration/open_in_editor"
+                                                target="_blank"
+                                                rel="noreferrer noopener"
+                                            />
+                                        ),
+                                    }}
+                                />
                             </>
                         }
                         value={selectedEditorId}
@@ -126,7 +135,7 @@ export const OpenInEditorPopover: React.FunctionComponent<
                             ))}
                     </Select>
                     <Button variant="primary" type="submit" disabled={!areSettingsValid}>
-                        Save
+                        {t('save-button')}
                     </Button>
                 </Form>
             </>
@@ -136,16 +145,23 @@ export const OpenInEditorPopover: React.FunctionComponent<
     function renderDone(): React.ReactNode {
         return (
             <>
-                <H3>You’re all set</H3>
+                <H3>{t('setup-completion-message')}</H3>
                 <Text>
-                    You can modify or add additional editor paths in your{' '}
-                    <Link to={props.sourcegraphUrl + '/user/settings'} target="_blank" rel="noreferrer noopener">
-                        user settings
-                    </Link>{' '}
-                    at any time.
+                    <Trans
+                        i18nKey="modify-editor-paths-instructions"
+                        components={{
+                            '0': (
+                                <Link
+                                    to={props.sourcegraphUrl + '/user/settings'}
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                />
+                            ),
+                        }}
+                    />
                 </Text>
                 <Button variant="primary" onClick={togglePopover}>
-                    Close
+                    {t('close-message')}
                 </Button>
             </>
         )

@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 
 import { mdiPlus } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import type { AuthenticatedUser } from '@sourcegraph/shared/src/auth'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -65,6 +66,8 @@ const createCodeMonitorUrl = (example: ExampleCodeMonitor): string => {
 export const CodeMonitoringGettingStarted: React.FunctionComponent<
     React.PropsWithChildren<CodeMonitoringGettingStartedProps>
 > = ({ authenticatedUser, telemetryRecorder }) => {
+    const { t } = useTranslation('enterprise/code-monitoring')
+
     const isLightTheme = useIsLightTheme()
     const assetsRoot = window.context?.assetsRoot || ''
 
@@ -78,82 +81,75 @@ export const CodeMonitoringGettingStarted: React.FunctionComponent<
             <Card className={classNames('mb-4 flex-column flex-lg-row', styles.hero)}>
                 <img
                     src={`${assetsRoot}/img/codemonitoring-illustration-${isLightTheme ? 'light' : 'dark'}.svg`}
-                    alt="A code monitor observes a depcreated library being used in code and sends an email alert."
+                    alt={t('code-monitor-deprecated-library-alert')}
                     className={classNames('mr-lg-5', styles.heroImage)}
                 />
                 <div className="align-self-center">
-                    <H2 className={classNames('mb-3', styles.heading)}>Proactively monitor changes to your codebase</H2>
-                    <Text className={classNames('mb-4')}>
-                        With code monitoring, you can automatically track changes made across multiple code hosts and
-                        repositories.
-                    </Text>
+                    <H2 className={classNames('mb-3', styles.heading)}>{t('proactive-codebase-monitoring')}</H2>
+                    <Text className={classNames('mb-4')}>{t('automatic-code-change-tracking')}</Text>
 
-                    <H3>Common use cases</H3>
+                    <H3>{t('common-use-cases')}</H3>
                     <ul>
-                        <li>Identify when bad patterns are committed </li>
-                        <li>Identify use of deprecated libraries</li>
+                        <li>{t('bad-patterns-identification')}</li>
+                        <li>{t('deprecated-library-identification')}</li>
                     </ul>
                     {authenticatedUser && (
                         <Button to="/code-monitoring/new" className={styles.createButton} variant="primary" as={Link}>
                             <Icon aria-hidden={true} className="mr-2" svgPath={mdiPlus} />
-                            Create a code monitor
+                            {t('create-code-monitor')}
                         </Button>
                     )}
                 </div>
             </Card>
 
             <div>
-                <H3 className="mb-3">Example code monitors</H3>
+                <H3 className="mb-3">{t('example-code-monitors')}</H3>
                 <div className={classNames('mb-3', styles.startingPointsContainer)}>
-                    {exampleCodeMonitors.map(monitor => (
-                        <div className={styles.startingPoint} key={monitor.title}>
-                            <Card className="h-100">
-                                <CardBody className="d-flex flex-column">
-                                    <H3>{monitor.title}</H3>
-                                    <Text className="text-muted flex-grow-1">{monitor.description}</Text>
-                                    <Link to={createCodeMonitorUrl(monitor)} onClick={logExampleMonitorClicked}>
-                                        Create copy of monitor
-                                    </Link>
-                                </CardBody>
-                            </Card>
-                        </div>
-                    ))}
+                    {exampleCodeMonitors.map(monitor => {
+                        const { t } = useTranslation('enterprise/code-monitoring')
+
+                        return (
+                            <div className={styles.startingPoint} key={monitor.title}>
+                                <Card className="h-100">
+                                    <CardBody className="d-flex flex-column">
+                                        <H3>{monitor.title}</H3>
+                                        <Text className="text-muted flex-grow-1">{monitor.description}</Text>
+                                        <Link to={createCodeMonitorUrl(monitor)} onClick={logExampleMonitorClicked}>
+                                            {t('copy-monitor')}
+                                        </Link>
+                                    </CardBody>
+                                </Card>
+                            </div>
+                        )
+                    })}
                 </div>
             </div>
             <div className="mt-5 px-0">
                 <div className="row">
                     <div className="col-4">
                         <div>
-                            <H4>Get started</H4>
-                            <Text className="text-muted">
-                                Craft searches that will monitor your code and trigger actions such as email
-                                notifications.
-                            </Text>
+                            <H4>{t('get-started-with-monitoring')}</H4>
+                            <Text className="text-muted">{t('monitor-code-trigger-actions')}</Text>
                             <Link to="/help/code_monitoring" className="link">
-                                Code monitoring documentation
+                                {t('code-monitoring-documentation')}
                             </Link>
                         </div>
                     </div>
                     <div className="col-4">
                         <div>
-                            <H4>Starting points and ideas</H4>
-                            <Text className="text-muted">
-                                Find specific examples of useful code monitors to keep on top of security and
-                                consistency concerns.
-                            </Text>
+                            <H4>{t('starting-points-ideas')}</H4>
+                            <Text className="text-muted">{t('useful-code-monitor-examples')}</Text>
                             <Link to="/help/code_monitoring/how-tos/starting_points" className="link">
-                                Explore starting points
+                                {t('explore-starting-points')}
                             </Link>
                         </div>
                     </div>
                     <div className="col-4">
                         <div>
-                            <H4>Questions and feedback</H4>
-                            <Text className="text-muted">
-                                Have a question or idea about code monitoring? We want to hear your feedback!
-                            </Text>
+                            <H4>{t('questions-and-feedback')}</H4>
+                            <Text className="text-muted">{t('share-feedback-on-monitoring')}</Text>
                             <Link to="mailto:feedback@sourcegraph.com" className="link">
-                                Share your thoughts
+                                {t('share-your-thoughts')}
                             </Link>
                         </div>
                     </div>

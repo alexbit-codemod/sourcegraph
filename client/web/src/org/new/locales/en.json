@@ -1,0 +1,8 @@
+{
+  "new-organization-label": "New organization",
+  "organization-description": "An organization is a set of users with associated configuration. See <0>Sourcegraph documentation</0> for information about configuring organizations.",
+  "organization-name-label": "Organization name",
+  "example-organization-name": "ACME Corporation",
+  "display-name-label": "Display name",
+  "create-organization-button": " Create organization"
+}

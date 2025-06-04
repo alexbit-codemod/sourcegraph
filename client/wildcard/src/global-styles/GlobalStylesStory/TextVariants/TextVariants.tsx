@@ -1,6 +1,7 @@
 import React, { type ElementType } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Code, Text } from '../../../components'
 
@@ -61,63 +62,71 @@ const TextVariations: React.FunctionComponent<React.PropsWithChildren<TextVarian
     return <>{textVariations}</>
 }
 
-export const TextVariants: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => (
-    <table className="table">
-        <tbody>
-            <tr>
-                <td>Body Text</td>
-                <td>
-                    {WEIGHT_VARIANTS.map(weight => (
-                        <Text key={`Base/${weight}`} className={styles.textVariant}>
-                            <TextLabel size="Base" name="Body" weight={weight} />
-                        </Text>
-                    ))}
-                    {WEIGHT_VARIANTS.map(weight => (
-                        <Text key={`Small/${weight}`} className={styles.textVariant}>
-                            <small>
-                                <TextLabel
-                                    size="Small"
-                                    name="Body"
-                                    weight={weight}
-                                    className={classNames({ 'font-weight-bold': weight === 'Strong' })}
-                                />
-                            </small>
-                        </Text>
-                    ))}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <Code>{'<label>'}</Code>
-                </td>
-                <td>
-                    <TextVariations component="label" name="Label" />
-                    <TextVariations component="label" name="Label" className="text-uppercase" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <Code>{'<input class="form-control">'}</Code>
-                </td>
-                <td>
-                    <span className={classNames('form-control', styles.inputVariant, styles.textVariant)}>
-                        <TextLabel size="Base" weight="Regular" name="Input" />
-                    </span>
-                    <span
-                        className={classNames('form-control form-control-sm', styles.inputVariant, styles.textVariant)}
-                    >
-                        <TextLabel size="Small" weight="Regular" name="Input" />
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <Code>{'<code>'}</Code>
-                </td>
-                <td>
-                    <TextVariations component="code" name="Code" weights={['Regular', 'Strong']} />
-                </td>
-            </tr>
-        </tbody>
-    </table>
-)
+export const TextVariants: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
+    const { t } = useTranslation('../../wildcard/src/global-styles/GlobalStylesStory/TextVariants')
+
+    return (
+        <table className="table">
+            <tbody>
+                <tr>
+                    <td>{t('body-text')}</td>
+                    <td>
+                        {WEIGHT_VARIANTS.map(weight => (
+                            <Text key={`Base/${weight}`} className={styles.textVariant}>
+                                <TextLabel size="Base" name="Body" weight={weight} />
+                            </Text>
+                        ))}
+                        {WEIGHT_VARIANTS.map(weight => (
+                            <Text key={`Small/${weight}`} className={styles.textVariant}>
+                                <small>
+                                    <TextLabel
+                                        size="Small"
+                                        name="Body"
+                                        weight={weight}
+                                        className={classNames({ 'font-weight-bold': weight === 'Strong' })}
+                                    />
+                                </small>
+                            </Text>
+                        ))}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <Code>{'<label>'}</Code>
+                    </td>
+                    <td>
+                        <TextVariations component="label" name="Label" />
+                        <TextVariations component="label" name="Label" className="text-uppercase" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <Code>{'<input class="form-control">'}</Code>
+                    </td>
+                    <td>
+                        <span className={classNames('form-control', styles.inputVariant, styles.textVariant)}>
+                            <TextLabel size="Base" weight="Regular" name="Input" />
+                        </span>
+                        <span
+                            className={classNames(
+                                'form-control form-control-sm',
+                                styles.inputVariant,
+                                styles.textVariant
+                            )}
+                        >
+                            <TextLabel size="Small" weight="Regular" name="Input" />
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <Code>{'<code>'}</Code>
+                    </td>
+                    <td>
+                        <TextVariations component="code" name="Code" weights={['Regular', 'Strong']} />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    )
+}

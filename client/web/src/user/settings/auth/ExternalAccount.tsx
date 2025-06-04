@@ -1,5 +1,7 @@
 import React, { useState, useCallback, type FC, useEffect } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import type { ErrorLike } from '@sourcegraph/common'
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { Button, Link, H3 } from '@sourcegraph/wildcard'
@@ -27,6 +29,8 @@ export const ExternalAccount: React.FunctionComponent<React.PropsWithChildren<Pr
     onDidAdd,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('user/settings/auth')
+
     const [isLoading, setIsLoading] = useState(false)
     const [isRemoveAccountModalOpen, setIsRemoveAccountModalOpen] = useState(false)
     const [isAddGerritAccountModalOpen, setIsGerritAccountModalOpen] = useState(false)
@@ -95,12 +99,12 @@ export const ExternalAccount: React.FunctionComponent<React.PropsWithChildren<Pr
                         onClick={() => setIsRemoveAccountModalOpen(true)}
                         variant="link"
                     >
-                        Remove
+                        {t('remove-button')}
                     </Button>
                 ) : (
                     <LoaderButton
                         loading={isLoading}
-                        label="Add"
+                        label={t('add-button')}
                         display="block"
                         onClick={navigateToAuthProvider}
                         variant="success"

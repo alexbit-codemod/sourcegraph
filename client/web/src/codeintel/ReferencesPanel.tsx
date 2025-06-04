@@ -4,6 +4,7 @@ import { mdiArrowCollapseRight, mdiChevronDown, mdiChevronRight, mdiFilterOutlin
 import classNames from 'classnames'
 import type * as H from 'history'
 import { capitalize } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate, useLocation } from 'react-router-dom'
 import VisibilitySensor from 'react-visibility-sensor'
 import type { Observable } from 'rxjs'
@@ -173,6 +174,8 @@ const RevisionResolvingReferencesList: React.FunctionComponent<
         }
     >
 > = props => {
+    const { t } = useTranslation('codeintel')
+
     const { data, loading, error } = useRepoAndBlob(props.repoName, props.filePath, props.revision)
 
     // Scroll blob UI to the selected symbol right after the reference panel is rendered
@@ -189,12 +192,12 @@ const RevisionResolvingReferencesList: React.FunctionComponent<
     }
 
     if (!data) {
-        return <>Nothing found</>
+        return <>{t('nothing-found')}</>
     }
 
     const useCodeIntel = props.useCodeIntel
     if (!useCodeIntel) {
-        return <>Code intelligence is not available</>
+        return <>{t('code-intelligence-not-available')}</>
     }
 
     const token = {
@@ -236,6 +239,8 @@ function oneBasedPositionToZeroBased(p: OneBasedPosition): ZeroBasedPosition {
 const SearchTokenFindingReferencesList: React.FunctionComponent<
     React.PropsWithChildren<ReferencesPanelPropsWithToken>
 > = props => {
+    const { t } = useTranslation('codeintel')
+
     const tokenRange = props.token.range
     const tokenResult = findSearchToken({
         text: props.fileContent,
@@ -250,7 +255,7 @@ const SearchTokenFindingReferencesList: React.FunctionComponent<
     if (tokenResult === undefined) {
         return (
             <div>
-                <Text className="text-danger">Could not find token.</Text>
+                <Text className="text-danger">{t('could-not-find-token')}</Text>
             </div>
         )
     }
@@ -295,6 +300,8 @@ const ReferencesList: React.FunctionComponent<
         }
     >
 > = props => {
+    const { t } = useTranslation('codeintel')
+
     const [filter, setFilter] = useState<string>()
     const debouncedFilter = useDebounce(filter, 150)
 
@@ -423,7 +430,7 @@ const ReferencesList: React.FunctionComponent<
 
     // If there weren't any errors and we just didn't receive any data
     if (!data) {
-        return <>Nothing found</>
+        return <>{t('nothing-found-duplicate')}</>
     }
 
     return (
@@ -442,7 +449,7 @@ const ReferencesList: React.FunctionComponent<
                     <Input
                         className={classNames('py-0 my-0 w-100 text-small')}
                         type="text"
-                        placeholder="Type to filter by filename"
+                        placeholder={t('type-to-filter-by-filename')}
                         value={filter === undefined ? '' : filter}
                         onChange={event => setFilter(event.target.value)}
                     />
@@ -577,6 +584,8 @@ interface CollapsibleLocationListProps
 const CollapsibleLocationList: React.FunctionComponent<
     React.PropsWithChildren<CollapsibleLocationListProps>
 > = props => {
+    const { t } = useTranslation('codeintel')
+
     const isOpen = props.isOpen(props.name) ?? true
 
     const repoCount = props.locationsGroup.repoCount
@@ -630,10 +639,20 @@ const CollapsibleLocationList: React.FunctionComponent<
                         <Text className="text-muted pl-4 pb-0">
                             {props.filter ? (
                                 <i>
-                                    No {props.name} matching <strong>{props.filter}</strong> found
+                                    {t('no-prefix')}
+                                    {props.name}
+                                    <Trans
+                                        i18nKey="no-matching-results"
+                                        values={{ propsFilter: <>{props.filter}</> }}
+                                        components={{ '0': <strong /> }}
+                                    />
                                 </i>
                             ) : (
-                                <i>No {props.name} found</i>
+                                <i>
+                                    {t('no-prefix-duplicate')}
+                                    {props.name}
+                                    {t('found-suffix')}
+                                </i>
                             )}
                         </Text>
                     )}
@@ -642,13 +661,17 @@ const CollapsibleLocationList: React.FunctionComponent<
                         props.fetchMore !== undefined &&
                         (props.loadingMore ? (
                             <div className="text-center mb-1">
-                                <em>Loading more {props.name}...</em>
+                                <em>
+                                    {t('loading-more')}
+                                    {props.name}...
+                                </em>
                                 <LoadingSpinner inline={true} />
                             </div>
                         ) : (
                             <div className="text-center mb-1">
                                 <Button variant="secondary" onClick={props.fetchMore}>
-                                    Load more {props.name}
+                                    {t('load-more-button')}
+                                    {props.name}
                                 </Button>
                             </div>
                         ))}
@@ -965,23 +988,31 @@ const CollapsibleLocationGroup: React.FunctionComponent<
     )
 }
 
-const LoadingCodeIntel: React.FunctionComponent<React.PropsWithChildren<{}>> = () => (
-    <>
-        <LoadingSpinner inline={false} className="mx-auto my-4" />
-        <Text alignment="center" className="text-muted">
-            <i>Loading code intel ...</i>
-        </Text>
-    </>
-)
+const LoadingCodeIntel: React.FunctionComponent<React.PropsWithChildren<{}>> = () => {
+    const { t } = useTranslation('codeintel')
 
-const LoadingCodeIntelFailed: React.FunctionComponent<React.PropsWithChildren<{ error: ErrorLike }>> = props => (
-    <>
-        <div>
-            <Text className="text-danger">Loading code intel failed:</Text>
-            <pre>{props.error.message}</pre>
-        </div>
-    </>
-)
+    return (
+        <>
+            <LoadingSpinner inline={false} className="mx-auto my-4" />
+            <Text alignment="center" className="text-muted">
+                <i>{t('loading-code-intel')}</i>
+            </Text>
+        </>
+    )
+}
+
+const LoadingCodeIntelFailed: React.FunctionComponent<React.PropsWithChildren<{ error: ErrorLike }>> = props => {
+    const { t } = useTranslation('codeintel')
+
+    return (
+        <>
+            <div>
+                <Text className="text-danger">{t('loading-code-intel-failed')}</Text>
+                <pre>{props.error.message}</pre>
+            </div>
+        </>
+    )
+}
 
 function sessionStorageKeyFromToken(token: Token): string {
     const start = token.range.start

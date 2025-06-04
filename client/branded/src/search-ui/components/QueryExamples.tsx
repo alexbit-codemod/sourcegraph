@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 
 import { mdiOpenInNew } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { SearchPatternType } from '@sourcegraph/shared/src/graphql-operations'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -40,6 +41,8 @@ export const QueryExamples: React.FunctionComponent<QueryExamplesProps> = ({
     isSourcegraphDotCom = false,
     patternType,
 }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/components')
+
     const exampleSyntaxColumns = useQueryExamples(
         selectedSearchContextSpec ?? 'global',
         isSourcegraphDotCom,
@@ -57,8 +60,8 @@ export const QueryExamples: React.FunctionComponent<QueryExamplesProps> = ({
     return isSourcegraphDotCom ? (
         <Tabs size="medium">
             <TabList wrapperClassName={classNames('mb-4', styles.tabHeader)}>
-                <Tab>How to search</Tab>
-                <Tab>Popular queries</Tab>
+                <Tab>{t('how-to-search')}</Tab>
+                <Tab>{t('popular-queries')}</Tab>
             </TabList>
             <TabPanels>
                 <TabPanel className={styles.tabPanel}>
@@ -98,28 +101,32 @@ const QueryExamplesLayout: React.FunctionComponent<QueryExamplesLayout> = ({
     patternType,
 }) => (
     <div className={styles.queryExamplesSectionsColumns}>
-        {queryColumns.map((column, index) => (
-            <div key={`column-${queryColumns[index][0].title}`}>
-                {column.map(({ title, queryExamples }) => (
-                    <ExamplesSection
-                        key={title}
-                        title={title}
-                        queryExamples={queryExamples}
-                        onQueryExampleClick={onQueryExampleClick}
-                        patternType={patternType}
-                    />
-                ))}
-                {/* Add docs link to last column */}
-                {queryColumns.length === index + 1 && (
-                    <small className="d-block">
-                        <Link target="blank" to="/help/code_search/reference/queries">
-                            Complete query reference{' '}
-                            <Icon role="img" aria-label="Open in a new tab" svgPath={mdiOpenInNew} />
-                        </Link>
-                    </small>
-                )}
-            </div>
-        ))}
+        {queryColumns.map((column, index) => {
+            const { t } = useTranslation('../../branded/src/search-ui/components')
+
+            return (
+                <div key={`column-${queryColumns[index][0].title}`}>
+                    {column.map(({ title, queryExamples }) => (
+                        <ExamplesSection
+                            key={title}
+                            title={title}
+                            queryExamples={queryExamples}
+                            onQueryExampleClick={onQueryExampleClick}
+                            patternType={patternType}
+                        />
+                    ))}
+                    {/* Add docs link to last column */}
+                    {queryColumns.length === index + 1 && (
+                        <small className="d-block">
+                            <Link target="blank" to="/help/code_search/reference/queries">
+                                {t('complete-query-reference')}
+                                <Icon role="img" aria-label="Open in a new tab" svgPath={mdiOpenInNew} />
+                            </Link>
+                        </small>
+                    )}
+                </div>
+            )
+        })}
     </div>
 )
 

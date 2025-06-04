@@ -4,6 +4,7 @@ import { mdiAccount } from '@mdi/js'
 import classNames from 'classnames'
 import { formatDistanceToNowStrict } from 'date-fns'
 import { capitalize } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { pluralize } from '@sourcegraph/common'
 import { useLazyQuery, useMutation, useQuery } from '@sourcegraph/http-client'
@@ -187,6 +188,8 @@ const FIRST_COUNT = 25
 interface Props extends TelemetryV2Props {}
 
 export const AccessRequestsPage: React.FunctionComponent<Props> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin/AccessRequestsPage')
+
     useEffect(() => {
         EVENT_LOGGER.logPageView('AccessRequestsPage')
         telemetryRecorder.recordEvent('admin.accessRequests', 'view')
@@ -303,16 +306,18 @@ export const AccessRequestsPage: React.FunctionComponent<Props> = ({ telemetryRe
     return (
         <>
             <SiteAdminPageTitle icon={mdiAccount}>
-                <span>Users</span>
-                <span>Account requests</span>
+                <span>{t('users')}</span>
+                <span>{t('account-requests')}</span>
             </SiteAdminPageTitle>
             {!hasRemainingSeats && (
                 <Alert variant="danger">
-                    No licenses remaining. To approve requests,{' '}
-                    <Link to="https://sourcegraph.com/pricing" target="_blank" rel="noopener">
-                        purchase additional licenses
-                    </Link>{' '}
-                    or <Link to="/site-admin/users">remove inactive users</Link>.
+                    <Trans
+                        i18nKey="license-approval-info"
+                        components={{
+                            '0': <Link to="https://sourcegraph.com/pricing" target="_blank" rel="noopener" />,
+                            '1': <Link to="/site-admin/users" />,
+                        }}
+                    />
                 </Alert>
             )}
             <Card className="p-3">
@@ -348,28 +353,34 @@ export const AccessRequestsPage: React.FunctionComponent<Props> = ({ telemetryRe
                                     key: 'Actions',
                                     header: 'Actions',
                                     align: 'right',
-                                    render: (node: AccessRequestNode) => (
-                                        <div className="d-flex align-items-start">
-                                            <Button
-                                                variant="link"
-                                                onClick={() => handleReject(node.id)}
-                                                className="pl-0"
-                                                size="sm"
-                                                disabled={status !== AccessRequestStatus.PENDING}
-                                            >
-                                                Reject
-                                            </Button>
-                                            <Button
-                                                variant="success"
-                                                disabled={!hasRemainingSeats || status === AccessRequestStatus.APPROVED}
-                                                className="ml-2"
-                                                size="sm"
-                                                onClick={() => handleApprove?.(node.id, node.name, node.email)}
-                                            >
-                                                Approve
-                                            </Button>
-                                        </div>
-                                    ),
+                                    render: (node: AccessRequestNode) => {
+                                        const { t } = useTranslation('site-admin/AccessRequestsPage')
+
+                                        return (
+                                            <div className="d-flex align-items-start">
+                                                <Button
+                                                    variant="link"
+                                                    onClick={() => handleReject(node.id)}
+                                                    className="pl-0"
+                                                    size="sm"
+                                                    disabled={status !== AccessRequestStatus.PENDING}
+                                                >
+                                                    {t('reject-button')}
+                                                </Button>
+                                                <Button
+                                                    variant="success"
+                                                    disabled={
+                                                        !hasRemainingSeats || status === AccessRequestStatus.APPROVED
+                                                    }
+                                                    className="ml-2"
+                                                    size="sm"
+                                                    onClick={() => handleApprove?.(node.id, node.name, node.email)}
+                                                >
+                                                    {t('approve-button')}
+                                                </Button>
+                                            </div>
+                                        )
+                                    },
                                 },
                             ]}
                             getRowId={node => node.id}
@@ -379,11 +390,16 @@ export const AccessRequestsPage: React.FunctionComponent<Props> = ({ telemetryRe
                 )}
                 {!loading && connection?.nodes.length === 0 && (
                     <div>
-                        <Alert variant="info">No {capitalize(status)} requests</Alert>
+                        <Alert variant="info">
+                            {t('no-prefix')}
+                            {capitalize(status)}
+                            {t('requests-suffix')}
+                        </Alert>
                         <Text>
-                            Users can request access to Sourcegraph via the login page. View the documentation to learn
-                            more about{' '}
-                            <Link to="/help/admin/auth#how-to-control-user-sign-up">controlling sign up requests</Link>.
+                            <Trans
+                                i18nKey="user-access-request-info"
+                                components={{ '0': <Link to="/help/admin/auth#how-to-control-user-sign-up" /> }}
+                            />
                         </Text>
                     </div>
                 )}

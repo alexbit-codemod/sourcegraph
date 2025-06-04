@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 
 import { mdiClose } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { RepoLink } from '@sourcegraph/shared/src/components/RepoLink'
 import {
@@ -48,6 +49,8 @@ export const MultiPackageForm: React.FunctionComponent<MultiPackageFormProps> = 
     onDismiss,
     onSave,
 }) => {
+    const { t } = useTranslation('site-admin/packages/components')
+
     const [blockState, setBlockState] = useState<MultiPackageState>(initialState)
     const query = useDebounce(blockState.nameFilter, 200)
 
@@ -77,7 +80,7 @@ export const MultiPackageForm: React.FunctionComponent<MultiPackageFormProps> = 
             <Form onSubmit={handleSubmit} className="w-100 mb-3">
                 <div>
                     <Label className="mb-2" id="package-name">
-                        Name
+                        {t('name-label')}
                     </Label>
                     <div className={styles.inputRow}>
                         <Select
@@ -104,7 +107,7 @@ export const MultiPackageForm: React.FunctionComponent<MultiPackageFormProps> = 
                             value={blockState.nameFilter || ''}
                             required={true}
                             onChange={event => setBlockState({ ...blockState, nameFilter: event.target.value })}
-                            placeholder="Example: @types/*"
+                            placeholder={t('example-types-filter')}
                         />
                         <Tooltip content="Remove name filter">
                             <Button
@@ -118,10 +121,8 @@ export const MultiPackageForm: React.FunctionComponent<MultiPackageFormProps> = 
                     </div>
                 </div>
                 <div className="mt-3">
-                    <Label className="mb-2">Version</Label>
-                    <Alert variant="info">
-                        All versions of all matching packages are blocked when using a name filter.
-                    </Alert>
+                    <Label className="mb-2">{t('version-label')}</Label>
+                    <Alert variant="info">{t('all-versions-blocked-message')}</Alert>
                 </div>
                 <div className={styles.listContainer}>
                     <PackageList query={query} blockState={blockState} />
@@ -137,6 +138,8 @@ interface PackageListProps {
     query: string
 }
 const PackageList: React.FunctionComponent<PackageListProps> = ({ blockState, query }) => {
+    const { t } = useTranslation('site-admin/packages/components')
+
     const [packageFetchLimit, setPackageFetchLimit] = useState(15)
     const { nodes, totalCount, loading, error } = useMatchingPackages({
         kind: blockState.ecosystem,
@@ -161,53 +164,66 @@ const PackageList: React.FunctionComponent<PackageListProps> = ({ blockState, qu
 
     return (
         <div className="mt-3">
-            <Label className="mb-2">Summary</Label>
+            <Label className="mb-2">{t('summary-label')}</Label>
             <div className="d-flex justify-content-between text-muted">
                 <span>
                     {totalCount === 0 ? (
-                        <>No package currently matches this filter</>
+                        <>{t('no-matching-packages-message')}</>
                     ) : (
                         <>
                             {totalCount === 1 ? (
-                                <>{totalCount} package currently matches</>
+                                <>{t('single-package-matching-message', { totalCount })}</>
                             ) : (
-                                <>{totalCount} packages currently match</>
-                            )}{' '}
-                            this filter
-                            {nodes.length < totalCount && <> (showing only {nodes.length})</>}
+                                <>{t('multiple-packages-matching-message', { totalCount })}</>
+                            )}
+                            {t('filter-info-message', {
+                                nodesLengthTotalCountShowingOnlyNodesLength: nodes.length < totalCount && (
+                                    <> (showing only {nodes.length})</>
+                                ),
+                            })}
                         </>
                     )}
                 </span>
                 {nodes.length < totalCount && (
                     <Button variant="link" className="p-0 mr-3" onClick={() => setPackageFetchLimit(nextFetchLimit)}>
-                        <>Show {nextFetchLimit === totalCount ? 'all ' : nextFetchLimit.toString()}</>
+                        <>
+                            {t('show-all-or-limited-packages', {
+                                nextFetchLimitToString: nextFetchLimit.toString(),
+                                nextFetchLimitTotalCount: nextFetchLimit === totalCount,
+                            })}
+                        </>
                     </Button>
                 )}
             </div>
             {nodes.length > 0 && (
                 <ul className={classNames('list-group mt-1', styles.list)}>
-                    {nodes.map(node => (
-                        <li className="list-group-item" key={node.id}>
-                            {node.blocked ? (
-                                <div className="d-flex justify-content-between">
-                                    <>{node.name}</>
-                                    <small className="text-danger">This package is already blocked by a filter.</small>
-                                </div>
-                            ) : node.repository ? (
-                                <div className="d-flex justify-content-between">
-                                    <RepoLink repoName={node.name} to={node.repository.url} />
-                                    <small className="text-muted">
-                                        Size: {prettyBytesBigint(BigInt(node.repository.mirrorInfo.byteSize))}
-                                    </small>
-                                </div>
-                            ) : (
-                                <div className="d-flex justify-content-between">
-                                    <>{node.name}</>
-                                    <small className="text-muted">This package has not yet been synced.</small>
-                                </div>
-                            )}
-                        </li>
-                    ))}
+                    {nodes.map(node => {
+                        const { t } = useTranslation('site-admin/packages/components')
+
+                        return (
+                            <li className="list-group-item" key={node.id}>
+                                {node.blocked ? (
+                                    <div className="d-flex justify-content-between">
+                                        <>{node.name}</>
+                                        <small className="text-danger">{t('package-already-blocked-message')}</small>
+                                    </div>
+                                ) : node.repository ? (
+                                    <div className="d-flex justify-content-between">
+                                        <RepoLink repoName={node.name} to={node.repository.url} />
+                                        <small className="text-muted">
+                                            {t('package-size-label')}
+                                            {prettyBytesBigint(BigInt(node.repository.mirrorInfo.byteSize))}
+                                        </small>
+                                    </div>
+                                ) : (
+                                    <div className="d-flex justify-content-between">
+                                        <>{node.name}</>
+                                        <small className="text-muted">{t('package-not-synced-message')}</small>
+                                    </div>
+                                )}
+                            </li>
+                        )
+                    })}
                 </ul>
             )}
         </div>

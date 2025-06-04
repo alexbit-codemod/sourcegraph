@@ -1,5 +1,7 @@
 import type { FC, FormEventHandler, FormHTMLAttributes, ReactNode } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { Input, type useFieldAPI, getDefaultInputProps, type SubmissionErrors } from '@sourcegraph/wildcard'
 
 import { CodeInsightDashboardsVisibility, RepositoryField } from '../../../../../../components'
@@ -30,6 +32,10 @@ export interface RenderPropertyInputs {
 }
 
 export const LangStatsInsightCreationForm: FC<LangStatsInsightCreationFormProps> = props => {
+    const { t } = useTranslation(
+        'enterprise/insights/pages/insights/creation/lang-stats/components/lang-stats-insight-creation-form'
+    )
+
     const {
         handleSubmit,
         submitErrors,
@@ -56,9 +62,9 @@ export const LangStatsInsightCreationForm: FC<LangStatsInsightCreationFormProps>
                 as={RepositoryField}
                 required={true}
                 autoFocus={true}
-                label="Repository"
+                label={t('repository-label')}
                 message="This insight is limited to one repository. You can set up multiple language usage charts for analyzing other repositories."
-                placeholder="Example: github.com/sourcegraph/sourcegraph"
+                placeholder={t('example-repository-url')}
                 {...getDefaultInputProps(repository)}
                 className="mb-0"
                 inputClassName="a11y-ignore"
@@ -66,9 +72,9 @@ export const LangStatsInsightCreationForm: FC<LangStatsInsightCreationFormProps>
 
             <Input
                 required={true}
-                label="Title"
+                label={t('title-label')}
                 message="Shown as the title for your insight."
-                placeholder="Example: Language Usage in RepositoryName"
+                placeholder={t('example-title-format')}
                 {...getDefaultInputProps(title)}
                 className="mb-0 mt-4"
             />
@@ -78,7 +84,7 @@ export const LangStatsInsightCreationForm: FC<LangStatsInsightCreationFormProps>
                 min={1}
                 max={100}
                 type="number"
-                label="Threshold of ‘Other’ category"
+                label={t('threshold-other-category')}
                 message="Languages with usage lower than the threshold are grouped into an 'other' category."
                 {...getDefaultInputProps(threshold)}
                 className="mb-0 mt-4"

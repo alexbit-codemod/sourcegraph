@@ -3,6 +3,7 @@ import React, { useMemo } from 'react'
 import classNames from 'classnames'
 import AlertCircleIcon from 'mdi-react/AlertCircleIcon'
 import MinusCircleIcon from 'mdi-react/MinusCircleIcon'
+import { useTranslation } from 'react-i18next'
 import { Routes, Route } from 'react-router-dom'
 import { of } from 'rxjs'
 import { catchError } from 'rxjs/operators'
@@ -44,6 +45,8 @@ export const RepoSettingsArea: React.FunctionComponent<React.PropsWithChildren<P
     useBreadcrumb,
     ...props
 }) => {
+    const { t } = useTranslation('repo/settings')
+
     const repoName = props.repoName
     const repoOrError = useObservable(
         useMemo(() => fetchSettingsAreaRepository(repoName).pipe(catchError(error => of(asError(error)))), [repoName])
@@ -56,7 +59,13 @@ export const RepoSettingsArea: React.FunctionComponent<React.PropsWithChildren<P
     }
 
     if (isErrorLike(repoOrError)) {
-        return <HeroPage icon={AlertCircleIcon} title="Error" subtitle={<ErrorMessage error={repoOrError.message} />} />
+        return (
+            <HeroPage
+                icon={AlertCircleIcon}
+                title={t('error-message')}
+                subtitle={<ErrorMessage error={repoOrError.message} />}
+            />
+        )
     }
 
     if (repoOrError === null) {
@@ -67,7 +76,7 @@ export const RepoSettingsArea: React.FunctionComponent<React.PropsWithChildren<P
         return (
             <HeroPage
                 icon={MinusCircleIcon}
-                title="Forbidden"
+                title={t('forbidden-access')}
                 subtitle="You are not authorized to view or change this repository's settings."
             />
         )

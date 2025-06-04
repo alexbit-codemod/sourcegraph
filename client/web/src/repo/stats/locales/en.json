@@ -1,0 +1,16 @@
+{
+  "contributors": "Contributors",
+  "contributions-filter": "Contributions filter",
+  "time-period": "Time period",
+  "all-time": "All time",
+  "last-7-days": "Last 7 days",
+  "last-30-days": "Last 30 days",
+  "last-year": "Last year",
+  "all-time-revision": "All time",
+  "revision-range": "Revision range",
+  "default-branch": "Default branch",
+  "path": "Path",
+  "all-files": "All files",
+  "update": "Update",
+  "cancel": "Cancel"
+}

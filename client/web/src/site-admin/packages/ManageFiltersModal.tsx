@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { Button, Modal, PageHeader } from '@sourcegraph/wildcard'
 
 import type { FilterOption } from '../../components/FilteredConnection'
@@ -20,6 +22,8 @@ interface ManageFiltersModalProps extends Omit<ManagePackageFiltersModalContentP
 }
 
 export const ManageFiltersModal: React.FunctionComponent<ManageFiltersModalProps> = props => {
+    const { t } = useTranslation('site-admin/packages')
+
     const [activeFilter, setActiveFilter] = useState<PackageRepoFilterFields>()
 
     return (
@@ -45,7 +49,7 @@ export const ManageFiltersModal: React.FunctionComponent<ManageFiltersModalProps
                         className={styles.header}
                         actions={
                             <Button variant="secondary" outline={true} onClick={props.onAdd}>
-                                Add filter
+                                {t('add-filter')}
                             </Button>
                         }
                     />

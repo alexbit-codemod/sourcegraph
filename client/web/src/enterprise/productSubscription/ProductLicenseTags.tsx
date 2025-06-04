@@ -1,6 +1,7 @@
 import React from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Alert, Badge, type BadgeVariantType, Tooltip } from '@sourcegraph/wildcard'
 
@@ -68,11 +69,15 @@ export const hasUnknownTags = (tags: string[]): boolean => tags.some(isUnknownTa
 
 export const UnknownTagWarning: React.FunctionComponent<React.PropsWithChildren<{ className?: string }>> = ({
     className,
-}) => (
-    <Alert className={className} variant="danger">
-        License tags contain unknown values (marked red), please check if the tags are correct.
-    </Alert>
-)
+}) => {
+    const { t } = useTranslation('enterprise/productSubscription')
+
+    return (
+        <Alert className={className} variant="danger">
+            {t('license-tags-unknown-values-check')}
+        </Alert>
+    )
+}
 
 export const ProductLicenseTags: React.FunctionComponent<
     React.PropsWithChildren<{

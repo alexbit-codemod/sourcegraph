@@ -14,6 +14,7 @@ import {
     mdiSecurity,
 } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { useMutation } from '@sourcegraph/http-client'
@@ -83,6 +84,8 @@ export const RepositoryNode: React.FunctionComponent<React.PropsWithChildren<Rep
     node,
     refetchAllRepos,
 }) => {
+    const { t } = useTranslation('site-admin')
+
     const [isPopoverOpen, setIsPopoverOpen] = useState(false)
     const navigate = useNavigate()
     const [recloneRepository] = useMutation<RecloneRepositoryResult, RecloneRepositoryVariables>(
@@ -154,7 +157,7 @@ export const RepositoryNode: React.FunctionComponent<React.PropsWithChildren<Rep
                                     <MenuDivider />
 
                                     <Alert variant="warning" className={classNames('m-2', styles.alertOverflow)}>
-                                        <H4>Error syncing repository:</H4>
+                                        <H4>{t('error-syncing-repository')}</H4>
                                         {node.mirrorInfo.lastError}
                                     </Alert>
                                 </PopoverContent>
@@ -178,7 +181,7 @@ export const RepositoryNode: React.FunctionComponent<React.PropsWithChildren<Rep
                                     className="p-2"
                                 >
                                     <Icon aria-hidden={true} svgPath={mdiRefresh} className="mr-1" />
-                                    Sync
+                                    {t('sync-button')}
                                 </MenuItem>
                                 <MenuItem
                                     as={Button}
@@ -187,7 +190,7 @@ export const RepositoryNode: React.FunctionComponent<React.PropsWithChildren<Rep
                                     className="p-2"
                                 >
                                     <Icon aria-hidden={true} svgPath={mdiDatabaseRefresh} className="mr-1" />
-                                    Reclone
+                                    {t('reclone-button')}
                                 </MenuItem>
                                 <MenuItem
                                     as={Button}
@@ -197,7 +200,7 @@ export const RepositoryNode: React.FunctionComponent<React.PropsWithChildren<Rep
                                     className="p-2"
                                 >
                                     <Icon aria-hidden={true} svgPath={mdiListStatus} className="mr-1" />
-                                    Last sync log
+                                    {t('last-sync-log')}
                                 </MenuItem>
                                 <MenuItem
                                     as={Button}
@@ -206,7 +209,7 @@ export const RepositoryNode: React.FunctionComponent<React.PropsWithChildren<Rep
                                     className="p-2"
                                 >
                                     <Icon aria-hidden={true} svgPath={mdiBrain} className="mr-1" />
-                                    Code graph data
+                                    {t('code-graph-data')}
                                 </MenuItem>
                                 <MenuItem
                                     as={Button}
@@ -215,7 +218,7 @@ export const RepositoryNode: React.FunctionComponent<React.PropsWithChildren<Rep
                                     className="p-2"
                                 >
                                     <Icon aria-hidden={true} svgPath={mdiSearchWeb} className="mr-1" />
-                                    Search indexing
+                                    {t('search-indexing')}
                                 </MenuItem>
                                 <MenuItem
                                     as={Button}
@@ -224,7 +227,7 @@ export const RepositoryNode: React.FunctionComponent<React.PropsWithChildren<Rep
                                     className="p-2"
                                 >
                                     <Icon aria-hidden={true} svgPath={mdiSecurity} className="mr-1" />
-                                    Permissions
+                                    {t('permissions')}
                                 </MenuItem>
                                 <MenuItem
                                     as={Button}
@@ -232,7 +235,7 @@ export const RepositoryNode: React.FunctionComponent<React.PropsWithChildren<Rep
                                     className="p-2"
                                 >
                                     <Icon aria-hidden={true} svgPath={mdiConnection} className="mr-1" />
-                                    Code host connections
+                                    {t('code-host-connections')}
                                 </MenuItem>
                                 <MenuItem
                                     as={Button}
@@ -240,7 +243,7 @@ export const RepositoryNode: React.FunctionComponent<React.PropsWithChildren<Rep
                                     className="p-2"
                                 >
                                     <Icon aria-hidden={true} svgPath={mdiCog} className="mr-1" />
-                                    Settings
+                                    {t('settings')}
                                 </MenuItem>
                             </MenuList>
                         </Menu>
@@ -255,8 +258,8 @@ export const RepositoryNode: React.FunctionComponent<React.PropsWithChildren<Rep
             {node.mirrorInfo.isCorrupted && (
                 <div className={styles.alertWrapper}>
                     <Alert variant="danger">
-                        Repository is corrupt.{' '}
-                        <LinkOrSpan to={`/${node.name}/-/settings/mirror`}>More details</LinkOrSpan>
+                        {t('repository-corrupt-message')}
+                        <LinkOrSpan to={`/${node.name}/-/settings/mirror`}>{t('more-details')}</LinkOrSpan>
                     </Alert>
                 </div>
             )}

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 import { mdiMenu } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Button, Icon } from '@sourcegraph/wildcard'
 
@@ -27,13 +28,15 @@ export const RepoSettingsSidebar: React.FunctionComponent<React.PropsWithChildre
     className,
     repo,
 }: Props) => {
+    const { t } = useTranslation('repo/settings')
+
     const [isMobileExpanded, setIsMobileExpanded] = useState(false)
 
     return (
         <>
             <Button className="d-sm-none align-self-start mb-3" onClick={() => setIsMobileExpanded(!isMobileExpanded)}>
                 <Icon aria-hidden={true} svgPath={mdiMenu} className="mr-2" />
-                {isMobileExpanded ? 'Hide' : 'Show'} menu
+                {t('toggle-menu', { isMobileExpanded })}
             </Button>
             <div className={classNames(className, 'd-sm-block', !isMobileExpanded && 'd-none')}>
                 {repoSettingsSidebarGroups.map(({ header, items }, index) => (

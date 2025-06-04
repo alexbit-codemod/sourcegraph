@@ -2,6 +2,7 @@ import React, { type MouseEvent, type KeyboardEvent, useCallback } from 'react'
 
 import classNames from 'classnames'
 import type * as H from 'history'
+import { useTranslation } from 'react-i18next'
 import type { Observable } from 'rxjs'
 
 import { CodeExcerpt } from '@sourcegraph/branded/src/search-ui/components'
@@ -156,6 +157,8 @@ function groupToPosition(group: MatchGroup): { line: number; character: number }
 }
 
 export const FileMatchChildren: React.FunctionComponent<React.PropsWithChildren<FileMatchProps>> = props => {
+    const { t } = useTranslation('../../vscode/src/webview/search-panel/alias')
+
     const { result, grouped } = props
 
     console.log('FILE_MATCH', { result, grouped })
@@ -217,7 +220,7 @@ export const FileMatchChildren: React.FunctionComponent<React.PropsWithChildren<
             {/* Path */}
             {result.type === 'path' && (
                 <div className={styles.item} data-testid="file-match-children-item">
-                    <small>Path match</small>
+                    <small>{t('path-match')}</small>
                 </div>
             )}
 

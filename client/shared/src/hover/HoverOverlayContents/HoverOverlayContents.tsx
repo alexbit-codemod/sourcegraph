@@ -2,6 +2,7 @@ import React from 'react'
 
 import classNames from 'classnames'
 import { upperFirst } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { isErrorLike } from '@sourcegraph/common'
 import { Alert, type AlertProps, LoadingSpinner } from '@sourcegraph/wildcard'
@@ -23,6 +24,8 @@ interface HoverOverlayContentsProps extends Pick<HoverOverlayBaseProps, 'hoverOr
 export const HoverOverlayContents: React.FunctionComponent<
     React.PropsWithChildren<HoverOverlayContentsProps>
 > = props => {
+    const { t } = useTranslation('../../shared/src/hover/HoverOverlayContents')
+
     const { hoverOrError, iconClassName, errorAlertClassName, errorAlertVariant, badgeClassName, contentClassName } =
         props
 
@@ -52,7 +55,7 @@ export const HoverOverlayContents: React.FunctionComponent<
     if (hoverOrError === null || hoverOrError.contents.length === 0) {
         return (
             // Show some content to give the close button space and communicate to the user we couldn't find a hover.
-            <small className={classNames(hoverOverlayStyle.hoverEmpty)}>No hover information available.</small>
+            <small className={classNames(hoverOverlayStyle.hoverEmpty)}>{t('no-hover-info-available')}</small>
         )
     }
 

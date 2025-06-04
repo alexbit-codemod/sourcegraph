@@ -1,0 +1,15 @@
+{
+  "sourcegraph-product-subscription": "Sourcegraph product subscription",
+  "currently-used": " currently used /",
+  "remaining-users": " remaining (",
+  "maximum-ever-used": " maximum ever used)",
+  "upgrade-license": "Upgrade",
+  "add-license-key-warning": {
+    "true": "or to exceed {{noLicenseWarningUserCount}} users",
+    "false": ""
+  },
+  "get-license-button": "Get license",
+  "exceeded-licensed-users-warning": "You have exceeded your licensed users. <0>Upgrade your license</0>  to true up and prevent a retroactive charge.",
+  "user-count-license": "{{formatUserCountLicenseUserCountTrue}} license,",
+  "invalid-license-key-reason": "The Sourcegraph license key is invalid. Reason:"
+}

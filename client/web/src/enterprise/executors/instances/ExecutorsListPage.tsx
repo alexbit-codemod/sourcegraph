@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react'
 
 import { useApolloClient } from '@apollo/client'
 import { mdiMapSearch } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { EVENT_LOGGER } from '@sourcegraph/shared/src/telemetry/web/eventLogger'
@@ -48,6 +49,8 @@ export const ExecutorsListPage: React.FC<ExecutorsListPageProps> = ({
     queryExecutors = defaultQueryExecutors,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/executors/instances')
+
     useEffect(() => {
         EVENT_LOGGER.logViewEvent('ExecutorsList')
         telemetryRecorder.recordEvent('admin.executors.list', 'view')
@@ -61,34 +64,29 @@ export const ExecutorsListPage: React.FC<ExecutorsListPageProps> = ({
 
     return (
         <>
-            <PageTitle title="Executor instances" />
+            <PageTitle title={t('executor-instances-title')} />
             <PageHeader
                 headingElement="h2"
                 path={[
                     {
-                        text: <>Executor instances</>,
+                        text: <>{t('executor-instances-label')}</>,
                     },
                 ]}
-                description="The executor instances attached to your Sourcegraph instance."
+                description={t('executor-instances-description')}
                 className="mb-3"
             />
 
             <Container className="mb-3">
-                <H3>Setting up executors</H3>
+                <H3>{t('setting-up-executors-title')}</H3>
                 <Text className="mb-0">
-                    Executors enable{' '}
-                    <Link to="/help/code_navigation/explanations/auto_indexing" rel="noopener">
-                        auto-indexing for code navigation
-                    </Link>{' '}
-                    and{' '}
-                    <Link to="/help/batch_changes/explanations/server_side" rel="noopener">
-                        running batch changes server-side
-                    </Link>
-                    . In order to use those features,{' '}
-                    <Link to="/help/admin/executors/deploy_executors" rel="noopener">
-                        set them up
-                    </Link>
-                    .
+                    <Trans
+                        i18nKey="executor-features-description"
+                        components={{
+                            '0': <Link to="/help/code_navigation/explanations/auto_indexing" rel="noopener" />,
+                            '1': <Link to="/help/batch_changes/explanations/server_side" rel="noopener" />,
+                            '2': <Link to="/help/admin/executors/deploy_executors" rel="noopener" />,
+                        }}
+                    />
                 </Text>
             </Container>
             <Container className="mb-3">
@@ -112,10 +110,14 @@ export const ExecutorsListPage: React.FC<ExecutorsListPageProps> = ({
     )
 }
 
-export const NoExecutors: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => (
-    <Text alignment="center" className="text-muted w-100 mb-0 mt-1">
-        <Icon className="mb-2" svgPath={mdiMapSearch} inline={false} aria-hidden={true} />
-        <br />
-        No executors found.
-    </Text>
-)
+export const NoExecutors: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
+    const { t } = useTranslation('enterprise/executors/instances')
+
+    return (
+        <Text alignment="center" className="text-muted w-100 mb-0 mt-1">
+            <Icon className="mb-2" svgPath={mdiMapSearch} inline={false} aria-hidden={true} />
+            <br />
+            {t('no-executors-found-message')}
+        </Text>
+    )
+}

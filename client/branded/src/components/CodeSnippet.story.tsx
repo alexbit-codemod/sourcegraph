@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { Container, Text, Code } from '@sourcegraph/wildcard'
 import { BrandedStory } from '@sourcegraph/wildcard/src/stories'
@@ -14,12 +15,17 @@ const config: Meta = {
 
 export default config
 
-export const Simple: StoryFn = () => (
-    <Container>
-        <Text>
-            Highlighted code pieces should go in a panel separating it from the surrounding content. Use{' '}
-            <Code>{'<CodeSnippet />'}</Code> for these uses.
-        </Text>
-        <CodeSnippet code="property: 1" language="yaml" />
-    </Container>
-)
+export const Simple: StoryFn = () => {
+    const { t } = useTranslation('../../branded/src/components')
+
+    return (
+        <Container>
+            <Text>
+                {t('highlighted-code-panel')}
+                <Code>{'<CodeSnippet />'}</Code>
+                {t('usage-instructions')}
+            </Text>
+            <CodeSnippet code="property: 1" language="yaml" />
+        </Container>
+    )
+}

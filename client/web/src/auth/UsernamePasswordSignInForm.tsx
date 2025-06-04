@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import { asError, logger } from '@sourcegraph/common'
@@ -33,6 +34,8 @@ export const UsernamePasswordSignInForm: React.FunctionComponent<React.PropsWith
     context,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('auth')
+
     const location = useLocation()
 
     // To populate the username/email text-box with the user's email value on sign-in screen after successful password change request
@@ -101,7 +104,7 @@ export const UsernamePasswordSignInForm: React.FunctionComponent<React.PropsWith
             <Form onSubmit={handleSubmit} className={className}>
                 <Input
                     id="username-or-email"
-                    label={<Text alignment="left">Username or email</Text>}
+                    label={<Text alignment="left">{t('username-or-email')}</Text>}
                     onChange={onUsernameOrEmailFieldChange}
                     required={true}
                     value={usernameOrEmail}
@@ -117,7 +120,7 @@ export const UsernamePasswordSignInForm: React.FunctionComponent<React.PropsWith
 
                 <div className="form-group d-flex flex-column align-content-start position-relative">
                     <Label htmlFor="password" className="align-self-start">
-                        Password
+                        {t('password-label')}
                     </Label>
                     <PasswordInput
                         onChange={onPasswordFieldChange}
@@ -129,7 +132,7 @@ export const UsernamePasswordSignInForm: React.FunctionComponent<React.PropsWith
                     />
                     {context.resetPasswordEnabled && (
                         <small className="form-text text-muted align-self-end position-absolute">
-                            <Link to="/password-reset">Forgot password?</Link>
+                            <Link to="/password-reset">{t('forgot-password')}</Link>
                         </small>
                     )}
                 </div>

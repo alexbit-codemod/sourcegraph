@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef } from 'react'
 
 import { mdiClose } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -31,6 +32,8 @@ interface ExecutionWorkspacesProps extends TelemetryV2Props {
 export const ExecutionWorkspaces: React.FunctionComponent<
     React.PropsWithChildren<ExecutionWorkspacesProps>
 > = props => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/execute/workspaces')
+
     const { batchSpec, errors } = useBatchSpecContext<BatchSpecExecutionFields>()
 
     if (batchSpec.source === BatchSpecSource.LOCAL) {
@@ -38,10 +41,11 @@ export const ExecutionWorkspaces: React.FunctionComponent<
             <>
                 <H1 className="text-center text-muted mt-5">
                     <Icon role="img" aria-hidden={true} svgPath={mdiClose} />
-                    <VisuallyHidden>No Execution</VisuallyHidden>
+                    <VisuallyHidden>{t('no-execution')}</VisuallyHidden>
                 </H1>
                 <Text alignment="center">
-                    This batch spec was executed locally with <Code>src-cli</Code>.
+                    {t('batch-spec-executed-locally')}
+                    <Code>src-cli</Code>.
                 </Text>
             </>
         )

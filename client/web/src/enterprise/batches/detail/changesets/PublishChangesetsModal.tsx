@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { asError, isErrorLike } from '@sourcegraph/common'
 import { Button, Checkbox, Modal, H3, Text, ErrorAlert, Form } from '@sourcegraph/wildcard'
 
@@ -24,6 +26,8 @@ export const PublishChangesetsModal: React.FunctionComponent<React.PropsWithChil
     changesetIDs,
     publishChangesets: publishChangesets = _publishChangesets,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
     const [isLoading, setIsLoading] = useState<boolean | Error>(false)
     const [draft, setDraft] = useState(false)
 
@@ -43,10 +47,8 @@ export const PublishChangesetsModal: React.FunctionComponent<React.PropsWithChil
 
     return (
         <Modal onDismiss={onCancel} aria-labelledby={MODAL_LABEL_ID}>
-            <H3 id={MODAL_LABEL_ID}>Publish changesets</H3>
-            <Text className="mb-4">
-                Are you sure you want to publish all the selected changesets to the code hosts?
-            </Text>
+            <H3 id={MODAL_LABEL_ID}>{t('publish-changesets')}</H3>
+            <Text className="mb-4">{t('confirm-publish-all-changesets')}</Text>
             <Form>
                 <div className="form-group">
                     <Checkbox
@@ -54,7 +56,7 @@ export const PublishChangesetsModal: React.FunctionComponent<React.PropsWithChil
                         checked={draft}
                         onChange={onToggleDraft}
                         disabled={isLoading === true}
-                        label="Publish as draft."
+                        label={t('publish-as-draft')}
                     />
                 </div>
             </Form>
@@ -67,7 +69,7 @@ export const PublishChangesetsModal: React.FunctionComponent<React.PropsWithChil
                     outline={true}
                     variant="secondary"
                 >
-                    Cancel
+                    {t('cancel-action')}
                 </Button>
                 <LoaderButton
                     onClick={onSubmit}
@@ -75,7 +77,7 @@ export const PublishChangesetsModal: React.FunctionComponent<React.PropsWithChil
                     variant="primary"
                     loading={isLoading === true}
                     alwaysShowLabel={true}
-                    label="Publish"
+                    label={t('publish')}
                 />
             </div>
         </Modal>

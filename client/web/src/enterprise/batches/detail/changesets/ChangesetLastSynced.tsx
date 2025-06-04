@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 
 import { mdiAlertCircle, mdiSync, mdiInformationOutline } from '@mdi/js'
 import { formatDistance, isBefore, parseISO } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import { isErrorLike } from '@sourcegraph/common'
 import { LoadingSpinner, Icon, Tooltip, Button } from '@sourcegraph/wildcard'
@@ -25,6 +26,8 @@ export const ChangesetLastSynced: React.FunctionComponent<React.PropsWithChildre
     viewerCanAdminister,
     _now,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
     // initially, the changeset was never last updated
     const [lastUpdatedAt, setLastUpdatedAt] = useState<string | Error | null>(null)
     // .. if it was, and the changesets current updatedAt doesn't match the previous updated at, we know that it has been synced
@@ -76,8 +79,8 @@ export const ChangesetLastSynced: React.FunctionComponent<React.PropsWithChildre
             {changeset.__typename === 'ExternalChangeset' && changeset.syncerError ? (
                 <Tooltip content="Expand to see details.">
                     <span>
-                        <Icon aria-hidden={true} className="text-danger" svgPath={mdiAlertCircle} /> Syncing from code
-                        host failed.
+                        <Icon aria-hidden={true} className="text-danger" svgPath={mdiAlertCircle} />
+                        {t('syncing-from-code-host-failed')}
                     </span>
                 </Tooltip>
             ) : (

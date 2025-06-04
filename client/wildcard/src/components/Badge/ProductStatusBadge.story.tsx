@@ -1,4 +1,5 @@
 import type { Meta } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { H1, H2, Text } from '..'
 import { BrandedStory } from '../../stories/BrandedStory'
@@ -35,22 +36,20 @@ const config: Meta = {
 
 export default config
 
-export const Badges = () => (
-    <>
-        <H1>Product status badges</H1>
-        <Text>
-            We often want to label different parts of our products with badges to ensure they are accurately presented
-            to users.
-        </Text>
-        {PRODUCT_STATUSES.map(status => (
-            <ProductStatusBadge key={status} status={status} className="mr-2" />
-        ))}
-        <H2 className="mt-4">Linked product status badges</H2>
-        <Text>
-            In some cases, we will want to automatically link to a relevant docs page for a particular status. This is
-            also possible!
-        </Text>
-        <ProductStatusBadge status="beta" linkToDocs={true} className="mr-3" />
-        <ProductStatusBadge status="experimental" linkToDocs={true} className="mr-3" />
-    </>
-)
+export const Badges = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Badge')
+
+    return (
+        <>
+            <H1>{t('product-status-badges')}</H1>
+            <Text>{t('product-badges-description')}</Text>
+            {PRODUCT_STATUSES.map(status => (
+                <ProductStatusBadge key={status} status={status} className="mr-2" />
+            ))}
+            <H2 className="mt-4">{t('linked-product-status-badges')}</H2>
+            <Text>{t('linked-product-badges-description')}</Text>
+            <ProductStatusBadge status="beta" linkToDocs={true} className="mr-3" />
+            <ProductStatusBadge status="experimental" linkToDocs={true} className="mr-3" />
+        </>
+    )
+}

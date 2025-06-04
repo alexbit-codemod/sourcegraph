@@ -1,0 +1,8 @@
+{
+  "no-changes": "No changes",
+  "added-message": "Added",
+  "deleted-message": "Deleted",
+  "binary-files-rendered-error": "Binary files can't be rendered.",
+  "deleted-files-rendered-default": "Deleted files aren't rendered by default.",
+  "click-here-to-view": "Click here to view."
+}

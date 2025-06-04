@@ -1,6 +1,7 @@
 import React, { type FunctionComponent, useEffect, useState, useCallback } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { lastValueFrom } from 'rxjs'
 
 import { asError, type ErrorLike, isErrorLike } from '@sourcegraph/common'
@@ -50,6 +51,8 @@ export const UserSettingsEmailsPage: FunctionComponent<React.PropsWithChildren<P
     user,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('user/settings/emails')
+
     const [emails, setEmails] = useState<UserEmailType[]>([])
     const [statusOrError, setStatusOrError] = useState<Status>()
     const [emailActionError, setEmailActionError] = useState<EmailActionError>()
@@ -100,14 +103,11 @@ export const UserSettingsEmailsPage: FunctionComponent<React.PropsWithChildren<P
     return (
         <div className={styles.userSettingsEmailsPage} data-testid="user-settings-emails-page">
             {user.scimControlled && <ScimAlert />}
-            <PageTitle title="Emails" />
+            <PageTitle title={t('emails-title')} />
             <PageHeader headingElement="h2" path={[{ text: 'Emails' }]} className="mb-3" />
 
             {flags && !flags.sendsEmailVerificationEmails && (
-                <Alert variant="warning">
-                    Sourcegraph is not configured to send email verifications. Newly added email addresses must be
-                    manually verified by a site admin.
-                </Alert>
+                <Alert variant="warning">{t('email-verification-not-configured')}</Alert>
             )}
 
             {isErrorLike(statusOrError) && <ErrorAlert className="mt-2" error={statusOrError} />}
@@ -130,7 +130,9 @@ export const UserSettingsEmailsPage: FunctionComponent<React.PropsWithChildren<P
                         </li>
                     ))}
                     {emails.length === 0 && (
-                        <li className={classNames('list-group-item text-muted', styles.listItem)}>No emails</li>
+                        <li className={classNames('list-group-item text-muted', styles.listItem)}>
+                            {t('no-emails-message')}
+                        </li>
                     )}
                 </ul>
             </Container>

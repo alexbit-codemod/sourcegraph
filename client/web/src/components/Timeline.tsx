@@ -4,6 +4,7 @@ import { mdiChevronDown, mdiChevronUp } from '@mdi/js'
 import VisuallyHidden from '@reach/visually-hidden'
 import classNames from 'classnames'
 import { formatDistance } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { Button, Collapse, CollapseHeader, CollapsePanel, Icon } from '@sourcegraph/wildcard'
@@ -34,22 +35,26 @@ export const Timeline: FunctionComponent<React.PropsWithChildren<TimelineProps>>
     showDurations = true,
 }) => (
     <div className={classNames('w-100', className)}>
-        {stages.map((stage, stageIndex) => (
-            <span key={stageIndex}>
-                {stageIndex !== 0 && (
-                    <div className="d-flex align-items-center">
-                        <div className={styles.separator} />
-                        {showDurations && (
-                            <span className="flex-1 text-muted ml-4">
-                                <VisuallyHidden>Step took</VisuallyHidden>
-                                {formatDistance(new Date(stage.date), new Date(stages[stageIndex - 1]?.date))}
-                            </span>
-                        )}
-                    </div>
-                )}
-                <TimelineStage key={`${stage.text}+${stage.date}`} stage={stage} now={now} />
-            </span>
-        ))}
+        {stages.map((stage, stageIndex) => {
+            const { t } = useTranslation('components')
+
+            return (
+                <span key={stageIndex}>
+                    {stageIndex !== 0 && (
+                        <div className="d-flex align-items-center">
+                            <div className={styles.separator} />
+                            {showDurations && (
+                                <span className="flex-1 text-muted ml-4">
+                                    <VisuallyHidden>{t('step-took')}</VisuallyHidden>
+                                    {formatDistance(new Date(stage.date), new Date(stages[stageIndex - 1]?.date))}
+                                </span>
+                            )}
+                        </div>
+                    )}
+                    <TimelineStage key={`${stage.text}+${stage.date}`} stage={stage} now={now} />
+                </span>
+            )
+        })}
     </div>
 )
 

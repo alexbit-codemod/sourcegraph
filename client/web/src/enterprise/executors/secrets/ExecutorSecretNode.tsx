@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState } from 'react'
 
 import { mdiDocker, mdiLock } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Badge, Button, Icon, H3, Link, Text, Tooltip } from '@sourcegraph/wildcard'
 
@@ -26,6 +27,8 @@ export const ExecutorSecretNode: React.FunctionComponent<React.PropsWithChildren
     namespaceID,
     refetchAll,
 }) => {
+    const { t } = useTranslation('enterprise/executors/secrets')
+
     const buttonReference = useRef<HTMLButtonElement | null>(null)
 
     const [openModal, setOpenModal] = useState<OpenModal | undefined>()
@@ -84,7 +87,7 @@ export const ExecutorSecretNode: React.FunctionComponent<React.PropsWithChildren
                                     aria-label="This secret is available to users of the Sourcegraph instance."
                                     className="mr-2"
                                 >
-                                    Global secret
+                                    {t('global-secret')}
                                 </Badge>
                             </span>
                         )}
@@ -96,18 +99,18 @@ export const ExecutorSecretNode: React.FunctionComponent<React.PropsWithChildren
                                     aria-label="This secret overwrites an existing secret set globally in this Sourcegraph instance."
                                     className="mr-2"
                                 >
-                                    Overwrites global secret
+                                    {t('overwrites-global-secret')}
                                 </Badge>
                             </span>
                         )}
                         <Text className="text-muted mb-0">
-                            by{' '}
+                            {t('by-space')}
                             {node.creator && (
                                 <Link className={styles.linkMuted} to={node.creator.url}>
                                     {node.creator.username}
                                 </Link>
                             )}
-                            {!node.creator && <>deleted user</>}
+                            {!node.creator && <>{t('deleted-user')}</>}
                         </Text>
                     </div>
                     <div className="mb-0 d-flex justify-content-end flex-grow-1 align-items-baseline">
@@ -116,7 +119,7 @@ export const ExecutorSecretNode: React.FunctionComponent<React.PropsWithChildren
                             variant="link"
                             aria-label={`View access logs for secret ${node.key}`}
                         >
-                            Access logs
+                            {t('access-logs')}
                         </Button>
                         {/* If this page is the global secrets page (site-admin), or when the secret is
                             defined in the viewer namepspace, render the update and remove buttons.
@@ -130,7 +133,7 @@ export const ExecutorSecretNode: React.FunctionComponent<React.PropsWithChildren
                                     aria-label={`Update secret value for ${node.key}`}
                                     ref={buttonReference}
                                 >
-                                    Update
+                                    {t('update-action')}
                                 </Button>
                                 <Button
                                     className="text-danger text-nowrap"
@@ -138,7 +141,7 @@ export const ExecutorSecretNode: React.FunctionComponent<React.PropsWithChildren
                                     variant="link"
                                     aria-label={`Remove scret ${node.key}`}
                                 >
-                                    Remove
+                                    {t('remove-action')}
                                 </Button>
                             </>
                         )}

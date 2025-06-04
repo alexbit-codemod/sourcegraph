@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { of } from 'rxjs'
 
@@ -27,11 +28,15 @@ interface CodeMonitorListProps
     authenticatedUser: AuthenticatedUser | null
 }
 
-const CodeMonitorEmptyList: React.FunctionComponent<React.PropsWithChildren<{}>> = () => (
-    <div className="text-center">
-        <H2 className="text-muted mb-2">No code monitors have been created.</H2>
-    </div>
-)
+const CodeMonitorEmptyList: React.FunctionComponent<React.PropsWithChildren<{}>> = () => {
+    const { t } = useTranslation('enterprise/code-monitoring')
+
+    return (
+        <div className="text-center">
+            <H2 className="text-muted mb-2">{t('no-code-monitors-created')}</H2>
+        </div>
+    )
+}
 
 export const CodeMonitorList: React.FunctionComponent<React.PropsWithChildren<CodeMonitorListProps>> = ({
     authenticatedUser,
@@ -39,6 +44,8 @@ export const CodeMonitorList: React.FunctionComponent<React.PropsWithChildren<Co
     fetchCodeMonitors,
     toggleCodeMonitorEnabled,
 }) => {
+    const { t } = useTranslation('enterprise/code-monitoring')
+
     const location = useLocation()
 
     const queryConnection = useCallback(
@@ -74,7 +81,7 @@ export const CodeMonitorList: React.FunctionComponent<React.PropsWithChildren<Co
             <div className="row mb-5">
                 <div className="d-flex flex-column w-100 col">
                     <div className="d-flex align-items-center justify-content-between">
-                        <H3 className="mb-2">Your code monitors</H3>
+                        <H3 className="mb-2">{t('your-code-monitors')}</H3>
                     </div>
                     <Container className="py-3">
                         <FilteredConnection<
@@ -107,7 +114,7 @@ export const CodeMonitorList: React.FunctionComponent<React.PropsWithChildren<Co
                     {authenticatedUser?.siteAdmin && (
                         <>
                             <div className="d-flex align-items-center justify-content-between">
-                                <H3 className="mb-2">All code monitors</H3>
+                                <H3 className="mb-2">{t('all-code-monitors')}</H3>
                             </div>
                             <Container className="py-3">
                                 <FilteredConnection<

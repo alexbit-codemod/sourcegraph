@@ -2,25 +2,35 @@ import React from 'react'
 
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { useTranslation } from 'react-i18next'
 import { describe, expect, it } from 'vitest'
 
 import { useSeriesToggle } from './use-series-toggle'
 
 const UseSeriesToggleExample: React.FunctionComponent = () => {
+    const { t } = useTranslation('insights/utils')
+
     const availableSeriesIds = ['foo', 'bar', 'baz']
     const { toggle, selectedSeriesIds, isSeriesHovered, isSeriesSelected, setHoveredId } = useSeriesToggle()
 
     return (
         <div>
-            {availableSeriesIds.map(id => (
-                <div key={id} onMouseEnter={() => setHoveredId(id)}>
-                    {isSeriesSelected(id) && <span>{id} is selected</span>}
-                    {isSeriesHovered(id) && <span>{id} is hovered</span>}
-                    <button onClick={() => toggle(id, availableSeriesIds)}>{id}</button>
-                </div>
-            ))}
+            {availableSeriesIds.map(id => {
+                const { t } = useTranslation('insights/utils')
 
-            <div>Selected series: {selectedSeriesIds.join(',')}</div>
+                return (
+                    <div key={id} onMouseEnter={() => setHoveredId(id)}>
+                        {isSeriesSelected(id) && <span>{t('id-selected', { id })}</span>}
+                        {isSeriesHovered(id) && <span>{t('id-hovered', { id })}</span>}
+                        <button onClick={() => toggle(id, availableSeriesIds)}>{id}</button>
+                    </div>
+                )
+            })}
+
+            <div>
+                {t('selected-series')}
+                {selectedSeriesIds.join(',')}
+            </div>
         </div>
     )
 }

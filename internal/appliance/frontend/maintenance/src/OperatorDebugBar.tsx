@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { Button, Paper, Stack, Typography } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 import { call } from './api'
 import { changeStage, maintenance } from './debugBar'
@@ -9,6 +10,8 @@ import { ContextProps, stage } from './Frame'
 const DebugBarTimerMs = 1 * 1000
 
 export const OperatorDebugBar: React.FC<ContextProps> = ({ context }) => {
+    const { t } = useTranslation('../../../internal/appliance/frontend/maintenance/src')
+
     const [waiting, setWaiting] = useState(false)
 
     const setStage = (action: stage, data?: string) => changeStage({ action, data, onDone: () => setWaiting(true) })
@@ -45,36 +48,36 @@ export const OperatorDebugBar: React.FC<ContextProps> = ({ context }) => {
         showDebugBar && (
             <Paper id="operator-debug" elevation={3} sx={{ m: 1, p: 2 }}>
                 <Stack direction="column" spacing={1} sx={{ alignItems: 'center' }}>
-                    <Typography variant="caption">Operator Debug Controls</Typography>
+                    <Typography variant="caption">{t('operator-debug-controls')}</Typography>
                     <Stack direction="row" spacing={1}>
                         <Stack sx={{ alignItems: 'center', p: 1, border: '1px solid lightgray' }}>
-                            <Typography variant="caption">Installation</Typography>
+                            <Typography variant="caption">{t('installation')}</Typography>
                             <Stack direction="row">
                                 <Stack direction="column">
                                     <Button disabled={waiting} onClick={startInstall}>
-                                        Start
+                                        {t('start-action')}
                                     </Button>
                                     <Button disabled={waiting} onClick={installProgress}>
-                                        Progress...
+                                        {t('progress-indicator')}
                                     </Button>
                                 </Stack>
                                 <Stack direction="column">
                                     <Button disabled={waiting} onClick={installWaitAdmin}>
-                                        Wait for admin
+                                        {t('wait-for-admin')}
                                     </Button>
                                     <Button disabled={waiting} onClick={failInstall}>
-                                        Crash
+                                        {t('crash-action')}
                                     </Button>
                                 </Stack>
                             </Stack>
                         </Stack>
                         <Stack sx={{ alignItems: 'center', p: 1, border: '1px solid lightgray' }}>
-                            <Typography variant="caption">Maintenance</Typography>
+                            <Typography variant="caption">{t('maintenance')}</Typography>
                             <Button disabled={waiting} onClick={() => setMaintenance({ healthy: false })}>
-                                Unhealthy
+                                {t('unhealthy-status')}
                             </Button>
                             <Button disabled={waiting} onClick={() => setMaintenance({ healthy: true })}>
-                                Healthy
+                                {t('healthy-status')}
                             </Button>
                         </Stack>
                         <Stack
@@ -84,9 +87,9 @@ export const OperatorDebugBar: React.FC<ContextProps> = ({ context }) => {
                                 border: '1px solid lightgray',
                             }}
                         >
-                            <Typography variant="caption">Reset</Typography>
+                            <Typography variant="caption">{t('reset-action')}</Typography>
                             <Button disabled={waiting} onClick={noState}>
-                                Reset
+                                {t('reset-label')}
                             </Button>
                         </Stack>
                         <Stack
@@ -96,12 +99,12 @@ export const OperatorDebugBar: React.FC<ContextProps> = ({ context }) => {
                                 border: '1px solid lightgray',
                             }}
                         >
-                            <Typography variant="caption">Upgrade</Typography>
+                            <Typography variant="caption">{t('upgrade-action')}</Typography>
                             <Button disabled={waiting} onClick={upgradeProgress}>
-                                Start
+                                {t('start-label')}
                             </Button>
                             <Button disabled={waiting} onClick={launchAdminUI}>
-                                Finish
+                                {t('finish-label')}
                             </Button>
                         </Stack>
                     </Stack>

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { UserAvatar } from '@sourcegraph/shared/src/components/UserAvatar'
 import {
     MultiCombobox,
@@ -29,6 +31,8 @@ export const UserSelect: React.FunctionComponent<UserSelectProps> = ({
     className,
     setSelectedMembers,
 }) => {
+    const { t } = useTranslation('team/members/user-select')
+
     const [search, setSearch] = useState<string>('')
     const [selectedItems, setSelectedItems] = useState<TeamMemberUserSelectSearchFields[]>([])
 
@@ -61,7 +65,7 @@ export const UserSelect: React.FunctionComponent<UserSelectProps> = ({
         >
             <MultiComboboxInput
                 value={search}
-                placeholder="Search users"
+                placeholder={t('search-users')}
                 onChange={event => setSearch(event.target.value)}
                 status={loading ? 'loading' : error ? 'error' : 'initial'}
                 disabled={disabled}

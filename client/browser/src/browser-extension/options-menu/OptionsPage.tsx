@@ -10,6 +10,7 @@ import {
     mdiClose,
 } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import type { Observable } from 'rxjs'
 
 import { SourcegraphLogo } from '@sourcegraph/branded/src/components/SourcegraphLogo'
@@ -98,6 +99,8 @@ export const OptionsPage: React.FunctionComponent<React.PropsWithChildren<Option
     currentUser,
     onSuggestedSourcegraphUrlDelete,
 }) => {
+    const { t } = useTranslation('../../browser/src/browser-extension/options-menu')
+
     const [showAdvancedSettings, setShowAdvancedSettings] = useState(initialShowAdvancedSettings)
 
     const toggleAdvancedSettings = useCallback(
@@ -114,19 +117,20 @@ export const OptionsPage: React.FunctionComponent<React.PropsWithChildren<Option
                         <Toggle
                             value={isActivated}
                             onToggle={onToggleActivated}
-                            title={`Toggle to ${isActivated ? 'disable' : 'enable'} extension`}
+                            title={t('toggle-extension-status', { isActivated })}
                             aria-label="Toggle browser extension"
                         />
                     </div>
                 </div>
-                <div className={styles.version}>v{version}</div>
+                <div className={styles.version}>{t('version-info', { version })}</div>
             </section>
             <section className={styles.section}>
-                Get code navigation tooltips while browsing and reviewing code on your code host.{' '}
-                <Link to="/help/integration/browser_extension#features" {...NEW_TAB_LINK_PROPS}>
-                    Learn more
-                </Link>{' '}
-                about the extension and compatible code hosts.
+                <Trans
+                    i18nKey="code-navigation-tooltip-info"
+                    components={{
+                        '0': <Link to="/help/integration/browser_extension#features" {...NEW_TAB_LINK_PROPS} />,
+                    }}
+                />
             </section>
             <section className={classNames('border-0', styles.section)}>
                 <SourcegraphURLForm
@@ -137,7 +141,7 @@ export const OptionsPage: React.FunctionComponent<React.PropsWithChildren<Option
                     validate={validateSourcegraphUrl}
                 />
                 <Text className="mt-2 mb-0">
-                    <small>Enter the URL of your Sourcegraph instance to use the extension on private code.</small>
+                    <small>{t('sourcegraph-instance-url-prompt')}</small>
                 </Text>
             </section>
 
@@ -157,7 +161,7 @@ export const OptionsPage: React.FunctionComponent<React.PropsWithChildren<Option
                     {...NEW_TAB_LINK_PROPS}
                     className="d-block mb-1"
                 >
-                    <small>How do we keep your code private?</small>{' '}
+                    <small>{t('code-privacy-question')}</small>{' '}
                     <Icon
                         className="ml-2"
                         svgPath={mdiOpenInNew}
@@ -174,7 +178,7 @@ export const OptionsPage: React.FunctionComponent<React.PropsWithChildren<Option
                         variant="link"
                         size="sm"
                     >
-                        {showAdvancedSettings ? 'Hide' : 'Show'} advanced settings
+                        {t('toggle-advanced-settings', { showAdvancedSettings })}
                     </Button>
                 </Text>
                 {showAdvancedSettings && (
@@ -185,13 +189,13 @@ export const OptionsPage: React.FunctionComponent<React.PropsWithChildren<Option
                 <div className={styles.splitSectionPart}>
                     <Link to="https://sourcegraph.com/search" {...NEW_TAB_LINK_PROPS}>
                         <Icon className="mr-2" aria-hidden={true} svgPath={mdiEarth} />
-                        Sourcegraph.com
+                        {t('sourcegraph-com')}
                     </Link>
                 </div>
                 <div className={styles.splitSectionPart}>
                     <Link to="https://sourcegraph.com/docs" {...NEW_TAB_LINK_PROPS}>
                         <Icon className="mr-2" aria-hidden={true} svgPath={mdiBookOpenPageVariant} />
-                        Documentation
+                        {t('documentation-link')}
                     </Link>
                 </div>
             </section>
@@ -209,19 +213,23 @@ const PermissionAlert: React.FunctionComponent<React.PropsWithChildren<Permissio
     name,
     icon: AlertIcon,
     onClickGrantPermissions,
-}) => (
-    <section className={classNames('bg-2', styles.section)}>
-        <H4>
-            {AlertIcon && <Icon className="mr-2" as={AlertIcon} aria-hidden={true} />} <span>{name}</span>
-        </H4>
-        <Text className={styles.permissionText}>
-            <strong>Grant permissions</strong> to use the Sourcegraph extension on {name}.
-        </Text>
-        <Button onClick={onClickGrantPermissions} variant="primary" size="sm">
-            <small>Grant permissions</small>
-        </Button>
-    </section>
-)
+}) => {
+    const { t } = useTranslation('../../browser/src/browser-extension/options-menu')
+
+    return (
+        <section className={classNames('bg-2', styles.section)}>
+            <H4>
+                {AlertIcon && <Icon className="mr-2" as={AlertIcon} aria-hidden={true} />} <span>{name}</span>
+            </H4>
+            <Text className={styles.permissionText}>
+                <Trans i18nKey="grant-permissions-message" values={{ name }} components={{ '0': <strong /> }} />
+            </Text>
+            <Button onClick={onClickGrantPermissions} variant="primary" size="sm">
+                <small>{t('grant-permissions')}</small>
+            </Button>
+        </section>
+    )
+}
 
 const RepoSyncErrorAlert: React.FunctionComponent<
     React.PropsWithChildren<{
@@ -229,6 +237,8 @@ const RepoSyncErrorAlert: React.FunctionComponent<
         currentUser: NonNullable<OptionsPageProps['currentUser']>
     }>
 > = ({ sourcegraphUrl, currentUser }) => {
+    const { t } = useTranslation('../../browser/src/browser-extension/options-menu')
+
     const isDefaultURL = isDefaultSourcegraphUrl(sourcegraphUrl)
 
     if (isDefaultURL && !currentUser.settingsURL) {
@@ -244,52 +254,66 @@ const RepoSyncErrorAlert: React.FunctionComponent<
             <Text className="mb-0">
                 {isDefaultURL ? (
                     <>
-                        You need to setup a{' '}
-                        <Link
-                            to={
-                                createURLWithUTM(new URL('https://sourcegraph.com/docs/'), {
-                                    utm_source: getPlatformName(),
-                                    utm_campaign: 'sync-private-repo-with-cloud',
-                                }).href
-                            }
-                            {...NEW_TAB_LINK_PROPS}
-                        >
-                            private Sourcegraph instance
-                        </Link>{' '}
-                        to use this extension with private repositories.
+                        <Trans
+                            i18nKey="setup-private-sourcegraph-instance"
+                            components={{
+                                '0': (
+                                    <Link
+                                        to={
+                                            createURLWithUTM(new URL('https://sourcegraph.com/docs/'), {
+                                                utm_source: getPlatformName(),
+                                                utm_campaign: 'sync-private-repo-with-cloud',
+                                            }).href
+                                        }
+                                        {...NEW_TAB_LINK_PROPS}
+                                    />
+                                ),
+                            }}
+                        />
                     </>
                 ) : currentUser.siteAdmin ? (
                     <>
-                        <Link
-                            to={
-                                createURLWithUTM(new URL('admin/repo/add', 'https://sourcegraph.com/docs/'), {
-                                    utm_source: getPlatformName(),
-                                    utm_campaign: 'add-repo-to-instance',
-                                }).href
-                            }
-                            {...NEW_TAB_LINK_PROPS}
-                        >
-                            Add your repository to Sourcegraph
-                        </Link>{' '}
-                        to use this extension.
+                        <Trans
+                            i18nKey="add-repository-to-sourcegraph"
+                            components={{
+                                '0': (
+                                    <Link
+                                        to={
+                                            createURLWithUTM(
+                                                new URL('admin/repo/add', 'https://sourcegraph.com/docs/'),
+                                                {
+                                                    utm_source: getPlatformName(),
+                                                    utm_campaign: 'add-repo-to-instance',
+                                                }
+                                            ).href
+                                        }
+                                        {...NEW_TAB_LINK_PROPS}
+                                    />
+                                ),
+                            }}
+                        />
                     </>
                 ) : (
-                    <>Contact your site administrator to add this repository to Sourcegraph.</>
+                    <>{t('contact-admin-for-repo')}</>
                 )}
             </Text>
         </section>
     )
 }
 
-const SourcegraphComAlert: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => (
-    <section className={classNames('bg-2', styles.section)}>
-        <H4>
-            <Icon aria-hidden={true} className="mr-2" svgPath={mdiCheckCircleOutline} />
-            You're on Sourcegraph.com
-        </H4>
-        <Text>Naturally, the browser extension is not necessary to browse public code on sourcegraph.com.</Text>
-    </section>
-)
+const SourcegraphComAlert: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
+    const { t } = useTranslation('../../browser/src/browser-extension/options-menu')
+
+    return (
+        <section className={classNames('bg-2', styles.section)}>
+            <H4>
+                <Icon aria-hidden={true} className="mr-2" svgPath={mdiCheckCircleOutline} />
+                {t('on-sourcegraph-com')}
+            </H4>
+            <Text>{t('browser-extension-not-required')}</Text>
+        </section>
+    )
+}
 
 function preventDefault(event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault()
@@ -327,6 +351,8 @@ export const SourcegraphURLForm: React.FunctionComponent<React.PropsWithChildren
     onSuggestionDelete,
     onChange,
 }) => {
+    const { t } = useTranslation('../../browser/src/browser-extension/options-menu')
+
     const urlInputReference = useRef<HTMLInputElement | null>(null)
 
     const [urlState, nextUrlFieldChange, nextUrlInputElement] = useInputValidation(
@@ -372,7 +398,7 @@ export const SourcegraphURLForm: React.FunctionComponent<React.PropsWithChildren
     return (
         // eslint-disable-next-line react/forbid-elements
         <form onSubmit={preventDefault} noValidate={true}>
-            <Label htmlFor="sourcegraph-url">Sourcegraph URL</Label>
+            <Label htmlFor="sourcegraph-url">{t('sourcegraph-url')}</Label>
             <Combobox openOnFocus={true} onSelect={nextUrlFieldChange}>
                 <ComboboxInput
                     type="url"
@@ -382,7 +408,7 @@ export const SourcegraphURLForm: React.FunctionComponent<React.PropsWithChildren
                     autocomplete={false}
                     status={getInputStatusFromKind(urlState.kind)}
                     pattern="^https://.*"
-                    placeholder="https://"
+                    placeholder={t('https-prefix')}
                     onFocus={onFocus}
                     id="sourcegraph-url"
                     ref={urlInputElements}
@@ -426,18 +452,17 @@ export const SourcegraphURLForm: React.FunctionComponent<React.PropsWithChildren
             </Combobox>
             <div className="mt-2">
                 {urlState.kind === 'LOADING' ? (
-                    <small className="d-block text-muted">Checking...</small>
+                    <small className="d-block text-muted">{t('checking-status')}</small>
                 ) : urlState.kind === 'INVALID' ? (
                     <small className="d-block invalid-feedback">
                         {urlState.reason === URL_FETCH_ERROR ? (
                             'Incorrect Sourcegraph instance address'
                         ) : urlState.reason === URL_AUTH_ERROR ? (
                             <>
-                                Authentication to Sourcegraph failed.{' '}
-                                <Link to={urlState.value} {...NEW_TAB_LINK_PROPS}>
-                                    Sign in to your instance
-                                </Link>{' '}
-                                to continue
+                                <Trans
+                                    i18nKey="authentication-failed-message"
+                                    components={{ '0': <Link to={urlState.value} {...NEW_TAB_LINK_PROPS} /> }}
+                                />
                             </>
                         ) : urlInputReference.current?.validity.typeMismatch ? (
                             'Please enter a valid URL, including the protocol prefix (e.g. https://sourcegraph.example.com).'
@@ -448,7 +473,9 @@ export const SourcegraphURLForm: React.FunctionComponent<React.PropsWithChildren
                         )}
                     </small>
                 ) : (
-                    <small className="d-block valid-feedback test-valid-sourcegraph-url-feedback">Looks good!</small>
+                    <small className="d-block valid-feedback test-valid-sourcegraph-url-feedback">
+                        {t('looks-good-message')}
+                    </small>
                 )}
             </div>
         </form>

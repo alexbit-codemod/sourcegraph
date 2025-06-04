@@ -1,5 +1,7 @@
 import { useCallback, useEffect, type FC } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
 import { H2 } from '@sourcegraph/wildcard'
 
@@ -37,6 +39,8 @@ export const NotebooksList: FC<NotebooksListProps> = ({
     fetchNotebooks,
     telemetryService,
 }) => {
+    const { t } = useTranslation('notebooks/listPage')
+
     useEffect(() => {
         // No V2 telemetry required, as this is duplicative with the view event logged in NotebooksListPage.tsx.
         telemetryService.logViewEvent(`SearchNotebooksList${logEventName}`)
@@ -78,7 +82,7 @@ export const NotebooksList: FC<NotebooksListProps> = ({
                 noSummaryIfAllNodesVisible={true}
                 cursorPaging={true}
                 inputClassName={styles.filterInput}
-                inputPlaceholder="Search notebooks by title and content"
+                inputPlaceholder={t('search-notebooks-by-title-and-content')}
                 useURLQuery={false}
             />
         </div>

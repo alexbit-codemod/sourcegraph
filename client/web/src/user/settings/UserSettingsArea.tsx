@@ -2,6 +2,7 @@ import React from 'react'
 
 import classNames from 'classnames'
 import MapSearchIcon from 'mdi-react/MapSearchIcon'
+import { useTranslation, Trans } from 'react-i18next'
 import { Route, Routes } from 'react-router-dom'
 
 import { gql, useQuery } from '@sourcegraph/http-client'
@@ -95,6 +96,8 @@ const USER_SETTINGS_AREA_USER_PROFILE = gql`
 const AuthenticatedUserSettingsArea: React.FunctionComponent<
     React.PropsWithChildren<UserSettingsAreaProps>
 > = props => {
+    const { t } = useTranslation('user/settings')
+
     const { authenticatedUser, sideBarItems } = props
 
     const { data, error, loading, previousData } = useQuery<
@@ -129,7 +132,7 @@ const AuthenticatedUserSettingsArea: React.FunctionComponent<
         return (
             <HeroPage
                 icon={MapSearchIcon}
-                title="403: Forbidden"
+                title={t('error-403-forbidden')}
                 subtitle="You are not authorized to view or edit this user's settings."
             />
         )
@@ -172,7 +175,11 @@ const AuthenticatedUserSettingsArea: React.FunctionComponent<
             {/* Indicate when the site admin is viewing another user's account */}
             {siteAdminViewingOtherUser && (
                 <SiteAdminAlert>
-                    Viewing account for <strong>{user.username}</strong>
+                    <Trans
+                        i18nKey="viewing-account-username"
+                        values={{ userUsername: <>{user.username}</> }}
+                        components={{ '0': <strong /> }}
+                    />
                 </SiteAdminAlert>
             )}
             <div className="d-flex flex-column flex-sm-row">

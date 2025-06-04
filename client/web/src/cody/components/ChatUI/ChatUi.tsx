@@ -11,6 +11,7 @@ import {
     mdiThumbUp,
 } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 
@@ -51,6 +52,8 @@ export const ChatUI: React.FC<IChatUIProps> = ({
     authenticatedUser,
     telemetryRecorder,
 }): JSX.Element => {
+    const { t } = useTranslation('cody/components/ChatUI')
+
     const onFeedbackSubmit = (feedback: string): void => {
         EVENT_LOGGER.log(`web:cody:feedbackSubmit:${feedback}`)
         // TODO (dadlerj): update @sourcegraph/cody-ui/dist/Chat package to enforce a limited set of feedback strings.
@@ -131,15 +134,14 @@ export const ChatUI: React.FC<IChatUIProps> = ({
     if (storageQuotaExceeded) {
         return (
             <div className={styles.storageQuotaError}>
-                <H2 className="text-center">Storage Limit Reached</H2>
+                <H2 className="text-center">{t('storage-limit-reached')}</H2>
                 <Text className="text-center mb-4">
-                    Cody can’t save your chat history right now because your browser’s storage space is full.
+                    {t('chat-history-storage-full')}
                     <br />
-                    Please free up some space by clearing your browser’s storage or deleting chat history, and then give
-                    it another try.
+                    {t('free-up-storage-space')}
                 </Text>
                 <Button onClick={clearHistory} variant="secondary">
-                    Clear Chat History
+                    {t('clear-chat-history')}
                 </Button>
             </div>
         )

@@ -1,0 +1,11 @@
+{
+  "remove-insight-confirmation": "Remove Insight?",
+  "remove-insight-dashboard-confirmation": "Are you sure you want to remove the insight <0>{{insightTitle}}</0> from the dashboard <1>{{dashboardTitle}}</1>?",
+  "edit-action": "Edit",
+  "shareable-link": "Get shareable link",
+  "export-data": "Export data",
+  "start-y-axis-zero": "Start Y Axis at 0",
+  "golang-fixes": "Golang quick fixes",
+  "remove-dashboard-item": "Remove from this dashboard",
+  "delete-action": "Delete"
+}

@@ -1,5 +1,6 @@
 import styledReact from '@emotion/styled'
 import { styled } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 
 import { ContextProps } from './Frame'
@@ -17,9 +18,13 @@ const OfflineIcon = styled(Circle)`
 `
 
 export const OperatorStatus: React.FC<ContextProps> = ({ context }) => {
-    const Status = () =>
-        context.online === undefined ? (
-            <div className="status connecting">connecting</div>
+    const { t } = useTranslation('../../../internal/appliance/frontend/maintenance/src')
+
+    const Status = () => {
+        const { t } = useTranslation('../../../internal/appliance/frontend/maintenance/src')
+
+        return context.online === undefined ? (
+            <div className="status connecting">{t('connecting-status')}</div>
         ) : context.online === true || context.needsLogin === true ? (
             <div className="status online">
                 <OnlineIcon />
@@ -29,6 +34,7 @@ export const OperatorStatus: React.FC<ContextProps> = ({ context }) => {
                 <OfflineIcon />
             </div>
         )
+    }
 
     switch (context.stage) {
         case 'refresh':
@@ -38,7 +44,8 @@ export const OperatorStatus: React.FC<ContextProps> = ({ context }) => {
 
     return (
         <div id="operator-status">
-            Status: <Status />
+            {t('status-message')}
+            <Status />
             {context.online === false && <Navigate to="/" />}
             {context.stage === 'unknown' && <Navigate to="/" />}
             {context.stage === 'install' && <Navigate to="/install" />}

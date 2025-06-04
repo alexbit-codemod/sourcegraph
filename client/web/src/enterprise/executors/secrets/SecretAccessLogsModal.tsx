@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { Button, Modal, H3, Text } from '@sourcegraph/wildcard'
 
@@ -26,14 +28,16 @@ export const SecretAccessLogsModal: React.FunctionComponent<React.PropsWithChild
     onCancel,
     secretID,
 }) => {
+    const { t } = useTranslation('enterprise/executors/secrets')
+
     const labelId = 'secretAccessLogs'
 
     const { loading, hasNextPage, fetchMore, connection, error } = useExecutorSecretAccessLogsConnection(secretID)
 
     return (
         <Modal onDismiss={onCancel} aria-labelledby={labelId}>
-            <H3 id={labelId}>Access logs</H3>
-            <Text>All events when the value of this secret was read.</Text>
+            <H3 id={labelId}>{t('access-logs')}</H3>
+            <Text>{t('all-events-secret-read')}</Text>
             <ConnectionContainer className="mb-3">
                 {error && <ConnectionError errors={[error.message]} />}
                 {loading && !connection && <ConnectionLoading />}
@@ -59,7 +63,7 @@ export const SecretAccessLogsModal: React.FunctionComponent<React.PropsWithChild
             </ConnectionContainer>
             <div className="d-flex justify-content-end">
                 <Button onClick={onCancel} outline={true} variant="secondary">
-                    Close
+                    {t('close-button')}
                 </Button>
             </div>
         </Modal>

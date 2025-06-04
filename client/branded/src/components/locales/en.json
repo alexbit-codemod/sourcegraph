@@ -1,0 +1,14 @@
+{
+  "highlighted-code-panel": "Highlighted code pieces should go in a panel separating it from the surrounding content. Use",
+  "usage-instructions": " for these uses.",
+  "greeting-hello": "Hello",
+  "toggle-status": {
+    "true": "Disabled ",
+    "false": ""
+  },
+  "toggle-status_select_2": {
+    "true": "on",
+    "false": "off"
+  },
+  "helper-text": "This is helper text as needed"
+}

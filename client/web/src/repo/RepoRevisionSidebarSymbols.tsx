@@ -2,6 +2,7 @@ import React, { useState, useMemo, Suspense } from 'react'
 
 import classNames from 'classnames'
 import { escapeRegExp, groupBy } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { logger } from '@sourcegraph/common'
 import { gql, dataOrThrowErrors } from '@sourcegraph/http-client'
@@ -85,6 +86,8 @@ export interface RepoRevisionSidebarSymbolsProps extends Partial<RevisionSpec> {
 export const RepoRevisionSidebarSymbols: React.FunctionComponent<
     React.PropsWithChildren<RepoRevisionSidebarSymbolsProps>
 > = ({ repoID, revision = '', activePath, focusKey, onHandleSymbolClick }) => {
+    const { t } = useTranslation('repo')
+
     const [searchValue, setSearchValue] = useState('')
     const query = useDebounce(searchValue, 200)
 
@@ -153,7 +156,7 @@ export const RepoRevisionSidebarSymbols: React.FunctionComponent<
                 <ConnectionForm
                     inputValue={searchValue}
                     onInputChange={event => setSearchValue(event.target.value)}
-                    inputPlaceholder="Search symbols..."
+                    inputPlaceholder={t('search-symbols-placeholder')}
                     compact={true}
                     formClassName={styles.form}
                 />

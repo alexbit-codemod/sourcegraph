@@ -1,0 +1,10 @@
+{
+  "filter-kind": "Filter {{filterKind}}",
+  "no-matches-search-results": "No matches in search results.",
+  "try-adding": "Try adding",
+  "narrow-results-query": "  to your original search query to narrow results to that repo.",
+  "expand-search": "Try expanding your search using the",
+  "search-bar": "search bar",
+  "search-above": "  above.",
+  "other-filters-available": "There are {{filteredFiltersLengthMaxFiltersNumber}} other filters, use search to see more"
+}

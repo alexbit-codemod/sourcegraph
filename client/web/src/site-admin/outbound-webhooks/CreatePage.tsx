@@ -2,6 +2,7 @@ import { type FC, useEffect, useState } from 'react'
 
 import { mdiWebhook } from '@mdi/js'
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { useMutation } from '@sourcegraph/http-client'
@@ -20,6 +21,8 @@ import { SubmitButton } from './create-edit/SubmitButton'
 export interface CreatePageProps extends TelemetryProps, TelemetryV2Props {}
 
 export const CreatePage: FC<CreatePageProps> = ({ telemetryService, telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin/outbound-webhooks')
+
     const navigate = useNavigate()
     useEffect(() => {
         telemetryService.logPageView('OutboundWebhooksCreatePage')
@@ -48,7 +51,7 @@ export const CreatePage: FC<CreatePageProps> = ({ telemetryService, telemetryRec
 
     return (
         <div>
-            <PageTitle title="Create outgoing webhook" />
+            <PageTitle title={t('create-outgoing-webhook')} />
             <PageHeader
                 path={[
                     { icon: mdiWebhook },
@@ -56,17 +59,22 @@ export const CreatePage: FC<CreatePageProps> = ({ telemetryService, telemetryRec
                     { text: 'Create' },
                 ]}
                 headingElement="h2"
-                description="Create a new outgoing webhook"
+                description={t('create-new-outgoing-webhook')}
                 className="mb-3"
             />
 
             <Container>
                 {createError && <ErrorAlert error={createError} />}
                 <Form>
-                    <Input label="URL" required={true} value={url} onChange={event => setURL(event.target.value)} />
                     <Input
-                        label="Secret"
-                        message={<small>Randomly generated. Alter as required.</small>}
+                        label={t('url')}
+                        required={true}
+                        value={url}
+                        onChange={event => setURL(event.target.value)}
+                    />
+                    <Input
+                        label={t('secret')}
+                        message={<small>{t('randomly-generated-alter-as-required')}</small>}
                         required={true}
                         value={secret}
                         onChange={event => setSecret(event.target.value)}
@@ -78,7 +86,7 @@ export const CreatePage: FC<CreatePageProps> = ({ telemetryService, telemetryRec
                         }}
                         state={loading ? 'loading' : eventTypes.size === 0 ? 'disabled' : undefined}
                     >
-                        Create
+                        {t('create-action')}
                     </SubmitButton>
                 </Form>
             </Container>

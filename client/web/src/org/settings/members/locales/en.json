@@ -1,0 +1,13 @@
+{
+  "members-org-name": "Members - {{orgName}}",
+  "search-username-display-name": "Search by username or display name",
+  "cannot-remove-only-member": "You can’t remove the only member of an organization",
+  "no-members-found-search-query": "No members found based on the search query.",
+  "username-label": "Username",
+  "add-member-button": "  Add member",
+  "set-notification-settings": "Set",
+  "email-notification-invite-info": " in <0>site configuration</0> to send email notifications about invitations.",
+  "invitation-sent-message": "Invitation sent to {{username}}. You can also send {{username}} the invitation link directly:",
+  "invitation-link-message": "Generated invitation link. Copy and send it to {{username}}:",
+  "invitation-url-label": "Invitation URL"
+}

@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { map } from 'rxjs/operators'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -86,25 +87,29 @@ export const RepoBatchChanges: React.FunctionComponent<React.PropsWithChildren<P
     )
 }
 
-export const RepoBatchChangesHeader: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => (
-    <>
-        {/* Empty filler elements for the spaces in the grid that don't need headers */}
-        <span />
-        <span />
-        <H5 as={H3} aria-hidden={true} className="p-2 d-none d-md-block text-uppercase text-center text-nowrap">
-            Status
-        </H5>
-        <H5 as={H3} aria-hidden={true} className="p-2 d-none d-md-block text-uppercase text-nowrap">
-            Changeset information
-        </H5>
-        <H5 as={H3} aria-hidden={true} className="p-2 d-none d-md-block text-uppercase text-center text-nowrap">
-            Check state
-        </H5>
-        <H5 as={H3} aria-hidden={true} className="p-2 d-none d-md-block text-uppercase text-center text-nowrap">
-            Review state
-        </H5>
-        <H5 as={H3} aria-hidden={true} className="p-2 d-none d-md-block text-uppercase text-center text-nowrap">
-            Changes
-        </H5>
-    </>
-)
+export const RepoBatchChangesHeader: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
+    const { t } = useTranslation('enterprise/batches/repo')
+
+    return (
+        <>
+            {/* Empty filler elements for the spaces in the grid that don't need headers */}
+            <span />
+            <span />
+            <H5 as={H3} aria-hidden={true} className="p-2 d-none d-md-block text-uppercase text-center text-nowrap">
+                {t('status')}
+            </H5>
+            <H5 as={H3} aria-hidden={true} className="p-2 d-none d-md-block text-uppercase text-nowrap">
+                {t('changeset-information')}
+            </H5>
+            <H5 as={H3} aria-hidden={true} className="p-2 d-none d-md-block text-uppercase text-center text-nowrap">
+                {t('check-state')}
+            </H5>
+            <H5 as={H3} aria-hidden={true} className="p-2 d-none d-md-block text-uppercase text-center text-nowrap">
+                {t('review-state')}
+            </H5>
+            <H5 as={H3} aria-hidden={true} className="p-2 d-none d-md-block text-uppercase text-center text-nowrap">
+                {t('changes')}
+            </H5>
+        </>
+    )
+}

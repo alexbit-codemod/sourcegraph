@@ -2,6 +2,7 @@ import { type MouseEvent, useCallback } from 'react'
 
 import { mdiChevronDown, mdiChevronUp, mdiArrowRight } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { smartSearchIconSvgPath, SyntaxHighlightedSearchQuery } from '@sourcegraph/branded'
 import { pluralize, SourcegraphURL } from '@sourcegraph/common'
@@ -69,6 +70,8 @@ export const SmartSearch: React.FunctionComponent<React.PropsWithChildren<SmartS
     onDisableSmartSearch,
     className,
 }) => {
+    const { t } = useTranslation('search/suggestion')
+
     const [isCollapsed, setIsCollapsed] = useTemporarySetting('search.results.collapseSmartSearch')
 
     const disableSmartSearch = useCallback(
@@ -98,14 +101,14 @@ export const SmartSearch: React.FunctionComponent<React.PropsWithChildren<SmartS
                             <span>
                                 <H2 className={styles.title}>{content.title} </H2>
                                 <span className="text-muted d-inline-block">
-                                    Don't want these?{' '}
+                                    {t('dont-want-these')}
                                     <Button
                                         variant="link"
                                         size="sm"
                                         className={styles.disableButton}
                                         onClick={disableSmartSearch}
                                     >
-                                        Disable <b>Smart Search</b>
+                                        <Trans i18nKey="disable-smart-search" components={{ '0': <b /> }} />
                                     </Button>
                                 </span>
                             </span>
@@ -113,12 +116,12 @@ export const SmartSearch: React.FunctionComponent<React.PropsWithChildren<SmartS
                         <span className="d-flex align-items-center flex-shrink-0 ml-2">
                             {isCollapsed ? (
                                 <>
-                                    <span className="text-muted mr-2 flex-shrink-0">Show queries</span>
+                                    <span className="text-muted mr-2 flex-shrink-0">{t('show-queries')}</span>
                                     <Icon aria-label="Expand" svgPath={mdiChevronDown} />
                                 </>
                             ) : (
                                 <>
-                                    <span className="text-muted mr-2 flex-shrink-0">Hide queries</span>
+                                    <span className="text-muted mr-2 flex-shrink-0">{t('hide-queries')}</span>
                                     <Icon aria-label="Collapse" svgPath={mdiChevronUp} />
                                 </>
                             )}

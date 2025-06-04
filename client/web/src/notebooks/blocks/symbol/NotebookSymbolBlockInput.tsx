@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react'
 
 import { EditorView } from '@codemirror/view'
+import { useTranslation } from 'react-i18next'
 
 import { createDefaultSuggestions, RepoFileLink } from '@sourcegraph/branded'
 import { SearchPatternType } from '@sourcegraph/shared/src/graphql-operations'
@@ -42,6 +43,8 @@ const editorAttributes = [
 export const NotebookSymbolBlockInput: React.FunctionComponent<
     React.PropsWithChildren<NotebookSymbolBlockInputProps>
 > = ({ onSymbolSelected, isSourcegraphDotCom, patternType, ...inputProps }) => {
+    const { t } = useTranslation('notebooks/blocks/symbol')
+
     const fetchSymbolSuggestions = useCallback(
         (query: string) =>
             fetchSuggestions(
@@ -78,7 +81,7 @@ export const NotebookSymbolBlockInput: React.FunctionComponent<
     return (
         <div className={styles.input}>
             <SearchTypeSuggestionsInput<SymbolMatch>
-                label="Find a symbol using a Sourcegraph search query"
+                label={t('find-symbol-using-sourcegraph-search-query')}
                 queryPrefix="type:symbol"
                 fetchSuggestions={fetchSymbolSuggestions}
                 countSuggestions={countSuggestions}

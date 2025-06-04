@@ -1,6 +1,7 @@
 import { type FC, useEffect, useState } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Toggle } from '@sourcegraph/branded/src/components/Toggle'
 import { QueryExamples } from '@sourcegraph/branded/src/search-ui/components/QueryExamples'
@@ -32,6 +33,8 @@ interface SearchPageContentProps {
 }
 
 export const SearchPageContent: FC<SearchPageContentProps> = props => {
+    const { t } = useTranslation('storm/pages/SearchPage')
+
     const { shouldShowAddCodeHostWidget } = props
 
     const { telemetryService, selectedSearchContextSpec, isSourcegraphDotCom, authenticatedUser, platformContext } =
@@ -79,16 +82,14 @@ export const SearchPageContent: FC<SearchPageContentProps> = props => {
         <div className={classNames('d-flex flex-column align-items-center px-3', styles.searchPage)}>
             <BrandLogo className={styles.logo} isLightTheme={isLightTheme} variant="logo" />
             {isSourcegraphDotCom && (
-                <div className="text-muted mt-3 mr-sm-2 pr-2 text-center">
-                    Code search and an AI assistant with the context of the code graph.
-                </div>
+                <div className="text-muted mt-3 mr-sm-2 pr-2 text-center">{t('code-search-ai-assistant-context')}</div>
             )}
 
             <div className={styles.searchContainer}>
                 {simpleSearchEnabled && (
                     <div className="mb-2">
                         <Label htmlFor="simpleSearchToggle" className="mr-2">
-                            Simple search
+                            {t('simple-search')}
                         </Label>
                         <Toggle
                             id="simpleSearchToggle"

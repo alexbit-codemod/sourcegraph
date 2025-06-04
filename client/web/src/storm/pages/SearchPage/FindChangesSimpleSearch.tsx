@@ -1,6 +1,7 @@
 import { type FC, useEffect, useState } from 'react'
 
 import { mdiHelpCircleOutline } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { Icon, Select, Tooltip, Input, Button, Form, Label } from '@sourcegraph/wildcard'
 
@@ -81,6 +82,8 @@ const getQuery = ({
 }
 
 export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUpdate, onSubmit }) => {
+    const { t } = useTranslation('storm/pages/SearchPage')
+
     const [repoPattern, setRepoPattern] = useState<string>('')
     const [repoNames, setRepoNames] = useState<string>('')
     const [filePaths, setFilePaths] = useState<string>('')
@@ -125,7 +128,7 @@ export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchU
                 <div id="contentFilterSection">
                     <div className="form-group row">
                         <Label htmlFor="commitMessagePattern" className="col-4 col-form-label">
-                            Commit message contains pattern
+                            {t('commit-message-pattern')}
                             <Tooltip content="Search for changes with a commit message that matches a regular expression pattern.">
                                 <Icon
                                     aria-label="hover icon for help tooltip"
@@ -140,7 +143,7 @@ export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchU
                                 <Input
                                     id="commitMessagePattern"
                                     name="commitMessagePattern"
-                                    placeholder="class CustomerManager"
+                                    placeholder={t('customer-manager-class')}
                                     type="text"
                                     onChange={event => setMessagePattern(event.target.value)}
                                 />
@@ -150,7 +153,7 @@ export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchU
 
                     <div className="form-group row">
                         <Label htmlFor="repoNamePattern" className="col-4 col-form-label">
-                            Author matches pattern
+                            {t('author-matches-pattern')}
                             <Tooltip content="Search for the commit author name or email using a regular expression.">
                                 <Icon
                                     aria-label="hover icon for help tooltip"
@@ -165,7 +168,7 @@ export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchU
                                 <Input
                                     id="repoNamePattern"
                                     name="repoNamePattern"
-                                    placeholder="@sourcegraph.com"
+                                    placeholder={t('sourcegraph-email')}
                                     type="text"
                                     onChange={event => setAuthorPattern(event.target.value)}
                                 />
@@ -175,7 +178,7 @@ export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchU
 
                     <div className="form-group row">
                         <Label htmlFor="fileContentPattern" className="col-4 col-form-label">
-                            Diff contains code matching pattern
+                            {t('diff-code-pattern')}
                             <Tooltip content="Search for matching diff file content using a regular expression.">
                                 <Icon
                                     aria-label="hover icon for help tooltip"
@@ -190,7 +193,7 @@ export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchU
                                 <Input
                                     id="fileContentPattern"
                                     name="fileContentPattern"
-                                    placeholder="class \w*Manager"
+                                    placeholder={t('manager-class-regex')}
                                     type="text"
                                     onChange={event => setDiffCodePattern(event.target.value)}
                                 />
@@ -200,7 +203,7 @@ export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchU
 
                     <div className="form-group row">
                         <Label htmlFor="diffPathPattern" className="col-4 col-form-label">
-                            Diff contains file path
+                            {t('diff-file-path')}
                             <Tooltip content="Search for matching diff containing a matching file path regular expression">
                                 <Icon
                                     aria-label="hover icon for help tooltip"
@@ -215,7 +218,7 @@ export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchU
                                 <Input
                                     id="diffPathPattern"
                                     name="diffPathPattern"
-                                    placeholder="README|LICENSE"
+                                    placeholder={t('readme-license-pattern')}
                                     type="text"
                                     onChange={event => setFilePaths(event.target.value)}
                                 />
@@ -228,7 +231,7 @@ export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchU
                 <div id="repoFilterSection">
                     <div className="form-group row">
                         <Label htmlFor="repoName" className="col-4 col-form-label">
-                            In these repos
+                            {t('target-repositories')}
                             <Tooltip content="Match repository names exactly.">
                                 <Icon
                                     aria-label="hover icon for help tooltip"
@@ -243,7 +246,7 @@ export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchU
                                 <Input
                                     id="repoName"
                                     name="repoName"
-                                    placeholder="sourcegraph/sourcegraph"
+                                    placeholder={t('sourcegraph-repo')}
                                     type="text"
                                     onChange={event => setRepoNames(event.target.value)}
                                 />
@@ -253,7 +256,7 @@ export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchU
 
                     <div className="form-group row">
                         <Label htmlFor="repoNamePatterns" className="col-4 col-form-label">
-                            In matching repos
+                            {t('matching-repositories')}
                             <Tooltip content="Use a regular expression pattern to match against repository names.">
                                 <Icon
                                     aria-label="hover icon for help tooltip"
@@ -266,7 +269,7 @@ export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchU
                             <Input
                                 id="repoNamePatterns"
                                 name="repoNamePatterns"
-                                placeholder="sourcegraph.*"
+                                placeholder={t('sourcegraph-regex')}
                                 type="text"
                                 onChange={event => setRepoPattern(event.target.value)}
                             />
@@ -278,7 +281,7 @@ export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchU
                             <Select
                                 label={
                                     <div>
-                                        Search over repository forks?
+                                        {t('search-repo-forks')}
                                         <Tooltip content="Choose an option to include or exclude forks from the search, or search only over forks.">
                                             <Icon
                                                 aria-label="hover icon for help tooltip"
@@ -293,9 +296,9 @@ export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchU
                                 name="searchForks"
                                 onChange={event => setUseForks(event.target.value)}
                             >
-                                <option value="no">No</option>
-                                <option value="yes">Yes</option>
-                                <option value="only">Only forks</option>
+                                <option value="no">{t('no')}</option>
+                                <option value="yes">{t('yes')}</option>
+                                <option value="only">{t('only-forks')}</option>
                             </Select>
                         </div>
 
@@ -303,7 +306,7 @@ export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchU
                             <Select
                                 label={
                                     <div>
-                                        Search over archived repositories?
+                                        {t('search-archived-repos')}
                                         <Tooltip content="Choose an option to include or exclude archived repos from the search, or search only over archived repos.">
                                             <Icon
                                                 aria-label="hover icon for help tooltip"
@@ -318,9 +321,9 @@ export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchU
                                 name="searchArchive"
                                 onChange={event => setUseArchive(event.target.value)}
                             >
-                                <option value="no">No</option>
-                                <option value="yes">Yes</option>
-                                <option value="only">Only archives</option>
+                                <option value="no">{t('no')}</option>
+                                <option value="yes">{t('yes')}</option>
+                                <option value="only">{t('only-archives')}</option>
                             </Select>
                         </div>
                     </div>
@@ -329,7 +332,7 @@ export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchU
                 <hr className="mt-4 mb-4" />
                 <div className="form-group row">
                     <Label htmlFor="searchContext" className="col-4 col-form-label">
-                        Search context
+                        {t('search-context')}
                         <Tooltip content="Only match files inside a search context. A search context is a Sourcegraph entity to provide shareable and repeatable filters, such as common sets of repositories. The global context  will search over all code on Sourcegraph.">
                             <Icon
                                 aria-label="hover icon for help tooltip"
@@ -352,7 +355,7 @@ export const FindChangesSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchU
                 <div className="form-group row">
                     <div className="offset-4 col-8">
                         <Button variant="primary" name="submit" type="submit" className="btn btn-primary">
-                            Submit
+                            {t('submit')}
                         </Button>
                     </div>
                 </div>

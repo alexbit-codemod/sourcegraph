@@ -1,0 +1,15 @@
+{
+  "edit-spec": "Edit spec",
+  "go-back": "Go back",
+  "error-404-not-found": "404: Not Found",
+  "error-batch-change-not-found": "Batch change not found",
+  "execution-timeline": "Execution timeline",
+  "close-button": "Close",
+  "executor-label": "Executor",
+  "cancel-current-execution-confirmation": "Are you sure you want to cancel the current execution?",
+  "workspace": "workspace",
+  "workspace-complete": " complete",
+  "workspace-working": " working",
+  "workspace-queued": " queued",
+  "workspace-ignored": " ignored"
+}

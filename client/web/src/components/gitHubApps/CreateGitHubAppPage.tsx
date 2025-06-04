@@ -2,6 +2,7 @@ import React, { type FC, useState, useCallback, useRef, useEffect } from 'react'
 
 import classNames from 'classnames'
 import { noop } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -84,6 +85,8 @@ export const CreateGitHubAppPage: FC<CreateGitHubAppPageProps> = ({
     authenticatedUser,
     minimizedMode,
 }) => {
+    const { t } = useTranslation('components/gitHubApps')
+
     const navigate = useNavigate()
     const ref = useRef<HTMLFormElement>(null)
     const formInput = useRef<HTMLInputElement>(null)
@@ -230,10 +233,17 @@ export const CreateGitHubAppPage: FC<CreateGitHubAppPageProps> = ({
                         description={
                             headerDescription || (
                                 <>
-                                    Register a GitHub App to better manage GitHub code host connections.{' '}
-                                    <Link to="/help/admin/external_service/github#using-a-github-app" target="_blank">
-                                        See how GitHub App configuration works.
-                                    </Link>
+                                    <Trans
+                                        i18nKey="register-github-app-introduction"
+                                        components={{
+                                            '0': (
+                                                <Link
+                                                    to="/help/admin/external_service/github#using-a-github-app"
+                                                    target="_blank"
+                                                />
+                                            ),
+                                        }}
+                                    />
                                 </>
                             )
                         }
@@ -244,16 +254,17 @@ export const CreateGitHubAppPage: FC<CreateGitHubAppPageProps> = ({
             )}
 
             <Container className="mb-3">
-                {error && <Alert variant="danger">Error creating GitHub App: {error}</Alert>}
+                {error && <Alert variant="danger">{t('error-creating-github-app', { error })}</Alert>}
                 <Text>
-                    Provide the details for a new GitHub App with the form below. Once you click "Create GitHub App",
-                    you will be routed to <strong>{baseURL || 'GitHub'}</strong> to create the App and choose which
-                    repositories to grant it access to. Once created on <strong>{baseURL || 'GitHub'}</strong>, you'll
-                    be redirected back here to finish connecting it to Sourcegraph.
+                    <Trans
+                        i18nKey="github-app-creation-details"
+                        values={{ baseUrlGitHub: <>{baseURL || 'GitHub'}</> }}
+                        components={{ '0': <strong />, '1': <strong /> }}
+                    />
                 </Text>
                 <Label className="w-100">
                     <Text alignment="left" className="mb-2">
-                        GitHub App Name
+                        {t('github-app-name-label')}
                     </Text>
                     <Input
                         type="text"
@@ -261,14 +272,14 @@ export const CreateGitHubAppPage: FC<CreateGitHubAppPageProps> = ({
                         value={name}
                         error={nameError}
                         status={nameError ? 'error' : undefined}
-                        placeholder="Sourcegraph"
+                        placeholder={t('sourcegraph-name')}
                         message="The display name of your GitHub App. It must be unique across the GitHub instance."
                     />
                 </Label>
                 {baseURL ? null : (
                     <Label className="w-100 mt-2">
                         <Text alignment="left" className="mb-2">
-                            GitHub URL
+                            {t('github-url-label')}
                         </Text>
                         <Input
                             type="text"
@@ -276,14 +287,17 @@ export const CreateGitHubAppPage: FC<CreateGitHubAppPageProps> = ({
                             value={url}
                             error={urlError}
                             status={urlError ? 'error' : undefined}
-                            placeholder="https://github.com"
+                            placeholder={t('github-url-example')}
                             message="The base URL of the GitHub instance, e.g., https://github.com, https://github.company.com."
                         />
                     </Label>
                 )}
                 <Label className="w-100 mt-2">
                     <Text alignment="left" className="mb-2">
-                        Organization name <span className="text-muted">(optional)</span>
+                        <Trans
+                            i18nKey="organization-name-label"
+                            components={{ '0': <span className="text-muted" /> }}
+                        />
                     </Text>
                     <Input
                         type="text"
@@ -291,16 +305,18 @@ export const CreateGitHubAppPage: FC<CreateGitHubAppPageProps> = ({
                         value={org}
                         message={
                             <>
-                                By default, the GitHub App will be registered on your personal account. To register the
-                                App on a GitHub organization instead, specify the organization name. Only{' '}
-                                <Link
-                                    to="https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/roles-in-an-organization#organization-owners"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    organization owners
-                                </Link>{' '}
-                                can register GitHub Apps.
+                                <Trans
+                                    i18nKey="github-app-registration-organization-info"
+                                    components={{
+                                        '0': (
+                                            <Link
+                                                to="https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/roles-in-an-organization#organization-owners"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            />
+                                        ),
+                                    }}
+                                />
                             </>
                         }
                     />
@@ -312,20 +328,26 @@ export const CreateGitHubAppPage: FC<CreateGitHubAppPageProps> = ({
                     checked={isPublic}
                     label={
                         <>
-                            Make App public <span className="text-muted">(optional)</span>
+                            <Trans
+                                i18nKey="make-app-public-label"
+                                components={{ '0': <span className="text-muted" /> }}
+                            />
                         </>
                     }
                     message={
                         <>
-                            Your GitHub App must be public if you want to install it on multiple organizations or user
-                            accounts.{' '}
-                            <Link
-                                to="/help/admin/external_service/github#multiple-installations"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                Learn more about public vs. private GitHub Apps.
-                            </Link>
+                            <Trans
+                                i18nKey="public-vs-private-app-info"
+                                components={{
+                                    '0': (
+                                        <Link
+                                            to="/help/admin/external_service/github#multiple-installations"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        />
+                                    ),
+                                }}
+                            />
                         </>
                     }
                 />
@@ -341,7 +363,7 @@ export const CreateGitHubAppPage: FC<CreateGitHubAppPageProps> = ({
                 })}
             >
                 <Button variant="primary" onClick={createState} disabled={!!nameError || !!urlError}>
-                    Create Github App
+                    {t('create-github-app-button')}
                 </Button>
                 <Button
                     className={classNames({
@@ -351,7 +373,7 @@ export const CreateGitHubAppPage: FC<CreateGitHubAppPageProps> = ({
                     onClick={() => navigate(-1)}
                     variant="secondary"
                 >
-                    Cancel
+                    {t('cancel-button')}
                 </Button>
             </div>
         </>

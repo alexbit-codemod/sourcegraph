@@ -1,0 +1,6 @@
+{
+  "loading-message": "Loading",
+  "run-aggregation-message": " Run aggregation",
+  "aggregation-error-message": "We couldn’t provide an aggregation for this query.",
+  "no-data-display-message": "No data to display"
+}

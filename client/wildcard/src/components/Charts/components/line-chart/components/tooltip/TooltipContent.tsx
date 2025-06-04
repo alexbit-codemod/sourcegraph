@@ -1,5 +1,7 @@
 import { type ReactElement, useMemo } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { isDefined } from '../../../../../../utils'
 import { H3 } from '../../../../../Typography'
 import { TooltipList, TooltipListBlankItem, TooltipListItem } from '../../../../core'
@@ -25,6 +27,8 @@ export interface TooltipContentProps<Datum> {
  * and its list of all nearest y points.
  */
 export function TooltipContent<Datum>(props: TooltipContentProps<Datum>): ReactElement | null {
+    const { t } = useTranslation('../../wildcard/src/components/Charts/components/line-chart/components/tooltip')
+
     const { activePoint, series, stacked } = props
 
     const lines = useMemo(() => {
@@ -63,7 +67,11 @@ export function TooltipContent<Datum>(props: TooltipContentProps<Datum>): ReactE
 
             <TooltipList>
                 {lines.leftRemaining > 0 && (
-                    <TooltipListBlankItem>... and {lines.leftRemaining} more</TooltipListBlankItem>
+                    <TooltipListBlankItem>
+                        {t('and-more')}
+                        {lines.leftRemaining}
+                        {t('more')}
+                    </TooltipListBlankItem>
                 )}
                 {lines.window.map(line => {
                     // TODO: Support stacked formatted value
@@ -81,7 +89,11 @@ export function TooltipContent<Datum>(props: TooltipContentProps<Datum>): ReactE
                     )
                 })}
                 {lines.rightRemaining > 0 && (
-                    <TooltipListBlankItem>... and {lines.rightRemaining} more</TooltipListBlankItem>
+                    <TooltipListBlankItem>
+                        {t('and-more-duplicate')}
+                        {lines.rightRemaining}
+                        {t('more-duplicate')}
+                    </TooltipListBlankItem>
                 )}
             </TooltipList>
         </>

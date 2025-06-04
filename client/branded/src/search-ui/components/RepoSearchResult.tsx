@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 
 import { mdiArchive, mdiLock, mdiSourceFork } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { highlightNode } from '@sourcegraph/common'
 import { codeHostSubstrLength, displayRepoName } from '@sourcegraph/shared/src/components/RepoLink'
@@ -37,6 +38,8 @@ export const RepoSearchResult: React.FunctionComponent<RepoSearchResultProps> = 
     buildSearchURLQueryFromQueryState,
     queryState,
 }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/components')
+
     const repoDescriptionElement = useRef<HTMLDivElement>(null)
     const repoNameElement = useRef<HTMLAnchorElement>(null)
 
@@ -112,7 +115,7 @@ export const RepoSearchResult: React.FunctionComponent<RepoSearchResultProps> = 
                                         className={classNames('flex-shrink-0 text-muted mr-1')}
                                         svgPath={mdiSourceFork}
                                     />
-                                    <small>Fork</small>
+                                    <small>{t('fork')}</small>
                                 </div>
                             )}
                             {result.archived && (
@@ -122,7 +125,7 @@ export const RepoSearchResult: React.FunctionComponent<RepoSearchResultProps> = 
                                         className={classNames('flex-shrink-0 text-muted mr-1')}
                                         svgPath={mdiArchive}
                                     />
-                                    <small>Archived</small>
+                                    <small>{t('archived')}</small>
                                 </div>
                             )}
                             {result.private && (
@@ -132,7 +135,7 @@ export const RepoSearchResult: React.FunctionComponent<RepoSearchResultProps> = 
                                         className={classNames('flex-shrink-0 text-muted mr-1')}
                                         svgPath={mdiLock}
                                     />
-                                    <small>Private</small>
+                                    <small>{t('private')}</small>
                                 </div>
                             )}
                         </div>

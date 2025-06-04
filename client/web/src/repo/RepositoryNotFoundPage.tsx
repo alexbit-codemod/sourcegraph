@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import MapSearchIcon from 'mdi-react/MapSearchIcon'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { EVENT_LOGGER } from '@sourcegraph/shared/src/telemetry/web/eventLogger'
@@ -27,6 +28,8 @@ export const RepositoryNotFoundPage: React.FunctionComponent<Props> = ({
     viewerCanAdminister,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('repo')
+
     React.useEffect(() => {
         EVENT_LOGGER.logViewEvent('RepositoryError')
         telemetryRecorder.recordEvent('repo.error.notFound', 'view')
@@ -35,17 +38,20 @@ export const RepositoryNotFoundPage: React.FunctionComponent<Props> = ({
     return (
         <HeroPage
             icon={MapSearchIcon}
-            title="Repository not found"
+            title={t('repository-not-found')}
             subtitle={
                 <div className={styles.repositoryNotFoundPage}>
                     {viewerCanAdminister && (
                         <Text>
-                            As a site admin, you can add <Code>{repo}</Code> to Sourcegraph to allow users to search and
-                            view it by <Link to="/site-admin/external-services">connecting an external service</Link>{' '}
-                            referencing it.
+                            {t('site-admin-add-external-service')}
+                            <Code>{repo}</Code>
+                            <Trans
+                                i18nKey="connect-external-service-reference"
+                                components={{ '0': <Link to="/site-admin/external-services" /> }}
+                            />
                         </Text>
                     )}
-                    {!viewerCanAdminister && <Text>To access this repository, contact the Sourcegraph admin.</Text>}
+                    {!viewerCanAdminister && <Text>{t('contact-sourcegraph-admin')}</Text>}
                 </div>
             }
         />

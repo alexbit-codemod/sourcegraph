@@ -1,5 +1,6 @@
 import { useCallback, useState, type FunctionComponent } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { lastValueFrom } from 'rxjs'
 
 import { asError, type ErrorLike } from '@sourcegraph/common'
@@ -70,6 +71,8 @@ export const UserEmail: FunctionComponent<React.PropsWithChildren<Props>> = ({
     onEmailResendVerification,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('user/settings/emails')
+
     const [isLoading, setIsLoading] = useState(false)
 
     const handleError = useCallback(
@@ -172,16 +175,16 @@ export const UserEmail: FunctionComponent<React.PropsWithChildren<Props>> = ({
                     */}
                     {verified && (
                         <Badge variant="success" className="a11y-ignore">
-                            Verified
+                            {t('verified-status')}
                         </Badge>
                     )}
-                    {!verified && !verificationPending && <Badge variant="secondary">Not verified</Badge>}
-                    {isPrimary && <Badge variant="primary">Primary</Badge>}
+                    {!verified && !verificationPending && <Badge variant="secondary">{t('not-verified')}</Badge>}
+                    {isPrimary && <Badge variant="primary">{t('primary-label')}</Badge>}
                 </div>
                 <div className="d-flex align-items-center flex-gap-2">
                     {!verified && verificationPending && (
                         <Button onClick={resendEmail} disabled={isLoading || disableControls} variant="secondary">
-                            Resend verification email
+                            {t('resend-verification-email')}
                         </Button>
                     )}
                     {viewerCanManuallyVerify && (
@@ -200,7 +203,7 @@ export const UserEmail: FunctionComponent<React.PropsWithChildren<Props>> = ({
                             variant="danger"
                             outline={true}
                         >
-                            Remove
+                            {t('remove-action')}
                         </Button>
                     )}
                 </div>

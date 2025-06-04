@@ -1,6 +1,7 @@
 import React from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@sourcegraph/wildcard'
 
@@ -21,13 +22,17 @@ export const ShowMoreButton: React.FunctionComponent<React.PropsWithChildren<Sho
     compact,
     centered,
     onClick,
-}) => (
-    <Button
-        className={classNames(styles.normal, !compact && styles.noncompact, centered && styles.centered, className)}
-        onClick={onClick}
-        size="sm"
-        variant="link"
-    >
-        Show more
-    </Button>
-)
+}) => {
+    const { t } = useTranslation('components/FilteredConnection/ui')
+
+    return (
+        <Button
+            className={classNames(styles.normal, !compact && styles.noncompact, centered && styles.centered, className)}
+            onClick={onClick}
+            size="sm"
+            variant="link"
+        >
+            {t('show-more')}
+        </Button>
+    )
+}

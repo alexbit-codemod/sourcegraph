@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { mdiAccount, mdiPencil, mdiPlus } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
 import { displayRepoName } from '@sourcegraph/shared/src/components/RepoLink'
@@ -25,6 +26,8 @@ export const RepositoryOwnPage: React.FunctionComponent<RepositoryOwnAreaPagePro
     telemetryRecorder,
     authenticatedUser,
 }) => {
+    const { t } = useTranslation('enterprise/own')
+
     const [searchParams] = useSearchParams()
     const filePath = searchParams.get('path') ?? ''
 
@@ -72,7 +75,9 @@ export const RepositoryOwnPage: React.FunctionComponent<RepositoryOwnAreaPagePro
     return (
         <>
             <Page>
-                <PageTitle title={`Ownership for ${displayRepoName(repo.name)}`} />
+                <PageTitle
+                    title={t('ownership-for-repo-name', { displayRepoNameRepoName: displayRepoName(repo.name) })}
+                />
                 <div className={styles.actionButtons}>
                     <ButtonLink
                         aria-label="Navigate to upload CODEOWNERS page"
@@ -80,11 +85,13 @@ export const RepositoryOwnPage: React.FunctionComponent<RepositoryOwnAreaPagePro
                         variant="secondary"
                         to={`${repo.url}/-/own/edit`}
                     >
-                        <Icon aria-hidden={true} svgPath={mdiPencil} /> Upload CODEOWNERS
+                        <Icon aria-hidden={true} svgPath={mdiPencil} />
+                        {t('upload-codeowners')}
                     </ButtonLink>
                     {showAddOwnerBtn && (
                         <Button aria-label="Add an owner" variant="success" onClick={onClickAdd}>
-                            <Icon aria-hidden={true} svgPath={mdiPlus} /> Add owner
+                            <Icon aria-hidden={true} svgPath={mdiPlus} />
+                            {t('add-owner')}
                         </Button>
                     )}
                 </div>
@@ -92,14 +99,13 @@ export const RepositoryOwnPage: React.FunctionComponent<RepositoryOwnAreaPagePro
                 <PageHeader
                     description={
                         <>
-                            Code ownership data for this repository can be provided via an upload or a committed
-                            CODEOWNERS file. <Link to="/help/own">Learn more about code ownership.</Link>
+                            <Trans i18nKey="code-ownership-data-upload" components={{ '0': <Link to="/help/own" /> }} />
                         </>
                     }
                 >
                     <H1 as="h2" className="d-flex align-items-center">
                         <Icon svgPath={mdiAccount} aria-hidden={true} />
-                        <span className="ml-2">Ownership</span>
+                        <span className="ml-2">{t('ownership')}</span>
                         <ProductStatusBadge status="beta" className="ml-2" />
                     </H1>
                 </PageHeader>

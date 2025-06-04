@@ -1,0 +1,10 @@
+{
+  "add-insight-to-dashboard-title": "Add insight to <0>{{dashboardTitle}}</0>",
+  "search-insights-placeholder": "Search insights...",
+  "create-new-insight-link": "Don't see an insight? <0>Create a new insight.</0>",
+  "out-of-insights": "out of",
+  "load-more-insights": "Load more insights",
+  "navigate-results-instructions": "Press <0>↑</0><1>↓</1> to navigate through results",
+  "cancel-action": "Cancel",
+  "insight-label": " insight"
+}

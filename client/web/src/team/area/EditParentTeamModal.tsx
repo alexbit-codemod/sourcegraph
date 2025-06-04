@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { logger } from '@sourcegraph/common'
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { Button, ErrorAlert, Form, H3, Label, Modal } from '@sourcegraph/wildcard'
@@ -27,6 +29,8 @@ export const EditParentTeamModal: React.FunctionComponent<React.PropsWithChildre
     afterEdit,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('team/area')
+
     const labelId = 'editParentTeam'
 
     const [parentTeam, setParentTeam] = useState<string | null>(currentParentTeamName)
@@ -57,10 +61,10 @@ export const EditParentTeamModal: React.FunctionComponent<React.PropsWithChildre
 
     return (
         <Modal onDismiss={onCancel} aria-labelledby={labelId}>
-            <H3 id={labelId}>Assign parent team of {teamName}</H3>
+            <H3 id={labelId}>{t('assign-parent-team-of-team-name', { teamName })}</H3>
             {error && <ErrorAlert error={error} />}
             <Form onSubmit={onSubmit}>
-                <Label htmlFor="edit-team--parent">New parent team</Label>
+                <Label htmlFor="edit-team--parent">{t('new-parent-team')}</Label>
                 <ParentTeamSelect
                     id="edit-team--parent"
                     teamId={teamID}
@@ -71,7 +75,7 @@ export const EditParentTeamModal: React.FunctionComponent<React.PropsWithChildre
 
                 <div className="d-flex justify-content-end pt-2">
                     <Button disabled={loading} className="mr-2" onClick={onCancel} outline={true} variant="secondary">
-                        Cancel
+                        {t('cancel-button')}
                     </Button>
                     <LoaderButton
                         type="submit"
@@ -79,7 +83,7 @@ export const EditParentTeamModal: React.FunctionComponent<React.PropsWithChildre
                         loading={loading}
                         disabled={loading}
                         alwaysShowLabel={true}
-                        label="Save"
+                        label={t('save-button')}
                     />
                 </div>
             </Form>

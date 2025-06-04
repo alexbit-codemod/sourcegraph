@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { noOpTelemetryRecorder } from '@sourcegraph/shared/src/telemetry'
 import { H1, H2, Code, Text } from '@sourcegraph/wildcard'
@@ -29,24 +30,30 @@ const config: Meta = {
 
 export default config
 
-export const GlobalAlerts: StoryFn = () => (
-    <div>
-        <H1>Global Alert</H1>
-        <Text>
-            These alerts map to the <Code>AlertType</Code> returned from the backend API
-        </Text>
-        <H2>Variants</H2>
-        {Object.values(AlertType).map(type => (
+export const GlobalAlerts: StoryFn = () => {
+    const { t } = useTranslation('global')
+
+    return (
+        <div>
+            <H1>{t('global-alert')}</H1>
+            <Text>
+                {t('alert-description')}
+                <Code>AlertType</Code>
+                {t('backend-api-response')}
+            </Text>
+            <H2>{t('variants-title')}</H2>
+            {Object.values(AlertType).map(type => (
+                <GlobalAlert
+                    key={type}
+                    alert={{ message: 'Something happened!', isDismissibleWithKey: null, type }}
+                    telemetryRecorder={noOpTelemetryRecorder}
+                />
+            ))}
+            <H2>{t('dismissible-alert')}</H2>
             <GlobalAlert
-                key={type}
-                alert={{ message: 'Something happened!', isDismissibleWithKey: null, type }}
+                alert={{ message: 'You can dismiss me', isDismissibleWithKey: 'dismiss-key', type: AlertType.INFO }}
                 telemetryRecorder={noOpTelemetryRecorder}
             />
-        ))}
-        <H2>Dismissible</H2>
-        <GlobalAlert
-            alert={{ message: 'You can dismiss me', isDismissibleWithKey: 'dismiss-key', type: AlertType.INFO }}
-            telemetryRecorder={noOpTelemetryRecorder}
-        />
-    </div>
-)
+        </div>
+    )
+}

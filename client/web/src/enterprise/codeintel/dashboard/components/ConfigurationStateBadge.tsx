@@ -1,5 +1,6 @@
 import { mdiWrench } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Badge, Icon, Link, Tooltip, useIsTruncated } from '@sourcegraph/wildcard'
 
@@ -14,6 +15,8 @@ export const ConfigurationStateBadge: React.FunctionComponent<ConfigurationState
     indexer,
     className,
 }) => {
+    const { t } = useTranslation('enterprise/codeintel/dashboard/components')
+
     const [ref, truncated, checkTruncation] = useIsTruncated<HTMLAnchorElement>()
 
     return (
@@ -29,7 +32,8 @@ export const ConfigurationStateBadge: React.FunctionComponent<ConfigurationState
                 onMouseEnter={checkTruncation}
             >
                 <Icon svgPath={mdiWrench} aria-hidden={true} className="mr-1 text-primary" />
-                Configure {indexer.key}
+                {t('configure-message')}
+                {indexer.key}
             </Badge>
         </Tooltip>
     )

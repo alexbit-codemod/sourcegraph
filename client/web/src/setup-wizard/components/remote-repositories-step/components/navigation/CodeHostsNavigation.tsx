@@ -3,6 +3,7 @@ import type { FC, ReactElement } from 'react'
 import type { QueryResult } from '@apollo/client'
 import { mdiDelete, mdiInformationOutline, mdiPlus, mdiAlertCircle } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { pluralize } from '@sourcegraph/common'
 import {
@@ -32,6 +33,8 @@ interface CodeHostsNavigationProps {
 }
 
 export const CodeHostsNavigation: FC<CodeHostsNavigationProps> = props => {
+    const { t } = useTranslation('setup-wizard/components/remote-repositories-step/components/navigation')
+
     const { codeHostQueryResult, activeConnectionId, createConnectionType, className, onCodeHostDelete } = props
     const { data, loading, error, refetch } = codeHostQueryResult
 
@@ -40,7 +43,7 @@ export const CodeHostsNavigation: FC<CodeHostsNavigationProps> = props => {
             <div className={className}>
                 <ErrorAlert error={error} />
                 <Button variant="secondary" outline={true} size="sm" onClick={() => refetch()}>
-                    Try fetch again
+                    {t('try-fetch-again')}
                 </Button>
             </div>
         )
@@ -49,7 +52,8 @@ export const CodeHostsNavigation: FC<CodeHostsNavigationProps> = props => {
     if (!data || (!data && loading)) {
         return (
             <small className={classNames(className, styles.loadingState)}>
-                <LoadingSpinner /> Fetching connected code host...
+                <LoadingSpinner />
+                {t('fetching-connected-code-host')}
             </small>
         )
     }
@@ -70,7 +74,7 @@ export const CodeHostsNavigation: FC<CodeHostsNavigationProps> = props => {
                         className={styles.emptyStateIcon}
                     />
                 </span>
-                <span>Choose at least one of the code host providers from the list.</span>
+                <span>{t('choose-at-least-one-code-host-provider')}</span>
             </small>
         )
     }
@@ -78,68 +82,83 @@ export const CodeHostsNavigation: FC<CodeHostsNavigationProps> = props => {
     return (
         <ul className={styles.list}>
             {createConnectionType && <CreateCodeHostConnectionCard codeHostType={createConnectionType} />}
-            {nonOtherExternalServices.map(codeHost => (
-                <li
-                    key={codeHost.id}
-                    className={classNames(styles.item, { [styles.itemActive]: codeHost.id === activeConnectionId })}
-                >
-                    <Button as={Link} to={`${codeHost.id}/edit`} className={styles.itemButton}>
-                        <span>
-                            <CodeHostIcon codeHostType={codeHost.kind} aria-hidden={true} />
-                        </span>
-                        <span className={styles.itemDescription}>
-                            <span className={styles.itemTitle}>
-                                {codeHost.displayName}
-                                {codeHost.lastSyncAt === null && (
-                                    <small>
-                                        <LoadingSpinner />
-                                    </small>
-                                )}
+            {nonOtherExternalServices.map(codeHost => {
+                const { t } = useTranslation('setup-wizard/components/remote-repositories-step/components/navigation')
+
+                return (
+                    <li
+                        key={codeHost.id}
+                        className={classNames(styles.item, { [styles.itemActive]: codeHost.id === activeConnectionId })}
+                    >
+                        <Button as={Link} to={`${codeHost.id}/edit`} className={styles.itemButton}>
+                            <span>
+                                <CodeHostIcon codeHostType={codeHost.kind} aria-hidden={true} />
                             </span>
-                            <small className={styles.itemDescriptionStatus}>
-                                {codeHost.lastSyncAt !== null && codeHost.lastSyncError === null && (
-                                    <>Synced, {codeHost.repoCount} repositories found</>
-                                )}
-                                {codeHost.lastSyncAt === null && codeHost.lastSyncError === null && (
-                                    <>
-                                        Syncing
-                                        {codeHost.repoCount > 0 && (
-                                            <>
-                                                , so far {codeHost.repoCount}{' '}
-                                                {pluralize('repository', codeHost.repoCount ?? 0, 'repositories')} found
-                                            </>
-                                        )}
-                                    </>
-                                )}
-                                {codeHost.lastSyncError !== null && (
-                                    <Popover>
-                                        <PopoverTrigger as="span" className={styles.errorButton}>
-                                            Sync error appeared{' '}
-                                            <Icon svgPath={mdiAlertCircle} aria-label="Sync error icon" />
-                                        </PopoverTrigger>
+                            <span className={styles.itemDescription}>
+                                <span className={styles.itemTitle}>
+                                    {codeHost.displayName}
+                                    {codeHost.lastSyncAt === null && (
+                                        <small>
+                                            <LoadingSpinner />
+                                        </small>
+                                    )}
+                                </span>
+                                <small className={styles.itemDescriptionStatus}>
+                                    {codeHost.lastSyncAt !== null && codeHost.lastSyncError === null && (
+                                        <>
+                                            {t('synced')}
+                                            {codeHost.repoCount}
+                                            {t('repositories-found')}
+                                        </>
+                                    )}
+                                    {codeHost.lastSyncAt === null && codeHost.lastSyncError === null && (
+                                        <>
+                                            {t('syncing-repositories-info', {
+                                                codeHostRepoCount0SoFarCodeHostRepoCountPluralizeRepositoryCodeHostRepoCount0RepositoriesFound:
+                                                    codeHost.repoCount > 0 && (
+                                                        <>
+                                                            , so far {codeHost.repoCount}{' '}
+                                                            {pluralize(
+                                                                'repository',
+                                                                codeHost.repoCount ?? 0,
+                                                                'repositories'
+                                                            )}{' '}
+                                                            found
+                                                        </>
+                                                    ),
+                                            })}
+                                        </>
+                                    )}
+                                    {codeHost.lastSyncError !== null && (
+                                        <Popover>
+                                            <PopoverTrigger as="span" className={styles.errorButton}>
+                                                {t('sync-error-appeared')}
+                                                <Icon svgPath={mdiAlertCircle} aria-label="Sync error icon" />
+                                            </PopoverTrigger>
 
-                                        <PopoverContent position="right" className={styles.errorPopover}>
-                                            <ErrorAlert
-                                                error={codeHost.lastSyncError}
-                                                variant="danger"
-                                                className="m-3"
-                                            />
-                                        </PopoverContent>
+                                            <PopoverContent position="right" className={styles.errorPopover}>
+                                                <ErrorAlert
+                                                    error={codeHost.lastSyncError}
+                                                    variant="danger"
+                                                    className="m-3"
+                                                />
+                                            </PopoverContent>
 
-                                        <PopoverTail size="sm" />
-                                    </Popover>
-                                )}
-                            </small>
-                        </span>
-                    </Button>
-
-                    <Tooltip content="Delete code host connection" placement="right" debounce={0}>
-                        <Button className={styles.deleteButton} onClick={() => onCodeHostDelete(codeHost)}>
-                            <Icon svgPath={mdiDelete} aria-label="Delete code host connection" />
+                                            <PopoverTail size="sm" />
+                                        </Popover>
+                                    )}
+                                </small>
+                            </span>
                         </Button>
-                    </Tooltip>
-                </li>
-            ))}
+
+                        <Tooltip content="Delete code host connection" placement="right" debounce={0}>
+                            <Button className={styles.deleteButton} onClick={() => onCodeHostDelete(codeHost)}>
+                                <Icon svgPath={mdiDelete} aria-label="Delete code host connection" />
+                            </Button>
+                        </Tooltip>
+                    </li>
+                )
+            })}
         </ul>
     )
 }
@@ -149,6 +168,8 @@ interface CreateCodeHostConnectionCardProps {
 }
 
 function CreateCodeHostConnectionCard(props: CreateCodeHostConnectionCardProps): ReactElement {
+    const { t } = useTranslation('setup-wizard/components/remote-repositories-step/components/navigation')
+
     const { codeHostType } = props
     const codeHostKind = getCodeHostKindFromURLParam(codeHostType)
 
@@ -159,12 +180,10 @@ function CreateCodeHostConnectionCard(props: CreateCodeHostConnectionCardProps):
             </span>
             <span className={styles.itemDescription}>
                 <span>
-                    Connect <CodeHostIcon codeHostType={codeHostKind} aria-hidden={true} />{' '}
-                    {getCodeHostName(codeHostKind)}
+                    {t('connect-new-code-host')}
+                    <CodeHostIcon codeHostType={codeHostKind} aria-hidden={true} /> {getCodeHostName(codeHostKind)}
                 </span>
-                <small className={styles.itemDescriptionStatus}>
-                    New code host will appear in the list as soon as you connect it
-                </small>
+                <small className={styles.itemDescriptionStatus}>{t('new-code-host-appearance-info')}</small>
             </span>
         </li>
     )

@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import type { Connection } from '../../../../../components/FilteredConnection'
 import type { UseShowMorePaginationResult } from '../../../../../components/FilteredConnection/hooks/useShowMorePagination'
 import {
@@ -68,6 +70,8 @@ export const WorkspacesPreviewList: React.FunctionComponent<React.PropsWithChild
     cacheDisabled,
     isReadOnly,
 }) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/edit/workspaces-preview')
+
     const connectionOrCached = showCached && cached ? cached : connection
 
     return (
@@ -95,7 +99,7 @@ export const WorkspacesPreviewList: React.FunctionComponent<React.PropsWithChild
                         noun="workspace"
                         pluralNoun="workspaces"
                         hasNextPage={hasNextPage}
-                        emptyElement={<span className="text-muted">No workspaces found</span>}
+                        emptyElement={<span className="text-muted">{t('no-workspaces-found')}</span>}
                     />
                     {hasNextPage && <ShowMoreButton centered={true} onClick={fetchMore} />}
                 </SummaryContainer>

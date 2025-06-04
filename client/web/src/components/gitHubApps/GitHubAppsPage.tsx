@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react'
 
 import { mdiPlus } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import { useQuery } from '@sourcegraph/http-client'
@@ -30,6 +31,8 @@ interface Props extends TelemetryV2Props {
 }
 
 export const GitHubAppsPage: React.FC<Props> = ({ batchChangesEnabled, telemetryRecorder }) => {
+    const { t } = useTranslation('components/gitHubApps')
+
     const { data, loading, error, refetch } = useQuery<GitHubAppsResult, GitHubAppsVariables>(GITHUB_APPS_QUERY, {
         variables: {
             domain: GitHubAppDomain.REPOS,
@@ -56,22 +59,26 @@ export const GitHubAppsPage: React.FC<Props> = ({ batchChangesEnabled, telemetry
 
     return (
         <>
-            <PageTitle title="GitHub Apps" />
+            <PageTitle title={t('github-apps-title')} />
             <PageHeader
                 headingElement="h2"
                 path={[{ text: 'GitHub Apps' }]}
                 className={classNames(styles.pageHeader, 'mb-3')}
                 description={
                     <>
-                        Create and connect a GitHub App to better manage GitHub code host connections.{' '}
-                        <Link to="/help/admin/code_hosts/github#using-a-github-app" target="_blank">
-                            See how GitHub App configuration works.
-                        </Link>
+                        <Trans
+                            i18nKey="github-apps-creation-description"
+                            components={{
+                                '0': <Link to="/help/admin/code_hosts/github#using-a-github-app" target="_blank" />,
+                            }}
+                        />
+
                         {batchChangesEnabled && (
                             <>
-                                {' '}
-                                To create a GitHub App to sign Batch Changes commits, visit{' '}
-                                <Link to="/site-admin/batch-changes">Batch Changes settings</Link>.
+                                <Trans
+                                    i18nKey="github-apps-batch-changes-instruction"
+                                    components={{ '0': <Link to="/site-admin/batch-changes" /> }}
+                                />
                             </>
                         )}
                     </>
@@ -83,7 +90,8 @@ export const GitHubAppsPage: React.FC<Props> = ({ batchChangesEnabled, telemetry
                         variant="primary"
                         as={Link}
                     >
-                        <Icon aria-hidden={true} svgPath={mdiPlus} /> Create GitHub App
+                        <Icon aria-hidden={true} svgPath={mdiPlus} />
+                        {t('create-github-app-button')}
                     </ButtonLink>
                 }
             />
@@ -100,7 +108,7 @@ export const GitHubAppsPage: React.FC<Props> = ({ batchChangesEnabled, telemetry
                     <SummaryContainer className="mt-2" centered={true}>
                         <ConnectionSummary
                             emptyElement={
-                                <div className="text-center text-muted">You haven't created any GitHub Apps yet.</div>
+                                <div className="text-center text-muted">{t('no-github-apps-created-message')}</div>
                             }
                             noSummaryIfAllNodesVisible={false}
                             first={gitHubApps?.length ?? 0}

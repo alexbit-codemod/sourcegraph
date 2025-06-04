@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { BrandedStory } from '../../stories/BrandedStory'
 import { Text } from '../Typography/Text/Text'
@@ -30,6 +31,8 @@ const config: Meta = {
 export default config
 
 export const Simple: StoryFn = (args = {}) => {
+    const { t } = useTranslation('../../wildcard/src/components/PageSwitcher')
+
     const totalPages = args.totalCount
 
     const [page, setPage] = useState(1)
@@ -56,9 +59,7 @@ export const Simple: StoryFn = (args = {}) => {
 
     return (
         <div>
-            <Text alignment="center">
-                Showing page {page} of {totalPages}
-            </Text>
+            <Text alignment="center">{t('showing-page-of-total-pages', { page, totalPages })}</Text>
             <PageSwitcher
                 totalLabel={args.totalLabel}
                 totalCount={args.totalCount}

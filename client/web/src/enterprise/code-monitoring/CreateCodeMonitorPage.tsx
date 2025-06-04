@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 
 import { VisuallyHidden } from '@reach/visually-hidden'
+import { useTranslation, Trans } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import type { Observable } from 'rxjs'
 
@@ -29,6 +30,8 @@ interface CreateCodeMonitorPageProps extends TelemetryV2Props {
 const AuthenticatedCreateCodeMonitorPage: React.FunctionComponent<
     React.PropsWithChildren<CreateCodeMonitorPageProps>
 > = ({ authenticatedUser, createCodeMonitor = _createCodeMonitor, isSourcegraphDotCom, telemetryRecorder }) => {
+    const { t } = useTranslation('enterprise/code-monitoring')
+
     const location = useLocation()
 
     const triggerQuery = useMemo(
@@ -71,15 +74,22 @@ const AuthenticatedCreateCodeMonitorPage: React.FunctionComponent<
 
     return (
         <div className="container col-sm-8">
-            <PageTitle title="Create new code monitor" />
+            <PageTitle title={t('create-new-code-monitor')} />
             <PageHeader
                 description={
                     <>
-                        Code monitors watch your code for specific triggers and run actions in response.{' '}
-                        <Link to="/help/code_monitoring/how-tos/starting_points" target="_blank" rel="noopener">
-                            <VisuallyHidden>Learn more about code monitors</VisuallyHidden>
-                            <span aria-hidden={true}>Learn more</span>
-                        </Link>
+                        <Trans
+                            i18nKey="code-monitors-description"
+                            components={{
+                                '0': (
+                                    <Link
+                                        to="/help/code_monitoring/how-tos/starting_points"
+                                        target="_blank"
+                                        rel="noopener"
+                                    />
+                                ),
+                            }}
+                        />
                     </>
                 }
             >
@@ -89,7 +99,7 @@ const AuthenticatedCreateCodeMonitorPage: React.FunctionComponent<
                         to="/code-monitoring"
                         aria-label="Code monitoring"
                     />
-                    <PageHeader.Breadcrumb>Create code monitor</PageHeader.Breadcrumb>
+                    <PageHeader.Breadcrumb>{t('create-code-monitor-action')}</PageHeader.Breadcrumb>
                 </PageHeader.Heading>
             </PageHeader>
             <CodeMonitorForm
@@ -97,7 +107,7 @@ const AuthenticatedCreateCodeMonitorPage: React.FunctionComponent<
                 onSubmit={createMonitorRequest}
                 triggerQuery={triggerQuery}
                 description={description}
-                submitButtonLabel="Create code monitor"
+                submitButtonLabel={t('create-code-monitor-duplicate')}
                 isSourcegraphDotCom={isSourcegraphDotCom}
             />
         </div>

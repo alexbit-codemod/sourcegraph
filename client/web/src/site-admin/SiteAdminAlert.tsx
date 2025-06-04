@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import { mdiLock } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Alert, type AlertProps, Icon, H2, H5 } from '@sourcegraph/wildcard'
 
@@ -19,11 +20,16 @@ export const SiteAdminAlert: React.FunctionComponent<React.PropsWithChildren<Sit
     children,
     className = '',
     variant = 'warning',
-}) => (
-    <Alert className={classNames(styles.siteAdminAlert, className)} variant={variant}>
-        <H5 as={H2}>
-            <Icon aria-hidden={true} svgPath={mdiLock} /> Site admin
-        </H5>
-        <div>{children}</div>
-    </Alert>
-)
+}) => {
+    const { t } = useTranslation('site-admin')
+
+    return (
+        <Alert className={classNames(styles.siteAdminAlert, className)} variant={variant}>
+            <H5 as={H2}>
+                <Icon aria-hidden={true} svgPath={mdiLock} />
+                {t('site-admin')}
+            </H5>
+            <div>{children}</div>
+        </Alert>
+    )
+}

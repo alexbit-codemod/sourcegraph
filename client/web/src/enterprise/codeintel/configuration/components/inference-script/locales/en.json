@@ -1,0 +1,6 @@
+{
+  "run-script-against-repository": "Run your script against a repository",
+  "example-github-url": "Example: github.com/sourcegraph/sourcegraph",
+  "preview-results": "Preview results",
+  "script-output": "Script output:"
+}
