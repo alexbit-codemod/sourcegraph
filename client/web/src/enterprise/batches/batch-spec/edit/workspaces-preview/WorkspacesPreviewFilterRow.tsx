@@ -1,5 +1,6 @@
 import React, { type FC, useCallback, useRef, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Input, Form } from '@sourcegraph/wildcard'
@@ -14,6 +15,8 @@ export interface WorkspacePreviewFilterRowProps {
 }
 
 export const WorkspacePreviewFilterRow: FC<WorkspacePreviewFilterRowProps> = ({ disabled, onFiltersChange }) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/edit/workspaces-preview')
+
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -57,7 +60,7 @@ export const WorkspacePreviewFilterRow: FC<WorkspacePreviewFilterRowProps> = ({ 
                         type="search"
                         ref={searchElement}
                         defaultValue={search}
-                        placeholder="Search repository name"
+                        placeholder={t('search-repository-name')}
                         aria-label="Search repository name"
                     />
                 </Form>

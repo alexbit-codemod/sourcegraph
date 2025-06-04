@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState, type FunctionComponent } fro
 import { useApolloClient } from '@apollo/client'
 import { mdiChevronRight, mdiDelete, mdiMapSearch, mdiRedo } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { Subject } from 'rxjs'
 import { tap } from 'rxjs/operators'
@@ -128,6 +129,8 @@ export const CodeIntelPreciseIndexesPage: FunctionComponent<CodeIntelPreciseInde
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/codeintel/indexes/pages')
+
     const location = useLocation()
     useEffect(() => {
         telemetryService.logViewEvent('CodeIntelPreciseIndexesPage')
@@ -297,25 +300,26 @@ export const CodeIntelPreciseIndexesPage: FunctionComponent<CodeIntelPreciseInde
 
     return (
         <div>
-            <PageTitle title="Precise indexes" />
+            <PageTitle title={t('precise-indexes-title')} />
             <PageHeader
                 headingElement="h2"
                 path={[
                     {
                         text: repo ? (
                             <>
-                                Precise indexes for <RepoLink repoName={repo.name} to={null} />
+                                {t('precise-indexes-for')}
+                                <RepoLink repoName={repo.name} to={null} />
                             </>
                         ) : (
                             'Precise indexes'
                         ),
                     },
                 ]}
-                description="Precise code intelligence index data and auto-indexing jobs."
+                description={t('precise-code-intelligence-description')}
                 actions={
                     repo &&
                     authenticatedUser?.siteAdmin && (
-                        <Link to="/site-admin/code-graph/indexes">View indexes across all repositories</Link>
+                        <Link to="/site-admin/code-graph/indexes">{t('view-indexes-all-repositories')}</Link>
                     )
                 }
                 className="mb-3"
@@ -355,75 +359,84 @@ export const CodeIntelPreciseIndexesPage: FunctionComponent<CodeIntelPreciseInde
                         nodeComponentProps={{ repo, selection, onCheckboxToggle, authenticatedUser }}
                         headComponent={
                             authenticatedUser?.siteAdmin
-                                ? () => (
-                                      <div className={styles.header}>
-                                          <Label className={styles.checkbox}>
-                                              <Checkbox
-                                                  aria-label="Select all indexes"
-                                                  id="checkAll"
-                                                  checked={selection === 'all'}
-                                                  wrapperClassName="d-flex align-items-center"
-                                                  onChange={() =>
-                                                      setSelection(selection =>
-                                                          selection === 'all' ? new Set() : 'all'
-                                                      )
-                                                  }
-                                              />
-                                          </Label>
+                                ? () => {
+                                      const { t } = useTranslation('enterprise/codeintel/indexes/pages')
 
-                                          <div className="text-right">
-                                              {indexingEnabled && (
-                                                  <Tooltip
-                                                      content={`Allow Sourcegraph to re-index ${
-                                                          selection === 'all' || selection.size > 1
-                                                              ? 'these commits'
-                                                              : 'this commit'
-                                                      } in the future and replace this data.`}
-                                                  >
-                                                      <Button
-                                                          className="mr-2"
-                                                          variant="secondary"
-                                                          disabled={selection !== 'all' && selection.size === 0}
-                                                          onClick={onReindex}
+                                      return (
+                                          <div className={styles.header}>
+                                              <Label className={styles.checkbox}>
+                                                  <Checkbox
+                                                      aria-label="Select all indexes"
+                                                      id="checkAll"
+                                                      checked={selection === 'all'}
+                                                      wrapperClassName="d-flex align-items-center"
+                                                      onChange={() =>
+                                                          setSelection(selection =>
+                                                              selection === 'all' ? new Set() : 'all'
+                                                          )
+                                                      }
+                                                  />
+                                              </Label>
+
+                                              <div className="text-right">
+                                                  {indexingEnabled && (
+                                                      <Tooltip
+                                                          content={`Allow Sourcegraph to re-index ${
+                                                              selection === 'all' || selection.size > 1
+                                                                  ? 'these commits'
+                                                                  : 'this commit'
+                                                          } in the future and replace this data.`}
                                                       >
-                                                          <Icon aria-hidden={true} svgPath={mdiRedo} /> Mark{' '}
-                                                          {(selection === 'all' ? totalCount : selection.size) === 0 ? (
-                                                              ''
-                                                          ) : (
-                                                              <>
-                                                                  {selection === 'all' ? totalCount : selection.size}{' '}
-                                                                  {(selection === 'all'
-                                                                      ? totalCount
-                                                                      : selection.size) === 1
-                                                                      ? 'index'
-                                                                      : 'indexes'}
-                                                              </>
-                                                          )}{' '}
-                                                          as replaceable by auto-indexing
-                                                      </Button>
-                                                  </Tooltip>
-                                              )}
-                                              <Button
-                                                  className="mr-2"
-                                                  variant="danger"
-                                                  disabled={selection !== 'all' && selection.size === 0}
-                                                  onClick={onDelete}
-                                              >
-                                                  <Icon aria-hidden={true} svgPath={mdiDelete} /> Delete{' '}
-                                                  {(selection === 'all' ? totalCount : selection.size) === 0 ? (
-                                                      ''
-                                                  ) : (
-                                                      <>
-                                                          {selection === 'all' ? totalCount : selection.size}{' '}
-                                                          {(selection === 'all' ? totalCount : selection.size) === 1
-                                                              ? 'index'
-                                                              : 'indexes'}
-                                                      </>
+                                                          <Button
+                                                              className="mr-2"
+                                                              variant="secondary"
+                                                              disabled={selection !== 'all' && selection.size === 0}
+                                                              onClick={onReindex}
+                                                          >
+                                                              <Icon aria-hidden={true} svgPath={mdiRedo} />
+                                                              {t('mark-as-replaceable')}
+                                                              {(selection === 'all' ? totalCount : selection.size) ===
+                                                              0 ? (
+                                                                  ''
+                                                              ) : (
+                                                                  <>
+                                                                      {selection === 'all'
+                                                                          ? totalCount
+                                                                          : selection.size}{' '}
+                                                                      {(selection === 'all'
+                                                                          ? totalCount
+                                                                          : selection.size) === 1
+                                                                          ? 'index'
+                                                                          : 'indexes'}
+                                                                  </>
+                                                              )}
+                                                              {t('replaceable-by-auto-indexing')}
+                                                          </Button>
+                                                      </Tooltip>
                                                   )}
-                                              </Button>
+                                                  <Button
+                                                      className="mr-2"
+                                                      variant="danger"
+                                                      disabled={selection !== 'all' && selection.size === 0}
+                                                      onClick={onDelete}
+                                                  >
+                                                      <Icon aria-hidden={true} svgPath={mdiDelete} />
+                                                      {t('delete-action')}
+                                                      {(selection === 'all' ? totalCount : selection.size) === 0 ? (
+                                                          ''
+                                                      ) : (
+                                                          <>
+                                                              {selection === 'all' ? totalCount : selection.size}{' '}
+                                                              {(selection === 'all' ? totalCount : selection.size) === 1
+                                                                  ? 'index'
+                                                                  : 'indexes'}
+                                                          </>
+                                                      )}
+                                                  </Button>
+                                              </div>
                                           </div>
-                                      </div>
-                                  )
+                                      )
+                                  }
                                 : undefined
                         }
                         queryConnection={queryConnection}
@@ -452,71 +465,79 @@ const IndexNode: FunctionComponent<IndexNodeProps> = ({
     selection,
     onCheckboxToggle,
     authenticatedUser,
-}) => (
-    <div className={classNames(styles.grid, authenticatedUser?.siteAdmin && styles.gridControlled)}>
-        {authenticatedUser?.siteAdmin && (
-            <Label className={styles.checkbox}>
-                <Checkbox
-                    aria-label="Select index"
-                    id="disabledFieldsetCheck"
-                    disabled={selection === 'all'}
-                    checked={selection === 'all' ? true : selection.has(node.id)}
-                    onChange={input => onCheckboxToggle(node.id, input.target.checked)}
-                    wrapperClassName="d-flex align-items-center"
-                />
-            </Label>
-        )}
-        <div className={styles.information}>
-            {!repo && (
-                <div>
-                    <H3 className="m-0 mb-1">
-                        {node.projectRoot ? (
-                            <Link to={node.projectRoot.repository.url}>{node.projectRoot.repository.name}</Link>
-                        ) : (
-                            <span>Unknown repository</span>
-                        )}
-                    </H3>
-                </div>
+}) => {
+    const { t } = useTranslation('enterprise/codeintel/indexes/pages')
+
+    return (
+        <div className={classNames(styles.grid, authenticatedUser?.siteAdmin && styles.gridControlled)}>
+            {authenticatedUser?.siteAdmin && (
+                <Label className={styles.checkbox}>
+                    <Checkbox
+                        aria-label="Select index"
+                        id="disabledFieldsetCheck"
+                        disabled={selection === 'all'}
+                        checked={selection === 'all' ? true : selection.has(node.id)}
+                        onChange={input => onCheckboxToggle(node.id, input.target.checked)}
+                        wrapperClassName="d-flex align-items-center"
+                    />
+                </Label>
             )}
+            <div className={styles.information}>
+                {!repo && (
+                    <div>
+                        <H3 className="m-0 mb-1">
+                            {node.projectRoot ? (
+                                <Link to={node.projectRoot.repository.url}>{node.projectRoot.repository.name}</Link>
+                            ) : (
+                                <span>{t('unknown-repository')}</span>
+                            )}
+                        </H3>
+                    </div>
+                )}
 
-            <div>
-                <span className="mr-2 d-block">
-                    <ProjectDescription index={node} />
-                </span>
+                <div>
+                    <span className="mr-2 d-block">
+                        <ProjectDescription index={node} />
+                    </span>
 
-                <small className="text-muted">
-                    <PreciseIndexLastUpdated index={node} />{' '}
-                    {node.shouldReindex && (
-                        <Tooltip content="This index has been marked as replaceable by auto-indexing.">
-                            <span className={classNames(styles.tag, 'ml-1 rounded')}>
-                                (replaceable by auto-indexing)
-                            </span>
-                        </Tooltip>
-                    )}
-                </small>
+                    <small className="text-muted">
+                        <PreciseIndexLastUpdated index={node} />{' '}
+                        {node.shouldReindex && (
+                            <Tooltip content="This index has been marked as replaceable by auto-indexing.">
+                                <span className={classNames(styles.tag, 'ml-1 rounded')}>
+                                    {t('replaceable-by-auto-indexing-note')}
+                                </span>
+                            </Tooltip>
+                        )}
+                    </small>
+                </div>
             </div>
+            <span className={classNames(styles.state, 'd-none d-md-inline')}>
+                <div className="d-flex flex-column align-items-center">
+                    <CodeIntelStateIcon state={node.state} autoIndexed={!!node.indexingFinishedAt} />
+                    <CodeIntelStateLabel
+                        state={node.state}
+                        autoIndexed={!!node.indexingFinishedAt}
+                        placeInQueue={node.placeInQueue}
+                        className="mt-2"
+                    />
+                </div>
+            </span>
+            <Link to={`./${node.id}`} className="d-flex justify-content-end align-items-center align-self-stretch p-0">
+                <Icon svgPath={mdiChevronRight} inline={false} aria-label="View details" />
+            </Link>
         </div>
-        <span className={classNames(styles.state, 'd-none d-md-inline')}>
-            <div className="d-flex flex-column align-items-center">
-                <CodeIntelStateIcon state={node.state} autoIndexed={!!node.indexingFinishedAt} />
-                <CodeIntelStateLabel
-                    state={node.state}
-                    autoIndexed={!!node.indexingFinishedAt}
-                    placeInQueue={node.placeInQueue}
-                    className="mt-2"
-                />
-            </div>
-        </span>
-        <Link to={`./${node.id}`} className="d-flex justify-content-end align-items-center align-self-stretch p-0">
-            <Icon svgPath={mdiChevronRight} inline={false} aria-label="View details" />
-        </Link>
-    </div>
-)
+    )
+}
 
-const EmptyIndex: React.FunctionComponent<{}> = () => (
-    <Text alignment="center" className="text-muted w-100 mb-0 mt-1">
-        <Icon className="mb-2" svgPath={mdiMapSearch} inline={false} aria-hidden={true} />
-        <br />
-        No indexes.
-    </Text>
-)
+const EmptyIndex: React.FunctionComponent<{}> = () => {
+    const { t } = useTranslation('enterprise/codeintel/indexes/pages')
+
+    return (
+        <Text alignment="center" className="text-muted w-100 mb-0 mt-1">
+            <Icon className="mb-2" svgPath={mdiMapSearch} inline={false} aria-hidden={true} />
+            <br />
+            {t('no-indexes-message')}
+        </Text>
+    )
+}

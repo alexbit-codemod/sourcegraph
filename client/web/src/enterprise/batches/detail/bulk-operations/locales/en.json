@@ -1,0 +1,8 @@
+{
+  "task-failed": "failed",
+  "task-complete": "complete",
+  "errors-occurred": "The following errors occured while running this task:",
+  "hidden-repository": "On hidden repository",
+  "on-repository": "  on",
+  "repository-details": "repository"
+}

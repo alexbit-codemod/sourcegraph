@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { logger } from '@sourcegraph/common'
 import { useMutation } from '@sourcegraph/http-client'
 import { Button, Modal, Input, H3, Text, ErrorAlert, Form } from '@sourcegraph/wildcard'
@@ -26,6 +28,8 @@ export interface CodyGatewayRateLimitModalProps {
 export const CodyGatewayRateLimitModal: React.FunctionComponent<
     React.PropsWithChildren<CodyGatewayRateLimitModalProps>
 > = ({ onCancel, afterSave, productSubscriptionID, current, mode }) => {
+    const { t } = useTranslation('enterprise/site-admin/dotcom/productSubscriptions')
+
     const labelId = 'codyGatewayRateLimit'
 
     const [limit, setLimit] = useState<number>(Number(current?.limit) ?? 100)
@@ -88,18 +92,9 @@ export const CodyGatewayRateLimitModal: React.FunctionComponent<
     return (
         <Modal onDismiss={onCancel} aria-labelledby={labelId}>
             <H3 id={labelId}>
-                Configure{' '}
-                {mode === 'chat'
-                    ? 'chat request'
-                    : mode === 'code'
-                    ? 'code completion request'
-                    : 'embeddings generation'}{' '}
-                rate limit for Cody Gateway
+                {t('configure-rate-limit-for-cody-gateway', { modeCode: mode === 'code', modeChat: mode === 'chat' })}
             </H3>
-            <Text>
-                Cody Gateway is a Sourcegraph managed service that allows customer instances to talk to upstream LLMs
-                and generate embeddings under our negotiated terms with third party providers in a safe manner.
-            </Text>
+            <Text>{t('cody-gateway-description')}</Text>
 
             {error && <ErrorAlert error={error} />}
 
@@ -131,21 +126,22 @@ export const CodyGatewayRateLimitModal: React.FunctionComponent<
                         required={true}
                         disabled={loading}
                         min={1}
-                        label="Rate limit interval"
-                        description="The interval is defined in seconds. See below for a pretty-printed version."
+                        label={t('rate-limit-interval')}
+                        description={t('interval-definition')}
                         value={limitInterval}
                         onChange={onChangeLimitInterval}
                         message={
                             <>
-                                {numberFormatter.format(BigInt(limit))} {mode === 'embeddings' ? 'tokens' : 'requests'}{' '}
-                                per {prettyInterval(limitInterval)}
+                                {numberFormatter.format(BigInt(limit))}
+                                {t('tokens-or-requests-per', { modeEmbeddings: mode === 'embeddings' })}
+                                {prettyInterval(limitInterval)}
                             </>
                         }
                     />
                 </div>
                 <div className="d-flex justify-content-end">
                     <Button disabled={loading} className="mr-2" onClick={onCancel} outline={true} variant="secondary">
-                        Cancel
+                        {t('cancel-button')}
                     </Button>
                     <LoaderButton
                         type="submit"
@@ -153,7 +149,7 @@ export const CodyGatewayRateLimitModal: React.FunctionComponent<
                         variant="primary"
                         loading={loading}
                         alwaysShowLabel={true}
-                        label="Save"
+                        label={t('save-button')}
                     />
                 </div>
             </Form>

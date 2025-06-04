@@ -1,0 +1,18 @@
+{
+  "loading-message": " Loading...",
+  "loading-indicator": " Loading...",
+  "make-owner": " Make owner",
+  "error-getting-history-ownership-details": "Error getting history and ownership details about this file.",
+  "own-label": " Own",
+  "no-owner-found": "No owner found",
+  "more-ownership-count": "+{{ownershipTotalCount2}} more",
+  "add-owner": " Add owner",
+  "owners-title": "Owners",
+  "contact": "Contact",
+  "owner": "Owner",
+  "reason": "Reason",
+  "actions": "Actions",
+  "inference-signals": "Inference signals",
+  "unregistered-owners-notice": "These users have viewed or contributed to this part of the codebase but are not registered owners.",
+  "owners-header": "Owners"
+}

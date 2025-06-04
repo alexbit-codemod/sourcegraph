@@ -14,6 +14,7 @@ import {
     mdiTag,
 } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 import { catchError } from 'rxjs/operators'
 
@@ -131,6 +132,8 @@ export const TreePage: FC<Props> = ({
     context,
     ...props
 }) => {
+    const { t } = useTranslation('repo/tree')
+
     const isRoot = filePath === ''
     const isPackage = useMemo(
         () => isPackageServiceType(repo?.externalRepository.serviceType),
@@ -215,136 +218,140 @@ export const TreePage: FC<Props> = ({
         return mdiSourceRepository
     }
 
-    const RootHeaderSection = (): React.ReactElement => (
-        <div className="d-flex flex-wrap justify-content-between px-0">
-            <div className={styles.header}>
-                <PageHeader className="mb-3 test-tree-page-title">
-                    <PageHeader.Heading as="h2" styleAs="h1">
-                        <Icon aria-hidden={true} svgPath={getIcon()} className="mr-2" />
-                        <span data-testid="repo-header">{displayRepoName(repo?.name || '')}</span>
-                        {repo?.isFork && (
-                            <Badge variant="outlineSecondary" className="mx-2 mt-1" data-testid="repo-fork-badge">
-                                Fork
-                            </Badge>
+    const RootHeaderSection = (): React.ReactElement => {
+        const { t } = useTranslation('repo/tree')
+
+        return (
+            <div className="d-flex flex-wrap justify-content-between px-0">
+                <div className={styles.header}>
+                    <PageHeader className="mb-3 test-tree-page-title">
+                        <PageHeader.Heading as="h2" styleAs="h1">
+                            <Icon aria-hidden={true} svgPath={getIcon()} className="mr-2" />
+                            <span data-testid="repo-header">{displayRepoName(repo?.name || '')}</span>
+                            {repo?.isFork && (
+                                <Badge variant="outlineSecondary" className="mx-2 mt-1" data-testid="repo-fork-badge">
+                                    {t('fork-action')}
+                                </Badge>
+                            )}
+                        </PageHeader.Heading>
+                    </PageHeader>
+                </div>
+                <div className={styles.menu}>
+                    <ButtonGroup>
+                        <RepoCommitsButton
+                            repoName={repo?.name || ''}
+                            repoType={repo?.sourceType || ''}
+                            revision={revision}
+                            filePath={filePath}
+                            svgPath={mdiSourceCommit}
+                            className={styles.text}
+                        />
+                        {!isPackage && (
+                            <Tooltip content="Git branches">
+                                <Button
+                                    className="flex-shrink-0"
+                                    to={`/${encodeURIPathComponent(repoName)}/-/branches`}
+                                    variant="secondary"
+                                    outline={true}
+                                    as={Link}
+                                >
+                                    <Icon aria-hidden={true} svgPath={mdiSourceBranch} />{' '}
+                                    <span className={styles.text}>{t('branches-label')}</span>
+                                </Button>
+                            </Tooltip>
                         )}
-                    </PageHeader.Heading>
-                </PageHeader>
+                        <Tooltip content={isPackage ? 'Package versions' : 'Git tags'}>
+                            <Button
+                                className="flex-shrink-0"
+                                to={`/${encodeURIPathComponent(repoName)}/-${isPackage ? '/versions' : '/tags'}`}
+                                variant="secondary"
+                                outline={true}
+                                as={Link}
+                            >
+                                <Icon aria-hidden={true} svgPath={mdiTag} />{' '}
+                                <span className={styles.text}>{isPackage ? 'Versions' : 'Tags'}</span>
+                            </Button>
+                        </Tooltip>
+                        <Tooltip content="Compare branches">
+                            <Button
+                                className="flex-shrink-0"
+                                to={
+                                    revision
+                                        ? `/${encodeURIPathComponent(repoName)}/-/compare/...${encodeURIComponent(
+                                              revision
+                                          )}`
+                                        : `/${encodeURIPathComponent(repoName)}/-/compare`
+                                }
+                                variant="secondary"
+                                outline={true}
+                                as={Link}
+                            >
+                                <Icon aria-hidden={true} svgPath={mdiHistory} />{' '}
+                                <span className={styles.text}>{t('compare-action')}</span>
+                            </Button>
+                        </Tooltip>
+                        {/** the code graph dashboard is only accessible to site admins */}
+                        {codeIntelligenceEnabled && authenticatedUser?.siteAdmin && (
+                            <Tooltip content="Code graph data">
+                                <Button
+                                    className="flex-shrink-0"
+                                    to={`/${encodeURIPathComponent(repoName)}/-/code-graph`}
+                                    variant="secondary"
+                                    outline={true}
+                                    as={Link}
+                                >
+                                    <Icon aria-hidden={true} svgPath={mdiBrain} />{' '}
+                                    <span className={styles.text}>{t('code-graph-data')}</span>
+                                </Button>
+                            </Tooltip>
+                        )}
+                        {batchChangesEnabled && !isPackage && (
+                            <Tooltip content="Batch changes">
+                                <RepoBatchChangesButton
+                                    className="flex-shrink-0"
+                                    textClassName={styles.text}
+                                    repoName={repoName}
+                                />
+                            </Tooltip>
+                        )}
+                        {showOwnership && (
+                            <Tooltip content="Repository ownership settings">
+                                <Button
+                                    className="flex-shrink-0"
+                                    to={`/${encodeURIPathComponent(repoName)}/-/own`}
+                                    variant="secondary"
+                                    outline={true}
+                                    as={Link}
+                                    onClick={() => {
+                                        props.telemetryService.log('repoPage:ownershipPage:clicked')
+                                        props.telemetryRecorder.recordEvent('repo.ownershipButton', 'click')
+                                    }}
+                                >
+                                    <Icon aria-hidden={true} svgPath={mdiAccount} />{' '}
+                                    <span className={styles.text}>{t('ownership-info')}</span>
+                                </Button>
+                            </Tooltip>
+                        )}
+                        {repo?.viewerCanAdminister && (
+                            <Tooltip content="Repository settings">
+                                <Button
+                                    className="flex-shrink-0"
+                                    to={`/${encodeURIPathComponent(repoName)}/-/settings`}
+                                    variant="secondary"
+                                    outline={true}
+                                    as={Link}
+                                    aria-label="Repository settings"
+                                >
+                                    <Icon aria-hidden={true} svgPath={mdiCog} />{' '}
+                                    <span className={styles.text}>{t('settings-menu')}</span>
+                                </Button>
+                            </Tooltip>
+                        )}
+                    </ButtonGroup>
+                </div>
             </div>
-            <div className={styles.menu}>
-                <ButtonGroup>
-                    <RepoCommitsButton
-                        repoName={repo?.name || ''}
-                        repoType={repo?.sourceType || ''}
-                        revision={revision}
-                        filePath={filePath}
-                        svgPath={mdiSourceCommit}
-                        className={styles.text}
-                    />
-                    {!isPackage && (
-                        <Tooltip content="Git branches">
-                            <Button
-                                className="flex-shrink-0"
-                                to={`/${encodeURIPathComponent(repoName)}/-/branches`}
-                                variant="secondary"
-                                outline={true}
-                                as={Link}
-                            >
-                                <Icon aria-hidden={true} svgPath={mdiSourceBranch} />{' '}
-                                <span className={styles.text}>Branches</span>
-                            </Button>
-                        </Tooltip>
-                    )}
-                    <Tooltip content={isPackage ? 'Package versions' : 'Git tags'}>
-                        <Button
-                            className="flex-shrink-0"
-                            to={`/${encodeURIPathComponent(repoName)}/-${isPackage ? '/versions' : '/tags'}`}
-                            variant="secondary"
-                            outline={true}
-                            as={Link}
-                        >
-                            <Icon aria-hidden={true} svgPath={mdiTag} />{' '}
-                            <span className={styles.text}>{isPackage ? 'Versions' : 'Tags'}</span>
-                        </Button>
-                    </Tooltip>
-                    <Tooltip content="Compare branches">
-                        <Button
-                            className="flex-shrink-0"
-                            to={
-                                revision
-                                    ? `/${encodeURIPathComponent(repoName)}/-/compare/...${encodeURIComponent(
-                                          revision
-                                      )}`
-                                    : `/${encodeURIPathComponent(repoName)}/-/compare`
-                            }
-                            variant="secondary"
-                            outline={true}
-                            as={Link}
-                        >
-                            <Icon aria-hidden={true} svgPath={mdiHistory} />{' '}
-                            <span className={styles.text}>Compare</span>
-                        </Button>
-                    </Tooltip>
-                    {/** the code graph dashboard is only accessible to site admins */}
-                    {codeIntelligenceEnabled && authenticatedUser?.siteAdmin && (
-                        <Tooltip content="Code graph data">
-                            <Button
-                                className="flex-shrink-0"
-                                to={`/${encodeURIPathComponent(repoName)}/-/code-graph`}
-                                variant="secondary"
-                                outline={true}
-                                as={Link}
-                            >
-                                <Icon aria-hidden={true} svgPath={mdiBrain} />{' '}
-                                <span className={styles.text}>Code graph data</span>
-                            </Button>
-                        </Tooltip>
-                    )}
-                    {batchChangesEnabled && !isPackage && (
-                        <Tooltip content="Batch changes">
-                            <RepoBatchChangesButton
-                                className="flex-shrink-0"
-                                textClassName={styles.text}
-                                repoName={repoName}
-                            />
-                        </Tooltip>
-                    )}
-                    {showOwnership && (
-                        <Tooltip content="Repository ownership settings">
-                            <Button
-                                className="flex-shrink-0"
-                                to={`/${encodeURIPathComponent(repoName)}/-/own`}
-                                variant="secondary"
-                                outline={true}
-                                as={Link}
-                                onClick={() => {
-                                    props.telemetryService.log('repoPage:ownershipPage:clicked')
-                                    props.telemetryRecorder.recordEvent('repo.ownershipButton', 'click')
-                                }}
-                            >
-                                <Icon aria-hidden={true} svgPath={mdiAccount} />{' '}
-                                <span className={styles.text}>Ownership</span>
-                            </Button>
-                        </Tooltip>
-                    )}
-                    {repo?.viewerCanAdminister && (
-                        <Tooltip content="Repository settings">
-                            <Button
-                                className="flex-shrink-0"
-                                to={`/${encodeURIPathComponent(repoName)}/-/settings`}
-                                variant="secondary"
-                                outline={true}
-                                as={Link}
-                                aria-label="Repository settings"
-                            >
-                                <Icon aria-hidden={true} svgPath={mdiCog} />{' '}
-                                <span className={styles.text}>Settings</span>
-                            </Button>
-                        </Tooltip>
-                    )}
-                </ButtonGroup>
-            </div>
-        </div>
-    )
+        )
+    }
 
     return (
         <div className={classNames(styles.treePage, className)}>
@@ -366,7 +373,8 @@ export const TreePage: FC<Props> = ({
 
                     {treeOrError === undefined || repo === undefined ? (
                         <div>
-                            <LoadingSpinner /> Loading files and directories
+                            <LoadingSpinner />
+                            {t('loading-files-directories')}
                         </div>
                     ) : isErrorLike(treeOrError) ? (
                         // If the tree is actually a blob, be helpful and redirect to the blob page.

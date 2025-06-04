@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { useMutation, gql } from '@sourcegraph/http-client'
@@ -40,6 +41,8 @@ export const SurveyForm: React.FunctionComponent<React.PropsWithChildren<SurveyF
     score,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('marketing/page')
+
     const navigate = useNavigate()
     const [email, setEmail] = useState('')
     const [validationError, setValidationError] = useState<Error | null>(null)
@@ -102,7 +105,7 @@ export const SurveyForm: React.FunctionComponent<React.PropsWithChildren<SurveyF
             {/* Label is associated with control through aria-labelledby */}
             {}
             <Label id="survey-form-scores" className={styles.label}>
-                How likely is it that you would recommend Sourcegraph to a friend?
+                {t('recommend-sourcegraph-friend')}
             </Label>
             <SurveyRatingRadio
                 ariaLabelledby="survey-form-scores"
@@ -123,7 +126,7 @@ export const SurveyForm: React.FunctionComponent<React.PropsWithChildren<SurveyF
             />
             <div className="form-group">
                 <Button display="block" variant="primary" type="submit" disabled={response.loading}>
-                    Submit
+                    {t('submit-button')}
                 </Button>
             </div>
             {response.loading && (
@@ -132,10 +135,7 @@ export const SurveyForm: React.FunctionComponent<React.PropsWithChildren<SurveyF
                 </div>
             )}
             <div>
-                <small>
-                    Your response to this survey will be sent to Sourcegraph, and will be visible to your Sourcegraph
-                    site admins.
-                </small>
+                <small>{t('survey-response-notice')}</small>
             </div>
         </Form>
     )

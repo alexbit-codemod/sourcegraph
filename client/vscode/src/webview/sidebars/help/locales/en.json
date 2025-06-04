@@ -1,0 +1,10 @@
+{
+  "give-feedback": "Give feedback",
+  "report-issue": "Report an issue",
+  "troubleshooting-docs": "Troubleshooting docs",
+  "create-new-account": " Create new account",
+  "sign-out-instruction": "Click button below to sign out of",
+  "vs-code-reload-notice": ". VS Code will be reloaded upon sign out.",
+  "sign-out": "Sign out",
+  "version-info": "Version v{{version}}"
+}

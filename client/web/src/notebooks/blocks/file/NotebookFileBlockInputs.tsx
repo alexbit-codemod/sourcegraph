@@ -3,6 +3,7 @@ import React, { useMemo, useState, useCallback } from 'react'
 import { EditorView } from '@codemirror/view'
 import { mdiInformationOutline } from '@mdi/js'
 import { debounce } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { createDefaultSuggestions } from '@sourcegraph/branded'
 import { isMacPlatform as isMacPlatformFunc } from '@sourcegraph/common'
@@ -47,6 +48,8 @@ const editorAttributes = [
 export const NotebookFileBlockInputs: React.FunctionComponent<
     React.PropsWithChildren<NotebookFileBlockInputsProps>
 > = ({ id, lineRange, onFileSelected, onLineRangeChange, isSourcegraphDotCom, patternType, ...inputProps }) => {
+    const { t } = useTranslation('notebooks/blocks/file')
+
     const [lineRangeInput, setLineRangeInput] = useState(serializeLineRange(lineRange))
     const debouncedOnLineRangeChange = useMemo(() => debounce(onLineRangeChange, 300), [onLineRangeChange])
 
@@ -106,13 +109,13 @@ export const NotebookFileBlockInputs: React.FunctionComponent<
         <div className={styles.fileBlockInputs}>
             <div className="text-muted mb-2">
                 <small>
-                    <Icon aria-hidden={true} svgPath={mdiInformationOutline} /> To automatically select a file, copy a
-                    Sourcegraph file URL, select the block, and paste the URL ({isMacPlatform ? '⌘' : 'Ctrl'} + v).
+                    <Icon aria-hidden={true} svgPath={mdiInformationOutline} />
+                    {t('auto-select-file-instructions', { isMacPlatform })}
                 </small>
             </div>
             <SearchTypeSuggestionsInput<PathMatch>
                 id={id}
-                label="Find a file using a Sourcegraph search query"
+                label={t('find-file-sourcegraph-query')}
                 queryPrefix="type:path"
                 fetchSuggestions={fetchFileSuggestions}
                 countSuggestions={countSuggestions}
@@ -126,8 +129,8 @@ export const NotebookFileBlockInputs: React.FunctionComponent<
                     status={InputStatus[isLineRangeValid === false ? 'error' : 'initial']}
                     value={lineRangeInput}
                     onChange={onLineRangeInputChange}
-                    placeholder="Enter a single line (1), a line range (1-10), or leave empty to show the entire file."
-                    label="Line range"
+                    placeholder={t('line-input-instructions')}
+                    label={t('line-range-label')}
                     className="mb-0"
                     error={
                         isLineRangeValid === false

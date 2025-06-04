@@ -1,6 +1,7 @@
 import { type FC, useEffect } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { useQuery } from '@sourcegraph/http-client'
 import { Container } from '@sourcegraph/wildcard'
@@ -25,6 +26,8 @@ interface Props {
 }
 
 export const PermissionsSyncStats: FC<Props> = ({ polling, filters, setFilters }) => {
+    const { t } = useTranslation('site-admin/permissions-center')
+
     const { data, startPolling, stopPolling } = useQuery<
         PermissionsSyncJobsStatsResult,
         PermissionsSyncJobsStatsVariables
@@ -46,7 +49,7 @@ export const PermissionsSyncStats: FC<Props> = ({ polling, filters, setFilters }
                         <ValueLegendItem
                             value={data.permissionsSyncingStats?.queueSize}
                             className={classNames(styles.stat)}
-                            description="Queued"
+                            description={t('status-queued')}
                             color="var(--body-color)"
                             tooltip="The number of permissions sync jobs in the queue."
                         />
@@ -54,7 +57,7 @@ export const PermissionsSyncStats: FC<Props> = ({ polling, filters, setFilters }
                             value={data.permissionsSyncingStats?.usersWithLatestJobFailing}
                             secondValue={data.site?.users.totalCount}
                             className={classNames(styles.stat)}
-                            description="Failing users"
+                            description={t('error-failing-users')}
                             color="var(--body-color)"
                             tooltip="The number of users with latest permissions sync job failing."
                             onClick={() =>
@@ -69,7 +72,7 @@ export const PermissionsSyncStats: FC<Props> = ({ polling, filters, setFilters }
                             value={data.permissionsSyncingStats?.usersWithNoPermissions}
                             secondValue={data.site?.users.totalCount}
                             className={classNames(styles.stat)}
-                            description="No perms users"
+                            description={t('error-no-permissions-users')}
                             color="var(--body-color)"
                             tooltip="The number of users with no permissions."
                         />
@@ -77,7 +80,7 @@ export const PermissionsSyncStats: FC<Props> = ({ polling, filters, setFilters }
                             value={data.permissionsSyncingStats?.usersWithStalePermissions}
                             secondValue={data.site?.users.totalCount}
                             className={classNames(styles.stat)}
-                            description="Outdated users"
+                            description={t('status-outdated-users')}
                             color="var(--body-color)"
                             tooltip="The number of users with old permissions."
                         />
@@ -85,7 +88,7 @@ export const PermissionsSyncStats: FC<Props> = ({ polling, filters, setFilters }
                             value={data.permissionsSyncingStats?.reposWithLatestJobFailing}
                             secondValue={data.repositoryStats?.total}
                             className={classNames(styles.stat)}
-                            description="Failing repos"
+                            description={t('error-failing-repositories')}
                             color="var(--body-color)"
                             tooltip="The number of repos with latest permissions sync job failing."
                             onClick={() =>
@@ -100,7 +103,7 @@ export const PermissionsSyncStats: FC<Props> = ({ polling, filters, setFilters }
                             value={data.permissionsSyncingStats?.reposWithNoPermissions}
                             secondValue={data.repositoryStats?.total}
                             className={classNames(styles.stat)}
-                            description="No perms repos"
+                            description={t('error-no-permissions-repositories')}
                             color="var(--body-color)"
                             tooltip="The number of repos with no permissions."
                         />
@@ -108,7 +111,7 @@ export const PermissionsSyncStats: FC<Props> = ({ polling, filters, setFilters }
                             value={data.permissionsSyncingStats?.reposWithStalePermissions}
                             secondValue={data.repositoryStats?.total}
                             className={classNames(styles.stat)}
-                            description="Outdated repos"
+                            description={t('status-outdated-repositories')}
                             color="var(--body-color)"
                             tooltip="The number of repos with old permissions."
                         />

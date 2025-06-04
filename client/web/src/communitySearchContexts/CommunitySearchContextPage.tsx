@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { mdiSourceRepositoryMultiple, mdiGithub, mdiGitlab, mdiBitbucket } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { catchError, startWith } from 'rxjs/operators'
 
@@ -52,6 +53,8 @@ export interface CommunitySearchContextPageProps
 export const CommunitySearchContextPage: React.FunctionComponent<
     React.PropsWithChildren<CommunitySearchContextPageProps>
 > = (props: CommunitySearchContextPageProps) => {
+    const { t } = useTranslation('communitySearchContexts')
+
     const location = useLocation()
     const navigate = useNavigate()
     const LOADING = 'loading' as const
@@ -129,7 +132,7 @@ export const CommunitySearchContextPage: React.FunctionComponent<
                            Rule: "color-contrast" (Elements must have sufficient color contrast)
                            GitHub issue: https://github.com/sourcegraph/sourcegraph/issues/33343
                           */}
-                        <span className="search-filter-keyword a11y-ignore">context:</span>
+                        <span className="search-filter-keyword a11y-ignore">{t('context-colon')}</span>
                         {props.communitySearchContextMetadata.spec}
                     </span>
                 )}
@@ -150,52 +153,60 @@ export const CommunitySearchContextPage: React.FunctionComponent<
                             {props.communitySearchContextMetadata.description}
                         </Text>
 
-                        <H2>Search examples</H2>
-                        {props.communitySearchContextMetadata.examples.map(example => (
-                            <div className="mt-3" key={example.title}>
-                                <H3 className="mb-3">{example.title}</H3>
-                                <Text>{example.description}</Text>
-                                <div className="d-flex mb-4">
-                                    <small className={classNames('form-control text-monospace ', styles.exampleBar)}>
-                                        <SyntaxHighlightedSearchQuery query={`${contextQuery} ${example.query}`} />
-                                    </small>
-                                    <div className="d-flex">
-                                        <Button
-                                            className={styles.searchButton}
-                                            aria-label="Search"
-                                            onClick={onSubmitExample(
-                                                `${contextQuery} ${example.query}`,
-                                                example.patternType
-                                            )}
-                                            variant="secondary"
-                                            size="sm"
+                        <H2>{t('search-examples')}</H2>
+                        {props.communitySearchContextMetadata.examples.map(example => {
+                            const { t } = useTranslation('communitySearchContexts')
+
+                            return (
+                                <div className="mt-3" key={example.title}>
+                                    <H3 className="mb-3">{example.title}</H3>
+                                    <Text>{example.description}</Text>
+                                    <div className="d-flex mb-4">
+                                        <small
+                                            className={classNames('form-control text-monospace ', styles.exampleBar)}
                                         >
-                                            Search
-                                        </Button>
+                                            <SyntaxHighlightedSearchQuery query={`${contextQuery} ${example.query}`} />
+                                        </small>
+                                        <div className="d-flex">
+                                            <Button
+                                                className={styles.searchButton}
+                                                aria-label="Search"
+                                                onClick={onSubmitExample(
+                                                    `${contextQuery} ${example.query}`,
+                                                    example.patternType
+                                                )}
+                                                variant="secondary"
+                                                size="sm"
+                                            >
+                                                {t('search-label')}
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            )
+                        })}
                     </div>
                     <div className={classNames('col-xs-12 col-lg-5', styles.column)}>
                         <div className="order-2-lg order-1-xs">
                             <Card className={styles.repoCard}>
                                 <H2>
                                     <Icon className="mr-2" aria-hidden={true} svgPath={mdiSourceRepositoryMultiple} />
-                                    Repositories
+                                    {t('repositories-label')}
                                 </H2>
                                 <Text>
-                                    Using the syntax{' '}
+                                    {t('using-syntax-in-query')}
                                     <Code>
                                         {/*
                                             a11y-ignore
                                             Rule: "color-contrast" (Elements must have sufficient color contrast)
                                             GitHub issue: https://github.com/sourcegraph/sourcegraph/issues/33343
                                           */}
-                                        <span className="search-filter-keyword a11y-ignore">context:</span>
+                                        <span className="search-filter-keyword a11y-ignore">
+                                            {t('context-colon-duplicate')}
+                                        </span>
                                         {props.communitySearchContextMetadata.spec}
-                                    </Code>{' '}
-                                    in a query will search these repositories:
+                                    </Code>
+                                    {t('search-repositories-description')}
                                 </Text>
                                 {searchContextOrError &&
                                     !isErrorLike(searchContextOrError) &&

@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { gql, useMutation } from '@sourcegraph/http-client'
 import { Alert, Button, Form, H3, Input, Modal, Text } from '@sourcegraph/wildcard'
 
@@ -21,6 +23,8 @@ export const AddGerritAccountModal: React.FunctionComponent<
         isOpen: boolean
     }>
 > = ({ onDidAdd, serviceID, isOpen, onDismiss }) => {
+    const { t } = useTranslation('user/settings/auth')
+
     const [addExternalAccount, { error, loading }] = useMutation<AddExternalAccountResult, AddExternalAccountVariables>(
         ADD_EXTERNAL_ACCOUNT,
         {
@@ -57,21 +61,19 @@ export const AddGerritAccountModal: React.FunctionComponent<
             onDismiss={onDismiss}
         >
             <H3 id="heading--add-gerrit-account" className="mb-4">
-                Add Gerrit account
+                {t('add-gerrit-account')}
             </H3>
             <Form onSubmit={onAccountAdd}>
                 {error && <Alert variant="danger">{error.message}</Alert>}
-                <Text id="description--add-gerrit-account">
-                    You are about to add a Gerrit account. Please enter your Gerrit HTTP credentials.
-                </Text>
-                <Input type="text" name="username" placeholder="Username" className="mb-4" />
-                <Input type="password" name="password" placeholder="Password" className="mb-4" />
+                <Text id="description--add-gerrit-account">{t('add-gerrit-account-instructions')}</Text>
+                <Input type="text" name="username" placeholder={t('username-label')} className="mb-4" />
+                <Input type="password" name="password" placeholder={t('password-label')} className="mb-4" />
                 <div className="d-flex justify-content-end">
                     <Button className="mr-2" disabled={loading} onClick={onDismiss} outline={true} variant="secondary">
-                        Cancel
+                        {t('cancel-button')}
                     </Button>
                     <Button type="submit" disabled={loading} variant="primary">
-                        Add account
+                        {t('add-account-button')}
                     </Button>
                 </div>
             </Form>

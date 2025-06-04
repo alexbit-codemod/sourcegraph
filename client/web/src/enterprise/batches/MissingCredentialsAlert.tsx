@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { pluralize } from '@sourcegraph/common'
 import { gql } from '@sourcegraph/http-client'
 import { Alert, Link, Text } from '@sourcegraph/wildcard'
@@ -27,6 +29,8 @@ export interface MissingCredentialsAlertProps {
 export const MissingCredentialsAlert: React.FunctionComponent<
     React.PropsWithChildren<MissingCredentialsAlertProps>
 > = ({ viewerBatchChangesCodeHosts, authenticatedUser }) => {
+    const { t } = useTranslation('enterprise/batches')
+
     if (viewerBatchChangesCodeHosts.totalCount === 0) {
         return <></>
     }
@@ -34,7 +38,7 @@ export const MissingCredentialsAlert: React.FunctionComponent<
         <Alert variant="warning">
             <Text>
                 <strong>
-                    You don't have credentials configured for{' '}
+                    {t('no-credentials-configured')}
                     {pluralize('this code host', viewerBatchChangesCodeHosts.totalCount, 'these code hosts')}
                 </strong>
             </Text>
@@ -44,11 +48,18 @@ export const MissingCredentialsAlert: React.FunctionComponent<
                 ))}
             </ul>
             <Text className="mb-0">
-                Credentials are required to publish changesets on code hosts. Configure them in your{' '}
-                <Link to={`${authenticatedUser.url}/settings/batch-changes`} target="_blank" rel="noopener">
-                    batch changes user settings
-                </Link>{' '}
-                to publish changesets from this batch change.
+                <Trans
+                    i18nKey="credentials-required-to-publish-changesets"
+                    components={{
+                        '0': (
+                            <Link
+                                to={`${authenticatedUser.url}/settings/batch-changes`}
+                                target="_blank"
+                                rel="noopener"
+                            />
+                        ),
+                    }}
+                />
             </Text>
         </Alert>
     )

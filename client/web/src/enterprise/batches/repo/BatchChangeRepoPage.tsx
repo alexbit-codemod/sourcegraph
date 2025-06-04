@@ -1,6 +1,7 @@
 import { type FC, useMemo, useEffect } from 'react'
 
 import VisuallyHidden from '@reach/visually-hidden'
+import { useTranslation } from 'react-i18next'
 
 import { pluralize } from '@sourcegraph/common'
 import { displayRepoName } from '@sourcegraph/shared/src/components/RepoLink'
@@ -49,6 +50,8 @@ export const BatchChangeRepoPage: FC<BatchChangeRepoPageProps> = ({
     queryRepoBatchChangeStats = _queryRepoBatchChangeStats,
     ...props
 }) => {
+    const { t } = useTranslation('enterprise/batches/repo')
+
     const repoDisplayName = displayRepoName(repo.name)
 
     const stats: RepoBatchChangeStats | undefined = useObservable(
@@ -70,7 +73,7 @@ export const BatchChangeRepoPage: FC<BatchChangeRepoPageProps> = ({
 
     return (
         <Page>
-            <PageTitle title="Batch Changes" />
+            <PageTitle title={t('batch-changes-title')} />
             <PageHeader
                 path={[{ icon: BatchChangesIcon, text: 'Batch Changes' }]}
                 headingElement="h1"
@@ -96,7 +99,9 @@ export const BatchChangeRepoPage: FC<BatchChangeRepoPageProps> = ({
             ) : null}
             {hasChangesets ? (
                 <Text>
-                    Batch changes has created {stats?.changesetsStats.total} changesets on {repoDisplayName}
+                    {t('batch-changes-created-message')}
+                    {stats?.changesetsStats.total}
+                    {t('changesets-on-repo', { repoDisplayName })}
                 </Text>
             ) : (
                 <div className="mb-3" />
@@ -120,40 +125,48 @@ interface StatsBarProps {
 
 const StatsBar: React.FunctionComponent<React.PropsWithChildren<StatsBarProps>> = ({
     stats: { total, draft, open, unpublished, closed, merged },
-}) => (
-    <div className="d-flex flex-wrap align-items-center">
-        <BatchChangeStatsTotalAction count={total} />
-        <ChangesetStatusOpen
-            className={ACTION_CLASSNAMES}
-            label={
-                <H4 className="font-weight-normal text-muted m-0">
-                    {draft + open} <VisuallyHidden>{pluralize('changeset', draft + open)}</VisuallyHidden> open
-                </H4>
-            }
-        />
-        <ChangesetStatusUnpublished
-            className={ACTION_CLASSNAMES}
-            label={
-                <H4 className="font-weight-normal text-muted m-0">
-                    {unpublished} <VisuallyHidden>{pluralize('changeset', unpublished)}</VisuallyHidden> unpublished
-                </H4>
-            }
-        />
-        <ChangesetStatusClosed
-            className={ACTION_CLASSNAMES}
-            label={
-                <H4 className="font-weight-normal text-muted m-0">
-                    {closed} <VisuallyHidden>{pluralize('changeset', closed)}</VisuallyHidden> closed
-                </H4>
-            }
-        />
-        <ChangesetStatusMerged
-            className={ACTION_CLASSNAMES}
-            label={
-                <H4 className="font-weight-normal text-muted m-0">
-                    {merged} <VisuallyHidden>{pluralize('changeset', merged)}</VisuallyHidden> merged
-                </H4>
-            }
-        />
-    </div>
-)
+}) => {
+    const { t } = useTranslation('enterprise/batches/repo')
+
+    return (
+        <div className="d-flex flex-wrap align-items-center">
+            <BatchChangeStatsTotalAction count={total} />
+            <ChangesetStatusOpen
+                className={ACTION_CLASSNAMES}
+                label={
+                    <H4 className="font-weight-normal text-muted m-0">
+                        {draft + open} <VisuallyHidden>{pluralize('changeset', draft + open)}</VisuallyHidden>
+                        {t('status-open')}
+                    </H4>
+                }
+            />
+            <ChangesetStatusUnpublished
+                className={ACTION_CLASSNAMES}
+                label={
+                    <H4 className="font-weight-normal text-muted m-0">
+                        {unpublished} <VisuallyHidden>{pluralize('changeset', unpublished)}</VisuallyHidden>
+                        {t('status-unpublished')}
+                    </H4>
+                }
+            />
+            <ChangesetStatusClosed
+                className={ACTION_CLASSNAMES}
+                label={
+                    <H4 className="font-weight-normal text-muted m-0">
+                        {closed} <VisuallyHidden>{pluralize('changeset', closed)}</VisuallyHidden>
+                        {t('status-closed')}
+                    </H4>
+                }
+            />
+            <ChangesetStatusMerged
+                className={ACTION_CLASSNAMES}
+                label={
+                    <H4 className="font-weight-normal text-muted m-0">
+                        {merged} <VisuallyHidden>{pluralize('changeset', merged)}</VisuallyHidden>
+                        {t('status-merged')}
+                    </H4>
+                }
+            />
+        </div>
+    )
+}

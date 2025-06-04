@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react'
 
 import { mdiMenu } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Link, Icon, Button } from '@sourcegraph/wildcard'
 
@@ -35,6 +36,8 @@ export const SiteAdminSidebar: React.FunctionComponent<React.PropsWithChildren<S
     groups,
     ...props
 }) => {
+    const { t } = useTranslation('site-admin')
+
     const [isMobileExpanded, setIsMobileExpanded] = useState(false)
     const collapseMobileSidebar = useCallback((): void => setIsMobileExpanded(false), [])
 
@@ -42,7 +45,7 @@ export const SiteAdminSidebar: React.FunctionComponent<React.PropsWithChildren<S
         <>
             <Button className="d-sm-none align-self-start mb-3" onClick={() => setIsMobileExpanded(!isMobileExpanded)}>
                 <Icon aria-hidden={true} svgPath={mdiMenu} className="mr-2" />
-                {isMobileExpanded ? 'Hide' : 'Show'} menu
+                {t('toggle-menu', { isMobileExpanded })}
             </Button>
             <SidebarGroup className={classNames(className, 'd-sm-block', !isMobileExpanded && 'd-none')}>
                 <ul className="list-group">

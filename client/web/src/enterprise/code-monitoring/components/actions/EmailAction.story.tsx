@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 import sinon from 'sinon'
 
 import { H2 } from '@sourcegraph/wildcard'
@@ -37,30 +38,34 @@ window.context.emailEnabled = true
 
 export const EmailActionStory: StoryFn = () => (
     <WebStory>
-        {() => (
-            <>
-                <H2>Action card disabled</H2>
-                <EmailAction {...defaultProps} disabled={true} />
+        {() => {
+            const { t } = useTranslation('enterprise/code-monitoring/components/actions')
 
-                <H2>Closed, not populated</H2>
-                <EmailAction {...defaultProps} />
+            return (
+                <>
+                    <H2>{t('action-card-disabled')}</H2>
+                    <EmailAction {...defaultProps} disabled={true} />
 
-                <H2>Open, not populated</H2>
-                <EmailAction {...defaultProps} _testStartOpen={true} />
+                    <H2>{t('closed-not-populated')}</H2>
+                    <EmailAction {...defaultProps} />
 
-                <H2>Closed, populated, enabled</H2>
-                <EmailAction {...defaultProps} action={action} />
+                    <H2>{t('open-not-populated')}</H2>
+                    <EmailAction {...defaultProps} _testStartOpen={true} />
 
-                <H2>Open, populated, enabled</H2>
-                <EmailAction {...defaultProps} _testStartOpen={true} action={action} />
+                    <H2>{t('closed-populated-enabled')}</H2>
+                    <EmailAction {...defaultProps} action={action} />
 
-                <H2>Closed, populated, disabled</H2>
-                <EmailAction {...defaultProps} action={{ ...action, enabled: false }} />
+                    <H2>{t('open-populated-enabled')}</H2>
+                    <EmailAction {...defaultProps} _testStartOpen={true} action={action} />
 
-                <H2>Open, populated, disabled</H2>
-                <EmailAction {...defaultProps} _testStartOpen={true} action={{ ...action, enabled: false }} />
-            </>
-        )}
+                    <H2>{t('closed-populated-disabled')}</H2>
+                    <EmailAction {...defaultProps} action={{ ...action, enabled: false }} />
+
+                    <H2>{t('open-populated-disabled')}</H2>
+                    <EmailAction {...defaultProps} _testStartOpen={true} action={{ ...action, enabled: false }} />
+                </>
+            )
+        }}
     </WebStory>
 )
 

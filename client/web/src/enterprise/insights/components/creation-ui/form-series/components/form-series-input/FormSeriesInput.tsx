@@ -1,6 +1,7 @@
 import type { FC, ReactNode } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { noop } from 'rxjs'
 
 import { SearchPatternType } from '@sourcegraph/shared/src/graphql-operations'
@@ -67,6 +68,8 @@ interface FormSeriesInputProps {
 }
 
 export const FormSeriesInput: FC<FormSeriesInputProps> = props => {
+    const { t } = useTranslation('enterprise/insights/components/creation-ui/form-series/components/form-series-input')
+
     const {
         index,
         series,
@@ -142,27 +145,32 @@ export const FormSeriesInput: FC<FormSeriesInputProps> = props => {
     return (
         <Card data-testid="series-form" ref={ref} className={classNames('d-flex flex-column', className)}>
             <Input
-                label="Name"
+                label={t('name-label')}
                 required={true}
                 autoFocus={autofocus}
-                placeholder="Example: Function component"
+                placeholder={t('example-function-component')}
                 message="Name shown in the legend and tooltip"
                 {...getDefaultInputProps(nameField)}
             />
 
             <Input
-                label="Search query"
+                label={t('search-query')}
                 required={true}
                 as={InsightQueryInput}
                 repoQuery={repoQuery}
                 repositories={repositories}
                 patternType={getQueryPatternTypeFilter(queryField.input.value, defaultPatternType)}
-                placeholder="Example: patternType:regexp const\s\w+:\s(React\.)?FunctionComponent"
+                placeholder={t('example-regexp-pattern')}
                 message={
                     queryFieldDescription ?? (
                         <span>
-                            Do not include <Code>context:</Code> <Code>repo:</Code> or <Code>rev:</Code> filters; if
-                            needed, <Code>repo:</Code> will be added automatically.
+                            {t('do-not-include')}
+                            <Code>{t('context-label')}</Code> <Code>{t('repo-label')}</Code>
+                            {t('or-label')}
+                            <Code>{t('rev-label')}</Code>
+                            {t('filters-note')}
+                            <Code>{t('repo-label-duplicate')}</Code>
+                            {t('automatic-addition-note')}
                         </span>
                     )
                 }
@@ -172,7 +180,7 @@ export const FormSeriesInput: FC<FormSeriesInputProps> = props => {
 
             <FormColorInput
                 name={`color group of ${index} series`}
-                title="Color"
+                title={t('color-label')}
                 className="mt-4"
                 value={colorField.input.value}
                 onChange={colorField.input.onChange}
@@ -185,12 +193,12 @@ export const FormSeriesInput: FC<FormSeriesInputProps> = props => {
                     variant="secondary"
                     onClick={handleSubmit}
                 >
-                    Done
+                    {t('done-message')}
                 </Button>
 
                 {cancel && (
                     <Button type="button" onClick={onCancel} variant="secondary" outline={true} className="ml-2">
-                        Cancel
+                        {t('cancel-message')}
                     </Button>
                 )}
             </div>

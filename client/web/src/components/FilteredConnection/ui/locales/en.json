@@ -1,0 +1,6 @@
+{
+  "show-more": "Show more",
+  "matching-connection-query": "  matching <0>{{connectionQuery}}</0>",
+  "no-plural-noun": "No {{pluralNoun}}",
+  "matching-connection-query-strong": "matching <0>{{connectionQuery}}</0>"
+}

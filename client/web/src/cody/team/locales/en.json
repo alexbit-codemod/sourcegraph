@@ -1,0 +1,22 @@
+{
+  "manage-cody-team": "Manage Cody team",
+  "manage-subscription": "Manage subscription",
+  "add-seats": " Add seats",
+  "manage-team": " Manage team",
+  "team-data-load-error": "We couldn't load team data this time. Please try a bit later.",
+  "cody-teams-seats-purchased": "{{newSeatsPurchased}} Cody teams seats purchased!",
+  "invited-users-info": "Invited users will receive unlimited autocompletions and unlimited chat messages.",
+  "cancel-button": "Cancel",
+  "team-members-title": "Team members",
+  "manage-users-description": "Manage invited and active users",
+  "avatar-label": "avatar",
+  "admin-label": "admin",
+  "revoke-admin-button": "Revoke admin",
+  "make-admin-button": "Make admin",
+  "remove-button": "Remove",
+  "invited-label": "invited",
+  "admin-status-label": "admin",
+  "invite-sent-message": "Invite sent {{formatInviteDateInviteSentAt}}",
+  "revoke-button": "Revoke",
+  "resend-invite-button": "Re-send invite"
+}

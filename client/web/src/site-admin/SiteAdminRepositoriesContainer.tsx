@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 
 import { isEqual } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { useQuery } from '@sourcegraph/http-client'
@@ -139,6 +140,8 @@ const FILTERS: Filter[] = [
 export const SiteAdminRepositoriesContainer: React.FunctionComponent<{ alwaysPoll?: boolean }> = ({
     alwaysPoll = false,
 }) => {
+    const { t } = useTranslation('site-admin')
+
     const {
         data,
         loading: repoStatsLoading,
@@ -366,7 +369,7 @@ export const SiteAdminRepositoriesContainer: React.FunctionComponent<{ alwaysPol
                         <Input
                             type="search"
                             className="flex-1 md-ml-5 mb-1"
-                            placeholder="Search repositories..."
+                            placeholder={t('search-repositories-placeholder')}
                             name="query"
                             value={searchQuery}
                             onChange={event => setSearchQuery(event.currentTarget.value)}
@@ -392,7 +395,7 @@ export const SiteAdminRepositoriesContainer: React.FunctionComponent<{ alwaysPol
                         {...paginationProps}
                         className="mt-4"
                         totalCount={connection?.totalCount ?? null}
-                        totalLabel="repositories"
+                        totalLabel={t('repositories-label')}
                     />
                 </Container>
             )}

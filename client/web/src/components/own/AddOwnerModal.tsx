@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 import type { ApolloError } from '@apollo/client/errors'
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { useMutation } from '@sourcegraph/http-client'
@@ -30,6 +31,8 @@ export const AddOwnerModal: React.FunctionComponent<React.PropsWithChildren<AddO
     path,
     onCancel,
 }) => {
+    const { t } = useTranslation('components/own')
+
     const labelId = 'addOwner'
     const [selectedUser, setSelectedUser] = useState<Scalars['ID']>('')
     const [selectedTeam, setSelectedTeam] = useState<Scalars['ID']>('')
@@ -62,7 +65,7 @@ export const AddOwnerModal: React.FunctionComponent<React.PropsWithChildren<AddO
 
     return (
         <Modal onDismiss={onCancel} aria-labelledby={labelId}>
-            <H3 id={labelId}>Add owner</H3>
+            <H3 id={labelId}>{t('add-owner')}</H3>
 
             {error && <ErrorAlert error={error} />}
 
@@ -74,7 +77,7 @@ export const AddOwnerModal: React.FunctionComponent<React.PropsWithChildren<AddO
                 }}
             >
                 <Label htmlFor="add-owner--owner" className="mt-2">
-                    New owner
+                    {t('new-owner')}
                 </Label>
                 <div className="mb-3">
                     <UserTeamSelect
@@ -92,7 +95,7 @@ export const AddOwnerModal: React.FunctionComponent<React.PropsWithChildren<AddO
                         outline={true}
                         variant="secondary"
                     >
-                        Cancel
+                        {t('cancel')}
                     </Button>
                     <LoaderButton
                         type="submit"
@@ -100,7 +103,7 @@ export const AddOwnerModal: React.FunctionComponent<React.PropsWithChildren<AddO
                         loading={loading || teamLoading}
                         disabled={loading || teamLoading || (selectedUser === '' && selectedTeam === '')}
                         alwaysShowLabel={true}
-                        label="Add owner"
+                        label={t('add-owner-quote')}
                     />
                 </div>
             </Form>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { mdiSourceRepository } from '@mdi/js'
 import type { Decorator, Meta } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { BrandedStory } from '../../stories'
 import { Grid } from '../Grid'
@@ -51,20 +52,26 @@ const DEMO_CONTACT_SUGGESTIONS = [
     { id: 'item_007', name: 'Mahatma Gandhi' },
 ]
 
-export const MultiComboboxDemo = () => (
-    <>
-        <H1>MultiCombobox UI</H1>
-        <Grid columnCount={2}>
-            <MultiComboboxWithPopover />
-            <MultiComboboxWithPermanentItems />
-            <MultiComboboxWithPlainList />
-            <MultiComboboxWithAsyncSearch />
-            <MultiComboboxWithCustomOptionUI />
-        </Grid>
-    </>
-)
+export const MultiComboboxDemo = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Combobox')
+
+    return (
+        <>
+            <H1>{t('multi-combobox-ui')}</H1>
+            <Grid columnCount={2}>
+                <MultiComboboxWithPopover />
+                <MultiComboboxWithPermanentItems />
+                <MultiComboboxWithPlainList />
+                <MultiComboboxWithAsyncSearch />
+                <MultiComboboxWithCustomOptionUI />
+            </Grid>
+        </>
+    )
+}
 
 function MultiComboboxWithPopover() {
+    const { t } = useTranslation('../../wildcard/src/components/Combobox')
+
     const [selectedItems, setSelectedItems] = useState<Item[]>([
         { id: 'item_004', name: 'Joan of Arc' },
         { id: 'item_006', name: 'Ludwig van Beethoven' },
@@ -82,8 +89,8 @@ function MultiComboboxWithPopover() {
             onSelectedItemsChange={setSelectedItems}
             className="mb-4"
         >
-            <MultiComboboxInput placeholder="Search assignee" />
-            <small className="text-muted pl-2">Focus the field in order to see option list with suggestions</small>
+            <MultiComboboxInput placeholder={t('search-assignee-placeholder')} />
+            <small className="text-muted pl-2">{t('focus-field-suggestions')}</small>
 
             <MultiComboboxPopover>
                 <MultiComboboxList items={suggestions}>
@@ -103,6 +110,8 @@ interface MaybePermanentItem extends Item {
 }
 
 function MultiComboboxWithPermanentItems() {
+    const { t } = useTranslation('../../wildcard/src/components/Combobox')
+
     const [selectedItems, setSelectedItems] = useState<MaybePermanentItem[]>([
         { id: 'item_001', name: 'Albert Einstein' },
         { id: 'item_002', name: 'Charles Darwin' },
@@ -123,10 +132,8 @@ function MultiComboboxWithPermanentItems() {
             onSelectedItemsChange={setSelectedItems}
             className="mb-4"
         >
-            <MultiComboboxInput placeholder="Search assignee" />
-            <small className="text-muted pl-2">
-                Selected items can be made permanent. These items will always appear at the beginning of the input list.
-            </small>
+            <MultiComboboxInput placeholder={t('search-assignee-placeholder-duplicate')} />
+            <small className="text-muted pl-2">{t('selected-items-permanent')}</small>
 
             <MultiComboboxPopover>
                 <MultiComboboxList items={suggestions}>
@@ -142,6 +149,8 @@ function MultiComboboxWithPermanentItems() {
 }
 
 function MultiComboboxWithPlainList() {
+    const { t } = useTranslation('../../wildcard/src/components/Combobox')
+
     const [selectedItems, setSelectedItems] = useState<Item[]>([
         { id: 'item_004', name: 'Joan of Arc' },
         { id: 'item_006', name: 'Ludwig van Beethoven' },
@@ -158,8 +167,8 @@ function MultiComboboxWithPlainList() {
             getItemName={item => item.name}
             onSelectedItemsChange={setSelectedItems}
         >
-            <MultiComboboxInput placeholder="Search assignee" />
-            <small className="text-muted pl-2">Suggestion list could be rendered without popover UI</small>
+            <MultiComboboxInput placeholder={t('search-assignee-placeholder-duplicate-2')} />
+            <small className="text-muted pl-2">{t('suggestion-list-without-popover')}</small>
 
             <MultiComboboxList items={suggestions} className="mt-2">
                 {items => items.map(item => <MultiComboboxOption key={item.id} value={item.name} />)}
@@ -214,6 +223,8 @@ const DEMO_CONTACT_SUGGESTIONS_WITH_DESCRIPTION: ExtendedItem[] = [
 ]
 
 function MultiComboboxWithCustomOptionUI() {
+    const { t } = useTranslation('../../wildcard/src/components/Combobox')
+
     const [selectedItems, setSelectedItems] = useState<ExtendedItem[]>([
         DEMO_CONTACT_SUGGESTIONS_WITH_DESCRIPTION[0],
         DEMO_CONTACT_SUGGESTIONS_WITH_DESCRIPTION[1],
@@ -230,8 +241,8 @@ function MultiComboboxWithCustomOptionUI() {
             getItemName={item => item.name}
             onSelectedItemsChange={setSelectedItems}
         >
-            <MultiComboboxInput placeholder="Search assignee" />
-            <small className="text-muted pl-2">You can have any layout for suggestion elements</small>
+            <MultiComboboxInput placeholder={t('search-assignee-placeholder-duplicate-3')} />
+            <small className="text-muted pl-2">{t('custom-layout-suggestion-elements')}</small>
 
             <MultiComboboxList items={suggestions} className="mt-2">
                 {items => items.map((item, index) => <CustomOption key={item.id} item={item} index={index} />)}
@@ -259,6 +270,8 @@ function CustomOption(props: CustomOptionProps) {
 }
 
 function MultiComboboxWithAsyncSearch() {
+    const { t } = useTranslation('../../wildcard/src/components/Combobox')
+
     const [search, setSearch] = useState<string>('')
     const [selectedItems, setSelectedItems] = useState<ExtendedItem[]>([
         DEMO_CONTACT_SUGGESTIONS_WITH_DESCRIPTION[0],
@@ -280,11 +293,11 @@ function MultiComboboxWithAsyncSearch() {
         >
             <MultiComboboxInput
                 value={search}
-                placeholder="Search assignee"
+                placeholder={t('search-assignee-placeholder-duplicate-4')}
                 onChange={event => setSearch(event.target.value)}
                 status={loading ? 'loading' : 'initial'}
             />
-            <small className="text-muted pl-2">You can connect any search engine on consumer level</small>
+            <small className="text-muted pl-2">{t('connect-search-engine-consumer')}</small>
 
             <MultiComboboxPopover className={styles.asyncSearchPopover}>
                 <MultiComboboxList items={suggestionsWithExcludes}>

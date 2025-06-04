@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 
 import { mdiAlertCircle, mdiChevronDown, mdiChevronUp, mdiOpenInNew } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { pluralize } from '@sourcegraph/common'
@@ -27,6 +28,8 @@ export const TriggerEvent: React.FunctionComponent<
         now?: () => Date
     }>
 > = ({ triggerEvent, startOpen = false, now }) => {
+    const { t } = useTranslation('enterprise/code-monitoring/components/logs')
+
     const [expanded, setExpanded] = useState(startOpen)
 
     const toggleExpanded = useCallback(() => setExpanded(expanded => !expanded), [])
@@ -91,7 +94,9 @@ export const TriggerEvent: React.FunctionComponent<
                         rel="noopener noreferrer"
                         className="font-weight-normal ml-2"
                     >
-                        {triggerEvent.resultCount} new {pluralize('result', triggerEvent.resultCount)}{' '}
+                        {triggerEvent.resultCount}
+                        {t('new-fragment')}
+                        {pluralize('result', triggerEvent.resultCount)}{' '}
                         <Icon aria-label=". Open in a new tab" svgPath={mdiOpenInNew} />
                     </Link>
                 )}
@@ -101,7 +106,7 @@ export const TriggerEvent: React.FunctionComponent<
                     <CollapsibleDetailsWithStatus
                         status={triggerEvent.status}
                         message={getTriggerEventMessage()}
-                        title="Monitor trigger"
+                        title={t('monitor-trigger')}
                         startOpen={startOpen}
                     />
 

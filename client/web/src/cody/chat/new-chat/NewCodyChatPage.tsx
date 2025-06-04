@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 
 import { CodyWebHistory, CodyWebChatProvider } from 'cody-web-experimental'
+import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 
 import { ButtonLink, PageHeader, ProductStatusBadge, Text } from '@sourcegraph/wildcard'
@@ -22,39 +23,50 @@ interface NewCodyChatPageProps {
 }
 
 export const NewCodyChatPage: FC<NewCodyChatPageProps> = props => {
+    const { t } = useTranslation('cody/chat/new-chat')
+
     const { isSourcegraphDotCom } = props
 
     return (
         <Page className={styles.root}>
-            <PageTitle title="Cody Chat" />
+            <PageTitle title={t('cody-chat-title')} />
 
             <CodyPageHeader isSourcegraphDotCom={isSourcegraphDotCom} className={styles.pageHeader} />
 
             <div className={styles.chatContainer}>
                 <CodyWebChatProvider accessToken="" serverEndpoint={window.location.origin}>
                     <CodyWebHistory>
-                        {history => (
-                            <div className={styles.chatHistory}>
-                                {history.loading && (
-                                    <>
-                                        <Skeleton />
-                                        <Skeleton />
-                                        <Skeleton />
-                                    </>
-                                )}
-                                {history.error && <Text>Error: {history.error.message}</Text>}
+                        {history => {
+                            const { t } = useTranslation('cody/chat/new-chat')
 
-                                {!history.loading && !history.error && (
-                                    <ChatHistoryList
-                                        chats={history.chats}
-                                        isSelectedChat={history.isSelectedChat}
-                                        onChatSelect={history.selectChat}
-                                        onChatDelete={history.deleteChat}
-                                        onChatCreate={history.createNewChat}
-                                    />
-                                )}
-                            </div>
-                        )}
+                            return (
+                                <div className={styles.chatHistory}>
+                                    {history.loading && (
+                                        <>
+                                            <Skeleton />
+                                            <Skeleton />
+                                            <Skeleton />
+                                        </>
+                                    )}
+                                    {history.error && (
+                                        <Text>
+                                            {t('error-message-prefix')}
+                                            {history.error.message}
+                                        </Text>
+                                    )}
+
+                                    {!history.loading && !history.error && (
+                                        <ChatHistoryList
+                                            chats={history.chats}
+                                            isSelectedChat={history.isSelectedChat}
+                                            onChatSelect={history.selectChat}
+                                            onChatDelete={history.deleteChat}
+                                            onChatCreate={history.createNewChat}
+                                        />
+                                    )}
+                                </div>
+                            )
+                        }}
                     </CodyWebHistory>
                     <ChatUi className={styles.chat} />
                 </CodyWebChatProvider>
@@ -69,6 +81,8 @@ interface CodyPageHeaderProps {
 }
 
 const CodyPageHeader: FC<CodyPageHeaderProps> = props => {
+    const { t } = useTranslation('cody/chat/new-chat')
+
     const { isSourcegraphDotCom, className } = props
 
     const codyDashboardLink = isSourcegraphDotCom ? CodyProRoutes.Manage : PageRoutes.CodyDashboard
@@ -83,10 +97,10 @@ const CodyPageHeader: FC<CodyPageHeaderProps> = props => {
             actions={
                 <div className="d-flex flex-gap-1">
                     <ButtonLink variant="link" to={codyDashboardLink}>
-                        Editor extensions
+                        {t('editor-extensions-title')}
                     </ButtonLink>
                     <ButtonLink variant="secondary" to={codyDashboardLink}>
-                        Dashboard
+                        {t('dashboard-title')}
                     </ButtonLink>
                 </div>
             }
@@ -94,7 +108,7 @@ const CodyPageHeader: FC<CodyPageHeaderProps> = props => {
             <PageHeader.Heading as="h2" styleAs="h1">
                 <PageHeader.Breadcrumb icon={CodyColorIcon}>
                     <div className="d-inline-flex align-items-center">
-                        Cody Chat
+                        {t('cody-chat-section')}
                         <ProductStatusBadge status="beta" className="ml-2" />
                     </div>
                 </PageHeader.Breadcrumb>

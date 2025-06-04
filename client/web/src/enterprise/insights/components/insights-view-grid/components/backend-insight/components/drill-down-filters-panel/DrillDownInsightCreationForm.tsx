@@ -1,5 +1,7 @@
 import type { FunctionComponent } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import {
     Button,
     Input,
@@ -32,6 +34,10 @@ interface DrillDownInsightCreationFormProps {
 }
 
 export const DrillDownInsightCreationForm: FunctionComponent<DrillDownInsightCreationFormProps> = props => {
+    const { t } = useTranslation(
+        'enterprise/insights/components/insights-view-grid/components/backend-insight/components/drill-down-filters-panel'
+    )
+
     const { className, onCreateInsight, onCancel } = props
 
     const { formAPI, ref, handleSubmit } = useForm({
@@ -48,14 +54,14 @@ export const DrillDownInsightCreationForm: FunctionComponent<DrillDownInsightCre
     return (
         // eslint-disable-next-line react/forbid-elements
         <form ref={ref} onSubmit={handleSubmit} noValidate={true} className={className}>
-            <H3 className="mb-3">Save as new view</H3>
+            <H3 className="mb-3">{t('save-as-new-view')}</H3>
 
             <Input
-                label="Name"
+                label={t('name-label')}
                 autoFocus={true}
                 required={true}
                 message="Shown as the title for your insight"
-                placeholder="Example: Migration to React function components"
+                placeholder={t('example-migration-to-react')}
                 {...getDefaultInputProps(insightName)}
             />
 
@@ -65,7 +71,7 @@ export const DrillDownInsightCreationForm: FunctionComponent<DrillDownInsightCre
                 )}
 
                 <Button type="reset" variant="secondary" className="ml-auto mr-2" onClick={onCancel}>
-                    Cancel
+                    {t('cancel-button')}
                 </Button>
 
                 <LoaderButton

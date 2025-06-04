@@ -1,0 +1,11 @@
+{
+  "account-created-for-user-link": "Account created for <0>{{username}}</0>.",
+  "not-yet-synced-from-code-host": "Not yet synced from code host.",
+  "last-synced-time": "Last synced",
+  "next-sync-time": ". Next sync time:",
+  "size-info": " . Size:",
+  "no-update-scheduled": "No update scheduled",
+  "shard-info": "Shard:",
+  "shard-label": "  Shard:",
+  "not-assigned": "not assigned"
+}

@@ -1,0 +1,8 @@
+{
+  "small-icon": "Small Icon",
+  "medium-icon": "Medium Icon",
+  "legacy-icon": "Legacy",
+  "icon": " Icon",
+  "new-icon": "New",
+  "mdi-js": "@mdi/js"
+}

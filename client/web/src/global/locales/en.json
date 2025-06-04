@@ -1,0 +1,8 @@
+{
+  "warning-proxied-api-data": "<0>Warning!</0> This build uses data from the proxied API: <1>{{processEnvSourcegraphApiUrl}}</1>",
+  "global-alert": "Global Alert",
+  "alert-description": "These alerts map to the",
+  "backend-api-response": " returned from the backend API",
+  "variants-title": "Variants",
+  "dismissible-alert": "Dismissible"
+}

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { TeamAvatar } from '@sourcegraph/shared/src/components/TeamAvatar'
 import { UserAvatar } from '@sourcegraph/shared/src/components/UserAvatar'
@@ -44,6 +45,8 @@ export const OwnerSearchResult: React.FunctionComponent<OwnerSearchResultProps> 
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/components')
+
     const displayName = useMemo(() => {
         let displayName = ''
         if (result.type === 'person') {
@@ -157,19 +160,17 @@ export const OwnerSearchResult: React.FunctionComponent<OwnerSearchResultProps> 
                 data-testid="owner-search-result"
             >
                 <small className={resultStyles.matchType}>
-                    <span>Owner match</span>
+                    <span>{t('owner-match')}</span>
                     {fileSearchLink && (
                         <Link to={fileSearchLink} className={styles.filesLink}>
-                            Show files
+                            {t('show-files')}
                         </Link>
                     )}
                 </small>
                 {result.type === 'person' && !result.user && (
                     <>
                         <div className={resultStyles.dividerVertical} />
-                        <small className="d-block font-italic">
-                            This owner is not associated with any Sourcegraph user or team.
-                        </small>
+                        <small className="d-block font-italic">{t('owner-not-associated-with-user-or-team')}</small>
                     </>
                 )}
             </div>

@@ -3,6 +3,7 @@ import React, { useState, useCallback } from 'react'
 import { mdiChevronDown, mdiChevronUp } from '@mdi/js'
 import classNames from 'classnames'
 import prettyBytes from 'pretty-bytes'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import { dirname } from '@sourcegraph/common'
@@ -35,6 +36,8 @@ export const FileDiffNode: React.FunctionComponent<React.PropsWithChildren<FileD
     persistLines,
     diffMode = 'unified',
 }) => {
+    const { t } = useTranslation('components/diff')
+
     const location = useLocation()
     const [expanded, setExpanded] = useState<boolean>(true)
     const [renderDeleted, setRenderDeleted] = useState<boolean>(false)
@@ -105,12 +108,12 @@ export const FileDiffNode: React.FunctionComponent<React.PropsWithChildren<FileD
                     <div className={classNames('align-items-baseline', styles.headerPathStat)}>
                         {!node.oldPath && (
                             <Badge variant="success" className="text-uppercase mr-2">
-                                Added
+                                {t('added-message')}
                             </Badge>
                         )}
                         {!node.newPath && (
                             <Badge variant="danger" className="text-uppercase mr-2">
-                                Deleted
+                                {t('deleted-message')}
                             </Badge>
                         )}
                         {node.newPath && node.oldPath && node.newPath !== node.oldPath && (
@@ -140,12 +143,12 @@ export const FileDiffNode: React.FunctionComponent<React.PropsWithChildren<FileD
                 </div>
                 {expanded &&
                     (node.oldFile?.binary || node.newFile?.binary ? (
-                        <div className="text-muted m-2">Binary files can't be rendered.</div>
+                        <div className="text-muted m-2">{t('binary-files-rendered-error')}</div>
                     ) : !node.newPath && !renderDeleted ? (
                         <div className="text-muted m-2">
-                            <Text className="mb-0">Deleted files aren't rendered by default.</Text>
+                            <Text className="mb-0">{t('deleted-files-rendered-default')}</Text>
                             <Button className="m-0 p-0" onClick={onClickToViewDeleted} variant="link">
-                                Click here to view.
+                                {t('click-here-to-view')}
                             </Button>
                         </div>
                     ) : (

@@ -1,5 +1,6 @@
 import React, { type FC, useCallback, useEffect } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import type { Observable } from 'rxjs'
 import { mergeMap, startWith, tap, catchError } from 'rxjs/operators'
@@ -29,6 +30,8 @@ export const DeleteNotebookModal: FC<DeleteNotebookModalProps> = ({
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('notebooks/notebookPage')
+
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -63,23 +66,24 @@ export const DeleteNotebookModal: FC<DeleteNotebookModalProps> = ({
     return (
         <Modal isOpen={isOpen} position="center" onDismiss={toggleDeleteModal} aria-labelledby={deleteLabelId}>
             <H3 className="text-danger" id={deleteLabelId}>
-                Delete the notebook?
+                {t('delete-notebook-confirmation')}
             </H3>
 
             <Text>
-                <strong>This action cannot be undone.</strong>
+                <strong>{t('action-irreversible-warning')}</strong>
             </Text>
             {(!deleteCompletedOrError || isErrorLike(deleteCompletedOrError)) && (
                 <div className="text-right">
                     <Button className="mr-2" onClick={toggleDeleteModal} variant="secondary" outline={true}>
-                        Cancel
+                        {t('cancel-button')}
                     </Button>
                     <Button onClick={onDelete} variant="danger">
-                        Yes, delete the notebook
+                        {t('confirm-delete-notebook')}
                     </Button>
                     {isErrorLike(deleteCompletedOrError) && (
                         <Alert className="mt-2" variant="danger">
-                            Error deleting notebook: {deleteCompletedOrError.message}
+                            {t('error-deleting-notebook')}
+                            {deleteCompletedOrError.message}
                         </Alert>
                     )}
                 </div>

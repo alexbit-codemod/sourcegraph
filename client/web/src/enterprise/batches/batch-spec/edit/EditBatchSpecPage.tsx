@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState, type FC } from 'react'
 
 import AlertCircleIcon from 'mdi-react/AlertCircleIcon'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { useQuery } from '@sourcegraph/http-client'
@@ -48,6 +49,8 @@ export interface EditBatchSpecPageProps extends NamespaceProps, SettingsCascadeP
 }
 
 export const EditBatchSpecPage: FC<EditBatchSpecPageProps> = props => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/edit')
+
     const { batchChangeName } = useParams()
     const { id } = props.namespace
 
@@ -79,7 +82,7 @@ export const EditBatchSpecPage: FC<EditBatchSpecPageProps> = props => {
     }
     // If there weren't any errors and we just didn't receive any data
     if (!data?.batchChange) {
-        return <HeroPage icon={AlertCircleIcon} title="Batch change not found" />
+        return <HeroPage icon={AlertCircleIcon} title={t('batch-change-not-found')} />
     }
 
     // The first node from the batch specs is the latest batch spec for a batch change. If

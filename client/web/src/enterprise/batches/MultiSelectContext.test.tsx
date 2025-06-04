@@ -4,6 +4,7 @@ import React, { useContext, useEffect } from 'react'
 
 import { render } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
+import { useTranslation } from 'react-i18next'
 import { describe, expect, test } from 'vitest'
 
 import { MultiSelectContext, MultiSelectContextProvider, type MultiSelectContextState } from './MultiSelectContext'
@@ -412,10 +413,12 @@ const repeat = (times: number, test: () => void) => {
 const Reflektor: React.FunctionComponent<
     React.PropsWithChildren<{ onContext: (inner: MultiSelectContextState) => void }>
 > = ({ onContext }) => {
+    const { t } = useTranslation('enterprise/batches')
+
     const context = useContext(MultiSelectContext)
     useEffect(() => {
         onContext(context)
     }, [context, onContext])
 
-    return <>reflektor</>
+    return <>{t('reflector')}</>
 }

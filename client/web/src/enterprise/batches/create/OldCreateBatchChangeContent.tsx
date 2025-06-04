@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { CodeSnippet } from '@sourcegraph/branded/src/components/CodeSnippet'
 import { Container, Button, Link, H2, Text } from '@sourcegraph/wildcard'
 
@@ -54,29 +56,33 @@ const samples: Sample[] = [
 ]
 
 export const OldBatchChangePageContent: React.FunctionComponent<React.PropsWithChildren<{}>> = () => {
+    const { t } = useTranslation('enterprise/batches/create')
+
     const [selectedSample, setSelectedSample] = useState<Sample>(samples[0])
 
     return (
         <>
-            <H2 data-testid="batch-spec-yaml-file">1. Write a batch spec YAML file</H2>
+            <H2 data-testid="batch-spec-yaml-file">{t('write-batch-spec-yaml-file')}</H2>
             <Container className="mb-3">
                 <Text className="mb-0">
-                    The batch spec (
-                    <Link
-                        to="/help/batch_changes/references/batch_spec_yaml_reference"
-                        rel="noopener noreferrer"
-                        target="_blank"
-                    >
-                        syntax reference
-                    </Link>
-                    ) describes what the batch change does. You'll provide it when previewing, creating, and updating
-                    batch changes. We recommend committing it to source control.
+                    <Trans
+                        i18nKey="batch-spec-description"
+                        components={{
+                            '0': (
+                                <Link
+                                    to="/help/batch_changes/references/batch_spec_yaml_reference"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                />
+                            ),
+                        }}
+                    />
                 </Text>
             </Container>
             <div className="d-flex mb-3">
                 <div className="flex-shrink-0">
                     <SidebarGroup>
-                        <SidebarGroupHeader label="Examples" />
+                        <SidebarGroupHeader label={t('examples-header')} />
                         {samples.map(sample => (
                             <SampleTabHeader
                                 key={sample.name}
@@ -91,24 +97,28 @@ export const OldBatchChangePageContent: React.FunctionComponent<React.PropsWithC
                     <CodeSnippet code={selectedSample.file} language="yaml" className="mb-0" />
                 </Container>
             </div>
-            <H2>2. Preview the batch change with Sourcegraph CLI</H2>
+            <H2>{t('preview-batch-change-sourcegraph-cli')}</H2>
             <Container className="mb-3">
                 <Text>
-                    Use the{' '}
-                    <Link to="https://github.com/sourcegraph/src-cli" rel="noopener noreferrer" target="_blank">
-                        Sourcegraph CLI (src)
-                    </Link>{' '}
-                    to preview the commits and changesets that your batch change will make:
+                    <Trans
+                        i18nKey="use-sourcegraph-cli-preview"
+                        components={{
+                            '0': (
+                                <Link
+                                    to="https://github.com/sourcegraph/src-cli"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                />
+                            ),
+                        }}
+                    />
                 </Text>
                 <CodeSnippet
                     code={`src batch preview -f ${getFileName(selectedSample.name)}`}
                     language="bash"
                     className="mb-3"
                 />
-                <Text className="mb-0">
-                    Follow the URL printed in your terminal to see the preview and (when you're ready) create the batch
-                    change.
-                </Text>
+                <Text className="mb-0">{t('follow-url-for-preview')}</Text>
             </Container>
         </>
     )

@@ -1,6 +1,7 @@
 import type { FunctionComponent, ReactNode } from 'react'
 
 import { mdiDatabaseEdit, mdiDatabasePlus } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { Container, Icon } from '@sourcegraph/wildcard'
 
@@ -14,6 +15,8 @@ export interface AuditLogPanelProps {
 }
 
 export const AuditLogPanel: FunctionComponent<AuditLogPanelProps> = ({ logs }) => {
+    const { t } = useTranslation('enterprise/codeintel/indexes/components')
+
     const stages = logs?.map(
         (log): TimelineStage => ({
             icon:
@@ -31,7 +34,7 @@ export const AuditLogPanel: FunctionComponent<AuditLogPanelProps> = ({ logs }) =
                     {log.reason && (
                         <>
                             <Container>
-                                <b>Reason</b>: {log.reason}
+                                <b>{t('reason')}</b>: {log.reason}
                             </Container>
                             <br />
                         </>
@@ -41,12 +44,12 @@ export const AuditLogPanel: FunctionComponent<AuditLogPanelProps> = ({ logs }) =
                             <thead>
                                 <tr>
                                     <th className={styles.dbColumnCol} scope="column">
-                                        Column
+                                        {t('column-label')}
                                     </th>
                                     <th className={styles.dataColumnCol} scope="column">
-                                        Old
+                                        {t('old-label')}
                                     </th>
-                                    <th scope="column">New</th>
+                                    <th scope="column">{t('new-label')}</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -2,24 +2,31 @@ import { createRef, useEffect, useState } from 'react'
 
 import Maintenance from '@mui/icons-material/Engineering'
 import { Box, Button, Paper, TextField, Typography } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 import { useOutletContext } from 'react-router-dom'
 
 import { OutletContext } from './Frame'
 
-const PublicMessage: React.FC<{ onLoginRequest: () => void }> = ({ onLoginRequest }) => (
-    <div className="public-message">
-        <Maintenance sx={{ fontSize: 64 }} />
-        <Typography>This system is currently undergoing maintenance.</Typography>
-        <Typography>Please try again later or contact your administrator for more information.</Typography>
-        <Box sx={{ marginTop: 20 }}>
-            <Button variant="outlined" onClick={onLoginRequest}>
-                Administrator Login
-            </Button>
-        </Box>
-    </div>
-)
+const PublicMessage: React.FC<{ onLoginRequest: () => void }> = ({ onLoginRequest }) => {
+    const { t } = useTranslation('../../../internal/appliance/frontend/maintenance/src')
+
+    return (
+        <div className="public-message">
+            <Maintenance sx={{ fontSize: 64 }} />
+            <Typography>{t('system-maintenance-notice')}</Typography>
+            <Typography>{t('retry-later-contact-admin')}</Typography>
+            <Box sx={{ marginTop: 20 }}>
+                <Button variant="outlined" onClick={onLoginRequest}>
+                    {t('admin-login-header')}
+                </Button>
+            </Box>
+        </div>
+    )
+}
 
 const Form: React.FC<LoginProps> = ({ onLogin, failed }) => {
+    const { t } = useTranslation('../../../internal/appliance/frontend/maintenance/src')
+
     const [password, setPassword] = useState<string>('')
     const passwordRef = createRef<HTMLInputElement>()
     const [loggingIn, setLoggingIn] = useState<boolean>(false)
@@ -56,7 +63,7 @@ const Form: React.FC<LoginProps> = ({ onLogin, failed }) => {
                     gap: 2,
                 }}
             >
-                <Typography variant="h5">Login</Typography>
+                <Typography variant="h5">{t('login-button')}</Typography>
                 <TextField
                     inputRef={passwordRef}
                     type="password"
@@ -70,12 +77,10 @@ const Form: React.FC<LoginProps> = ({ onLogin, failed }) => {
                     }}
                 ></TextField>
                 <Button variant="contained" onClick={login} disabled={loggingIn}>
-                    Login
+                    {t('login-header')}
                 </Button>
-                {failed && <Typography color="error">Incorrect password</Typography>}
-                <Typography variant="caption">
-                    You can find the maintenance password in the cluster secret config.
-                </Typography>
+                {failed && <Typography color="error">{t('incorrect-password-error')}</Typography>}
+                <Typography variant="caption">{t('maintenance-password-info')}</Typography>
             </Paper>
         </div>
     )

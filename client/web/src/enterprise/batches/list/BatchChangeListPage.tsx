@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback, useState, useMemo } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import { pluralize } from '@sourcegraph/common'
@@ -80,6 +81,8 @@ export const BatchChangeListPage: React.FunctionComponent<React.PropsWithChildre
     isSourcegraphDotCom,
     authenticatedUser,
 }) => {
+    const { t } = useTranslation('enterprise/batches/list')
+
     const location = useLocation()
     useEffect(() => {
         telemetryService.logViewEvent('BatchChangesListPage')
@@ -174,7 +177,7 @@ export const BatchChangeListPage: React.FunctionComponent<React.PropsWithChildre
                                 })
                             }}
                         >
-                            Get Sourcegraph Enterprise
+                            {t('get-sourcegraph-enterprise')}
                         </Button>
                     ) : (
                         <NewBatchChangeButton
@@ -188,7 +191,7 @@ export const BatchChangeListPage: React.FunctionComponent<React.PropsWithChildre
                 description="Run and manage large-scale changes across many repositories."
             >
                 <PageHeader.Heading as="h2" styleAs="h1">
-                    <PageHeader.Breadcrumb icon={BatchChangesIcon}>Batch Changes</PageHeader.Breadcrumb>
+                    <PageHeader.Breadcrumb icon={BatchChangesIcon}>{t('batch-changes')}</PageHeader.Breadcrumb>
                 </PageHeader.Heading>
             </PageHeader>
             <BatchChangesListIntro isLicensed={isBatchChangesLicensed} viewerIsAdmin={!!authenticatedUser?.siteAdmin} />
@@ -318,11 +321,13 @@ interface BatchChangeListEmptyElementProps extends Pick<BatchChangeListPageProps
 const BatchChangeListEmptyElement: React.FunctionComponent<
     React.PropsWithChildren<BatchChangeListEmptyElementProps>
 > = ({ canCreate, telemetryRecorder }) => {
+    const { t } = useTranslation('enterprise/batches/list')
+
     const location = useLocation()
     return (
         <div className="w-100 py-5 text-center">
             <Text>
-                <strong>No batch changes have been created.</strong>
+                <strong>{t('no-batch-changes-created')}</strong>
             </Text>
             <NewBatchChangeButton
                 to={`${location.pathname}/create`}
@@ -340,6 +345,8 @@ const BatchChangeListTabHeader: React.FunctionComponent<
     }> &
         TelemetryV2Props
 > = ({ selectedTab, setSelectedTab, telemetryRecorder }) => {
+    const { t } = useTranslation('enterprise/batches/list')
+
     const onSelectBatchChanges = useCallback<React.MouseEventHandler>(
         event => {
             event.preventDefault()
@@ -366,7 +373,7 @@ const BatchChangeListTabHeader: React.FunctionComponent<
                         role="tab"
                     >
                         <span className="text-content" data-tab-content="All batch changes">
-                            All batch changes
+                            {t('all-batch-changes')}
                         </span>
                     </Link>
                 </div>
@@ -384,7 +391,7 @@ const BatchChangeListTabHeader: React.FunctionComponent<
                         data-testid="test-getting-started-btn"
                     >
                         <span className="text-content" data-tab-content="Getting started">
-                            Getting started
+                            {t('getting-started')}
                         </span>
                     </Link>
                 </div>

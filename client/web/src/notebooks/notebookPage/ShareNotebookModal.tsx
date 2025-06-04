@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useEffect } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
@@ -43,6 +44,8 @@ export const ShareNotebookModal: React.FunctionComponent<React.PropsWithChildren
     onUpdateVisibility,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('notebooks/notebookPage')
+
     useEffect(() => {
         if (isOpen) {
             telemetryService.log('SearchNotebookShareModalOpened')
@@ -64,7 +67,7 @@ export const ShareNotebookModal: React.FunctionComponent<React.PropsWithChildren
 
     return (
         <Modal isOpen={isOpen} position="top-third" onDismiss={toggleModal} aria-labelledby={shareLabelId}>
-            <H3 id={shareLabelId}>Share Notebook</H3>
+            <H3 id={shareLabelId}>{t('share-notebook')}</H3>
             <div className={classNames('mb-2', styles.body)}>
                 <NotebookShareOptionsDropdown
                     isSourcegraphDotCom={isSourcegraphDotCom}
@@ -88,18 +91,16 @@ export const ShareNotebookModal: React.FunctionComponent<React.PropsWithChildren
                                 isPublic: event.target.checked,
                             })
                         }
-                        label={`Everyone ${
-                            isSourcegraphDotCom ? 'on Sourcegraph.com' : 'with access to the Sourcegraph instance'
-                        } can view the notebook`}
+                        label={t('everyone-can-view-notebook', { isSourcegraphDotCom })}
                     />
                 )}
             </div>
             <div className="text-right">
                 <Button className="mr-1" variant="secondary" outline={true} size="sm" onClick={toggleModal}>
-                    Cancel
+                    {t('cancel-button')}
                 </Button>
                 <Button variant="primary" size="sm" onClick={onDoneClick} data-testid="share-notebook-done-button">
-                    Done
+                    {t('done-button')}
                 </Button>
             </div>
         </Modal>

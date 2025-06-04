@@ -3,6 +3,7 @@ import React, { useEffect, useMemo } from 'react'
 import type * as H from 'history'
 import { default as AlertCircleIcon } from 'mdi-react/AlertCircleIcon'
 import { default as ReloadIcon } from 'mdi-react/ReloadIcon'
+import { useTranslation } from 'react-i18next'
 import { isRouteErrorResponse, useRouteError } from 'react-router-dom'
 
 import { asError, logger } from '@sourcegraph/common'
@@ -120,6 +121,8 @@ interface ErrorBoundaryMessageProps {
     className?: string
 }
 const ErrorBoundaryMessage: React.FC<ErrorBoundaryMessageProps> = ({ error, extraContext, render, className }) => {
+    const { t } = useTranslation('components')
+
     if (isChunkLoadError(error)) {
         // This means that the JavaScript assets that correspond to the deploy version currently
         // running are no longer available, likely because a redeploy occurred after the user
@@ -127,12 +130,12 @@ const ErrorBoundaryMessage: React.FC<ErrorBoundaryMessageProps> = ({ error, extr
         return (
             <HeroPage
                 icon={ReloadIcon}
-                title="Reload required"
+                title={t('reload-required')}
                 subtitle={
                     <div className="container">
-                        <Text>A new version of Sourcegraph is available.</Text>
+                        <Text>{t('new-version-available')}</Text>
                         <Button onClick={hardReload} variant="primary">
-                            Reload to update
+                            {t('reload-to-update')}
                         </Button>
                     </div>
                 }
@@ -147,14 +150,11 @@ const ErrorBoundaryMessage: React.FC<ErrorBoundaryMessageProps> = ({ error, extr
     return (
         <HeroPage
             icon={AlertCircleIcon}
-            title="Error"
+            title={t('error-message')}
             className={className}
             subtitle={
                 <div className="container">
-                    <Text>
-                        Sourcegraph encountered an unexpected error. If reloading the page doesn't fix it, contact your
-                        site admin or Sourcegraph support.
-                    </Text>
+                    <Text>{t('unexpected-error-notification')}</Text>
                     <Text>
                         <Code className="text-wrap">{error.message}</Code>
                     </Text>

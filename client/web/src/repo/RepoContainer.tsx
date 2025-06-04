@@ -14,6 +14,7 @@ import React, {
 import classNames from 'classnames'
 import { escapeRegExp } from 'lodash'
 import { createPortal } from 'react-dom'
+import { useTranslation } from 'react-i18next'
 import { Route, Routes, useLocation, type Location } from 'react-router-dom'
 import { NEVER, of } from 'rxjs'
 import { catchError, switchMap } from 'rxjs/operators'
@@ -619,6 +620,8 @@ function redirectToExternalHost(externalRedirectURL: string): void {
     window.location.replace(redirectURL.href)
 }
 
-const EmptyRepo: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => (
-    <HeroPage icon={RepoQuestionIcon} title="Empty repository" />
-)
+const EmptyRepo: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
+    const { t } = useTranslation('repo')
+
+    return <HeroPage icon={RepoQuestionIcon} title={t('empty-repository')} />
+}

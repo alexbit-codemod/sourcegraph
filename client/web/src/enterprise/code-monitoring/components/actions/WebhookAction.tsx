@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 
 import { gql, useMutation } from '@apollo/client'
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { Alert, Input, Link, ProductStatusBadge, Label } from '@sourcegraph/wildcard'
 
@@ -26,6 +27,8 @@ export const WebhookAction: React.FunctionComponent<React.PropsWithChildren<Acti
     authenticatedUser,
     _testStartOpen,
 }) => {
+    const { t } = useTranslation('enterprise/code-monitoring/components/actions')
+
     const [enabled, setEnabled] = useState(action ? action.enabled : true)
 
     const toggleWebhookEnabled: (enabled: boolean, saveImmediately: boolean) => void = useCallback(
@@ -102,7 +105,8 @@ export const WebhookAction: React.FunctionComponent<React.PropsWithChildren<Acti
         <ActionEditor
             title={
                 <div>
-                    Call a webhook <ProductStatusBadge className="ml-1 mb-1" status="beta" />{' '}
+                    {t('call-a-webhook')}
+                    <ProductStatusBadge className="ml-1 mb-1" status="beta" />{' '}
                 </div>
             }
             subtitle="Calls the specified URL with a JSON payload."
@@ -127,14 +131,14 @@ export const WebhookAction: React.FunctionComponent<React.PropsWithChildren<Acti
             _testStartOpen={_testStartOpen}
         >
             <Alert aria-live="off" variant="info" className="mt-4">
-                The specified webhook URL will be called with a JSON payload.
+                {t('webhook-url-json-payload')}
                 <br />
                 <Link to="/help/code_monitoring/how-tos/webhook" target="_blank" rel="noopener">
-                    Read more about how to set up webhooks and the JSON schema in the docs.
+                    {t('webhooks-setup-docs')}
                 </Link>
             </Alert>
             <div className="form-group">
-                <Label htmlFor="code-monitor-webhook-url">Webhook URL</Label>
+                <Label htmlFor="code-monitor-webhook-url">{t('webhook-url')}</Label>
                 <Input
                     id="code-monitor-webhook-url"
                     type="url"

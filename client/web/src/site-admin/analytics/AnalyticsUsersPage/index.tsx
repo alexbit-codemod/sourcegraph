@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect, type FC } from 'react'
 
 import classNames from 'classnames'
 import { startCase } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { useQuery } from '@sourcegraph/http-client'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -25,6 +26,8 @@ import styles from './AnalyticsUsersPage.module.scss'
 interface Props extends TelemetryV2Props {}
 
 export const AnalyticsUsersPage: FC<Props> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin/analytics/AnalyticsUsersPage')
+
     const { dateRange, aggregation, grouping } = useChartFilters({
         name: 'Users',
         aggregation: 'uniqueUsers',
@@ -129,7 +132,7 @@ export const AnalyticsUsersPage: FC<Props> = ({ telemetryRecorder }) => {
 
     return (
         <>
-            <AnalyticsPageTitle>Users</AnalyticsPageTitle>
+            <AnalyticsPageTitle>{t('users-label')}</AnalyticsPageTitle>
             <Card className="p-3">
                 <div className="d-flex justify-content-end align-items-stretch mb-2 text-nowrap">
                     <HorizontalSelect<typeof dateRange.value> {...dateRange} />
@@ -223,9 +226,7 @@ export const AnalyticsUsersPage: FC<Props> = ({ telemetryRecorder }) => {
                     )}
                 </div>
             </Card>
-            <Text className="font-italic text-center mt-2">
-                All events are generated from entries in the event logs table and are updated every 24 hours.
-            </Text>
+            <Text className="font-italic text-center mt-2">{t('event-logs-description')}</Text>
         </>
     )
 }

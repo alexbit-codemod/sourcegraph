@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useState } from 'react'
 
 import { mdiMagnify } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 import { tap } from 'rxjs/operators'
 
 import { Container, Icon } from '@sourcegraph/wildcard'
@@ -165,14 +166,18 @@ export const PreviewList: React.FunctionComponent<React.PropsWithChildren<Props>
     )
 }
 
-const EmptyPreviewSearchElement: React.FunctionComponent<React.PropsWithChildren<{}>> = () => (
-    <div className="text-muted row w-100">
-        <div className="col-12 text-center">
-            <Icon className="icon" svgPath={mdiMagnify} inline={false} aria-hidden={true} />
-            <div className="pt-2">No changesets matched the search.</div>
+const EmptyPreviewSearchElement: React.FunctionComponent<React.PropsWithChildren<{}>> = () => {
+    const { t } = useTranslation('enterprise/batches/preview/list')
+
+    return (
+        <div className="text-muted row w-100">
+            <div className="col-12 text-center">
+                <Icon className="icon" svgPath={mdiMagnify} inline={false} aria-hidden={true} />
+                <div className="pt-2">{t('no-changesets-matched-search')}</div>
+            </div>
         </div>
-    </div>
-)
+    )
+}
 
 /**
  * A list of none to many dismissible alerts, one for each time the publication state
@@ -189,11 +194,15 @@ const PublicationStatesUpdateAlerts: React.FunctionComponent<React.PropsWithChil
             {recalculationUpdates.map(([timestamp, status]) =>
                 // Wait to show publication state update alerts until the connection query
                 // request resolves.
-                status === 'complete' ? (
-                    <DismissibleAlert variant="success" key={timestamp}>
-                        Publication state actions were recalculated.
-                    </DismissibleAlert>
-                ) : null
+                {
+                    const { t } = useTranslation('enterprise/batches/preview/list')
+
+                    return status === 'complete' ? (
+                        <DismissibleAlert variant="success" key={timestamp}>
+                            {t('publication-state-actions-recalculated')}
+                        </DismissibleAlert>
+                    ) : null
+                }
             )}
         </div>
     )

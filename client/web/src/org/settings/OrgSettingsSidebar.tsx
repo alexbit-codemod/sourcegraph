@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react'
 
 import { mdiMenu } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Button, Icon, ProductStatusBadge, type ProductStatusType } from '@sourcegraph/wildcard'
 
@@ -43,6 +44,8 @@ export const OrgSettingsSidebar: React.FunctionComponent<React.PropsWithChildren
     className,
     ...props
 }) => {
+    const { t } = useTranslation('org/settings')
+
     const [isMobileExpanded, setIsMobileExpanded] = useState(false)
     const collapseMobileSidebar = useCallback((): void => setIsMobileExpanded(false), [])
 
@@ -60,7 +63,7 @@ export const OrgSettingsSidebar: React.FunctionComponent<React.PropsWithChildren
         <>
             <Button className="d-sm-none align-self-start mb-3" onClick={() => setIsMobileExpanded(!isMobileExpanded)}>
                 <Icon aria-hidden={true} svgPath={mdiMenu} className="mr-2" />
-                {isMobileExpanded ? 'Hide' : 'Show'} menu
+                {t('toggle-menu-visibility', { isMobileExpanded })}
             </Button>
             <div
                 className={classNames(
@@ -73,12 +76,16 @@ export const OrgSettingsSidebar: React.FunctionComponent<React.PropsWithChildren
                 {/* Indicate when the site admin is viewing another org's settings */}
                 {siteAdminViewingOtherOrg && (
                     <SiteAdminAlert className="sidebar__alert">
-                        Viewing settings for <strong>{org.name}</strong>
+                        <Trans
+                            i18nKey="viewing-settings-for-organization"
+                            values={{ orgName: <>{org.name}</> }}
+                            components={{ '0': <strong /> }}
+                        />
                     </SiteAdminAlert>
                 )}
 
                 <SidebarGroup>
-                    <SidebarGroupHeader label="Organization" />
+                    <SidebarGroupHeader label={t('organization-label')} />
                     {props.items.map(
                         ({ label, to, exact, status, condition = () => true }) =>
                             condition(context) && (

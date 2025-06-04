@@ -5,6 +5,7 @@ import { mdiChatQuestionOutline } from '@mdi/js'
 import classNames from 'classnames'
 import { addDays, endOfDay } from 'date-fns'
 import { noop } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { useMutation } from '@sourcegraph/http-client'
 import type { Scalars } from '@sourcegraph/shared/src/graphql-operations'
@@ -173,6 +174,8 @@ const HANDBOOK_INFO_URL =
 export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionComponent<
     React.PropsWithChildren<Props>
 > = ({ latestLicense, subscriptionID, subscriptionAccount, onGenerate, onCancel, telemetryRecorder }) => {
+    const { t } = useTranslation('enterprise/site-admin/dotcom/productSubscriptions')
+
     const labelId = 'generateLicense'
 
     const [hasAcknowledgedInfo, setHasAcknowledgedInfo] = useState(false)
@@ -319,7 +322,7 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
             className={styles.modal}
         >
             <H3 className="flex-shrink-0" id={labelId}>
-                Generate new Sourcegraph license
+                {t('generate-new-sourcegraph-license')}
                 {hasAcknowledgedInfo && (
                     <>
                         {' '}
@@ -337,13 +340,13 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
             {!hasAcknowledgedInfo && (
                 <>
                     <Alert variant="info" className="flex-shrink-0">
-                        Please read the{' '}
-                        <Link rel="noopener" target="_blank" to={HANDBOOK_INFO_URL}>
-                            guide for how to create a license key for a new prospect or new customer.
-                        </Link>
+                        <Trans
+                            i18nKey="license-creation-guide"
+                            components={{ '0': <Link rel="noopener" target="_blank" to={HANDBOOK_INFO_URL} /> }}
+                        />
                     </Alert>
                     <Button variant="secondary" onClick={() => setHasAcknowledgedInfo(true)}>
-                        Acknowledge information
+                        {t('acknowledge-information')}
                     </Button>
                 </>
             )}
@@ -370,16 +373,13 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
                                     <>
                                         {formData.plan !== '' &&
                                             ALL_PLANS.find(plan => plan.label === formData.plan)?.deprecated && (
-                                                <span className="text-danger">
-                                                    This plan has been deprecated. Only issue a new license for this
-                                                    plan if you got approval to do so.
-                                                </span>
+                                                <span className="text-danger">{t('deprecated-plan-warning')}</span>
                                             )}
                                     </>
                                 }
                             >
                                 <option value="" disabled={true}>
-                                    Select a plan
+                                    {t('select-a-plan')}
                                 </option>
                                 {ALL_PLANS.filter(plan => !plan.deprecated && !plan.stopIssuance).map(plan => (
                                     <option key={plan.label} value={plan.label}>
@@ -387,7 +387,7 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
                                     </option>
                                 ))}
                                 <option value="" disabled={true}>
-                                    Deprecated plans
+                                    {t('deprecated-plans')}
                                 </option>
                                 {ALL_PLANS.filter(plan => plan.deprecated && !plan.stopIssuance).map(plan => (
                                     <option key={plan.label} value={plan.label}>
@@ -402,7 +402,7 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
                                         <Checkbox
                                             id="productSubscription__trial"
                                             aria-label="Is trial"
-                                            label="This license is for a trial"
+                                            label={t('trial-license')}
                                             disabled={loading}
                                             checked={formData.trial}
                                             onChange={onIsTrialChange}
@@ -411,8 +411,8 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
 
                                     <Input
                                         id="site-admin-create-product-subscription-page__customer_input"
-                                        label="Customer"
-                                        description="Name of the customer. Will be encoded into the key for easier identification."
+                                        label={t('customer')}
+                                        description={t('customer-name-description')}
                                         type="text"
                                         disabled={loading}
                                         value={formData.customer || ''}
@@ -422,8 +422,8 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
 
                                     <Input
                                         id="site-admin-create-product-subscription-page__salesforce_sub_id_input"
-                                        label="Salesforce Subscription ID"
-                                        description="Enter the corresponding Subscription ID from Salesforce."
+                                        label={t('salesforce-subscription-id')}
+                                        description={t('salesforce-subscription-id-description')}
                                         type="text"
                                         disabled={loading}
                                         value={formData.salesforceSubscriptionID}
@@ -432,8 +432,8 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
 
                                     <Input
                                         id="site-admin-create-product-subscription-page__salesforce_op_id_input"
-                                        label="Salesforce Opportunity ID"
-                                        description="Enter the corresponding Opportunity ID from Salesforce."
+                                        label={t('salesforce-opportunity-id')}
+                                        description={t('salesforce-opportunity-id-description')}
                                         type="text"
                                         disabled={loading}
                                         value={formData.salesforceOpportunityID}
@@ -442,28 +442,24 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
 
                                     <Input
                                         type="number"
-                                        label="Users"
+                                        label={t('users')}
                                         min={1}
                                         id="site-admin-create-product-subscription-page__userCount"
                                         disabled={!selectedPlan || loading}
                                         value={formData.userCount}
                                         onChange={onUserCountChange}
-                                        description="The maximum number of users permitted on this license."
+                                        description={t('maximum-users-description')}
                                         className="w-100"
                                         message={
                                             <>
                                                 {formData.trueUp && (
-                                                    <Text className="mb-0">
-                                                        With true up enabled, the maximum user count is not enforced and
-                                                        additional users can join the instance. Bill for those users
-                                                        separately.
-                                                    </Text>
+                                                    <Text className="mb-0">{t('true-up-enabled-description')}</Text>
                                                 )}
                                             </>
                                         }
                                     />
 
-                                    <Label>Additional Options</Label>
+                                    <Label>{t('additional-options')}</Label>
                                     {selectedPlan.additionalTags?.find(tag => tag.tagValue === TAG_TRUEUP.tagValue) && (
                                         <div className="form-group mb-2">
                                             <Checkbox
@@ -483,7 +479,7 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
                                             <Checkbox
                                                 id="productSubscription__airgapped"
                                                 aria-label="Whether the instance may be air gapped"
-                                                label="Allow air gapped"
+                                                label={t('allow-air-gapped')}
                                                 checked={formData.airGapped}
                                                 onChange={onAirGappedChange}
                                                 message={TAG_AIR_GAPPED.description}
@@ -497,7 +493,7 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
                                             <Checkbox
                                                 id="productSubscription__batches"
                                                 aria-label="Whether the instance may use Batch Changes unrestrictedly"
-                                                label="Allow unrestricted Batch Changes"
+                                                label={t('allow-unrestricted-batch-changes')}
                                                 checked={formData.batchChanges}
                                                 onChange={onBatchChangesChange}
                                                 message={TAG_BATCH_CHANGES.description}
@@ -511,7 +507,7 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
                                             <Checkbox
                                                 id="productSubscription__codeinsights"
                                                 aria-label="Whether the instance may use Code Insights"
-                                                label="Allow Code Insights"
+                                                label={t('allow-code-insights')}
                                                 checked={formData.codeInsights}
                                                 onChange={onCodeInsightsChange}
                                                 message={TAG_CODE_INSIGHTS.description}
@@ -525,7 +521,7 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
                                             <Checkbox
                                                 id="productSubscription__disableTelemetry"
                                                 aria-label={TAG_DISABLE_TELEMETRY_EXPORT.description}
-                                                label="Allow disable telemetry export"
+                                                label={t('allow-disable-telemetry-export')}
                                                 checked={formData.disableTelemetry || formData.airGapped}
                                                 disabled={formData.airGapped}
                                                 onChange={onDisableTelemetryChange}
@@ -539,8 +535,8 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
                                     )}
                                     <Input
                                         type="date"
-                                        description="When this license expires. Sourcegraph will disable beyond this date. Usually the end date of the contract."
-                                        label="Expires At"
+                                        description={t('license-expiration-description')}
+                                        label={t('expires-at')}
                                         id="site-admin-create-product-subscription-page__expiresAt"
                                         min={formatDateForInput(addDaysAndRoundToEndOfDayInUTC(1))}
                                         max={formatDateForInput(addDaysAndRoundToEndOfDayInUTC(2000))}
@@ -558,7 +554,7 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
                                                     />
                                                 )}
                                                 <Text>
-                                                    Set to{' '}
+                                                    {t('set-to')}
                                                     {DURATION_LINKS.map(({ label, days }) => (
                                                         <Button
                                                             key={days}
@@ -577,21 +573,20 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
                                     <Collapsible titleAtStart={true} title="Additional Information">
                                         <Input
                                             type="text"
-                                            label="Tags"
+                                            label={t('tags')}
                                             id="site-admin-create-product-subscription-page__tags"
                                             disabled={loading}
                                             value={formData.tags}
                                             onChange={onTagsChange}
                                             list="known-tags"
-                                            description="Comma separated list of tags. Tags restrict a license."
+                                            description={t('tags-description')}
                                             message={
                                                 <Text className="text-danger">
-                                                    Note that specifying tags manually is no longer required and the
-                                                    form should handle all options.
+                                                    {t('tags-manual-specification-warning')}
                                                     <br />
-                                                    Only use this if you know what you're doing!
+                                                    {t('use-tags-caution')}
                                                     <br />
-                                                    All the tags are displayed at the end of the form as well.
+                                                    {t('tags-display-warning')}
                                                 </Text>
                                             }
                                             className="mt-2"
@@ -605,11 +600,8 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
                                         </datalist>
                                     </Collapsible>
                                     <hr className="mb-3" />
-                                    <H4>Final License Details</H4>
-                                    <Text>
-                                        Please double check that the license tags and user count are correct before
-                                        generating the license. The license cannot be modified once generated.
-                                    </Text>
+                                    <H4>{t('final-license-details')}</H4>
+                                    <Text>{t('license-verification-warning')}</Text>
                                     <div>
                                         {hasUnknownTags(tags) && <UnknownTagWarning className="mb-2" />}
                                         <Text>
@@ -627,7 +619,7 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
                                     outline={true}
                                     variant="secondary"
                                 >
-                                    Cancel
+                                    {t('cancel')}
                                 </Button>
                                 <LoaderButton
                                     type="submit"
@@ -635,7 +627,7 @@ export const SiteAdminGenerateProductLicenseForSubscriptionForm: React.FunctionC
                                     variant="primary"
                                     loading={loading}
                                     alwaysShowLabel={true}
-                                    label="Generate key"
+                                    label={t('generate-key')}
                                 />
                             </div>
                         </Form>

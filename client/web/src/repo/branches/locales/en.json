@@ -1,0 +1,10 @@
+{
+  "overview": "Overview",
+  "all-branches": "All branches",
+  "branches-label": "Branches",
+  "default-branch-label": "Default branch",
+  "view-repo-with-default-branch": "View this repository using {{defaultBranchDisplayName}} as the selected revision",
+  "active-branches-label": "Active branches",
+  "view-repo-with-git-reference": "View this repository using {{gitReferenceDisplayName}} as the selected revision",
+  "view-more-branches-action": "View more branches"
+}

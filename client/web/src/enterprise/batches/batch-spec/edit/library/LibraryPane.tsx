@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react'
 
 import { mdiChevronDoubleLeft, mdiChevronDoubleRight, mdiOpenInNew } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { animated, useSpring } from 'react-spring'
 
@@ -63,6 +64,8 @@ export const LibraryPane: React.FunctionComponent<React.PropsWithChildren<Librar
     name,
     ...props
 }) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/edit/library')
+
     // Remember the last collapsed state of the pane
     const [defaultCollapsed, setDefaultCollapsed] = useLocalStorage(LIBRARY_PANE_DEFAULT_COLLAPSED, false)
     // Start with the library collapsed by default if the batch spec is read-only, or if
@@ -154,7 +157,7 @@ export const LibraryPane: React.FunctionComponent<React.PropsWithChildren<Librar
                 <div className={styles.header}>
                     <animated.div style={headerStyle}>
                         <H4 as={H3} className="m-0">
-                            Library
+                            {t('library-title')}
                         </H4>
                     </animated.div>
                     <div className={styles.collapseButton}>
@@ -195,7 +198,8 @@ export const LibraryPane: React.FunctionComponent<React.PropsWithChildren<Librar
                                 props.telemetryRecorder.recordEvent('batchChange.editor.viewMoreExamples', 'click')
                             }}
                         >
-                            View more examples <Icon aria-hidden={true} svgPath={mdiOpenInNew} />
+                            {t('view-more-examples')}
+                            <Icon aria-hidden={true} svgPath={mdiOpenInNew} />
                         </Link>
                     </Text>
                 </animated.div>

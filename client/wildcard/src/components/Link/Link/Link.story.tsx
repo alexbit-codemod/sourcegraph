@@ -1,4 +1,5 @@
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Text } from '../..'
 import { BrandedStory } from '../../../stories/BrandedStory'
@@ -26,8 +27,12 @@ const config: Meta = {
 
 export default config
 
-export const Simple: StoryFn = () => (
-    <Text>
-        Text can contain links, which <Link to="/">trigger a navigation to a different page</Link>.
-    </Text>
-)
+export const Simple: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Link/Link')
+
+    return (
+        <Text>
+            <Trans i18nKey="text-contains-links-navigation" components={{ '0': <Link to="/" /> }} />
+        </Text>
+    )
+}

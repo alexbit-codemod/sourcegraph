@@ -1,6 +1,7 @@
 import { type FC, useCallback } from 'react'
 
 import type { ApolloClient } from '@apollo/client'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { useTemporarySetting } from '@sourcegraph/shared/src/settings/temporary'
@@ -59,6 +60,8 @@ const CORE_STEPS: StepConfiguration[] = [
 interface SetupWizardProps extends TelemetryProps, TelemetryV2Props {}
 
 export const SetupWizard: FC<SetupWizardProps> = props => {
+    const { t } = useTranslation('setup-wizard')
+
     const { telemetryService, telemetryRecorder } = props
 
     const navigate = useNavigate()
@@ -96,7 +99,7 @@ export const SetupWizard: FC<SetupWizardProps> = props => {
 
     return (
         <div className={styles.root}>
-            <PageTitle title="Setup" />
+            <PageTitle title={t('setup-message')} />
             <SetupStepsRoot
                 initialStepId={activeStepId}
                 steps={steps}
@@ -108,7 +111,7 @@ export const SetupWizard: FC<SetupWizardProps> = props => {
                         <BrandLogo variant="logo" isLightTheme={false} className={styles.logo} />
 
                         <H2 as={H1} className="font-weight-normal text-white mt-3 mb-4">
-                            Welcome to Sourcegraph! Let's get started.
+                            {t('welcome-message')}
                         </H2>
                     </header>
 

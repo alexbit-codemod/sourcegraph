@@ -2,6 +2,7 @@ import { type FC, useMemo } from 'react'
 
 import { mdiAlertOctagon, mdiRefresh } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import { pluralize } from '@sourcegraph/common'
@@ -31,6 +32,8 @@ function getReloadURL(): string {
 }
 
 export const DeveloperSettingsGlobalNavItem: FC<{ className?: string }> = ({ className }) => {
+    const { t } = useTranslation('devsettings')
+
     const counter = useOverrideCounter()
     const hasOverrides = counter.featureFlags + counter.temporarySettings > 0
     const showReloadButton = useMighNeedReload()
@@ -42,7 +45,7 @@ export const DeveloperSettingsGlobalNavItem: FC<{ className?: string }> = ({ cla
                 className={classNames(showReloadButton && 'pr-1')}
                 onClick={() => toggleDevSettingsDialog(true)}
             >
-                Developer Settings
+                {t('developer-settings')}
                 {hasOverrides && (
                     <Tooltip
                         content={`You have ${counter.featureFlags} local feature flag and ${counter.temporarySettings} temporary settings overrides.`}

@@ -1,5 +1,7 @@
 import type { FC } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { useTemporarySetting } from '@sourcegraph/shared/src/settings/temporary/useTemporarySetting'
 import { Button, Modal, Link, H1, Text } from '@sourcegraph/wildcard'
 
@@ -40,11 +42,13 @@ interface GaConfirmationModalContentProps {
  * on CI.
  */
 export const GaConfirmationModalContent: FC<GaConfirmationModalContentProps> = props => {
+    const { t } = useTranslation('enterprise/insights/modals')
+
     const { onAccept } = props
 
     return (
         <>
-            <H1 className={styles.title}>Thank you for trying Code Insights!</H1>
+            <H1 className={styles.title}>{t('thank-you-code-insights')}</H1>
 
             <div className={styles.mediaHeroWrapper}>
                 <div className={styles.mediaHeroContent}>
@@ -52,28 +56,27 @@ export const GaConfirmationModalContent: FC<GaConfirmationModalContentProps> = p
                     <FourLineChart className={styles.chart} />
                     <LangStatsInsightChart className={styles.chart} />
                 </div>
-                <div className={styles.mediaHeroOverlay}>Your trial has expired</div>
+                <div className={styles.mediaHeroOverlay}>{t('trial-expired')}</div>
             </div>
 
             <div className={styles.textContent}>
                 <Text>
-                    <b>Your instance is now using the limited access version of Code Insights.</b>
+                    <b>{t('limited-access-version')}</b>
                 </Text>
 
-                <Text>
-                    Contact your admin or reach out to us to upgrade your licence for unlimited insights and dashboards.
-                </Text>
+                <Text>{t('contact-admin-upgrade-license')}</Text>
 
                 <Text>
-                    Questions? Learn more about the{' '}
-                    <Link to="/help/code_insights/references/license">Code Insights limited access</Link> or contact us
-                    directly.
+                    <Trans
+                        i18nKey="learn-more-limited-access"
+                        components={{ '0': <Link to="/help/code_insights/references/license" /> }}
+                    />
                 </Text>
             </div>
 
             <footer className={styles.actions}>
                 <Button variant="primary" onClick={onAccept}>
-                    Understood, let’s go!
+                    {t('understood-go-ahead')}
                 </Button>
             </footer>
         </>

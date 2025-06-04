@@ -2,6 +2,7 @@ import { useCallback, useEffect } from 'react'
 
 import classNames from 'classnames'
 import SourceCommitIcon from 'mdi-react/SourceCommitIcon'
+import { useTranslation } from 'react-i18next'
 import { BehaviorSubject } from 'rxjs'
 
 import { UserAvatar } from '@sourcegraph/shared/src/components/UserAvatar'
@@ -119,6 +120,8 @@ export const BlameDecoration: React.FunctionComponent<BlameDecorationProps> = ({
     onDeselect,
     externalURLs,
 }) => {
+    const { t } = useTranslation('repo/blob')
+
     const hunkStartLine = blameHunk?.startLine ?? line
     const id = hunkStartLine?.toString() || ''
     const onOpen = useCallback(() => {
@@ -231,7 +234,7 @@ export const BlameDecoration: React.FunctionComponent<BlameDecorationProps> = ({
                                         )}
                                         className={styles.footerLink}
                                     >
-                                        View blame prior to this change
+                                        {t('view-blame-prior-to-change')}
                                     </Link>
                                 </div>
                             </>

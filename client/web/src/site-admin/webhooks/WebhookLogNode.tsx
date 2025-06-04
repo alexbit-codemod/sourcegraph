@@ -3,6 +3,7 @@ import React, { useCallback, useState } from 'react'
 import { mdiChevronDown, mdiChevronUp } from '@mdi/js'
 import classNames from 'classnames'
 import { format } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 import type { Optional } from 'utility-types'
 
 import { CodeSnippet } from '@sourcegraph/branded/src/components/CodeSnippet'
@@ -30,6 +31,8 @@ export const WebhookLogNode: React.FunctionComponent<React.PropsWithChildren<Pro
     initialTabIndex,
     node: { error, eventType, externalService, receivedAt, request, response, statusCode },
 }) => {
+    const { t } = useTranslation('site-admin/webhooks')
+
     const [isExpanded, setIsExpanded] = useState(initiallyExpanded === true)
     const toggleExpanded = useCallback(() => setIsExpanded(!isExpanded), [isExpanded])
 
@@ -53,7 +56,7 @@ export const WebhookLogNode: React.FunctionComponent<React.PropsWithChildren<Pro
                     externalService ? (
                         externalService.displayName
                     ) : (
-                        <span className="text-danger">Unmatched</span>
+                        <span className="text-danger">{t('unmatched-status')}</span>
                     )
                 ) : (
                     eventType ?? undefined
@@ -66,15 +69,15 @@ export const WebhookLogNode: React.FunctionComponent<React.PropsWithChildren<Pro
                         <Icon aria-hidden={true} svgPath={mdiChevronUp} />
                     ) : (
                         <Icon aria-hidden={true} svgPath={mdiChevronDown} />
-                    )}{' '}
-                    {isExpanded ? 'Hide' : 'Show'} details
+                    )}
+                    {t('toggle-details', { isExpanded })}
                 </Button>
             </span>
             {isExpanded && (
                 <div className={classNames('px-4', 'pt-3', 'pb-2', styles.expanded)}>
                     <Tabs index={initialTabIndex} size="small">
                         <TabList>
-                            <Tab>Request</Tab>
+                            <Tab>{t('request-action')}</Tab>
                             <Tab>{response ? 'Response' : 'Error'}</Tab>
                         </TabList>
                         <TabPanels>

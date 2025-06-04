@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState, type FC } from 'react'
 
 import { mdiChevronDoubleDown, mdiChevronDoubleUp } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { SearchPatternType } from '@sourcegraph/shared/src/graphql-operations'
@@ -82,6 +83,8 @@ export interface SearchResultsInfoBarProps
  * and a few actions like expand all and save query
  */
 export const SearchResultsInfoBar: FC<SearchResultsInfoBarProps> = props => {
+    const { t } = useTranslation('search/results/components/search-results-info-bar')
+
     const {
         query,
         patternType,
@@ -204,7 +207,7 @@ export const SearchResultsInfoBar: FC<SearchResultsInfoBarProps> = props => {
                         size="sm"
                         aria-label={`${showMobileFilters ? 'Hide' : 'Show'} filters`}
                     >
-                        Filters
+                        {t('filters-title')}
                         <Icon
                             aria-hidden={true}
                             className="ml-2"
@@ -222,7 +225,7 @@ export const SearchResultsInfoBar: FC<SearchResultsInfoBarProps> = props => {
                         size="sm"
                         aria-label="Show filters sidebar"
                     >
-                        Filters
+                        {t('filters-title-duplicate')}
                         <Icon aria-hidden={true} className="ml-2" svgPath={mdiChevronDoubleDown} />
                     </Button>
                 )}
@@ -241,7 +244,10 @@ export const SearchResultsInfoBar: FC<SearchResultsInfoBarProps> = props => {
                             )
                         }
                     >
-                        {aggregationUIMode === AggregationUIMode.SearchPage ? 'Hide' : 'Show'} aggregation results
+                        {t('aggregation-results-toggle', {
+                            aggregationUiModeAggregationUiModeSearchPage:
+                                aggregationUIMode === AggregationUIMode.SearchPage,
+                        })}
                     </Button>
                 )}
             </div>

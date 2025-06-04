@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 
 import { mdiPlus } from '@mdi/js'
 import { groupBy, noop } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { PageHeader, Button, Icon, ProductStatusBadge, ErrorAlert, LoadingSpinner, Link } from '@sourcegraph/wildcard'
@@ -19,6 +20,8 @@ export interface SiteAdminRolesPageProps extends TelemetryV2Props {}
 export const SiteAdminRolesPage: React.FunctionComponent<React.PropsWithChildren<SiteAdminRolesPageProps>> = ({
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/rbac')
+
     useEffect(() => {
         telemetryRecorder.recordEvent('admin.roles', 'view')
     }, [telemetryRecorder])
@@ -52,26 +55,31 @@ export const SiteAdminRolesPage: React.FunctionComponent<React.PropsWithChildren
 
     return (
         <div className="site-admin-roles-page">
-            <PageTitle title="Roles - Admin" />
+            <PageTitle title={t('roles-admin')} />
             <PageHeader
                 className={styles.rolesPageHeader}
                 description={
                     <>
-                        Roles are a part of the{' '}
-                        <Link to="/help/admin/access_control">Role-Based Access Control system</Link> for Sourcegraph
-                        and represent a set of in-product permissions. Use the{' '}
-                        <Link to="/site-admin/users">user administration page</Link> to assign roles.
+                        <Trans
+                            i18nKey="roles-description-access-control"
+                            components={{
+                                '0': <Link to="/help/admin/access_control" />,
+                                '1': <Link to="/site-admin/users" />,
+                            }}
+                        />
                     </>
                 }
                 actions={
                     <Button variant="primary" onClick={openModal}>
-                        <Icon aria-hidden={true} svgPath={mdiPlus} /> Create role
+                        <Icon aria-hidden={true} svgPath={mdiPlus} />
+                        {t('create-role')}
                     </Button>
                 }
             >
                 <PageHeader.Heading as="h2">
                     <PageHeader.Breadcrumb>
-                        Roles <ProductStatusBadge status="beta" />
+                        {t('roles-label')}
+                        <ProductStatusBadge status="beta" />
                     </PageHeader.Breadcrumb>
                 </PageHeader.Heading>
             </PageHeader>

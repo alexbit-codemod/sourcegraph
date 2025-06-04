@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { pluralize } from '@sourcegraph/common'
 import { Button, useObservable, Link, H4, Text } from '@sourcegraph/wildcard'
@@ -32,6 +33,8 @@ export const WebhookAlert: React.FunctionComponent<React.PropsWithChildren<Props
     },
     isSiteAdmin,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail')
+
     const user = useObservable(authenticatedUser)
     if (isSiteAdmin === undefined) {
         isSiteAdmin = user?.siteAdmin === true
@@ -53,22 +56,27 @@ export const WebhookAlert: React.FunctionComponent<React.PropsWithChildren<Props
     return (
         <DismissibleAlert variant="warning" partialStorageKey={id}>
             <div>
-                <H4>Changeset information may not be up to date</H4>
+                <H4>{t('changeset-info-not-up-to-date')}</H4>
                 <Text className={styles.blurb}>
-                    Sourcegraph will poll for updates because{' '}
+                    {t('sourcegraph-poll-for-updates')}
                     <Button className={classNames(styles.openLink, 'p-0')} onClick={toggleOpen} variant="link">
                         {totalCount}{' '}
                         {pluralize('code host is not configured', totalCount, 'code hosts are not configured')}
-                    </Button>{' '}
-                    to use webhooks.{' '}
+                    </Button>
+                    {t('use-webhooks-instructions')}
                     {isSiteAdmin ? (
                         <>
-                            Learn how to <Link to={SITE_ADMIN_CONFIG_DOC_URL}>configure webhooks</Link> or disable this
-                            warning.
+                            <Trans
+                                i18nKey="learn-configure-webhooks"
+                                components={{ '0': <Link to={SITE_ADMIN_CONFIG_DOC_URL} /> }}
+                            />
                         </>
                     ) : (
                         <>
-                            Ask your site admin <Link to={SITE_ADMIN_CONFIG_DOC_URL}>to configure webhooks</Link>.
+                            <Trans
+                                i18nKey="ask-admin-configure-webhooks"
+                                components={{ '0': <Link to={SITE_ADMIN_CONFIG_DOC_URL} /> }}
+                            />
                         </>
                     )}
                 </Text>
@@ -79,7 +87,11 @@ export const WebhookAlert: React.FunctionComponent<React.PropsWithChildren<Props
                                 <CodeHost {...codeHost} />
                             </li>
                         ))}
-                        {hasNextPage && <li key="and-more">and {totalCount - nodes.length} more</li>}
+                        {hasNextPage && (
+                            <li key="and-more">
+                                {t('more-items-available', { totalCountNodesLength: totalCount - nodes.length })}
+                            </li>
+                        )}
                     </ul>
                 )}
             </div>

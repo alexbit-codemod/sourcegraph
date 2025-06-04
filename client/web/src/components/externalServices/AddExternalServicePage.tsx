@@ -1,6 +1,7 @@
 import { type FC, useEffect, useCallback, useState } from 'react'
 
 import type { FetchResult } from '@apollo/client'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { logger, renderMarkdown } from '@sourcegraph/common'
@@ -58,6 +59,8 @@ export const AddExternalServicePage: FC<Props> = ({
     allowEditExternalServicesWithFile,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('components/externalServices')
+
     const [config, setConfig] = useState(externalService.defaultConfig)
     const [displayName, setDisplayName] = useState(externalService.defaultDisplayName)
     const navigate = useNavigate()
@@ -121,7 +124,7 @@ export const AddExternalServicePage: FC<Props> = ({
 
     return (
         <>
-            <PageTitle title="Add a code host connection" />
+            <PageTitle title={t('add-code-host-connection')} />
             <PageHeader headingElement="h2" path={[{ text: 'Add a code host connection' }]} className="mb-3" />
             <Container className="mb-3">
                 {createdExternalService?.warning ? (
@@ -130,14 +133,14 @@ export const AddExternalServicePage: FC<Props> = ({
                             <ExternalServiceCard
                                 {...externalService}
                                 title={createdExternalService.displayName}
-                                shortDescription="Update this external service configuration to manage repository mirroring."
+                                shortDescription={t('update-external-service-configuration')}
                                 to={`/site-admin/external-services/${encodeURIComponent(
                                     createdExternalService.id
                                 )}/edit`}
                             />
                         </div>
                         <Alert variant="warning">
-                            <H4>Warning</H4>
+                            <H4>{t('warning')}</H4>
                             <Markdown dangerousInnerHTML={renderMarkdown(createdExternalService.warning)} />
                         </Alert>
                     </div>
@@ -148,7 +151,7 @@ export const AddExternalServicePage: FC<Props> = ({
                         </div>
                         {Instructions && (
                             <>
-                                <H3>Instructions:</H3>
+                                <H3>{t('instructions')}</H3>
                                 <div className="mb-4">
                                     <Instructions />
                                 </div>

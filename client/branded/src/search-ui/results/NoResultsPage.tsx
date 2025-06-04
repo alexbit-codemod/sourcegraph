@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react'
 
 import { mdiClose, mdiOpenInNew } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import type { SearchPatternType } from '@sourcegraph/shared/src/graphql-operations'
 import type { SearchContextProps } from '@sourcegraph/shared/src/search'
@@ -66,6 +67,8 @@ export const NoResultsPage: React.FunctionComponent<React.PropsWithChildren<NoRe
     selectedSearchContextSpec,
     queryExamplesPatternType,
 }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/results')
+
     const [hiddenSectionIDs, setHiddenSectionIds] = useTemporarySetting('search.hiddenNoResultsSections')
 
     const onClose = useCallback(
@@ -88,7 +91,7 @@ export const NoResultsPage: React.FunctionComponent<React.PropsWithChildren<NoRe
         <div className={styles.root}>
             {showQueryExamples && (
                 <>
-                    <H3 as={H2}>Search basics</H3>
+                    <H3 as={H2}>{t('search-basics')}</H3>
                     <div className={styles.queryExamplesContainer}>
                         <QueryExamples
                             selectedSearchContextSpec={selectedSearchContextSpec}
@@ -111,7 +114,7 @@ export const NoResultsPage: React.FunctionComponent<React.PropsWithChildren<NoRe
                     )}
 
                     <Container title="More resources">
-                        <Text>Check out the docs for more tips on getting the most from Sourcegraph.</Text>
+                        <Text>{t('docs-tips-sourcegraph')}</Text>
                         <Text>
                             <Link
                                 onClick={() => {
@@ -121,14 +124,15 @@ export const NoResultsPage: React.FunctionComponent<React.PropsWithChildren<NoRe
                                 target="blank"
                                 to="https://sourcegraph.com/docs/"
                             >
-                                Sourcegraph Docs <Icon svgPath={mdiOpenInNew} aria-label="Open in a new tab" />
+                                {t('sourcegraph-docs-link')}
+                                <Icon svgPath={mdiOpenInNew} aria-label="Open in a new tab" />
                             </Link>
                         </Text>
                     </Container>
 
                     {hiddenSectionIDs && hiddenSectionIDs.length > 0 && (
                         <Text>
-                            Some help panels are hidden.{' '}
+                            {t('hidden-help-panels-message')}
                             <Button
                                 className="p-0 border-0 align-baseline"
                                 onClick={() => {
@@ -138,7 +142,7 @@ export const NoResultsPage: React.FunctionComponent<React.PropsWithChildren<NoRe
                                 }}
                                 variant="link"
                             >
-                                Show all panels.
+                                {t('show-all-panels-action')}
                             </Button>
                         </Text>
                     )}

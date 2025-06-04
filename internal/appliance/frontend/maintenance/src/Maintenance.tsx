@@ -4,6 +4,7 @@ import Unhealthy from '@mui/icons-material/CarCrashOutlined'
 import Healthy from '@mui/icons-material/ThumbUp'
 import { Alert, Button, CircularProgress, Grid, Stack, Typography } from '@mui/material'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { call } from './api'
 import { maintenance } from './debugBar'
@@ -21,17 +22,19 @@ type Status = {
     services: Service[]
 }
 
-const ShowServices: React.FC<{ services: Service[] }> = ({ services }) =>
-    services.length > 0 ? (
+const ShowServices: React.FC<{ services: Service[] }> = ({ services }) => {
+    const { t } = useTranslation('../../../internal/appliance/frontend/maintenance/src')
+
+    return services.length > 0 ? (
         <Grid container spacing={2} className="service-grid">
             <Grid item xs={3} className="service-header">
-                <Typography variant="caption">Service</Typography>
+                <Typography variant="caption">{t('service')}</Typography>
             </Grid>
             <Grid item xs={3} className="service-header">
-                <Typography variant="caption">Health</Typography>
+                <Typography variant="caption">{t('health')}</Typography>
             </Grid>
             <Grid item xs={6} className="service-header">
-                <Typography variant="caption">Message</Typography>
+                <Typography variant="caption">{t('message')}</Typography>
             </Grid>
             {services.map((s: Service) => {
                 const className = classNames('service-item', s.healthy ? 'healthy' : 'unhealthy')
@@ -52,8 +55,11 @@ const ShowServices: React.FC<{ services: Service[] }> = ({ services }) =>
             })}
         </Grid>
     ) : null
+}
 
 export const Maintenance: React.FC = () => {
+    const { t } = useTranslation('../../../internal/appliance/frontend/maintenance/src')
+
     const [status, setStatus] = useState<Status | undefined>()
     const [fixing, setFixing] = useState<boolean>(false)
 
@@ -80,15 +86,12 @@ export const Maintenance: React.FC = () => {
 
     return (
         <div className="maintenance">
-            <Typography variant="h5">Maintenance Page</Typography>
+            <Typography variant="h5">{t('maintenance-page')}</Typography>
             {ready ? (
                 unhealthy ? (
-                    <Alert severity="warning">
-                        Something is wrong. Please check the logs and actions below to resolve. If does not resolve,
-                        please contact support.
-                    </Alert>
+                    <Alert severity="warning">{t('error-message-logs')}</Alert>
                 ) : (
-                    <Alert severity="success">Everything is pretty around here!</Alert>
+                    <Alert severity="success">{t('everything-is-pretty')}</Alert>
                 )
             ) : (
                 <CircularProgress />
@@ -96,23 +99,23 @@ export const Maintenance: React.FC = () => {
 
             {ready ? (
                 <>
-                    <Typography variant="h5">Service Status</Typography>
+                    <Typography variant="h5">{t('service-status')}</Typography>
                     <ShowServices services={status?.services ?? []} />
                 </>
             ) : null}
 
             {unhealthy && (
                 <>
-                    <Typography variant="h5">Actions</Typography>
+                    <Typography variant="h5">{t('actions')}</Typography>
                     <Stack direction="row" spacing={1}>
                         <Button variant="contained" onClick={() => setFixing(true)}>
-                            Restart Cluster
+                            {t('restart-cluster')}
                         </Button>
                         <Button variant="contained" onClick={() => alert('failed :-(')}>
-                            Page On-Call
+                            {t('page-on-call')}
                         </Button>
                         <Button variant="contained" onClick={() => alert('failed :-(')}>
-                            Call Sourcegraph Support
+                            {t('call-support')}
                         </Button>
                     </Stack>
                 </>
@@ -121,7 +124,7 @@ export const Maintenance: React.FC = () => {
             {fixing && (
                 <Stack direction="row" spacing={2}>
                     <CircularProgress size={32} />
-                    <Typography variant="h5">Fixing... Please wait...</Typography>
+                    <Typography variant="h5">{t('fixing-please-wait')}</Typography>
                 </Stack>
             )}
         </div>

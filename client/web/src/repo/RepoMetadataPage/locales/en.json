@@ -1,0 +1,14 @@
+{
+  "metadata-added": "Metadata added",
+  "add-metadata": "Add metadata",
+  "add-key-value-pair": "Add an additional key, or key-value pair, to this repository.",
+  "key-label": "Key",
+  "value-optional": "Value (optional)",
+  "add-action": "Add",
+  "loading-message": "Loading...",
+  "repo-metadata-settings-title": "Repo metadata settings",
+  "repo-metadata-settings-description": "Add repository metadata to help search, filter and navigate between repositories. Repository metadata can also be added via the CLI and API. See the <0>Repository Metadata Documentation</0> to learn more.",
+  "filter-metadata-prompt": "Filter metadata by key or value…",
+  "no-metadata-found-with-query": "No metadata containing \"{{searchQuery}}\"",
+  "no-metadata-found": "No metadata"
+}

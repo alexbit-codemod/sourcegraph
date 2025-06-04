@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 
 import { mdiMapSearch } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { dataOrThrowErrors } from '@sourcegraph/http-client'
 import { BulkOperationState } from '@sourcegraph/shared/src/graphql-operations'
@@ -69,12 +70,16 @@ export const BulkOperationsTab: React.FunctionComponent<React.PropsWithChildren<
     )
 }
 
-const EmptyBulkOperationsListElement: React.FunctionComponent<React.PropsWithChildren<{}>> = () => (
-    <div className="text-muted text-center mb-3 w-100">
-        <Icon className="icon" svgPath={mdiMapSearch} inline={false} aria-hidden={true} />
-        <div className="pt-2">No bulk operations have been run on this batch change.</div>
-    </div>
-)
+const EmptyBulkOperationsListElement: React.FunctionComponent<React.PropsWithChildren<{}>> = () => {
+    const { t } = useTranslation('enterprise/batches/detail')
+
+    return (
+        <div className="text-muted text-center mb-3 w-100">
+            <Icon className="icon" svgPath={mdiMapSearch} inline={false} aria-hidden={true} />
+            <div className="pt-2">{t('no-bulk-operations-batch-change')}</div>
+        </div>
+    )
+}
 
 const BATCH_COUNT = 15
 

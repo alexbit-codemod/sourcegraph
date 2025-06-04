@@ -1,6 +1,7 @@
 import { type FC, type ReactNode, useEffect } from 'react'
 
 import { useQuery } from '@apollo/client'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { useMutation } from '@sourcegraph/http-client'
@@ -48,6 +49,8 @@ interface CodeHostEditProps extends TelemetryProps, TelemetryV2Props {
  * Also performs edit, delete actions over opened code host connection
  */
 export const CodeHostEdit: FC<CodeHostEditProps> = props => {
+    const { t } = useTranslation('setup-wizard/components/remote-repositories-step/components/code-hosts')
+
     const { onCodeHostDelete, telemetryService, telemetryRecorder } = props
     const { codehostId } = useParams()
 
@@ -68,7 +71,7 @@ export const CodeHostEdit: FC<CodeHostEditProps> = props => {
             <div>
                 <ErrorAlert error={error} />
                 <Button variant="secondary" outline={true} size="sm" onClick={() => refetch()}>
-                    Try fetch again
+                    {t('try-fetch-again')}
                 </Button>
             </div>
         )
@@ -77,7 +80,8 @@ export const CodeHostEdit: FC<CodeHostEditProps> = props => {
     if (!data || (!data && loading)) {
         return (
             <small className={styles.loadingState}>
-                <LoadingSpinner /> Fetching connected code host...
+                <LoadingSpinner />
+                {t('fetching-connected-code-host')}
             </small>
         )
     }
@@ -85,8 +89,8 @@ export const CodeHostEdit: FC<CodeHostEditProps> = props => {
     if (data.node?.__typename !== 'ExternalService') {
         return (
             <Alert variant="warning">
-                <H4>We either couldn't find code host</H4>
-                Try to connect new code host instead <Link to="..">here</Link>
+                <H4>{t('code-host-not-found')}</H4>
+                <Trans i18nKey="try-connect-new-code-host" components={{ '0': <Link to=".." /> }} />
             </Alert>
         )
     }
@@ -101,32 +105,36 @@ export const CodeHostEdit: FC<CodeHostEditProps> = props => {
             telemetryService={telemetryService}
             telemetryRecorder={telemetryRecorder}
         >
-            {state => (
-                <footer className={styles.footer}>
-                    <LoaderButton
-                        type="submit"
-                        variant="primary"
-                        size="sm"
-                        label={state.submitting ? 'Updating' : 'Update'}
-                        alwaysShowLabel={true}
-                        loading={state.submitting}
-                        disabled={state.submitting}
-                    />
+            {state => {
+                const { t } = useTranslation('setup-wizard/components/remote-repositories-step/components/code-hosts')
 
-                    <Button as={Link} size="sm" to=".." variant="secondary">
-                        Cancel
-                    </Button>
+                return (
+                    <footer className={styles.footer}>
+                        <LoaderButton
+                            type="submit"
+                            variant="primary"
+                            size="sm"
+                            label={state.submitting ? 'Updating' : 'Update'}
+                            alwaysShowLabel={true}
+                            loading={state.submitting}
+                            disabled={state.submitting}
+                        />
 
-                    <Button
-                        variant="danger"
-                        size="sm"
-                        type="submit"
-                        onClick={() => onCodeHostDelete(data.node as EditableCodeHost)}
-                    >
-                        Delete
-                    </Button>
-                </footer>
-            )}
+                        <Button as={Link} size="sm" to=".." variant="secondary">
+                            {t('cancel-action')}
+                        </Button>
+
+                        <Button
+                            variant="danger"
+                            size="sm"
+                            type="submit"
+                            onClick={() => onCodeHostDelete(data.node as EditableCodeHost)}
+                        >
+                            {t('delete-action')}
+                        </Button>
+                    </footer>
+                )
+            }}
         </CodeHostEditView>
     )
 }

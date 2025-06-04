@@ -1,5 +1,7 @@
 import { type FC, useCallback, useEffect, useMemo } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
 import { useLocalStorage, Link, PageHeader, useObservable, FORM_ERROR } from '@sourcegraph/wildcard'
@@ -46,6 +48,8 @@ export interface LangStatsInsightCreationPageProps extends TelemetryProps, Telem
 }
 
 export const LangStatsInsightCreationPage: FC<LangStatsInsightCreationPageProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation/lang-stats')
+
     const { backUrl, telemetryService, telemetryRecorder, onInsightCreateRequest, onCancel, onSuccessfulCreation } =
         props
 
@@ -100,7 +104,7 @@ export const LangStatsInsightCreationPage: FC<LangStatsInsightCreationPageProps>
 
     return (
         <CodeInsightsPage>
-            <PageTitle title="Create language usage insight - Code Insights" />
+            <PageTitle title={t('create-language-usage-insight')} />
 
             <PageHeader
                 className="mb-5"
@@ -111,10 +115,10 @@ export const LangStatsInsightCreationPage: FC<LangStatsInsightCreationPageProps>
                 ]}
                 description={
                     <span className="text-muted">
-                        Shows language usage in your repository based on number of lines of code.{' '}
-                        <Link to="/help/code_insights" target="_blank" rel="noopener">
-                            Learn more.
-                        </Link>
+                        <Trans
+                            i18nKey="language-usage-repository-insight"
+                            components={{ '0': <Link to="/help/code_insights" target="_blank" rel="noopener" /> }}
+                        />
                     </span>
                 }
             />

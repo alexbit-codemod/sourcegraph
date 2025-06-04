@@ -1,0 +1,9 @@
+{
+  "insight-processing": "This insight is still being processed",
+  "no-data-display": "No data to display",
+  "no-matches-found": "We couldn’t find any matches for this insight.",
+  "troubleshoot": "Troubleshoot",
+  "incomplete-data-points-troubleshoot": "Results for some points of this data series may be incomplete. <0>Troubleshoot</0>",
+  "timeout-limit-exceeded": "Exceeded the timeout limit:",
+  "unable-to-calculate": "Unable to calculate:"
+}

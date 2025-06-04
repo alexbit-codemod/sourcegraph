@@ -2,6 +2,7 @@ import { useCallback, type FC } from 'react'
 
 import { mdiHelpCircleOutline, mdiOpenInNew } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
@@ -32,6 +33,8 @@ interface SearchHelpDropdownButtonProps extends TelemetryProps, TelemetryV2Props
  * syntax.
  */
 export const SearchHelpDropdownButton: FC<SearchHelpDropdownButtonProps> = props => {
+    const { t } = useTranslation('../../branded/src/search-ui/input')
+
     const { isSourcegraphDotCom, className, telemetryService, telemetryRecorder } = props
 
     const onQueryDocumentationLinkClicked = useCallback(() => {
@@ -57,68 +60,72 @@ export const SearchHelpDropdownButton: FC<SearchHelpDropdownButtonProps> = props
 
             <PopoverContent position={Position.bottom} className={styles.content}>
                 <MenuHeader>
-                    <strong>Search reference</strong>
+                    <strong>{t('search-reference')}</strong>
                 </MenuHeader>
                 <MenuDivider />
-                <MenuHeader>Finding matches:</MenuHeader>
+                <MenuHeader>{t('finding-matches')}</MenuHeader>
                 <ul className="list-unstyled px-2 mb-2">
                     <li>
-                        <span className="text-muted small">Structural:</span> <Code weight="bold">if(:[my_match])</Code>
+                        <span className="text-muted small">{t('structural')}</span>{' '}
+                        <Code weight="bold">{t('if-my-match')}</Code>
                     </li>
                     <li>
-                        <span className="text-muted small">Regexp:</span> <Code weight="bold">(read|write)File</Code>
+                        <span className="text-muted small">{t('regexp')}</span>{' '}
+                        <Code weight="bold">{t('read-write-file')}</Code>
                     </li>
                     <li>
-                        <span className="text-muted small">Exact:</span> <Code weight="bold">fs.open(f)</Code>
+                        <span className="text-muted small">{t('exact')}</span>{' '}
+                        <Code weight="bold">{t('fs-open-f')}</Code>
                     </li>
                 </ul>
                 <MenuDivider />
-                <MenuHeader>Common search keywords:</MenuHeader>
+                <MenuHeader>{t('common-search-keywords')}</MenuHeader>
                 <ul className="list-unstyled px-2 mb-2">
                     <li>
                         <Code>
-                            repo:<strong>my/repo</strong>
+                            <Trans i18nKey="repo-my-repo" components={{ '0': <strong /> }} />
                         </Code>
                     </li>
                     {isSourcegraphDotCom && (
                         <li>
                             <Code>
-                                repo:<strong>github.com/myorg/</strong>
+                                <Trans i18nKey="repo-github-org" components={{ '0': <strong /> }} />
                             </Code>
                         </li>
                     )}
                     <li>
                         <Code>
-                            file:<strong>my/file</strong>
+                            <Trans i18nKey="file-my-file" components={{ '0': <strong /> }} />
                         </Code>
                     </li>
                     <li>
                         <Code>
-                            lang:<strong>javascript</strong>
+                            <Trans i18nKey="lang-javascript" components={{ '0': <strong /> }} />
                         </Code>
                     </li>
                 </ul>
                 <MenuDivider />
-                <MenuHeader>Diff/commit search keywords:</MenuHeader>
+                <MenuHeader>{t('diff-commit-search-keywords')}</MenuHeader>
                 <ul className="list-unstyled px-2 mb-2">
                     <li>
-                        <Code>type:diff</Code> <em className="text-muted small">or</em> <Code>type:commit</Code>
+                        <Code>{t('type-diff')}</Code> <em className="text-muted small">{t('or')}</em>{' '}
+                        <Code>{t('type-commit')}</Code>
                     </li>
                     <li>
                         <Code>
-                            after:<strong>"2 weeks ago"</strong>
+                            <Trans i18nKey="after-2-weeks-ago" components={{ '0': <strong /> }} />
                         </Code>
                     </li>
                     <li>
                         <Code>
-                            author:<strong>alice@example.com</strong>
+                            <Trans i18nKey="author-alice-email" components={{ '0': <strong /> }} />
                         </Code>
                     </li>
                     <li className="text-nowrap">
                         <Code>
-                            repo:<strong>r@*refs/heads/</strong>
+                            <Trans i18nKey="repo-r-refs-heads" components={{ '0': <strong /> }} />
                         </Code>{' '}
-                        <span className="text-muted small">(all branches)</span>
+                        <span className="text-muted small">{t('all-branches')}</span>
                     </li>
                 </ul>
                 <MenuDivider className="mb-0" />
@@ -129,7 +136,8 @@ export const SearchHelpDropdownButton: FC<SearchHelpDropdownButtonProps> = props
                     to="/help/code_search/reference/queries"
                     onClick={onQueryDocumentationLinkClicked}
                 >
-                    <Icon aria-hidden={true} className="small" svgPath={mdiOpenInNew} /> All search keywords
+                    <Icon aria-hidden={true} className="small" svgPath={mdiOpenInNew} />
+                    {t('all-search-keywords')}
                 </MenuText>
             </PopoverContent>
             <PopoverTail size="sm" />

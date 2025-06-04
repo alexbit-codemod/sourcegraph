@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { gql, useMutation } from '@sourcegraph/http-client'
 import { Button, type ButtonProps, LoadingSpinner } from '@sourcegraph/wildcard'
@@ -16,6 +17,8 @@ interface CodeInsightsJobActionsProps {
 }
 
 export const CodeInsightsJobsActions: FC<CodeInsightsJobActionsProps> = props => {
+    const { t } = useTranslation('enterprise/insights/admin-ui/components/job-actions')
+
     const { selectedJobIds, className, onSelectionClear } = props
 
     const [retryJobs, { loading: retryLoading }] = useMutation(getMultipleRetryMutation(selectedJobIds), {
@@ -41,7 +44,7 @@ export const CodeInsightsJobsActions: FC<CodeInsightsJobActionsProps> = props =>
                 actionCount={selectedJobIds.length}
                 onClick={() => retryJobs()}
             >
-                Retry
+                {t('retry-action')}
             </JobActionButton>
             <JobActionButton
                 disabled={loading}
@@ -49,7 +52,7 @@ export const CodeInsightsJobsActions: FC<CodeInsightsJobActionsProps> = props =>
                 actionCount={selectedJobIds.length}
                 onClick={() => moveToBack()}
             >
-                Back of queue
+                {t('back-of-queue')}
             </JobActionButton>
             <JobActionButton
                 disabled={loading}
@@ -57,11 +60,11 @@ export const CodeInsightsJobsActions: FC<CodeInsightsJobActionsProps> = props =>
                 actionCount={selectedJobIds.length}
                 onClick={() => moveToFront()}
             >
-                Front of queue
+                {t('front-of-queue')}
             </JobActionButton>
             {selectedJobIds.length > 0 && (
                 <Button variant="secondary" outline={true} onClick={onSelectionClear}>
-                    Clear selection
+                    {t('clear-selection')}
                 </Button>
             )}
         </div>

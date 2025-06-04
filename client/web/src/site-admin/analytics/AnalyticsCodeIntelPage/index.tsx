@@ -2,6 +2,7 @@ import React, { useMemo, useEffect, useState } from 'react'
 
 import classNames from 'classnames'
 import { groupBy, sortBy, startCase, sumBy } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { useQuery } from '@sourcegraph/http-client'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -37,6 +38,8 @@ import styles from './index.module.scss'
 
 interface Props extends TelemetryV2Props {}
 export const AnalyticsCodeIntelPage: React.FC<Props> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin/analytics/AnalyticsCodeIntelPage')
+
     const { dateRange, aggregation, grouping } = useChartFilters({ name: 'CodeIntel', telemetryRecorder })
     const { data, error, loading } = useQuery<CodeIntelStatisticsResult, CodeIntelStatisticsVariables>(
         CODEINTEL_STATISTICS,
@@ -278,8 +281,11 @@ export const AnalyticsCodeIntelPage: React.FC<Props> = ({ telemetryRecorder }) =
                                 brand: 'precise',
                                 element: (
                                     <div key={lang} className={styles.preciseItem}>
-                                        <strong>{Math.round((precise / total) * 100)}%</strong> Precise coverage for{' '}
-                                        <strong>{lang}</strong>
+                                        <Trans
+                                            i18nKey="precise-coverage-percentage"
+                                            values={{ lang: <>{lang}</> }}
+                                            components={{ '0': <strong />, '1': <strong /> }}
+                                        />
                                     </div>
                                 ),
                             }
@@ -299,7 +305,7 @@ export const AnalyticsCodeIntelPage: React.FC<Props> = ({ telemetryRecorder }) =
                         {items.filter(item => item.brand === 'precise').map(item => item.element)}
                         {items.some(item => item.brand === 'configurable') && (
                             <div className={styles.preciseItem}>
-                                Configure precise navigation for{' '}
+                                {t('configure-precise-navigation')}
                                 {items
                                     .filter(item => item.brand === 'configurable')
                                     .map(item => item.element)
@@ -316,7 +322,7 @@ export const AnalyticsCodeIntelPage: React.FC<Props> = ({ telemetryRecorder }) =
 
     return (
         <>
-            <AnalyticsPageTitle>Code navigation</AnalyticsPageTitle>
+            <AnalyticsPageTitle>{t('code-navigation')}</AnalyticsPageTitle>
 
             <Card className="p-3 position-relative">
                 <div className="d-flex justify-content-end align-items-stretch mb-2 text-nowrap">
@@ -342,35 +348,41 @@ export const AnalyticsCodeIntelPage: React.FC<Props> = ({ telemetryRecorder }) =
                         </div>
                     </div>
                 )}
-                <H2 className="my-3">Total time saved</H2>
+                <H2 className="my-3">{t('total-time-saved')}</H2>
                 {calculatorProps && <TimeSavedCalculatorGroup {...calculatorProps} />}
                 <div className={styles.suggestionBox}>
-                    <H4 className="my-3">Suggestions</H4>
+                    <H4 className="my-3">{t('suggestions')}</H4>
                     <div className={classNames(styles.border, 'mb-3')} />
                     <ul className="mb-3 pl-3">
                         <Text as="li">
-                            Promote installation of the{' '}
+                            {t('promote-installation')}
                             <AnchorLink to="/help/integration/browser_extension" target="_blank">
-                                browser extension
-                            </AnchorLink>{' '}
-                            to add code intelligence to your code hosts.
+                                {t('browser-extension')}
+                            </AnchorLink>
+                            {t('add-code-intelligence')}
                         </Text>
                         {repos && (
                             <Text as="li">
-                                <b>{repos.preciseCodeIntelCount}</b> of your <b>{repos.count}</b> repositories have
-                                precise code navigation.{' '}
+                                <Trans
+                                    i18nKey="precise-code-intel-count"
+                                    values={{
+                                        reposPreciseCodeIntelCount: <>{repos.preciseCodeIntelCount}</>,
+                                        reposCount: <>{repos.count}</>,
+                                    }}
+                                    components={{ '0': <b />, '1': <b /> }}
+                                />
                                 <AnchorLink
                                     to="/help/code_navigation/explanations/precise_code_navigation"
                                     target="_blank"
                                 >
-                                    Learn how to improve precise code navigation coverage.
+                                    {t('improve-precise-navigation-coverage')}
                                 </AnchorLink>
                             </Text>
                         )}
                     </ul>
                 </div>
                 <div>
-                    <H4 className="my-3">Events by language</H4>
+                    <H4 className="my-3">{t('events-by-language')}</H4>
                     {data && (
                         <div className={styles.events}>
                             <ChartContainer className={styles.chart} labelX="Languages" labelY="Events">
@@ -397,18 +409,18 @@ export const AnalyticsCodeIntelPage: React.FC<Props> = ({ telemetryRecorder }) =
                                 <div className={styles.percent}>
                                     {preciseFraction ? (100 * preciseFraction).toFixed(1) : '...'}%
                                 </div>
-                                <div>Precise code navigation</div>
+                                <div>{t('precise-code-navigation')}</div>
                             </div>
                         </div>
                     )}
-                    <H4 className="my-3">Top repositories</H4>
+                    <H4 className="my-3">{t('top-repositories')}</H4>
                     {topRepos && (
                         <div className={styles.repos}>
                             <div className="text-muted text-nowrap">{/* Repository */}</div>
-                            <div className="text-center text-muted text-nowrap">Events</div>
-                            <div className="text-center text-muted text-nowrap">Hours saved</div>
-                            <div className="text-center text-muted text-nowrap">Precise enabled</div>
-                            <div className="text-muted text-nowrap">Precise navigation</div>
+                            <div className="text-center text-muted text-nowrap">{t('events')}</div>
+                            <div className="text-center text-muted text-nowrap">{t('hours-saved')}</div>
+                            <div className="text-center text-muted text-nowrap">{t('precise-enabled')}</div>
+                            <div className="text-muted text-nowrap">{t('precise-navigation')}</div>
                             {topRepos.map((repo, index) => (
                                 <React.Fragment key={index}>
                                     <Text className="text-muted">{repo.repoName}</Text>
@@ -429,8 +441,9 @@ export const AnalyticsCodeIntelPage: React.FC<Props> = ({ telemetryRecorder }) =
                 </div>
             </Card>
             <Text className="font-italic text-center mt-2">
-                All events are generated from entries in the event logs table and are updated every 24 hours.
-                <br />* Calculated from precise code navigation events
+                {t('event-logs-update-info')}
+                <br />
+                {t('calculated-from-precise-events')}
             </Text>
         </>
     )

@@ -3,6 +3,7 @@
 import React, { useCallback, useState } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { type IEditor, LazyQueryInput } from '@sourcegraph/branded'
 import { SearchContextDropdown } from '@sourcegraph/branded/src/search-ui/input/SearchContextDropdown'
@@ -51,6 +52,8 @@ export interface JetBrainsSearchBoxProps
 }
 
 export const JetBrainsSearchBox: React.FunctionComponent<React.PropsWithChildren<JetBrainsSearchBoxProps>> = props => {
+    const { t } = useTranslation('../../jetbrains/webview/src/search/input')
+
     const { queryState, onEditorCreated: onEditorCreatedCallback, onChange } = props
 
     const [editor, setEditor] = useState<IEditor>()
@@ -124,7 +127,7 @@ export const JetBrainsSearchBox: React.FunctionComponent<React.PropsWithChildren
                         selectedSearchContextSpec={props.selectedSearchContextSpec}
                         className={styles.searchBoxInput}
                         onEditorCreated={onEditorCreated}
-                        placeholder="Enter search query..."
+                        placeholder={t('enter-search-query')}
                     />
                     <JetBrainsToggles
                         patternType={props.patternType}

@@ -2,6 +2,7 @@ import React from 'react'
 
 import type { MockedResponse } from '@apollo/client/testing'
 import type { Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { noOpTelemetryRecorder } from '@sourcegraph/shared/src/telemetry'
 import { NOOP_TELEMETRY_SERVICE } from '@sourcegraph/shared/src/telemetry/telemetryService'
@@ -1364,48 +1365,55 @@ export const BackendInsightDemoCasesShowcase: StoryFn = () => (
     </div>
 )
 
-export const BackendInsightVitrine: StoryFn = () => (
-    <section>
-        <article>
-            <H2>Card</H2>
-            <MockedTestProvider addTypename={true} mocks={mockInsightAPIResponse()}>
-                <TestBackendInsight />
-            </MockedTestProvider>
-        </article>
-        <article className="mt-3">
-            <H2>Card with delay API</H2>
-            <MockedTestProvider mocks={mockInsightAPIResponse({ delayAmount: 2000 })}>
-                <TestBackendInsight />
-            </MockedTestProvider>
-        </article>
-        <article className="mt-3">
-            <H2>Card backfilling data</H2>
-            <MockedTestProvider addTypename={true} mocks={mockInsightAPIResponse({ isFetchingHistoricalData: true })}>
-                <TestBackendInsight />
-            </MockedTestProvider>
-        </article>
-        <article className="mt-3">
-            <H2>Card no data</H2>
-            <MockedTestProvider addTypename={true} mocks={mockInsightAPIResponse({ hasData: false })}>
-                <TestBackendInsight />
-            </MockedTestProvider>
-        </article>
-        <article className="mt-3">
-            <H2>Card insight syncing</H2>
-            <MockedTestProvider addTypename={true} mocks={mockInsightAPIResponse({ throwProcessingError: true })}>
-                <TestBackendInsight />
-            </MockedTestProvider>
-        </article>
-        <article className="mt-3">
-            <H2>Locked Card insight</H2>
-            <MockedTestProvider addTypename={true} mocks={mockInsightAPIResponse()}>
-                <BackendInsightView
-                    style={{ width: 400, height: 400 }}
-                    insight={{ ...INSIGHT_CONFIGURATION_MOCK, isFrozen: true }}
-                    telemetryService={NOOP_TELEMETRY_SERVICE}
-                    telemetryRecorder={noOpTelemetryRecorder}
-                />
-            </MockedTestProvider>
-        </article>
-    </section>
-)
+export const BackendInsightVitrine: StoryFn = () => {
+    const { t } = useTranslation('enterprise/insights/components/insights-view-grid/components/backend-insight')
+
+    return (
+        <section>
+            <article>
+                <H2>{t('card')}</H2>
+                <MockedTestProvider addTypename={true} mocks={mockInsightAPIResponse()}>
+                    <TestBackendInsight />
+                </MockedTestProvider>
+            </article>
+            <article className="mt-3">
+                <H2>{t('card-with-delay-api')}</H2>
+                <MockedTestProvider mocks={mockInsightAPIResponse({ delayAmount: 2000 })}>
+                    <TestBackendInsight />
+                </MockedTestProvider>
+            </article>
+            <article className="mt-3">
+                <H2>{t('card-backfilling-data')}</H2>
+                <MockedTestProvider
+                    addTypename={true}
+                    mocks={mockInsightAPIResponse({ isFetchingHistoricalData: true })}
+                >
+                    <TestBackendInsight />
+                </MockedTestProvider>
+            </article>
+            <article className="mt-3">
+                <H2>{t('card-no-data')}</H2>
+                <MockedTestProvider addTypename={true} mocks={mockInsightAPIResponse({ hasData: false })}>
+                    <TestBackendInsight />
+                </MockedTestProvider>
+            </article>
+            <article className="mt-3">
+                <H2>{t('card-insight-syncing')}</H2>
+                <MockedTestProvider addTypename={true} mocks={mockInsightAPIResponse({ throwProcessingError: true })}>
+                    <TestBackendInsight />
+                </MockedTestProvider>
+            </article>
+            <article className="mt-3">
+                <H2>{t('locked-card-insight')}</H2>
+                <MockedTestProvider addTypename={true} mocks={mockInsightAPIResponse()}>
+                    <BackendInsightView
+                        style={{ width: 400, height: 400 }}
+                        insight={{ ...INSIGHT_CONFIGURATION_MOCK, isFrozen: true }}
+                        telemetryService={NOOP_TELEMETRY_SERVICE}
+                        telemetryRecorder={noOpTelemetryRecorder}
+                    />
+                </MockedTestProvider>
+            </article>
+        </section>
+    )
+}

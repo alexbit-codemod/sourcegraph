@@ -2,6 +2,7 @@ import React, { useMemo, useContext } from 'react'
 
 import { mdiInformationOutline } from '@mdi/js'
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { pluralize } from '@sourcegraph/common'
 import { Button, useObservable, Icon } from '@sourcegraph/wildcard'
@@ -68,6 +69,8 @@ export const PreviewSelectRow: React.FunctionComponent<React.PropsWithChildren<P
     queryPublishableChangesetSpecIDs = _queryPublishableChangesetSpecIDs,
     queryArguments,
 }) => {
+    const { t } = useTranslation('enterprise/batches/preview/list')
+
     // The user can modify the desired publication states for changesets in the preview
     // list from this dropdown selector. However, these modifications are transient and
     // are not persisted to the backend (until the user applies the batch change and the
@@ -133,7 +136,10 @@ export const PreviewSelectRow: React.FunctionComponent<React.PropsWithChildren<P
                         allChangesetSpecIDs &&
                         allChangesetSpecIDs.length > selected.size && (
                             <Button className="py-0 px-1" onClick={selectAll} variant="link">
-                                (Select all{allChangesetSpecIDs !== undefined && ` ${allChangesetSpecIDs.length}`})
+                                {t('select-all-changesets', {
+                                    allChangesetSpecIDsUndefinedAllChangesetSpecIDsLength:
+                                        allChangesetSpecIDs !== undefined && ` ${allChangesetSpecIDs.length}`,
+                                })}
                             </Button>
                         )}
                 </div>
@@ -141,7 +147,7 @@ export const PreviewSelectRow: React.FunctionComponent<React.PropsWithChildren<P
                 <div className="m-0 col col-md-auto">
                     <div className="row no-gutters">
                         <div className="col ml-0 ml-sm-2">
-                            <DropdownButton actions={actions} placeholder="Select action on apply" />
+                            <DropdownButton actions={actions} placeholder={t('select-action-on-apply')} />
                         </div>
                     </div>
                 </div>
@@ -151,13 +157,17 @@ export const PreviewSelectRow: React.FunctionComponent<React.PropsWithChildren<P
 }
 
 const AllSelectedLabel: React.FunctionComponent<React.PropsWithChildren<{ count?: number }>> = ({ count }) => {
+    const { t } = useTranslation('enterprise/batches/preview/list')
+
     if (count === undefined) {
-        return <>All changesets selected</>
+        return <>{t('all-changesets-selected')}</>
     }
 
     return (
         <>
-            All {count} {pluralize('changeset', count)} selected
+            {t('all-count-selected', { count })}
+            {pluralize('changeset', count)}
+            {t('selected')}
         </>
     )
 }

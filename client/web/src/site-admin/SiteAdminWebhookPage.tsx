@@ -1,6 +1,7 @@
 import { type FC, useEffect, useState, useCallback } from 'react'
 
 import { mdiWebhook, mdiDelete, mdiPencil } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -44,6 +45,8 @@ import styles from './SiteAdminWebhookPage.module.scss'
 export interface WebhookPageProps extends TelemetryProps, TelemetryV2Props {}
 
 export const SiteAdminWebhookPage: FC<WebhookPageProps> = props => {
+    const { t } = useTranslation('site-admin')
+
     const { telemetryService, telemetryRecorder } = props
 
     const { id = '' } = useParams<{ id: string }>()
@@ -71,7 +74,7 @@ export const SiteAdminWebhookPage: FC<WebhookPageProps> = props => {
 
     return (
         <>
-            <PageTitle title="Incoming webhooks" />
+            <PageTitle title={t('incoming-webhooks')} />
             {webhookLoading && !webhookData && <ConnectionLoading />}
             {!webhookLoading && !webhookData && webhookError && <ErrorAlert error={webhookError} />}
             {webhookData?.node && webhookData.node.__typename === 'Webhook' && (
@@ -99,7 +102,8 @@ export const SiteAdminWebhookPage: FC<WebhookPageProps> = props => {
                                 variant="secondary"
                                 display="inline"
                             >
-                                <Icon aria-hidden={true} svgPath={mdiPencil} /> Edit
+                                <Icon aria-hidden={true} svgPath={mdiPencil} />
+                                {t('edit')}
                             </ButtonLink>
                             <Button
                                 aria-label="Delete"
@@ -108,19 +112,20 @@ export const SiteAdminWebhookPage: FC<WebhookPageProps> = props => {
                                 disabled={showDeleteModal}
                                 onClick={deleteWebhook}
                             >
-                                <Icon aria-hidden={true} svgPath={mdiDelete} /> Delete
+                                <Icon aria-hidden={true} svgPath={mdiDelete} />
+                                {t('delete')}
                             </Button>
                         </div>
                     }
                 />
             )}
             <Container className="mb-3">
-                <H2>Information</H2>
+                <H2>{t('information')}</H2>
                 {webhookData?.node && webhookData.node.__typename === 'Webhook' && (
                     <WebhookInformation webhook={webhookData.node as WebhookFields} />
                 )}
 
-                <H2>Logs</H2>
+                <H2>{t('logs')}</H2>
                 <WebhookInfoLogPageHeader webhookID={id} onlyErrors={onlyErrors} onSetOnlyErrors={setOnlyErrors} />
 
                 <ConnectionContainer className="mt-5">
@@ -128,7 +133,7 @@ export const SiteAdminWebhookPage: FC<WebhookPageProps> = props => {
                     {loading && !connection && <ConnectionLoading />}
 
                     <ConnectionList aria-label="WebhookLogs" className={styles.logs}>
-                        <SiteAdminWebhookPageHeader timeLabel="Received at" />
+                        <SiteAdminWebhookPageHeader timeLabel={t('received-at')} />
                         {connection?.nodes?.map(node => (
                             <WebhookLogNode doNotShowExternalService={true} key={node.id} node={node} />
                         ))}
@@ -154,7 +159,7 @@ export const SiteAdminWebhookPage: FC<WebhookPageProps> = props => {
 
             {webhookData?.node && webhookData.node.__typename === 'Webhook' && (
                 <>
-                    <H2>Setup instructions</H2>
+                    <H2>{t('setup-instructions')}</H2>
                     <Container>
                         <WebhookSetupInstructions webhook={webhookData.node} />
                     </Container>
@@ -178,77 +183,93 @@ export interface SiteAdminWebhookPageHeaderProps {
     timeLabel: string
 }
 
-export const SiteAdminWebhookPageHeader: FC<SiteAdminWebhookPageHeaderProps> = ({ middleColumnLabel, timeLabel }) => (
-    <>
-        {/* Render an empty element here to fill in available space for the first column*/}
-        {/* element in the header row*/}
-        <span className="d-md-block" />
-        <H5 className="text-uppercase text-center text-nowrap">Status code</H5>
-        <H5 className="text-uppercase text-nowrap">{middleColumnLabel}</H5>
-        <H5 className="text-uppercase text-nowrap">{timeLabel}</H5>
-    </>
-)
+export const SiteAdminWebhookPageHeader: FC<SiteAdminWebhookPageHeaderProps> = ({ middleColumnLabel, timeLabel }) => {
+    const { t } = useTranslation('site-admin')
 
-const EmptyList: FC<{ onlyErrors: boolean }> = ({ onlyErrors }) => (
-    <div className="m-4 w-100 text-center text-muted">
-        {onlyErrors ? (
-            'No errors have been received from this webhook recently.'
-        ) : (
-            <>
-                No requests received yet. Be sure to{' '}
-                <Link to="/help/admin/config/webhooks/incoming#configuring-webhooks-on-the-code-host">
-                    configure the webhook on the code host
-                </Link>
-                .
-            </>
-        )}
-    </div>
-)
+    return (
+        <>
+            {/* Render an empty element here to fill in available space for the first column*/}
+            {/* element in the header row*/}
+            <span className="d-md-block" />
+            <H5 className="text-uppercase text-center text-nowrap">{t('status-code')}</H5>
+            <H5 className="text-uppercase text-nowrap">{middleColumnLabel}</H5>
+            <H5 className="text-uppercase text-nowrap">{timeLabel}</H5>
+        </>
+    )
+}
+
+const EmptyList: FC<{ onlyErrors: boolean }> = ({ onlyErrors }) => {
+    const { t } = useTranslation('site-admin')
+
+    return (
+        <div className="m-4 w-100 text-center text-muted">
+            {onlyErrors ? (
+                'No errors have been received from this webhook recently.'
+            ) : (
+                <>
+                    <Trans
+                        i18nKey="no-requests-received"
+                        components={{
+                            '0': (
+                                <Link to="/help/admin/config/webhooks/incoming#configuring-webhooks-on-the-code-host" />
+                            ),
+                        }}
+                    />
+                </>
+            )}
+        </div>
+    )
+}
 
 interface WebhookSetupInstructionsProps {
     webhook: WebhookFields
 }
 
 const WebhookSetupInstructions: React.FunctionComponent<WebhookSetupInstructionsProps> = ({ webhook }) => {
+    const { t } = useTranslation('site-admin')
+
     if (webhook.codeHostKind === ExternalServiceKind.GITHUB) {
         return (
             <>
                 <Text>
-                    To set up a GitHub webhook, follow the instructions below, or see more in the{' '}
-                    <Link to="/help/admin/config/webhooks/incoming#github">GitHub webooks documentation</Link>.
+                    <Trans
+                        i18nKey="setup-github-webhook"
+                        components={{ '0': <Link to="/help/admin/config/webhooks/incoming#github" /> }}
+                    />
                 </Text>
-                <Alert variant="info">
-                    Note: For GitHub App integrations, webhooks are created automatically. You do not need to create
-                    them manually.
-                </Alert>
+                <Alert variant="info">{t('github-app-webhooks-note')}</Alert>
                 <Text className="mb-0">
                     <ol className="mb-0">
                         <li>
-                            Copy the webhook URL <strong>{webhook.url}</strong>
+                            <Trans
+                                i18nKey="copy-webhook-url"
+                                values={{ webhookUrl: <>{webhook.url}</> }}
+                                components={{ '0': <strong /> }}
+                            />
                         </li>
                         <li>
-                            On GitHub, go to the settings page of your organization. From there, click{' '}
-                            <strong>Settings</strong>, then
-                            <strong>Webhooks</strong>, then <strong>Add webhook</strong>.
+                            <Trans
+                                i18nKey="github-settings-webhook-setup"
+                                components={{ '0': <strong />, '1': <strong />, '2': <strong /> }}
+                            />
                         </li>
                         <li>
-                            Fill in the webhook form:
+                            {t('fill-webhook-form')}
                             <ul>
-                                <li>Payload URL: the URL you just copied above.</li>
+                                <li>{t('payload-url-description')}</li>
                                 <li>
-                                    Content type: this must be set to <strong>application/json</strong>.
+                                    <Trans i18nKey="content-type-requirement" components={{ '0': <strong /> }} />
                                 </li>
-                                <li>Secret: the secret token you can find above.</li>
-                                <li>Active: ensure this is enabled.</li>
+                                <li>{t('secret-token-description')}</li>
+                                <li>{t('active-status-requirement')}</li>
                                 <li>
-                                    Which events: select <strong>Let me select individual events</strong>, and then
-                                    enable:
+                                    <Trans i18nKey="select-events-description" components={{ '0': <strong /> }} />
                                     <table className="table ml-3">
                                         <thead>
                                             <tr>
-                                                <th className="px-2">Repo updates</th>
-                                                <th className="px-2">Batch Changes</th>
-                                                <th className="px-2">Repo permissions</th>
+                                                <th className="px-2">{t('repo-updates')}</th>
+                                                <th className="px-2">{t('batch-changes')}</th>
+                                                <th className="px-2">{t('repo-permissions')}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -256,51 +277,51 @@ const WebhookSetupInstructions: React.FunctionComponent<WebhookSetupInstructions
                                                 <td>
                                                     <ul>
                                                         <li>
-                                                            <Code>push</Code>
+                                                            <Code>{t('push-event')}</Code>
                                                         </li>
                                                     </ul>
                                                 </td>
                                                 <td>
                                                     <ul>
                                                         <li>
-                                                            <Code>Issue comments</Code>
+                                                            <Code>{t('issue-comments')}</Code>
                                                         </li>
                                                         <li>
-                                                            <Code>Pull requests</Code>
+                                                            <Code>{t('pull-requests')}</Code>
                                                         </li>
                                                         <li>
-                                                            <Code>Pull request reviews</Code>
+                                                            <Code>{t('pull-request-reviews')}</Code>
                                                         </li>
                                                         <li>
-                                                            <Code>Pull request review comments</Code>
+                                                            <Code>{t('pull-request-review-comments')}</Code>
                                                         </li>
                                                         <li>
-                                                            <Code>Check runs</Code>
+                                                            <Code>{t('check-runs')}</Code>
                                                         </li>
                                                         <li>
-                                                            <Code>Check suites</Code>
+                                                            <Code>{t('check-suites')}</Code>
                                                         </li>
                                                         <li>
-                                                            <Code>Statuses</Code>
+                                                            <Code>{t('statuses')}</Code>
                                                         </li>
                                                     </ul>
                                                 </td>
                                                 <td>
                                                     <ul>
                                                         <li>
-                                                            <Code>Collaborator add, remove, or changed</Code>
+                                                            <Code>{t('collaborator-changes')}</Code>
                                                         </li>
                                                         <li>
-                                                            <Code>Memberships</Code>
+                                                            <Code>{t('memberships')}</Code>
                                                         </li>
                                                         <li>
-                                                            <Code>Organizations</Code>
+                                                            <Code>{t('organizations')}</Code>
                                                         </li>
                                                         <li>
-                                                            <Code>Repositories</Code>
+                                                            <Code>{t('repositories')}</Code>
                                                         </li>
                                                         <li>
-                                                            <Code>Teams</Code>
+                                                            <Code>{t('teams')}</Code>
                                                         </li>
                                                     </ul>
                                                 </td>
@@ -311,10 +332,10 @@ const WebhookSetupInstructions: React.FunctionComponent<WebhookSetupInstructions
                             </ul>
                         </li>
                         <li>
-                            Click <strong>Add webhook</strong>.
+                            <Trans i18nKey="click-add-webhook" components={{ '0': <strong /> }} />
                         </li>
-                        <li>Confirm that the new webhook is listed.</li>
-                        <li>You should see an initial ping event sent from GitHub in the webhook logs above.</li>
+                        <li>{t('confirm-webhook-listing')}</li>
+                        <li>{t('initial-ping-event')}</li>
                     </ol>
                 </Text>
             </>
@@ -324,8 +345,10 @@ const WebhookSetupInstructions: React.FunctionComponent<WebhookSetupInstructions
         return (
             <>
                 <Text className="mb-0">
-                    To set up a GitLab webhook, follow the instructions in the{' '}
-                    <Link to="/help/admin/config/webhooks/incoming#gitlab">GitLab integration documentation</Link>.
+                    <Trans
+                        i18nKey="setup-gitlab-webhook"
+                        components={{ '0': <Link to="/help/admin/config/webhooks/incoming#gitlab" /> }}
+                    />
                 </Text>
             </>
         )
@@ -334,11 +357,10 @@ const WebhookSetupInstructions: React.FunctionComponent<WebhookSetupInstructions
         return (
             <>
                 <Text className="mb-0">
-                    To set up a Bitbucket Server webhook, follow the instructions in the{' '}
-                    <Link to="/help/admin/config/webhooks/incoming#bitbucket-server">
-                        Bitbucket Server integration documentation
-                    </Link>
-                    .
+                    <Trans
+                        i18nKey="setup-bitbucket-server-webhook"
+                        components={{ '0': <Link to="/help/admin/config/webhooks/incoming#bitbucket-server" /> }}
+                    />
                 </Text>
             </>
         )
@@ -347,11 +369,10 @@ const WebhookSetupInstructions: React.FunctionComponent<WebhookSetupInstructions
         return (
             <>
                 <Text className="mb-0">
-                    To set up a Bitbucket Cloud webhook, follow the instructions in the{' '}
-                    <Link to="/help/admin/config/webhooks/incoming#bitbucket-cloud">
-                        Bitbucket Cloud integration documentation
-                    </Link>
-                    .
+                    <Trans
+                        i18nKey="setup-bitbucket-cloud-webhook"
+                        components={{ '0': <Link to="/help/admin/config/webhooks/incoming#bitbucket-cloud" /> }}
+                    />
                 </Text>
             </>
         )
@@ -360,11 +381,10 @@ const WebhookSetupInstructions: React.FunctionComponent<WebhookSetupInstructions
         return (
             <>
                 <Text className="mb-0">
-                    To set up an Azure DevOps webhook, follow the instructions in the{' '}
-                    <Link to="/help/admin/config/webhooks/incoming#azure-devops">
-                        Azure DevOps integration documentation
-                    </Link>
-                    .
+                    <Trans
+                        i18nKey="setup-azure-devops-webhook"
+                        components={{ '0': <Link to="/help/admin/config/webhooks/incoming#azure-devops" /> }}
+                    />
                 </Text>
             </>
         )

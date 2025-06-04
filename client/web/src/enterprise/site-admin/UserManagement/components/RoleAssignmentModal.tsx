@@ -2,6 +2,7 @@ import React, { useId, useState, useMemo, type PropsWithChildren } from 'react'
 
 import { mdiClose } from '@mdi/js'
 import { noop } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 
 import {
     Button,
@@ -44,6 +45,8 @@ export const RoleAssignmentModal: React.FunctionComponent<RoleAssignmentModalPro
     onSuccess,
     user,
 }) => {
+    const { t } = useTranslation('enterprise/site-admin/UserManagement/components')
+
     const labelID = 'RoleAssignment'
 
     const id = useId()
@@ -98,7 +101,11 @@ export const RoleAssignmentModal: React.FunctionComponent<RoleAssignmentModalPro
             <header className="mb-4">
                 <div className={styles.headerTopLine}>
                     <H2 className="m-0 font-weight-normal" id={labelID}>
-                        Manage roles for <strong>{user.username}</strong>
+                        <Trans
+                            i18nKey="manage-roles-for-user"
+                            values={{ userUsername: <>{user.username}</> }}
+                            components={{ '0': <strong /> }}
+                        />
                     </H2>
 
                     <Button variant="icon" className={styles.closeButton} aria-label="Close" onClick={onCancel}>
@@ -107,9 +114,7 @@ export const RoleAssignmentModal: React.FunctionComponent<RoleAssignmentModalPro
                 </div>
 
                 <Text className="mb-0">
-                    Roles determine which permissions are granted to this user.{' '}
-                    <Link to="/site-admin/roles">View roles settings</Link> to manage available roles and permissions.
-                    Note that system roles cannot be revoked or assigned via this modal.
+                    <Trans i18nKey="roles-permissions-info" components={{ '0': <Link to="/site-admin/roles" /> }} />
                 </Text>
             </header>
 
@@ -129,7 +134,7 @@ export const RoleAssignmentModal: React.FunctionComponent<RoleAssignmentModalPro
                         id={id}
                         value={searchTerm}
                         autoFocus={true}
-                        placeholder="Search roles..."
+                        placeholder={t('search-roles-placeholder')}
                         status={loading ? 'loading' : 'initial'}
                         onChange={event => setSearchTerm(event.target.value)}
                     />
@@ -156,17 +161,16 @@ export const RoleAssignmentModal: React.FunctionComponent<RoleAssignmentModalPro
 
                 <footer className={styles.footer}>
                     <span className={styles.keyboardExplanation}>
-                        Press <kbd>↑</kbd>
-                        <kbd>↓</kbd> to navigate through results
+                        <Trans i18nKey="navigate-results-instructions" components={{ '0': <kbd />, '1': <kbd /> }} />
                     </span>
 
                     <Button variant="secondary" className="ml-auto mr-2" onClick={onCancel}>
-                        Cancel
+                        {t('cancel-action')}
                     </Button>
                     <LoaderButton
                         variant="primary"
                         loading={setRolesLoading}
-                        label="Update"
+                        label={t('update-button')}
                         alwaysShowLabel={true}
                         disabled={loading || setRolesLoading}
                         type="submit"

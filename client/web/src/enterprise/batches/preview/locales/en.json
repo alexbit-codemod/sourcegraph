@@ -1,0 +1,22 @@
+{
+  "preview-changesets": "Preview changesets",
+  "spec": "Spec",
+  "uploaded-message": "Uploaded",
+  "by-separator": " by",
+  "deleted-user": "deleted user",
+  "click-apply-or-run": "  Click 'Apply' or run",
+  "src-batch-apply": "src batch apply",
+  "batch-change-update-create": {
+    "true": "update",
+    "false": "create"
+  },
+  "update-existing-batch-change": "This operation will update the existing batch change <0>{{batchChangeName}}</0>.",
+  "apply-button": "Apply",
+  "batch-spec-not-found": "Batch spec not found",
+  "apply-batch-spec": "Apply batch spec",
+  "duplicate-batch-spec-not-found": "Batch spec not found",
+  "license-limitations-changesets": "Your license only allows for {{maxUnlicensedChangesets}} changesets per batch change",
+  "exceeding-changesets-warning": " Since more than {{maxUnlicensedChangesets}} changesets are generated, you won't be able to apply the batch change and actually publish the changesets to the code host.",
+  "changeset-preview-batch-spec": "This is a preview of the changesets generated from executing the batch spec.",
+  "preview-label": "Preview"
+}

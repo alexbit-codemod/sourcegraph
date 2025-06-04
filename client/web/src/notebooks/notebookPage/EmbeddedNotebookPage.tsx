@@ -1,6 +1,7 @@
 import { type FC, useCallback, useEffect, useMemo } from 'react'
 
 import { noop } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { NEVER } from 'rxjs'
 import { catchError, startWith } from 'rxjs/operators'
@@ -30,6 +31,8 @@ interface EmbeddedNotebookPageProps
 const LOADING = 'loading' as const
 
 export const EmbeddedNotebookPage: FC<EmbeddedNotebookPageProps> = ({ platformContext, ...props }) => {
+    const { t } = useTranslation('notebooks/notebookPage')
+
     const { notebookId } = useParams()
 
     useEffect(() => EVENT_LOGGER.logPageView('EmbeddedNotebookPage'), [])
@@ -67,7 +70,11 @@ export const EmbeddedNotebookPage: FC<EmbeddedNotebookPageProps> = ({ platformCo
             )}
             {isErrorLike(notebookOrError) && (
                 <Alert variant="danger">
-                    Error while loading the notebook: <strong>{notebookOrError.message}</strong>
+                    <Trans
+                        i18nKey="error-loading-notebook"
+                        values={{ notebookOrErrorMessage: <>{notebookOrError.message}</> }}
+                        components={{ '0': <strong /> }}
+                    />
                 </Alert>
             )}
             {notebookOrError && notebookOrError !== LOADING && !isErrorLike(notebookOrError) && (

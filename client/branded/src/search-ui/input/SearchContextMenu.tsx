@@ -3,6 +3,7 @@ import { useCallback, useRef, useEffect, type FormEvent, useState, type FC, useM
 import { mdiClose, mdiArrowRight, mdiStar } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { BehaviorSubject, combineLatest, of, timer } from 'rxjs'
 import { catchError, debounce, map, switchMap, tap } from 'rxjs/operators'
 
@@ -61,6 +62,8 @@ type LoadingState = 'LOADING' | 'LOADING_NEXT_PAGE' | 'DONE' | 'ERROR'
 const SEARCH_CONTEXTS_PER_PAGE_TO_LOAD = 15
 
 export const SearchContextMenu: FC<SearchContextMenuProps> = props => {
+    const { t } = useTranslation('../../branded/src/search-ui/input')
+
     const {
         authenticatedUser,
         selectedSearchContextSpec,
@@ -180,7 +183,7 @@ export const SearchContextMenu: FC<SearchContextMenuProps> = props => {
     return (
         <Combobox openOnFocus={true} className={classNames(styles.container, className)} onSelect={handleContextSelect}>
             <div className={styles.title}>
-                <small>Choose search context</small>
+                <small>{t('choose-search-context')}</small>
                 <Button variant="icon" aria-label="Close" className={styles.titleClose} onClick={() => onMenuClose()}>
                     <Icon aria-hidden={true} svgPath={mdiClose} />
                 </Button>
@@ -189,7 +192,7 @@ export const SearchContextMenu: FC<SearchContextMenuProps> = props => {
                 <ComboboxInput
                     type="search"
                     variant="small"
-                    placeholder="Find..."
+                    placeholder={t('find-placeholder')}
                     autoFocus={true}
                     spellCheck={false}
                     aria-label="Find a context"
@@ -204,9 +207,9 @@ export const SearchContextMenu: FC<SearchContextMenuProps> = props => {
                     <>
                         {defaultContextExists === false && !props.ignoreDefaultContextDoesNotExistError && (
                             <Alert variant="warning" className="mx-2 mt-2">
-                                Your default search context is no longer available.
+                                {t('default-context-unavailable')}
                                 <br />
-                                <Link to="/contexts">Choose a new default context.</Link>
+                                <Link to="/contexts">{t('choose-new-default-context')}</Link>
                             </Alert>
                         )}
                         {searchContexts.map((context, index) => (
@@ -230,17 +233,17 @@ export const SearchContextMenu: FC<SearchContextMenuProps> = props => {
                 )}
                 {(loadingState === 'LOADING' || loadingState === 'LOADING_NEXT_PAGE') && (
                     <div data-testid="search-context-menu-item" className={styles.item}>
-                        <small>Loading search contexts...</small>
+                        <small>{t('loading-search-contexts')}</small>
                     </div>
                 )}
                 {loadingState === 'ERROR' && (
                     <div data-testid="search-context-menu-item" className={classNames(styles.item, styles.itemError)}>
-                        <small>Error occurred while loading search contexts</small>
+                        <small>{t('error-loading-search-contexts')}</small>
                     </div>
                 )}
                 {loadingState === 'DONE' && searchContexts.length === 0 && (
                     <div data-testid="search-context-menu-item" className={styles.item}>
-                        <small>No contexts found</small>
+                        <small>{t('no-contexts-found')}</small>
                     </div>
                 )}
 
@@ -258,22 +261,25 @@ export const SearchContextMenu: FC<SearchContextMenuProps> = props => {
                                     svgPath={mdiArrowRight}
                                 />
                                 <Text className="mb-0">
-                                    To search across your team's private repositories,{' '}
-                                    <Link
-                                        to="https://sourcegraph.com"
-                                        onClick={() => {
-                                            telemetryService.log('ClickedOnEnterpriseCTA', {
-                                                location: 'ContextDropDown',
-                                            })
-                                            telemetryRecorder.recordEvent(
-                                                'search.contextDropdown.enterpriseCTA',
-                                                'clicked'
-                                            )
+                                    <Trans
+                                        i18nKey="enterprise-cta-message"
+                                        components={{
+                                            '0': (
+                                                <Link
+                                                    to="https://sourcegraph.com"
+                                                    onClick={() => {
+                                                        telemetryService.log('ClickedOnEnterpriseCTA', {
+                                                            location: 'ContextDropDown',
+                                                        })
+                                                        telemetryRecorder.recordEvent(
+                                                            'search.contextDropdown.enterpriseCTA',
+                                                            'clicked'
+                                                        )
+                                                    }}
+                                                />
+                                            ),
                                         }}
-                                    >
-                                        get Sourcegraph Enterprise
-                                    </Link>
-                                    .
+                                    />
                                 </Text>
                             </div>
                         </>
@@ -282,7 +288,7 @@ export const SearchContextMenu: FC<SearchContextMenuProps> = props => {
                         <>
                             <div className="flex-grow-1" />
                             <ButtonLink variant="link" to="/contexts" size="sm" className={styles.footerButton}>
-                                Manage contexts
+                                {t('manage-contexts')}
                             </ButtonLink>
                         </>
                     )}
@@ -309,6 +315,8 @@ export const SearchContextMenuItem: FC<SearchContextMenuItemProps> = ({
     isDefault,
     starred,
 }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/input')
+
     const descriptionOrQuery = description.length > 0 ? description : query
 
     return (
@@ -333,13 +341,13 @@ export const SearchContextMenuItem: FC<SearchContextMenuItemProps> = ({
                 <>
                     <VisuallyHidden>,</VisuallyHidden>
                     <Badge variant="secondary" className={classNames('text-uppercase ml-1', styles.itemDefault)}>
-                        Default
+                        {t('default-context-label')}
                     </Badge>
                 </>
             )}
             {starred && (
                 <>
-                    <VisuallyHidden>, Starred</VisuallyHidden>
+                    <VisuallyHidden>{t('starred-contexts')}</VisuallyHidden>
                     <Icon svgPath={mdiStar} className={classNames('ml-1', styles.star)} aria-hidden={true} />
                 </>
             )}

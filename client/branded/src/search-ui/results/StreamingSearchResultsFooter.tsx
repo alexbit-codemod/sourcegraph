@@ -1,6 +1,7 @@
 import React from 'react'
 
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import type { AggregateStreamingSearchResults } from '@sourcegraph/shared/src/search/stream'
 import { Alert, LoadingSpinner, Code, Text, H2, H3, ErrorAlert } from '@sourcegraph/wildcard'
@@ -16,6 +17,8 @@ export const StreamingSearchResultFooter: React.FunctionComponent<
         className?: string
     }>
 > = ({ results, children, className }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/results')
+
     const skippedDisplay =
         results?.state === 'complete' && results.progress.skipped.find(skipped => skipped.reason.includes('display'))
     const resultLimitHit =
@@ -40,7 +43,7 @@ export const StreamingSearchResultFooter: React.FunctionComponent<
             {results?.state === 'complete' && !results.alert && results?.results.length === 0 && (
                 <Alert variant="info">
                     <H3 as={H2} className="m-0 py-1">
-                        No results matched your search.
+                        {t('no-results-matched-search')}
                     </H3>
                 </Alert>
             )}
@@ -49,13 +52,14 @@ export const StreamingSearchResultFooter: React.FunctionComponent<
                 <Alert className="d-flex flex-column" variant="info">
                     {skippedDisplay && (
                         <Text className="m-0">
-                            <strong>Display limit hit.</strong> {skippedDisplay.message}
+                            <strong>{t('display-limit-hit')}</strong> {skippedDisplay.message}
                         </Text>
                     )}
                     {resultLimitHit && (
                         <Text className="m-0">
-                            <strong>Result limit hit.</strong> Modify your query with <Code>count:</Code> to search for
-                            more items.
+                            <Trans i18nKey="result-limit-hit-modify-query" components={{ '0': <strong /> }} />
+                            <Code>{t('count-label')}</Code>
+                            {t('search-more-items')}
                         </Text>
                     )}
                 </Alert>

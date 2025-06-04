@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { AppBar, Typography, useTheme } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 import { Outlet } from 'react-router-dom'
 
 import logo from '../assets/sourcegraph.png'
@@ -59,6 +60,8 @@ const fetchStatus = async (lastContext: OutletContext): Promise<OutletContext> =
     })
 
 export const Frame: React.FC = () => {
+    const { t } = useTranslation('../../../internal/appliance/frontend/maintenance/src')
+
     const theme = useTheme()
     const [context, setContext] = useState<OutletContext>({
         online: false,
@@ -104,7 +107,7 @@ export const Frame: React.FC = () => {
                 <div className="product">
                     <img id="logo" src={logo} />
                     <Typography className={`title-${theme.palette.mode}`} variant="h6">
-                        Appliance
+                        {t('appliance-label')}
                     </Typography>
                 </div>
                 <div className="spacer" />

@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { pluralize } from '@sourcegraph/common'
 import { AlertLink, Alert } from '@sourcegraph/wildcard'
 
@@ -14,19 +16,22 @@ export const UnpublishedNotice: React.FunctionComponent<React.PropsWithChildren<
     total,
     className,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail')
+
     if (total === 0 || unpublished !== total) {
         return <></>
     }
     return (
         <Alert className={className} variant="secondary">
-            {unpublished} unpublished {pluralize('changeset', unpublished, 'changesets')}. Select changeset(s) and
-            choose the 'Publish changesets' action to publish them, or{' '}
+            {t('unpublished-status', { unpublished })}
+            {pluralize('changeset', unpublished, 'changesets')}
+            {t('select-changesets-publish-action')}
             <AlertLink
                 to="/help/batch_changes/how-tos/publishing_changesets#publishing-changesets"
                 rel="noopener"
                 target="_blank"
             >
-                read more about publishing changesets
+                {t('read-more-publishing-changesets')}
             </AlertLink>
             .
         </Alert>

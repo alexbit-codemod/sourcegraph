@@ -2,6 +2,7 @@ import { type FunctionComponent, useMemo } from 'react'
 
 import { mdiAlertCircle, mdiCheck, mdiCheckCircle, mdiFileUpload, mdiProgressClock, mdiTimerSand } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { isDefined } from '@sourcegraph/common'
@@ -267,69 +268,80 @@ const ExecutionLogEntry: React.FunctionComponent<React.PropsWithChildren<Executi
     logEntry,
     children,
     now,
-}) => (
-    <Card className="mb-3">
-        <CardBody>
-            {logEntry.command.length > 0 ? (
-                <LogOutput text={logEntry.command.join(' ')} className="mb-3" logDescription="Executed command:" />
-            ) : (
-                <div className="mb-3">
-                    <span className="text-muted">Internal step {logEntry.key}.</span>
-                </div>
-            )}
+}) => {
+    const { t } = useTranslation('enterprise/codeintel/indexes/components')
 
-            <div>
-                {logEntry.exitCode === null && <LoadingSpinner className="mr-1" />}
-                {logEntry.exitCode !== null && (
-                    <>
-                        {logEntry.exitCode === 0 ? (
-                            <Icon
-                                className="text-success mr-1"
-                                svgPath={mdiCheckCircle}
-                                inline={false}
-                                aria-label="Success"
-                            />
-                        ) : (
-                            <Icon
-                                className="text-danger mr-1"
-                                svgPath={mdiAlertCircle}
-                                inline={false}
-                                aria-label="Failed"
-                            />
-                        )}
-                    </>
+    return (
+        <Card className="mb-3">
+            <CardBody>
+                {logEntry.command.length > 0 ? (
+                    <LogOutput
+                        text={logEntry.command.join(' ')}
+                        className="mb-3"
+                        logDescription={t('executed-command')}
+                    />
+                ) : (
+                    <div className="mb-3">
+                        <span className="text-muted">
+                            {t('internal-step')}
+                            {logEntry.key}.
+                        </span>
+                    </div>
                 )}
-                <span className="text-muted">Started</span>{' '}
-                <Timestamp date={logEntry.startTime} now={now} noAbout={true} />
-                {logEntry.exitCode !== null && logEntry.durationMilliseconds !== null && (
-                    <>
-                        <span className="text-muted">, ran for</span>{' '}
-                        {formatDurationLong(logEntry.durationMilliseconds)}
-                    </>
+
+                <div>
+                    {logEntry.exitCode === null && <LoadingSpinner className="mr-1" />}
+                    {logEntry.exitCode !== null && (
+                        <>
+                            {logEntry.exitCode === 0 ? (
+                                <Icon
+                                    className="text-success mr-1"
+                                    svgPath={mdiCheckCircle}
+                                    inline={false}
+                                    aria-label="Success"
+                                />
+                            ) : (
+                                <Icon
+                                    className="text-danger mr-1"
+                                    svgPath={mdiAlertCircle}
+                                    inline={false}
+                                    aria-label="Failed"
+                                />
+                            )}
+                        </>
+                    )}
+                    <span className="text-muted">{t('started')}</span>{' '}
+                    <Timestamp date={logEntry.startTime} now={now} noAbout={true} />
+                    {logEntry.exitCode !== null && logEntry.durationMilliseconds !== null && (
+                        <>
+                            <span className="text-muted">{t('ran-for')}</span>{' '}
+                            {formatDurationLong(logEntry.durationMilliseconds)}
+                        </>
+                    )}
+                </div>
+                {children}
+            </CardBody>
+
+            <div className="p-2">
+                {logEntry.out ? (
+                    <Collapsible
+                        title="Log output"
+                        titleAtStart={true}
+                        className="p-0"
+                        buttonClassName={styles.collapseButton}
+                        defaultExpanded={logEntry.exitCode !== null && logEntry.exitCode !== 0}
+                    >
+                        <LogOutput text={logEntry.out} logDescription={t('log-output')} />
+                    </Collapsible>
+                ) : (
+                    <div className="p-2">
+                        <span className="text-muted">{t('no-log-output-available')}</span>
+                    </div>
                 )}
             </div>
-            {children}
-        </CardBody>
-
-        <div className="p-2">
-            {logEntry.out ? (
-                <Collapsible
-                    title="Log output"
-                    titleAtStart={true}
-                    className="p-0"
-                    buttonClassName={styles.collapseButton}
-                    defaultExpanded={logEntry.exitCode !== null && logEntry.exitCode !== 0}
-                >
-                    <LogOutput text={logEntry.out} logDescription="Log output:" />
-                </Collapsible>
-            ) : (
-                <div className="p-2">
-                    <span className="text-muted">No log output available.</span>
-                </div>
-            )}
-        </div>
-    </Card>
-)
+        </Card>
+    )
+}
 
 interface ExecutionMetaInformationProps {
     image: string
@@ -341,21 +353,25 @@ const ExecutionMetaInformation: React.FunctionComponent<ExecutionMetaInformation
     image,
     commands,
     root,
-}) => (
-    <div className="pt-3">
-        <div className={classNames(styles.dockerCommandSpec, 'py-2 border-top pl-2')}>
-            <strong className={styles.header}>Image</strong>
-            <div>{image}</div>
-        </div>
-        <div className={classNames(styles.dockerCommandSpec, 'py-2 border-top pl-2')}>
-            <strong className={styles.header}>Commands</strong>
-            <div>
-                <Code>{commands.join(' ')}</Code>
+}) => {
+    const { t } = useTranslation('enterprise/codeintel/indexes/components')
+
+    return (
+        <div className="pt-3">
+            <div className={classNames(styles.dockerCommandSpec, 'py-2 border-top pl-2')}>
+                <strong className={styles.header}>{t('image')}</strong>
+                <div>{image}</div>
+            </div>
+            <div className={classNames(styles.dockerCommandSpec, 'py-2 border-top pl-2')}>
+                <strong className={styles.header}>{t('commands')}</strong>
+                <div>
+                    <Code>{commands.join(' ')}</Code>
+                </div>
+            </div>
+            <div className={classNames(styles.dockerCommandSpec, 'py-2 border-top pl-2')}>
+                <strong className={styles.header}>{t('root')}</strong>
+                <div>/{root}</div>
             </div>
         </div>
-        <div className={classNames(styles.dockerCommandSpec, 'py-2 border-top pl-2')}>
-            <strong className={styles.header}>Root</strong>
-            <div>/{root}</div>
-        </div>
-    </div>
-)
+    )
+}

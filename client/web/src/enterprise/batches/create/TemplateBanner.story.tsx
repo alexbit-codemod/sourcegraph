@@ -1,4 +1,5 @@
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { WebStory } from '../../../components/WebStory'
 
@@ -15,13 +16,17 @@ export default config
 
 export const TemplateBannerStory: StoryFn = () => (
     <WebStory>
-        {props => (
-            <TemplateBanner
-                heading="You are creating a Batch Change from a Code Search"
-                description="Let Sourcegraph help you refactor your code by preparing a Batch Change from your search query"
-                {...props}
-            />
-        )}
+        {props => {
+            const { t } = useTranslation('enterprise/batches/create')
+
+            return (
+                <TemplateBanner
+                    heading="You are creating a Batch Change from a Code Search"
+                    description={t('let-sourcegraph-help-refactor-code')}
+                    {...props}
+                />
+            )
+        }}
     </WebStory>
 )
 

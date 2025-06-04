@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
 import { PageHeader, Text } from '@sourcegraph/wildcard'
@@ -15,6 +17,8 @@ export const AboutOrganizationPage: React.FunctionComponent<React.PropsWithChild
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('user/settings/aboutOrganization')
+
     useEffect(() => {
         telemetryService.logViewEvent('AboutOrg')
         telemetryRecorder.recordEvent('settings.aboutOrganizations', 'view')
@@ -22,11 +26,11 @@ export const AboutOrganizationPage: React.FunctionComponent<React.PropsWithChild
 
     return (
         <>
-            <PageTitle title="Organizations" />
+            <PageTitle title={t('organizations-title')} />
             <PageHeader
                 headingElement="h2"
                 path={[{ text: 'Organizations' }]}
-                description="Support for organizations is not currently available on Sourcegraph.com."
+                description={t('support-for-organizations-unavailable')}
                 className="mb-3"
             />
             <SelfHostedCta
@@ -36,11 +40,9 @@ export const AboutOrganizationPage: React.FunctionComponent<React.PropsWithChild
                 telemetryRecorder={telemetryRecorder}
             >
                 <Text className="mb-2">
-                    <strong>Need more enterprise features? Run Sourcegraph self-hosted</strong>
+                    <strong>{t('need-more-enterprise-features')}</strong>
                 </Text>
-                <Text className="mb-2">
-                    For additional code hosts and enterprise only features, install Sourcegraph self-hosted.
-                </Text>
+                <Text className="mb-2">{t('additional-code-hosts-enterprise-features')}</Text>
             </SelfHostedCta>
         </>
     )

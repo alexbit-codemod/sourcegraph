@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { logger } from '@sourcegraph/common'
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { Button, H3, Modal, ErrorAlert, Form, Label } from '@sourcegraph/wildcard'
@@ -25,6 +27,8 @@ export const AddTeamMemberModal: React.FunctionComponent<React.PropsWithChildren
     afterAdd,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('team/members')
+
     const labelId = 'addTeamMember'
 
     const [selectedMembers, setSelectedMembers] = useState<Scalars['ID'][]>([])
@@ -57,13 +61,13 @@ export const AddTeamMemberModal: React.FunctionComponent<React.PropsWithChildren
 
     return (
         <Modal onDismiss={onCancel} aria-labelledby={labelId}>
-            <H3 id={labelId}>Add members to {teamName}</H3>
+            <H3 id={labelId}>{t('add-members-to-team', { teamName })}</H3>
 
             {error && <ErrorAlert error={error} />}
 
             <Form onSubmit={onSubmit}>
                 <Label htmlFor="add-team-member--members" className="mt-2">
-                    New members
+                    {t('new-members-header')}
                 </Label>
                 <UserSelect
                     id="add-team-member--members"
@@ -74,7 +78,7 @@ export const AddTeamMemberModal: React.FunctionComponent<React.PropsWithChildren
 
                 <div className="d-flex justify-content-end pt-1">
                     <Button disabled={loading} className="mr-2" onClick={onCancel} outline={true} variant="secondary">
-                        Cancel
+                        {t('cancel-button')}
                     </Button>
                     <LoaderButton
                         type="submit"
@@ -82,7 +86,7 @@ export const AddTeamMemberModal: React.FunctionComponent<React.PropsWithChildren
                         loading={loading}
                         disabled={loading}
                         alwaysShowLabel={true}
-                        label="Add members"
+                        label={t('add-members-label')}
                     />
                 </div>
             </Form>

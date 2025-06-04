@@ -6,6 +6,7 @@ import DirectionsRunIcon from '@mui/icons-material/DirectionsRun'
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline'
 import { Alert, Box, Grid, LinearProgress, LinearProgressProps, Stack, Typography } from '@mui/material'
 import classnames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { call } from './api'
 
@@ -85,6 +86,8 @@ const TaskGrid: React.FC<{ tasks: Task[] }> = ({ tasks }) =>
 export const Progress: React.FC<{
     action: 'install' | 'upgrade'
 }> = ({ action }) => {
+    const { t } = useTranslation('../../../internal/appliance/frontend/maintenance/src')
+
     const [version, setVersion] = useState<string>()
     const [progress, setProgress] = useState<number>(0)
     const [error, setError] = useState<string>()
@@ -109,7 +112,7 @@ export const Progress: React.FC<{
         <div className="progress">
             {progress === 100 && (
                 <Alert severity="success">
-                    {action === 'install' ? 'Installation' : 'Upgrade'} successful. Please wait for Admin UI to appear.
+                    {t('installation-or-upgrade-success-message', { actionInstall: action === 'install' })}
                 </Alert>
             )}
             <Typography variant="h5">

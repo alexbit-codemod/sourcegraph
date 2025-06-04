@@ -1,0 +1,12 @@
+{
+  "error-message": "Error:",
+  "done-message": "Done",
+  "tell-us-what-you-think": "Tell us what you think",
+  "recommend-sourcegraph": "How likely is it that you would recommend Sourcegraph to a friend?",
+  "select-a-score-0-to-10": "Please select a score between 0 to 10",
+  "feedback-agreement-sourcegraph-privacy-policy": "By submitting your feedback, you agree to the <0>Sourcegraph Privacy Policy</0>.",
+  "dont-show-again": "Don't show this again",
+  "continue": "Continue",
+  "thank-you-feedback": "Thank you for your feedback!",
+  "anything-else-question": "Anything else?"
+}

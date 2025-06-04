@@ -1,0 +1,33 @@
+{
+  "overview": "Overview",
+  "version-label": "Version",
+  "upgrade-button": "Upgrade",
+  "license-info": {
+    "true": " expired on ",
+    "false": " valid until "
+  },
+  "get-license-button": "Get license",
+  "developer-time-saved": "Developer time saved",
+  "active-users": "Active Users",
+  "events": "Events",
+  "hours-saved": "Hours saved",
+  "annual-projection-hours-saved": "Annual projection: <0>{{formatNumberProjectedHoursSaved}} hours</0> saved*",
+  "data-range-description": {
+    "true": "last 3 months",
+    "false": "$t('data-range-description_select_2', { \"value\": \"{{dateRangeAnalyticsDateRangeLastMonth}}\" })"
+  },
+  "data-range-description_select_2": {
+    "true": "last month",
+    "false": "last week"
+  },
+  "hours-by-feature": "Hours by feature",
+  "event-type-header": "EVENT TYPE",
+  "events-header": "EVENTS",
+  "hours-saved-header": "HOURS SAVED",
+  "search-feature": " Search",
+  "code-navigation-feature": " Code Navigation",
+  "batch-changes-feature": " Batch Changes",
+  "notebooks-feature": " Notebooks",
+  "search-extensions-feature": " Search extensions",
+  "code-insights-feature": " Code insights"
+}

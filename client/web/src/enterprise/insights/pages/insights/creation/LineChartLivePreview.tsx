@@ -1,5 +1,7 @@
 import type { FC, HTMLAttributes } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { useDeepMemo, type Series, useDebounce, ErrorAlert } from '@sourcegraph/wildcard'
 
 import { useSeriesToggle } from '../../../../../insights/utils/use-series-toggle'
@@ -39,6 +41,8 @@ interface LineChartLivePreviewProps extends HTMLAttributes<HTMLElement> {
 }
 
 export const LineChartLivePreview: FC<LineChartLivePreviewProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation')
+
     const { disabled, repositories, repoQuery, repoMode, stepValue, step, series, ...attributes } = props
     const seriesToggleState = useSeriesToggle()
 
@@ -77,13 +81,15 @@ export const LineChartLivePreview: FC<LineChartLivePreviewProps> = props => {
 
             <LivePreviewCard className="flex-1">
                 {state.status === LivePreviewStatus.Loading ? (
-                    <LivePreviewLoading>Loading code insight</LivePreviewLoading>
+                    <LivePreviewLoading>{t('loading-code-insight')}</LivePreviewLoading>
                 ) : state.status === LivePreviewStatus.Error ? (
                     <ErrorAlert error={state.error} className="m-0" />
                 ) : (
                     <LivePreviewChart>
-                        {parent =>
-                            state.status === LivePreviewStatus.Data ? (
+                        {parent => {
+                            const { t } = useTranslation('enterprise/insights/pages/insights/creation')
+
+                            return state.status === LivePreviewStatus.Data ? (
                                 <SeriesChart
                                     type={SeriesBasedChartTypes.Line}
                                     width={parent.width}
@@ -103,13 +109,10 @@ export const LineChartLivePreview: FC<LineChartLivePreviewProps> = props => {
                                         // doesn't support inferring as component with generic.
                                         series={SERIES_MOCK_CHART as Series<unknown>[]}
                                     />
-                                    <LivePreviewBanner>
-                                        The chart preview will be shown here once you have filled out the repositories
-                                        and series fields.
-                                    </LivePreviewBanner>
+                                    <LivePreviewBanner>{t('chart-preview-instructions')}</LivePreviewBanner>
                                 </>
                             )
-                        }
+                        }}
                     </LivePreviewChart>
                 )}
 

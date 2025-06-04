@@ -1,6 +1,7 @@
 import React, { useCallback, useState, type FC } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { logger } from '@sourcegraph/common'
 import type { AuthenticatedUser } from '@sourcegraph/shared/src/auth'
@@ -96,6 +97,8 @@ export const AddCredentialModal: FC<React.PropsWithChildren<AddCredentialModalPr
     requiresUsername,
     initialStep = 'add-token',
 }) => {
+    const { t } = useTranslation('enterprise/batches/settings')
+
     const labelId = 'addCredential'
     const [credential, setCredential] = useState<string>('')
     const [sshPublicKey, setSSHPublicKey] = useState<string>()
@@ -174,16 +177,16 @@ export const AddCredentialModal: FC<React.PropsWithChildren<AddCredentialModalPr
                         onChange={event => setAuthStrategy(event.target.value as AuthenticationStrategyType)}
                     >
                         <option value={AuthenticationStrategy.PERSONAL_ACCESS_TOKEN} defaultChecked={true}>
-                            Personal Access Token
+                            {t('personal-access-token')}
                         </option>
-                        <option value={AuthenticationStrategy.GITHUB_APP}>GitHub App</option>
+                        <option value={AuthenticationStrategy.GITHUB_APP}>{t('github-app')}</option>
                     </Select>
                 )}
                 {requiresSSH && (
                     <div className="d-flex w-100 justify-content-between mb-4">
                         <div className="flex-grow-1 mr-2">
                             <Text className={classNames('mb-0 py-2', step === 'get-ssh-key' && 'text-muted')}>
-                                1. Add token
+                                {t('add-token-instruction')}
                             </Text>
                             <div
                                 className={classNames(
@@ -194,7 +197,7 @@ export const AddCredentialModal: FC<React.PropsWithChildren<AddCredentialModalPr
                         </div>
                         <div className="flex-grow-1 ml-2">
                             <Text className={classNames('mb-0 py-2', step === 'add-token' && 'text-muted')}>
-                                2. Get SSH Key
+                                {t('get-ssh-key-instruction')}
                             </Text>
                             <div
                                 className={classNames(
@@ -227,17 +230,14 @@ export const AddCredentialModal: FC<React.PropsWithChildren<AddCredentialModalPr
                 )}
                 {step === 'get-ssh-key' && (
                     <>
-                        <Text>
-                            An SSH key has been generated for your batch changes code host connection. Copy the public
-                            key below and enter it on your code host.
-                        </Text>
+                        <Text>{t('ssh-key-generation-notice')}</Text>
                         <CodeHostSshPublicKey externalServiceKind={externalServiceKind} sshPublicKey={sshPublicKey!} />
                         <Button
                             className="test-add-credential-modal-submit float-right"
                             onClick={afterCreate}
                             variant="primary"
                         >
-                            Finish
+                            {t('finish-button')}
                         </Button>
                     </>
                 )}
@@ -300,6 +300,8 @@ const AddToken: FC<AddTokenProps> = ({
     externalServiceURL,
     user,
 }) => {
+    const { t } = useTranslation('enterprise/batches/settings')
+
     const patLabel = computeCredentialLabel(externalServiceKind, authStrategy)
     const isStrategyPAT = authStrategy === AuthenticationStrategy.PERSONAL_ACCESS_TOKEN
     const kind = user ? GitHubAppKind.USER_CREDENTIAL : GitHubAppKind.SITE_CREDENTIAL
@@ -324,7 +326,7 @@ const AddToken: FC<AddTokenProps> = ({
                                         minLength={1}
                                         value={username}
                                         onChange={onChangeUsername}
-                                        label="Username"
+                                        label={t('username-label')}
                                     />
                                 </>
                             )}
@@ -348,7 +350,8 @@ const AddToken: FC<AddTokenProps> = ({
                                     target="_blank"
                                     aria-label={`Follow our docs to learn how to create a new ${patLabel.toLocaleLowerCase()} on this code host`}
                                 >
-                                    Create a new {patLabel.toLocaleLowerCase()}
+                                    {t('create-new-instruction')}
+                                    {patLabel.toLocaleLowerCase()}
                                 </Link>{' '}
                                 {scopeRequirements[externalServiceKind]}
                             </Text>
@@ -363,7 +366,7 @@ const AddToken: FC<AddTokenProps> = ({
                                         outline={true}
                                         variant="secondary"
                                     >
-                                        Cancel
+                                        {t('cancel-button')}
                                     </Button>
                                     <LoaderButton
                                         type="submit"

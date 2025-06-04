@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { TemplateBanner } from './TemplateBanner'
 
 interface InsightTemplatesBannerProps {
@@ -13,13 +15,18 @@ export const InsightTemplatesBanner: React.FunctionComponent<React.PropsWithChil
     type,
     className,
 }) => {
+    const { t } = useTranslation('enterprise/batches/create')
+
     const [heading, description]: [React.ReactNode, React.ReactNode] =
         type === 'create'
             ? [
                   'You are creating a batch change from a code insight',
                   <>
-                      Let Sourcegraph help you with <strong>{insightTitle}</strong> by preparing a relevant{' '}
-                      <strong>batch change</strong>.
+                      <Trans
+                          i18nKey="let-sourcegraph-help-with-batch-change"
+                          values={{ insightTitle: <>{insightTitle}</> }}
+                          components={{ '0': <strong />, '1': <strong /> }}
+                      />
                   </>,
               ]
             : [

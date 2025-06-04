@@ -1,0 +1,10 @@
+{
+  "code-host-option-not-found": "We either couldn't find \"{{codeHostType}}\" code host option or we do not support this",
+  "pick-supported-code-host-option": " Pick one of supported code host option <0>here</0>",
+  "cancel-action": "Cancel",
+  "try-fetch-again": "Try fetch again",
+  "fetching-connected-code-host": " Fetching connected code host...",
+  "code-host-not-found": "We either couldn't find code host",
+  "try-connect-new-code-host": " Try to connect new code host instead <0>here</0>",
+  "delete-action": "Delete"
+}

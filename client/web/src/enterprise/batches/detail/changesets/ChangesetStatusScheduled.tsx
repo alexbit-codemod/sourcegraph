@@ -3,6 +3,7 @@ import React, { useCallback, useState } from 'react'
 import { mdiTimerOutline } from '@mdi/js'
 import classNames from 'classnames'
 import { formatDistanceToNow, isBefore, parseISO } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import type { Scalars } from '@sourcegraph/shared/src/graphql-operations'
 import { Tooltip, Icon } from '@sourcegraph/wildcard'
@@ -113,18 +114,22 @@ const StaticChangesetStatusScheduled: React.FunctionComponent<
 
 export const ChangesetStatusScheduled: React.FunctionComponent<React.PropsWithChildren<Partial<Props>>> = ({
     id,
-    label = <span>Scheduled</span>,
+    label = <span>{t('scheduled')}</span>,
     className,
     role,
-}) => (
-    // If there's no ID (for example, when previewing a batch change), then no
-    // dynamic behaviour is required, and we can just return a static icon and
-    // label. Otherwise, we need the whole dynamic shebang.
-    <>
-        {id ? (
-            <DynamicChangesetStatusScheduled id={id} label={label} className={className} role={role} />
-        ) : (
-            <StaticChangesetStatusScheduled label={label} className={className} role={role} />
-        )}
-    </>
-)
+}) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
+    return (
+        // If there's no ID (for example, when previewing a batch change), then no
+        // dynamic behaviour is required, and we can just return a static icon and
+        // label. Otherwise, we need the whole dynamic shebang.
+        <>
+            {id ? (
+                <DynamicChangesetStatusScheduled id={id} label={label} className={className} role={role} />
+            ) : (
+                <StaticChangesetStatusScheduled label={label} className={className} role={role} />
+            )}
+        </>
+    )
+}

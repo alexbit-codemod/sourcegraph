@@ -2,6 +2,7 @@ import * as React from 'react'
 import { useEffect } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { logger } from '@sourcegraph/common'
 import { useQuery } from '@sourcegraph/http-client'
@@ -33,6 +34,8 @@ export const TreeOwnershipPanel: React.FunctionComponent<OwnershipPanelProps & T
     showAddOwnerButton,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('repo/blob/own')
+
     useEffect(() => {
         telemetryService.log('OwnershipPanelOpened')
         telemetryRecorder.recordEvent('repo.blob.ownershipPanel', 'open')
@@ -53,7 +56,8 @@ export const TreeOwnershipPanel: React.FunctionComponent<OwnershipPanelProps & T
     if (loading) {
         return (
             <div className={classNames(styles.loaderWrapper, 'text-muted')}>
-                <LoadingSpinner inline={true} className="mr-1" /> Loading...
+                <LoadingSpinner inline={true} className="mr-1" />
+                {t('loading-message')}
             </div>
         )
     }

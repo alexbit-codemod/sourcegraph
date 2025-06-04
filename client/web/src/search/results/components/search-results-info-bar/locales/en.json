@@ -1,0 +1,8 @@
+{
+  "filters-title": "Filters",
+  "filters-title-duplicate": "Filters",
+  "aggregation-results-toggle": {
+    "true": "Hide",
+    "false": "Show"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "greeting-cody": "Hi! I'm Cody",
+  "context-selection-prompt": "Choose the context for this conversation",
+  "general-knowledge-option": "General knowledge",
+  "specific-repositories-prompt": "Specific repositories:",
+  "importance-of-context-question": "Why is context important?",
+  "context-requirement-explanation": "Without providing relevant repo(s) for context, Cody won't be able to answer questions specific to your project.",
+  "tip-context-selector-availability": "<0>Tip:</0>  The context selector is always available at the bottom of the screen",
+  "agreement-terms-and-privacy": "By using Cody, you agree to its <0>license and privacy statement</0>."
+}

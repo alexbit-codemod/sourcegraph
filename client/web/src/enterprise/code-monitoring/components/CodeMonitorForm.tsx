@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 
 import classNames from 'classnames'
 import { isEqual } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import type { Observable } from 'rxjs'
 import { mergeMap, startWith, catchError, tap, filter } from 'rxjs/operators'
@@ -59,6 +60,8 @@ export const CodeMonitorForm: React.FunctionComponent<React.PropsWithChildren<Co
     description,
     isSourcegraphDotCom,
 }) => {
+    const { t } = useTranslation('enterprise/code-monitoring/components')
+
     const LOADING = 'loading' as const
 
     const navigate = useNavigate()
@@ -167,22 +170,24 @@ export const CodeMonitorForm: React.FunctionComponent<React.PropsWithChildren<Co
                             onChange={event => {
                                 onNameChange(event.target.value)
                             }}
-                            label="Name"
+                            label={t('name-label')}
                             value={currentCodeMonitorState.description}
                             autoFocus={true}
                             spellCheck={false}
                         />
                         <small className="text-muted">
-                            Give it a short, descriptive name to reference events on Sourcegraph and in notifications.
-                            Do not include{' '}
-                            <Link
-                                to="/help/code_monitoring/explanations/best_practices#do-not-include-confidential-information-in-monitor-names"
-                                target="_blank"
-                                rel="noopener"
-                            >
-                                confidential information
-                            </Link>
-                            .
+                            <Trans
+                                i18nKey="name-description"
+                                components={{
+                                    '0': (
+                                        <Link
+                                            to="/help/code_monitoring/explanations/best_practices#do-not-include-confidential-information-in-monitor-names"
+                                            target="_blank"
+                                            rel="noopener"
+                                        />
+                                    ),
+                                }}
+                            />
                         </small>
                     </div>
 
@@ -245,7 +250,7 @@ export const CodeMonitorForm: React.FunctionComponent<React.PropsWithChildren<Co
                         <div className="d-flex">
                             <div>
                                 <Toggle
-                                    title="Active"
+                                    title={t('active-label')}
                                     value={currentCodeMonitorState.enabled}
                                     onToggle={onEnabledChange}
                                     className="mr-2"
@@ -281,7 +286,7 @@ export const CodeMonitorForm: React.FunctionComponent<React.PropsWithChildren<Co
                                 {submitButtonLabel}
                             </Button>
                             <Button onClick={onCancel} data-testid="cancel-monitor" variant="secondary">
-                                Cancel
+                                {t('cancel-button')}
                             </Button>
                         </div>
                         {showDeleteButton && (
@@ -292,14 +297,16 @@ export const CodeMonitorForm: React.FunctionComponent<React.PropsWithChildren<Co
                                     outline={true}
                                     variant="danger"
                                 >
-                                    Delete
+                                    {t('delete-button')}
                                 </Button>
                             </div>
                         )}
                     </div>
                     {isErrorLike(codeMonitorOrError) && (
                         <Alert variant="danger">
-                            Failed to {currentCodeMonitorState.id === '' ? 'create' : 'update'} monitor:{' '}
+                            {t('monitor-failure-message', {
+                                currentCodeMonitorStateId: currentCodeMonitorState.id === '',
+                            })}
                             {codeMonitorOrError.message}
                         </Alert>
                     )}

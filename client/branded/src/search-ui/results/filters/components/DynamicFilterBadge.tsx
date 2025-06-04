@@ -1,16 +1,22 @@
 import type { FC } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Badge, Tooltip, Code } from '@sourcegraph/wildcard'
 
 import styles from './DynamicFilterBadge.module.scss'
 
 export const DynamicFilterBadge: FC<{ exhaustive: boolean; count: number }> = ({ exhaustive, count }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/results/filters/components')
+
     const tooltipContent = exhaustive ? null : (
         <>
-            This is an approximate count of the results returned because you hit a limit. Try increasing the limit using
-            the <Code>count:</Code> filter in the search query, or select <Code>count:all</Code> from the filter list.
+            {t('approximate-count-limit-warning')}
+            <Code>{t('count-label')}</Code>
+            {t('filter-instructions')}
+            <Code>{t('count-all-filter')}</Code>
+            {t('filter-list-instructions')}
         </>
     )
 

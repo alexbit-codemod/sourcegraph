@@ -1,4 +1,5 @@
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { WebStory } from '../../../../components/WebStory'
 
@@ -21,14 +22,18 @@ CreateNewBatchChange.storyName = 'creating a new batch change'
 
 export const BatchChangeExists: StoryFn = () => (
     <WebStory>
-        {props => (
-            <BatchChangeHeader
-                {...props}
-                namespace={{ to: '/users/my-username', text: 'my-username' }}
-                title={{ to: '/users/my-username/batch-changes/my-batch-change', text: 'my-batch-change' }}
-                description="This is a description of my batch change."
-            />
-        )}
+        {props => {
+            const { t } = useTranslation('enterprise/batches/batch-spec/header')
+
+            return (
+                <BatchChangeHeader
+                    {...props}
+                    namespace={{ to: '/users/my-username', text: 'my-username' }}
+                    title={{ to: '/users/my-username/batch-changes/my-batch-change', text: 'my-batch-change' }}
+                    description={t('description-of-batch-change')}
+                />
+            )
+        }}
     </WebStory>
 )
 

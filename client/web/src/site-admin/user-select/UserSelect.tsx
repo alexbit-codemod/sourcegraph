@@ -3,6 +3,7 @@ import React, { type ButtonHTMLAttributes, forwardRef, useEffect, useState } fro
 import classNames from 'classnames'
 import ChevronDownIcon from 'mdi-react/ChevronDownIcon'
 import ChevronUpIcon from 'mdi-react/ChevronUpIcon'
+import { useTranslation } from 'react-i18next'
 
 import { UserAvatar } from '@sourcegraph/shared/src/components/UserAvatar'
 import {
@@ -84,6 +85,8 @@ export interface UserSelectContentProps {
 }
 
 export const UserSelectContent: React.FunctionComponent<UserSelectContentProps> = ({ onSelect }) => {
+    const { t } = useTranslation('site-admin/user-select')
+
     const [search, setSearch] = useState<string>('')
 
     const { data, loading, error } = useUserSelectSearch(search)
@@ -110,7 +113,7 @@ export const UserSelectContent: React.FunctionComponent<UserSelectContentProps> 
                 value={search}
                 autoFocus={true}
                 spellCheck={false}
-                placeholder="Search users"
+                placeholder={t('search-users')}
                 aria-label="Search users"
                 inputClassName={styles.comboboxInput}
                 className={styles.comboboxInputContainer}

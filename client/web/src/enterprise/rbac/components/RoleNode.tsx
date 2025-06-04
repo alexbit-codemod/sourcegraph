@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { mdiChevronUp, mdiChevronDown, mdiDelete, mdiLock } from '@mdi/js'
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { animated, useSpring } from 'react-spring'
 
 import { convertREMToPX } from '@sourcegraph/shared/src/components/utils/size'
@@ -52,6 +53,8 @@ const ModifiableRoleNode: React.FunctionComponent<RoleNodeProps> = ({
     allPermissions,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/rbac/components')
+
     const [isExpanded, setIsExpanded] = useState<boolean>(false)
     const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState<boolean>(false)
     const [showAlert, setShowAlert] = useState<boolean>(false)
@@ -194,7 +197,7 @@ const ModifiableRoleNode: React.FunctionComponent<RoleNodeProps> = ({
                     ref={ref}
                     onSubmit={handleSubmit}
                 >
-                    <SuccessAlert visible={showAlert}>Permissions successfully updated.</SuccessAlert>
+                    <SuccessAlert visible={showAlert}>{t('permissions-updated-successfully')}</SuccessAlert>
                     <PermissionsList
                         allPermissions={allPermissions}
                         isChecked={isChecked}
@@ -207,7 +210,7 @@ const ModifiableRoleNode: React.FunctionComponent<RoleNodeProps> = ({
                         variant="primary"
                         type="submit"
                         loading={setPermissionsLoading}
-                        label="Update"
+                        label={t('update-button-label')}
                         disabled={isUpdateDisabled}
                     />
                 </CollapsePanel>
@@ -296,11 +299,15 @@ export const RoleNode: React.FunctionComponent<RoleNodeProps> = ({
         />
     )
 
-const SystemLabel: React.FunctionComponent = () => (
-    <Tooltip content="System roles are predefined by Sourcegraph. They cannot be deleted.">
-        <Text className={styles.roleNodeSystemText}>System</Text>
-    </Tooltip>
-)
+const SystemLabel: React.FunctionComponent = () => {
+    const { t } = useTranslation('enterprise/rbac/components')
+
+    return (
+        <Tooltip content="System roles are predefined by Sourcegraph. They cannot be deleted.">
+            <Text className={styles.roleNodeSystemText}>{t('system-label')}</Text>
+        </Tooltip>
+    )
+}
 
 // The Alert banner has a 1rem bottom margin
 const ONE_REM_IN_PX = convertREMToPX(1)

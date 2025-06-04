@@ -1,17 +1,27 @@
 import type { FC } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { Alert, H4, Code, Text, Link } from '@sourcegraph/wildcard'
 
-export const ExternalServiceEditingDisabledAlert: FC<{ className?: string }> = props => (
-    <Alert variant="info" className={props.className}>
-        <H4>Editing through UI disabled</H4>
-        <Text className="mb-0">
-            Environment variable <Code>EXTSVC_CONFIG_FILE</Code> is set.{' '}
-            <Link to="/help/admin/config/advanced_config_file#code-host-configuration">
-                You can't create or edit code host connections when <Code>EXTSVC_CONFIG_FILE</Code> is set.
-            </Link>{' '}
-            If you also set <Code>EXTSVC_CONFIG_ALLOW_EDITS</Code> to <Code>"true"</Code> you can edit code host
-            connections, but changes will be discarded with the next restart of the Sourcegraph instance.
-        </Text>
-    </Alert>
-)
+export const ExternalServiceEditingDisabledAlert: FC<{ className?: string }> = props => {
+    const { t } = useTranslation('components/externalServices')
+
+    return (
+        <Alert variant="info" className={props.className}>
+            <H4>{t('editing-through-ui-disabled')}</H4>
+            <Text className="mb-0">
+                {t('environment-variable-prefix')}
+                <Code>{t('extsvc-config-file-name')}</Code>
+                <Trans
+                    i18nKey="extsvc-config-file-warning"
+                    components={{ '0': <Link to="/help/admin/config/advanced_config_file#code-host-configuration" /> }}
+                />
+                <Code>{t('extsvc-config-allow-edits')}</Code>
+                {t('set-to')}
+                <Code>{t('true-value')}</Code>
+                {t('edit-code-host-warning')}
+            </Text>
+        </Alert>
+    )
+}

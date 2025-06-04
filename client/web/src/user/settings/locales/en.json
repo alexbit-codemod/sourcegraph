@@ -1,0 +1,20 @@
+{
+  "user-access-individual-settings": "Only the user may access their individual settings.",
+  "viewing-settings-for-user": "Viewing settings for <0>{{userUsername}}</0>",
+  "user-settings-override-global": "User settings override global and organization settings.",
+  "profile-managed-by-identity-provider": "This profile is managed by the organization's identity provider through SCIM. Some fields are disabled. <0>Learn more about SCIM</0>",
+  "error-403-forbidden": "403: Forbidden",
+  "viewing-account-username": "Viewing account for <0>{{userUsername}}</0>",
+  "toggle-menu": {
+    "true": "Hide",
+    "false": "Show"
+  },
+  "account-label": "Account",
+  "your-organizations-label": "Your organizations",
+  "about-organizations": "About organizations",
+  "new-organization-label": " New organization",
+  "other-actions-label": "Other actions",
+  "api-console-label": "API console",
+  "site-admin-label": "Site admin",
+  "version-label": "Version:"
+}

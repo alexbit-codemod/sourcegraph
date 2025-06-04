@@ -14,6 +14,7 @@ import {
 } from '@mdi/js'
 import classNames from 'classnames'
 import { upperFirst } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { useQuery } from '@sourcegraph/http-client'
@@ -61,6 +62,8 @@ export const BatchSpecNode: React.FunctionComponent<React.PropsWithChildren<Batc
     now = () => new Date(),
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/batches')
+
     const [isExpanded, setIsExpanded] = useState(currentSpecID === node.id)
     const toggleIsExpanded = useCallback<React.MouseEventHandler<HTMLButtonElement>>(() => {
         setIsExpanded(!isExpanded)
@@ -98,7 +101,11 @@ export const BatchSpecNode: React.FunctionComponent<React.PropsWithChildren<Batc
                                     </Tooltip>{' '}
                                 </>
                             )}
-                            Created by <strong>{node.creator?.username}</strong>{' '}
+                            <Trans
+                                i18nKey="created-by-username"
+                                values={{ nodeCreatorUsername: <>{node.creator?.username}</> }}
+                                components={{ '0': <strong /> }}
+                            />
                             <Timestamp date={node.createdAt} now={now} />
                         </Link>
                     )}
@@ -118,7 +125,11 @@ export const BatchSpecNode: React.FunctionComponent<React.PropsWithChildren<Batc
                 </H3>
                 {!currentSpecID && (
                     <small className="text-muted d-block">
-                        Created by <strong>{node.creator?.username}</strong>{' '}
+                        <Trans
+                            i18nKey="created-by-username-repeated"
+                            values={{ nodeCreatorUsername: <>{node.creator?.username}</> }}
+                            components={{ '0': <strong /> }}
+                        />
                         <Timestamp date={node.createdAt} now={now} />
                     </small>
                 )}
@@ -144,6 +155,8 @@ type BatchWorkspaceFile = {
 } & Omit<PartialBatchSpecWorkspaceFileFields, '__typename'>
 
 export const BatchSpecInfo: React.FunctionComponent<BatchSpecInfoProps> = ({ spec, telemetryRecorder }) => {
+    const { t } = useTranslation('enterprise/batches')
+
     const specFile: BatchWorkspaceFile = {
         binary: false,
         isSpecFile: true,
@@ -198,7 +211,7 @@ export const BatchSpecInfo: React.FunctionComponent<BatchSpecInfoProps> = ({ spe
 
     return (
         <>
-            <H4>Input spec</H4>
+            <H4>{t('input-spec')}</H4>
             <BatchSpec
                 name={spec.description.name}
                 originalInput={spec.originalInput}
@@ -223,6 +236,8 @@ const BatchWorkspaceFileContent: React.FunctionComponent<BatchWorkspaceFileConte
 }
 
 const BinaryBatchWorkspaceFile: React.FunctionComponent<BatchWorkspaceFileContentProps> = ({ file }) => {
+    const { t } = useTranslation('enterprise/batches')
+
     const [loading, setIsLoading] = useState<boolean>(true)
     const [downloadUrl, setDownloadUrl] = useState<string>('')
     const [downloadError, setDownloadError] = useState<Error | null>(null)
@@ -241,7 +256,10 @@ const BinaryBatchWorkspaceFile: React.FunctionComponent<BatchWorkspaceFileConten
     if (downloadError) {
         return (
             <Alert variant="danger" className={styles.fileError}>
-                <Text>Error fetching file content: {downloadError?.message}</Text>
+                <Text>
+                    {t('error-fetching-file-content')}
+                    {downloadError?.message}
+                </Text>
             </Alert>
         )
     }
@@ -262,14 +280,15 @@ const BinaryBatchWorkspaceFile: React.FunctionComponent<BatchWorkspaceFileConten
                 as={AnchorLink}
             >
                 <Icon aria-hidden={true} svgPath={mdiFileDownload} className="mr-1" />
-                {'  '}
-                Download file
+                {t('download-file')}
             </Button>
         </div>
     )
 }
 
 const NonBinaryBatchWorkspaceFile: React.FunctionComponent<Pick<BatchWorkspaceFile, 'id'>> = ({ id }) => {
+    const { t } = useTranslation('enterprise/batches')
+
     const { data, loading, error } = useQuery<BatchSpecWorkspaceFileResult, BatchSpecWorkspaceFileVariables>(
         BATCH_SPEC_WORKSPACE_FILE,
         {
@@ -285,7 +304,10 @@ const NonBinaryBatchWorkspaceFile: React.FunctionComponent<Pick<BatchWorkspaceFi
     if (error) {
         return (
             <Alert variant="danger" className={styles.fileError}>
-                <Text>Error fetching file content: {error?.message}</Text>
+                <Text>
+                    {t('error-fetching-file-content-repeated')}
+                    {error?.message}
+                </Text>
             </Alert>
         )
     }
@@ -293,7 +315,7 @@ const NonBinaryBatchWorkspaceFile: React.FunctionComponent<Pick<BatchWorkspaceFi
     if (!data || data.node?.__typename !== 'BatchSpecWorkspaceFile') {
         return (
             <Alert variant="danger" className={styles.fileError}>
-                <Text>Not a valid BatchSpecWorkspaceFile</Text>
+                <Text>{t('invalid-batch-spec-workspace-file')}</Text>
             </Alert>
         )
     }

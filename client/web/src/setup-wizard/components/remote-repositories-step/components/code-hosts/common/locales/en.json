@@ -1,0 +1,5 @@
+{
+  "display-name": "Display name",
+  "ctrl-space-completion-instructions": "Use Ctrl+Space for completion, and hover over JSON properties for documentation.",
+  "jsonc-configuration-instructions": "See instructions how to fill out JSONC configuration"
+}

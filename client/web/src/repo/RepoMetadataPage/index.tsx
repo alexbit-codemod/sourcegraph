@@ -1,5 +1,6 @@
 import { type FC, useCallback, useMemo, useState, useEffect } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 
 import { RepoMetadata, type RepoMetadataItem } from '@sourcegraph/branded'
@@ -39,6 +40,8 @@ export const RepoMetadataPage: FC<RepoMetadataPageProps> = ({
     repo,
     ...props
 }) => {
+    const { t } = useTranslation('repo/RepoMetadataPage')
+
     useBreadcrumb(BREADCRUMB)
     const [repoMetadataEnabled, status] = useFeatureFlag('repository-metadata', true)
 
@@ -104,7 +107,7 @@ export const RepoMetadataPage: FC<RepoMetadataPageProps> = ({
     )
 
     if (status !== 'loaded') {
-        return <div>Loading...</div>
+        return <div>{t('loading-message')}</div>
     }
 
     if (!repoMetadataEnabled) {
@@ -113,12 +116,13 @@ export const RepoMetadataPage: FC<RepoMetadataPageProps> = ({
 
     return (
         <Page>
-            <PageTitle title="Repo metadata settings" />
+            <PageTitle title={t('repo-metadata-settings-title')} />
             <PageHeader path={[{ text: 'Metadata' }]} headingElement="h2" className="mb-3" />
             <Text>
-                Add repository metadata to help search, filter and navigate between repositories. Repository metadata
-                can also be added via the CLI and API. See the{' '}
-                <Link to="/help/admin/repo/metadata">Repository Metadata Documentation</Link> to learn more.
+                <Trans
+                    i18nKey="repo-metadata-settings-description"
+                    components={{ '0': <Link to="/help/admin/repo/metadata" /> }}
+                />
             </Text>
             <Container className="repo-settings-metadata-page mb-2">
                 {fetchError && <ErrorAlert error={fetchError} />}
@@ -127,7 +131,7 @@ export const RepoMetadataPage: FC<RepoMetadataPageProps> = ({
                 {items.length ? (
                     <>
                         <Input
-                            placeholder="Filter metadata by key or value…"
+                            placeholder={t('filter-metadata-prompt')}
                             value={searchQuery}
                             onChange={handleSearchChange}
                             type="search"
@@ -137,12 +141,14 @@ export const RepoMetadataPage: FC<RepoMetadataPageProps> = ({
                             <RepoMetadata items={filteredMetadata} onDelete={onDelete} />
                         ) : (
                             searchQuery.length > 0 && (
-                                <Text className="text-muted m-0">No metadata containing "{searchQuery}"</Text>
+                                <Text className="text-muted m-0">
+                                    {t('no-metadata-found-with-query', { searchQuery })}
+                                </Text>
                             )
                         )}
                     </>
                 ) : (
-                    <Text className="text-muted m-0">No metadata</Text>
+                    <Text className="text-muted m-0">{t('no-metadata-found')}</Text>
                 )}
             </Container>
             <AddMetadataForm onDidAdd={refetch} repoID={repo.id} />

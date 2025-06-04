@@ -1,6 +1,7 @@
 import { type FC, useCallback, useMemo, useRef, useState } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import type { AuthenticatedUser } from '@sourcegraph/shared/src/auth'
 import type { PlatformContextProps } from '@sourcegraph/shared/src/platform/context'
@@ -47,6 +48,8 @@ export interface SearchContextDropdownProps
 }
 
 export const SearchContextDropdown: FC<SearchContextDropdownProps> = props => {
+    const { t } = useTranslation('../../branded/src/search-ui/input')
+
     const {
         authenticatedUser,
         query,
@@ -152,7 +155,7 @@ export const SearchContextDropdown: FC<SearchContextDropdownProps> = props => {
                             // Rule: "color-contrast" (Elements must have sufficient color contrast)
                             // GitHub issue: https://github.com/sourcegraph/sourcegraph/issues/33343
                         }
-                        <span className="a11y-ignore search-filter-keyword">context</span>
+                        <span className="a11y-ignore search-filter-keyword">{t('context')}</span>
                         <span className="search-filter-separator">:</span>
                         {selectedSearchContextSpec?.startsWith('@') ? (
                             <>

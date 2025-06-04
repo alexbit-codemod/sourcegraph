@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { pluralize } from '@sourcegraph/common'
 import { Text } from '@sourcegraph/wildcard'
@@ -49,6 +50,8 @@ export const ConnectionSummary = <C extends Connection<N>, N, NP = {}, HP = {}>(
     centered,
     className,
 }: ConnectionNodesSummaryProps<C, N, NP, HP>): JSX.Element | null => {
+    const { t } = useTranslation('components/FilteredConnection/ui')
+
     const shouldShowSummary = !noSummaryIfAllNodesVisible || connection.nodes.length === 0 || hasNextPage
     const summaryClassName = classNames(
         compact && styles.compact,
@@ -76,8 +79,11 @@ export const ConnectionSummary = <C extends Connection<N>, N, NP = {}, HP = {}>(
                         {totalCount} {pluralize(noun, totalCount, pluralNoun)}{' '}
                         {connectionQuery ? (
                             <span>
-                                {' '}
-                                matching <strong>{connectionQuery}</strong>
+                                <Trans
+                                    i18nKey="matching-connection-query"
+                                    values={{ connectionQuery: <>{connectionQuery}</> }}
+                                    components={{ '0': <strong /> }}
+                                />
                             </span>
                         ) : (
                             'total'
@@ -98,10 +104,14 @@ export const ConnectionSummary = <C extends Connection<N>, N, NP = {}, HP = {}>(
         emptyElement || (
             <Text className={summaryClassName} data-testid="summary">
                 <small>
-                    No {pluralNoun}{' '}
+                    {t('no-plural-noun', { pluralNoun })}
                     {connectionQuery && (
                         <span>
-                            matching <strong>{connectionQuery}</strong>
+                            <Trans
+                                i18nKey="matching-connection-query-strong"
+                                values={{ connectionQuery: <>{connectionQuery}</> }}
+                                components={{ '0': <strong /> }}
+                            />
                         </span>
                     )}
                 </small>

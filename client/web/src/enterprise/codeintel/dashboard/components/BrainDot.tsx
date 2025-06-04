@@ -2,6 +2,7 @@ import React from 'react'
 
 import { mdiBrain } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import {
     Icon,
@@ -24,18 +25,24 @@ export interface BrainDotProps {
     path?: string
 }
 
-export const BrainDot: React.FunctionComponent<BrainDotProps> = ({ repoName, commit, path }) => (
-    <>
-        <MenuDivider />
-        <MenuHeader className="d-flex">
-            <Icon aria-hidden={true} svgPath={mdiBrain} fill="text-muted" />
-            <Text className="mb-0 ml-2">Code intelligence preview</Text>
-        </MenuHeader>
-        <BrainDotContent repoName={repoName} commit={commit} path={path} />
-    </>
-)
+export const BrainDot: React.FunctionComponent<BrainDotProps> = ({ repoName, commit, path }) => {
+    const { t } = useTranslation('enterprise/codeintel/dashboard/components')
+
+    return (
+        <>
+            <MenuDivider />
+            <MenuHeader className="d-flex">
+                <Icon aria-hidden={true} svgPath={mdiBrain} fill="text-muted" />
+                <Text className="mb-0 ml-2">{t('code-intelligence-preview')}</Text>
+            </MenuHeader>
+            <BrainDotContent repoName={repoName} commit={commit} path={path} />
+        </>
+    )
+}
 
 const BrainDotContent: React.FunctionComponent<BrainDotProps> = ({ repoName, commit, path }) => {
+    const { t } = useTranslation('enterprise/codeintel/dashboard/components')
+
     const { data: visibleIndexes, loading: visibleIndexesLoading } = useVisibleIndexes({
         repository: repoName,
         commit,
@@ -60,7 +67,7 @@ const BrainDotContent: React.FunctionComponent<BrainDotProps> = ({ repoName, com
                         id="none"
                         key="none"
                         name="none"
-                        label="None"
+                        label={t('none-value')}
                         wrapperClassName={classNames(styles.radioBtn, 'py-1')}
                         checked={visibleIndexID === undefined}
                         onChange={() => {
@@ -68,28 +75,33 @@ const BrainDotContent: React.FunctionComponent<BrainDotProps> = ({ repoName, com
                             setIndexIDForSnapshotData(indexIDsForSnapshotData)
                         }}
                     />
-                    {visibleIndexes.map(index => (
-                        <RadioButton
-                            key={index.id}
-                            id={index.id}
-                            name={index.id}
-                            checked={visibleIndexID === index.id}
-                            wrapperClassName={classNames(styles.radioBtn, 'py-1')}
-                            label={
-                                <>
-                                    Index at <Code>{index.inputCommit.slice(0, 7)}</Code>
-                                </>
-                            }
-                            onChange={() => {
-                                indexIDsForSnapshotData[repoName] = index.id
-                                setIndexIDForSnapshotData(indexIDsForSnapshotData)
-                            }}
-                        />
-                    ))}
+                    {visibleIndexes.map(index => {
+                        const { t } = useTranslation('enterprise/codeintel/dashboard/components')
+
+                        return (
+                            <RadioButton
+                                key={index.id}
+                                id={index.id}
+                                name={index.id}
+                                checked={visibleIndexID === index.id}
+                                wrapperClassName={classNames(styles.radioBtn, 'py-1')}
+                                label={
+                                    <>
+                                        {t('index-at')}
+                                        <Code>{index.inputCommit.slice(0, 7)}</Code>
+                                    </>
+                                }
+                                onChange={() => {
+                                    indexIDsForSnapshotData[repoName] = index.id
+                                    setIndexIDForSnapshotData(indexIDsForSnapshotData)
+                                }}
+                            />
+                        )
+                    })}
                 </div>
             )}
             {(visibleIndexes?.length ?? 0) === 0 && !visibleIndexesLoading && (
-                <small className="px-2">No precise indexes to display debug information for.</small>
+                <small className="px-2">{t('no-precise-indexes-debug-info')}</small>
             )}
         </>
     )

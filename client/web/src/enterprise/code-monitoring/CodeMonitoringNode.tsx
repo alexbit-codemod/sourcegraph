@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react'
 
 import type * as H from 'history'
+import { useTranslation } from 'react-i18next'
 import { type Observable, concat, of } from 'rxjs'
 import { switchMap, catchError, startWith, takeUntil, tap, delay } from 'rxjs/operators'
 
@@ -30,6 +31,8 @@ export const CodeMonitorNode: React.FunctionComponent<React.PropsWithChildren<Co
     showOwner,
     toggleCodeMonitorEnabled = _toggleCodeMonitorEnabled,
 }: CodeMonitorNodeProps) => {
+    const { t } = useTranslation('enterprise/code-monitoring')
+
     const [enabled, setEnabled] = useState<boolean>(node.enabled)
 
     const [toggleMonitor, toggleMonitorOrError] = useEventObservable(
@@ -101,13 +104,16 @@ export const CodeMonitorNode: React.FunctionComponent<React.PropsWithChildren<Co
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    (owned by {node.owner.namespaceName})
+                                    {t('owned-by-fragment')}
+                                    {node.owner.namespaceName})
                                 </Link>
                             </>
                         )}
                     </div>
                     {node.actions.nodes.length > 0 && (
-                        <div className="d-flex text-muted align-items-center">New search result → {actions}</div>
+                        <div className="d-flex text-muted align-items-center">
+                            {t('new-search-result-action', { actions })}
+                        </div>
                     )}
                 </div>
                 <div className="d-flex">
@@ -127,12 +133,15 @@ export const CodeMonitorNode: React.FunctionComponent<React.PropsWithChildren<Co
                         variant="link"
                         as={Link}
                     >
-                        Edit
+                        {t('edit-button-fragment')}
                     </Button>
                 </div>
             </div>
             {isErrorLike(toggleMonitorOrError) && (
-                <Alert variant="danger">Failed to toggle monitor: {toggleMonitorOrError.message}</Alert>
+                <Alert variant="danger">
+                    {t('monitor-toggle-failure')}
+                    {toggleMonitorOrError.message}
+                </Alert>
             )}
         </div>
     )

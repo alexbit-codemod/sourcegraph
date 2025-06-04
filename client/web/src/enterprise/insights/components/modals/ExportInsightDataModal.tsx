@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 
 import { escapeRegExp } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Modal, Text, H2, Link } from '@sourcegraph/wildcard'
 
@@ -15,21 +16,25 @@ interface ExportInsightDataModalProps {
 }
 
 export const ExportInsightDataModal: FC<ExportInsightDataModalProps> = props => {
+    const { t } = useTranslation('enterprise/insights/components/modals')
+
     const { insightId, insightTitle, showModal, onCancel, onConfirm } = props
 
     return (
         <Modal isOpen={showModal} position="center" aria-label="Export insight data modal" onDismiss={onCancel}>
-            <H2 className="font-weight-normal">Export data for '{insightTitle}' insight?</H2>
+            <H2 className="font-weight-normal">{t('export-data-insight-confirmation', { insightTitle })}</H2>
 
             <Text className="mt-4 mb-2">
-                This will create a CSV archive of all data for this Code Insight, including
-                <Link to="/help/code_insights/explanations/data_retention" target="_blank" rel="noopener">
-                    {' '}
-                    data that has been archived
-                </Link>
-                .
+                <Trans
+                    i18nKey="csv-archive-data-explanation"
+                    components={{
+                        '0': (
+                            <Link to="/help/code_insights/explanations/data_retention" target="_blank" rel="noopener" />
+                        ),
+                    }}
+                />
             </Text>
-            <Text>This will only include data that you are permitted to see.</Text>
+            <Text>{t('data-permission-notice')}</Text>
             <div className="d-flex justify-content-end mt-5">
                 <DownloadFileButton
                     fileName={escapeRegExp(insightTitle)}
@@ -37,7 +42,7 @@ export const ExportInsightDataModal: FC<ExportInsightDataModalProps> = props => 
                     variant="primary"
                     onClick={onConfirm}
                 >
-                    Export data as CSV
+                    {t('export-data-as-csv')}
                 </DownloadFileButton>
             </div>
         </Modal>

@@ -2,6 +2,7 @@ import type { FC } from 'react'
 
 import classNames from 'classnames'
 import MapSearchIcon from 'mdi-react/MapSearchIcon'
+import { useTranslation } from 'react-i18next'
 
 import { Link, H1, Icon } from '@sourcegraph/wildcard'
 
@@ -57,10 +58,14 @@ interface NotFoundPageProps {
     pageType: string
 }
 
-export const NotFoundPage: FC<NotFoundPageProps> = ({ pageType }) => (
-    <HeroPage
-        icon={MapSearchIcon}
-        title="404: Not Found"
-        subtitle={`Sorry, the requested ${pageType} page was not found.`}
-    />
-)
+export const NotFoundPage: FC<NotFoundPageProps> = ({ pageType }) => {
+    const { t } = useTranslation('components')
+
+    return (
+        <HeroPage
+            icon={MapSearchIcon}
+            title={t('error-404-not-found')}
+            subtitle={`Sorry, the requested ${pageType} page was not found.`}
+        />
+    )
+}

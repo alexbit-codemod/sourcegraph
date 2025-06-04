@@ -4,6 +4,7 @@ import { useApolloClient } from '@apollo/client'
 import { mdiArrowExpand, mdiArrowCollapse, mdiPlus } from '@mdi/js'
 import classNames from 'classnames'
 import { isEqual, noop } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { SeriesSortDirection, SeriesSortMode } from '@sourcegraph/shared/src/graphql-operations'
 import {
@@ -86,6 +87,10 @@ interface DrillDownInsightFilters {
 }
 
 export const DrillDownInsightFilters: FunctionComponent<DrillDownInsightFilters> = props => {
+    const { t } = useTranslation(
+        'enterprise/insights/components/insights-view-grid/components/backend-insight/components/drill-down-filters-panel/drill-down-filters'
+    )
+
     const {
         initialValues,
         originalValues,
@@ -165,7 +170,7 @@ export const DrillDownInsightFilters: FunctionComponent<DrillDownInsightFilters>
     if (isPreviewMode) {
         return (
             <header className={classNames(className, styles.header)}>
-                <H4 className={styles.heading}>Filters</H4>
+                <H4 className={styles.heading}>{t('filters-title')}</H4>
 
                 <FilterPreviewPill text={getSerializedSearchContextFilter(contexts.input.value, true)} />
                 <FilterPreviewPill text={getSerializedRepositoriesFilter(currentRepositoriesFilters)} />
@@ -187,7 +192,9 @@ export const DrillDownInsightFilters: FunctionComponent<DrillDownInsightFilters>
         // eslint-disable-next-line react/forbid-elements
         <form ref={ref} onSubmit={handleSubmit} className={className}>
             <header className={styles.header}>
-                <H4 className={classNames(styles.heading, styles.headingWithExpandedContent)}>Filters</H4>
+                <H4 className={classNames(styles.heading, styles.headingWithExpandedContent)}>
+                    {t('filters-title-duplicate')}
+                </H4>
 
                 <Button
                     disabled={
@@ -199,7 +206,7 @@ export const DrillDownInsightFilters: FunctionComponent<DrillDownInsightFilters>
                     className={styles.actionButton}
                     onClick={handleClear}
                 >
-                    Clear filters
+                    {t('clear-filters')}
                 </Button>
 
                 {isHorizontalMode && (
@@ -243,15 +250,18 @@ export const DrillDownInsightFilters: FunctionComponent<DrillDownInsightFilters>
                     onOpenChange={opened => handleCollapseState(FilterSection.SearchContext, opened)}
                 >
                     <small className={styles.sectionDescription}>
-                        Choose{' '}
-                        <Link
-                            to="/help/code_search/how-to/search_contexts#beta-query-based-search-contexts"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            query-based search context (beta)
-                        </Link>{' '}
-                        to change the scope of this insight.
+                        <Trans
+                            i18nKey="choose-query-based-search-context"
+                            components={{
+                                '0': (
+                                    <Link
+                                        to="/help/code_search/how-to/search_contexts#beta-query-based-search-contexts"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    />
+                                ),
+                            }}
+                        />
                     </small>
 
                     <DrillDownSearchContextFilter
@@ -276,9 +286,7 @@ export const DrillDownInsightFilters: FunctionComponent<DrillDownInsightFilters>
                     className={classNames(styles.panel, { [styles.panelHorizontalMode]: isHorizontalMode })}
                     onOpenChange={opened => handleCollapseState(FilterSection.RegularExpressions, opened)}
                 >
-                    <small className={styles.sectionDescription}>
-                        Use regular expression to change the scope of this insight.
-                    </small>
+                    <small className={styles.sectionDescription}>{t('use-regular-expression-scope')}</small>
 
                     <fieldset className={styles.regExpFilters}>
                         <LabelWithReset
@@ -324,14 +332,18 @@ export const DrillDownInsightFilters: FunctionComponent<DrillDownInsightFilters>
 
                 {hasAppliedFilters && (
                     <small className="text-muted">
-                        <Link
-                            to="/help/code_insights/explanations/code_insights_filters"
-                            target="_blank"
-                            rel="noopener"
-                        >
-                            Default filters
-                        </Link>{' '}
-                        applied
+                        <Trans
+                            i18nKey="default-filters-applied"
+                            components={{
+                                '0': (
+                                    <Link
+                                        to="/help/code_insights/explanations/code_insights_filters"
+                                        target="_blank"
+                                        rel="noopener"
+                                    />
+                                ),
+                            }}
+                        />
                     </small>
                 )}
 
@@ -356,7 +368,7 @@ export const DrillDownInsightFilters: FunctionComponent<DrillDownInsightFilters>
                         onClick={onCreateInsightRequest}
                     >
                         <Icon aria-hidden={true} className="mr-1" svgPath={mdiPlus} />
-                        Save as new view
+                        {t('save-as-new-view')}
                     </Button>
                 </div>
             </footer>

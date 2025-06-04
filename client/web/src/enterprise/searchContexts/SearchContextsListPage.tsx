@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { mdiMagnify, mdiPlus } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 
 import type { PlatformContextProps } from '@sourcegraph/shared/src/platform/context'
 import type { SearchContextProps } from '@sourcegraph/shared/src/search'
@@ -27,6 +28,8 @@ export const SearchContextsListPage: React.FunctionComponent<SearchContextsListP
     platformContext,
     isSourcegraphDotCom,
 }) => {
+    const { t } = useTranslation('enterprise/searchContexts')
+
     const [alert, setAlert] = useState<string | undefined>()
 
     useEffect(() => {
@@ -41,27 +44,31 @@ export const SearchContextsListPage: React.FunctionComponent<SearchContextsListP
                         <div className={styles.actions}>
                             <Button to="/contexts/new" variant="primary" as={Link}>
                                 <Icon aria-hidden={true} svgPath={mdiPlus} />
-                                Create search context
+                                {t('create-search-context')}
                             </Button>
                         </div>
                     }
                     description={
                         <span className="text-muted">
-                            Search code you care about with search contexts.{' '}
-                            <Link
-                                to="/help/code-search/working/search_contexts"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                Learn more
-                            </Link>
+                            <Trans
+                                i18nKey="search-code-with-contexts"
+                                components={{
+                                    '0': (
+                                        <Link
+                                            to="/help/code-search/working/search_contexts"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        />
+                                    ),
+                                }}
+                            />
                         </span>
                     }
                     className="mb-3"
                 >
                     <PageHeader.Heading as="h2" styleAs="h1">
                         <PageHeader.Breadcrumb icon={mdiMagnify} to="/search" aria-label="Code Search" />
-                        <PageHeader.Breadcrumb>Contexts</PageHeader.Breadcrumb>
+                        <PageHeader.Breadcrumb>{t('contexts')}</PageHeader.Breadcrumb>
                     </PageHeader.Heading>
                 </PageHeader>
                 {alert && <Alert variant="danger">{alert}</Alert>}

@@ -4,6 +4,7 @@ import BitbucketIcon from 'mdi-react/BitbucketIcon'
 import GithubIcon from 'mdi-react/GithubIcon'
 import GitIcon from 'mdi-react/GitIcon'
 import GitLabIcon from 'mdi-react/GitlabIcon'
+import { useTranslation, Trans } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import { ExternalServiceKind } from '@sourcegraph/shared/src/graphql-operations'
@@ -49,6 +50,8 @@ export const AddExternalServicesPage: FC<AddExternalServicesPageProps> = ({
     allowEditExternalServicesWithFile,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('components/externalServices')
+
     const { search } = useLocation()
     const [hasDismissedPrivacyWarning, setHasDismissedPrivacyWarning] = useTemporarySetting(
         'admin.hasDismissedCodeHostPrivacyWarning',
@@ -102,11 +105,11 @@ export const AddExternalServicesPage: FC<AddExternalServicesPageProps> = ({
 
     return (
         <>
-            <PageTitle title="Add a code host connection" />
+            <PageTitle title={t('add-code-host-connection')} />
             <PageHeader
                 headingElement="h2"
                 path={[{ text: 'Add a code host connection' }]}
-                description="Add code host connection to one of the supported code hosts."
+                description={t('add-code-host-connection-description')}
                 className="mb-3"
             />
 
@@ -146,48 +149,45 @@ interface ExternalServicesPrivacyAlertProps {
     dismissPrivacyWarning: () => void
 }
 
-const ExternalServicesPrivacyAlert: FC<ExternalServicesPrivacyAlertProps> = ({ dismissPrivacyWarning }) => (
-    <Alert variant="info">
-        <Text>
-            This Sourcegraph installation will never send your code, repository names, file names, or any other specific
-            code data to Sourcegraph.com or any other destination. Your code is kept private on this installation.
-        </Text>
-        <Text>
-            When <Link to="/help/cody/overview">Cody</Link> is enabled, some of your data, including code, repository
-            names, file names, and other specific code details, might be shared temporarily with our trusted LLM
-            partner. We have established a zero retention policy agreement with the LLM company, to ensure the highest
-            levels of data protection and confidentiality.
-        </Text>
-        <H3>This Sourcegraph installation will access your code host by:</H3>
-        <ul>
-            <li>
-                Periodically fetching a list of repositories to ensure new, removed, and renamed repositories are
-                accessible on Sourcegraph.
-            </li>
-            <li>Cloning the repositories you specify to create a local cache.</li>
-            <li>Periodically pulling cloned repositories to ensure search results are current.</li>
-            <li>
-                Fetching{' '}
-                <Link to="/help/admin/permissions" target="_blank" rel="noopener noreferrer">
-                    user repository access permissions
-                </Link>
-                , if you have enabled this feature.
-            </li>
-            <li>
-                Opening pull requests and syncing their metadata as part of{' '}
-                <Link to="/help/batch_changes" target="_blank" rel="noopener noreferrer">
-                    batch changes
-                </Link>
-                , if you have enabled this feature.
-            </li>
-        </ul>
-        <div className="d-flex justify-content-end">
-            <Button variant="secondary" onClick={dismissPrivacyWarning}>
-                Do not show this again
-            </Button>
-        </div>
-    </Alert>
-)
+const ExternalServicesPrivacyAlert: FC<ExternalServicesPrivacyAlertProps> = ({ dismissPrivacyWarning }) => {
+    const { t } = useTranslation('components/externalServices')
+
+    return (
+        <Alert variant="info">
+            <Text>{t('sourcegraph-installation-privacy')}</Text>
+            <Text>
+                <Trans i18nKey="cody-data-sharing-policy" components={{ '0': <Link to="/help/cody/overview" /> }} />
+            </Text>
+            <H3>{t('sourcegraph-code-host-access')}</H3>
+            <ul>
+                <li>{t('fetching-repositories-list')}</li>
+                <li>{t('cloning-repositories-local-cache')}</li>
+                <li>{t('pulling-cloned-repositories')}</li>
+                <li>
+                    <Trans
+                        i18nKey="fetching-user-repo-access-permissions"
+                        components={{
+                            '0': <Link to="/help/admin/permissions" target="_blank" rel="noopener noreferrer" />,
+                        }}
+                    />
+                </li>
+                <li>
+                    <Trans
+                        i18nKey="opening-pull-requests-batch-changes"
+                        components={{
+                            '0': <Link to="/help/batch_changes" target="_blank" rel="noopener noreferrer" />,
+                        }}
+                    />
+                </li>
+            </ul>
+            <div className="d-flex justify-content-end">
+                <Button variant="secondary" onClick={dismissPrivacyWarning}>
+                    {t('do-not-show-again')}
+                </Button>
+            </div>
+        </Alert>
+    )
+}
 
 interface ExternalServicesGroup {
     label: string

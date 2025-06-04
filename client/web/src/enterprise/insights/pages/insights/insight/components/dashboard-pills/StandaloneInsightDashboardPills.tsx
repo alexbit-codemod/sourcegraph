@@ -2,6 +2,7 @@ import type { FunctionComponent, HTMLAttributes } from 'react'
 
 import { mdiViewDashboard } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
@@ -20,6 +21,8 @@ interface StandaloneInsightDashboardPillsProps
 }
 
 export const StandaloneInsightDashboardPills: FunctionComponent<StandaloneInsightDashboardPillsProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/insight/components/dashboard-pills')
+
     const { dashboards, insightId, className, telemetryService, telemetryRecorder, ...attributes } = props
 
     const handleDashboardClick = (): void => {
@@ -30,7 +33,7 @@ export const StandaloneInsightDashboardPills: FunctionComponent<StandaloneInsigh
     return (
         <div {...attributes} className={classNames(className, styles.list)}>
             <Text size="small" className={styles.title}>
-                Insight added to:
+                {t('insight-added-to')}
             </Text>
 
             <Button
@@ -45,7 +48,7 @@ export const StandaloneInsightDashboardPills: FunctionComponent<StandaloneInsigh
                 onClick={handleDashboardClick}
             >
                 <Icon aria-hidden={true} svgPath={mdiViewDashboard} />
-                All Insights
+                {t('all-insights')}
             </Button>
 
             {dashboards.map(dashboard => (

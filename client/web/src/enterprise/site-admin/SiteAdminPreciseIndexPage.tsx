@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { Navigate, useParams } from 'react-router-dom'
 import { catchError } from 'rxjs/operators'
 
@@ -18,6 +19,8 @@ interface Props extends TelemetryV2Props {}
  * A page displaying metadata about a precise index.
  */
 export const SiteAdminPreciseIndexPage: React.FC<Props> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('enterprise/site-admin')
+
     const { id = '' } = useParams<{ id: string }>()
     useEffect(() => {
         EVENT_LOGGER.logViewEvent('SiteAdminPreciseIndex')
@@ -30,7 +33,7 @@ export const SiteAdminPreciseIndexPage: React.FC<Props> = ({ telemetryRecorder }
 
     return (
         <div className="site-admin-lsif-upload-page w-100">
-            <PageTitle title="Precise indexes - Admin" />
+            <PageTitle title={t('precise-indexes-admin')} />
             {!indexOrError ? (
                 <LoadingSpinner />
             ) : isErrorLike(indexOrError) ? (

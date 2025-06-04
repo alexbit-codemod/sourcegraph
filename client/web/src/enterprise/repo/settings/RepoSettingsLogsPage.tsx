@@ -3,6 +3,7 @@ import { type FC, useCallback, useEffect, useState } from 'react'
 import { mdiAlertCircleOutline, mdiCheckCircleOutline, mdiClockOutline, mdiChevronDown, mdiChevronRight } from '@mdi/js'
 import classNames from 'classnames'
 import { parseISO } from 'date-fns'
+import { useTranslation, Trans } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
@@ -42,6 +43,8 @@ export interface RepoSettingsLogsPageProps extends TelemetryV2Props {
  * The repository settings log page.
  */
 export const RepoSettingsLogsPage: FC<RepoSettingsLogsPageProps> = ({ repo, telemetryRecorder }) => {
+    const { t } = useTranslation('enterprise/repo/settings')
+
     const [activeTabIndex, setActiveTabIndex] = useState<number>(LogsPageTabs.COMMANDS)
     useEffect(() => telemetryRecorder.recordEvent('repo.settings.logs', 'view'), [telemetryRecorder])
     const [searchParams, setSearchParams] = useSearchParams()
@@ -73,7 +76,7 @@ export const RepoSettingsLogsPage: FC<RepoSettingsLogsPageProps> = ({ repo, tele
 
     return (
         <>
-            <PageTitle title="Logs" />
+            <PageTitle title={t('logs-title')} />
             <PageHeader path={[{ text: 'Logs and activities' }]} headingElement="h2" className="mb-3" />
 
             <Container>
@@ -85,8 +88,8 @@ export const RepoSettingsLogsPage: FC<RepoSettingsLogsPageProps> = ({ repo, tele
                     onChange={setActiveTab}
                 >
                     <TabList>
-                        <Tab>Command logs</Tab>
-                        <Tab>Sync output</Tab>
+                        <Tab>{t('command-logs')}</Tab>
+                        <Tab>{t('sync-output')}</Tab>
                     </TabList>
 
                     <TabPanels>
@@ -109,6 +112,8 @@ interface CommandLogsProps {
 }
 
 const CommandLogs: FC<CommandLogsProps> = ({ repo }) => {
+    const { t } = useTranslation('enterprise/repo/settings')
+
     const { recordedCommands, loading, error, fetchMore, hasNextPage, isRecordingEnabled } = useFetchRecordedCommands(
         repo.id
     )
@@ -123,15 +128,17 @@ const CommandLogs: FC<CommandLogsProps> = ({ repo }) => {
                  */}
                 {!loading && isRecordingEnabled === false && (
                     <Alert variant="info" className="mt-3">
-                        <small>Command recording isn't enabled for this repository.</small>{' '}
+                        <small>{t('command-recording-disabled')}</small>{' '}
                         <small>
-                            Visit <Link to="/help/admin/repo/recording">the docs</Link> to learn how to enable command
-                            recording.
+                            <Trans
+                                i18nKey="command-recording-docs-link"
+                                components={{ '0': <Link to="/help/admin/repo/recording" /> }}
+                            />
                         </small>
                     </Alert>
                 )}
                 {!loading && recordedCommands.length === 0 && isRecordingEnabled && (
-                    <Text className="my-2">No recorded commands yet.</Text>
+                    <Text className="my-2">{t('no-recorded-commands')}</Text>
                 )}
                 {recordedCommands.map((command, index) => (
                     // We use the index as key here because commands don't have the concept
@@ -144,7 +151,7 @@ const CommandLogs: FC<CommandLogsProps> = ({ repo }) => {
             {loading && <LoadingSpinner />}
             {hasNextPage && !loading && (
                 <div className="d-flex justify-content-center">
-                    <Button onClick={() => fetchMore(recordedCommands.length)}>Show more</Button>
+                    <Button onClick={() => fetchMore(recordedCommands.length)}>{t('show-more')}</Button>
                 </div>
             )}
         </>
@@ -157,6 +164,8 @@ interface LastExecutedCommandNodeProps {
 }
 
 const LastExecutedCommandNode: FC<LastExecutedCommandNodeProps> = ({ command, mirrorInfo }) => {
+    const { t } = useTranslation('enterprise/repo/settings')
+
     const [isExpanded, setIsExpanded] = useState(false)
     const toggleIsExpanded = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
         event => {
@@ -183,7 +192,9 @@ const LastExecutedCommandNode: FC<LastExecutedCommandNodeProps> = ({ command, mi
                     />
                     <span className="font-weight-bold">{command.isSuccess ? 'Succeeded' : 'Failed'}</span>{' '}
                     <span className="text-muted">
-                        <Timestamp date={startDate} /> on shard {mirrorInfo.shard}
+                        <Timestamp date={startDate} />
+                        {t('shard-info')}
+                        {mirrorInfo.shard}
                     </span>
                 </div>
 
@@ -198,7 +209,7 @@ const LastExecutedCommandNode: FC<LastExecutedCommandNodeProps> = ({ command, mi
                     [styles.commandNodeLogOutputFailState]: !command.isSuccess,
                 })}
                 text={command.command}
-                logDescription="Command:"
+                logDescription={t('command-label')}
             />
 
             <div className={styles.commandNodeFooter}>
@@ -215,13 +226,20 @@ const LastExecutedCommandNode: FC<LastExecutedCommandNodeProps> = ({ command, mi
                                 svgPath={isExpanded ? mdiChevronDown : mdiChevronRight}
                                 className={styles.commandNodeExpandBtn}
                             />
-                            <small>Command output</small>
+                            <small>{t('command-output')}</small>
                         </Button>
                     )}
                 </div>
-                <small className={classNames('text-muted', styles.commandNodePath)}>Path: {command.dir}</small>
+                <small className={classNames('text-muted', styles.commandNodePath)}>
+                    {t('path-label')}
+                    {command.dir}
+                </small>
                 {isExpanded && (
-                    <LogOutput text={command.output} logDescription="Output:" className={styles.commandNodeOutput} />
+                    <LogOutput
+                        text={command.output}
+                        logDescription={t('output-label')}
+                        className={styles.commandNodeOutput}
+                    />
                 )}
             </div>
         </div>
@@ -233,14 +251,16 @@ interface SyncOutputProps {
 }
 
 const SyncOutput: FC<SyncOutputProps> = props => {
+    const { t } = useTranslation('enterprise/repo/settings')
+
     const output =
         (props.mirrorInfo.cloneInProgress && 'Cloning in progress...') ||
         props.mirrorInfo.lastSyncOutput ||
         'Last sync command did not produce any output'
     return (
         <div className="mt-2">
-            <Text className="mb-1">Output from this repository's most recent sync</Text>
-            <LogOutput text={output} logDescription="Job output:" />
+            <Text className="mb-1">{t('recent-sync-output')}</Text>
+            <LogOutput text={output} logDescription={t('job-output-label')} />
         </div>
     )
 }

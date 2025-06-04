@@ -1,6 +1,7 @@
 import { useEffect, useState, type FC } from 'react'
 
 import { mdiChevronDown } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import {
@@ -49,6 +50,8 @@ const setupOptions: SetupOption[] = [
 interface CodyDashboardPageProps extends TelemetryV2Props {}
 
 export const CodyDashboardPage: FC<CodyDashboardPageProps> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('cody/dashboard')
+
     useEffect(() => {
         telemetryRecorder.recordEvent('cody.dashboard', 'view')
     }, [telemetryRecorder])
@@ -59,10 +62,8 @@ export const CodyDashboardPage: FC<CodyDashboardPageProps> = ({ telemetryRecorde
         // a check here just in case to avoid confusing users if they find their way here.
         <section className={styles.dashboardContainer}>
             <section className={styles.dashboardHero}>
-                <H1 className={styles.dashboardHeroHeader}>Cody is not enabled</H1>
-                <Text className={styles.dashboardHeroTagline}>
-                    Contact your Sourcegraph admin if this is unexpected.
-                </Text>
+                <H1 className={styles.dashboardHeroHeader}>{t('cody-not-enabled')}</H1>
+                <Text className={styles.dashboardHeroTagline}>{t('contact-admin-unexpected')}</Text>
             </section>
         </section>
     ) : (
@@ -72,27 +73,28 @@ export const CodyDashboardPage: FC<CodyDashboardPageProps> = ({ telemetryRecorde
                     <section className={styles.dashboardHero}>
                         <CodyColorIcon className={styles.dashboardCodyIcon} />
                         <H1 className={styles.dashboardHeroHeader}>
-                            Get started with <span className={styles.codyGradient}>Cody</span>
+                            <Trans
+                                i18nKey="get-started-with-cody"
+                                components={{ '0': <span className={styles.codyGradient} /> }}
+                            />
                         </H1>
-                        <Text className={styles.dashboardHeroTagline}>
-                            Hey! 👋 Let’s get started with Cody — your new AI coding assistant.
-                        </Text>
+                        <Text className={styles.dashboardHeroTagline}>{t('welcome-to-cody')}</Text>
                     </section>
                     <section className={styles.dashboardOnboarding}>
                         <section className={styles.dashboardOnboardingIde}>
-                            <Text className={styles.dashboardText}>Use Cody in your editor</Text>
+                            <Text className={styles.dashboardText}>{t('use-cody-in-editor')}</Text>
                             <LinkSelector options={setupOptions} />
                             <Text className="text-muted">
                                 <Link to={codySetupLink} className={styles.dashboardOnboardingIdeInstallationLink}>
-                                    Documentation
+                                    {t('documentation-link')}
                                 </Link>
                             </Text>
                         </section>
                         <section className={styles.dashboardOnboardingWeb}>
-                            <Text className={styles.dashboardText}>... or try it on the web</Text>
+                            <Text className={styles.dashboardText}>{t('try-cody-on-web')}</Text>
                             <ButtonLink to="/cody/chat" outline={true} className={styles.dashboardOnboardingWebLink}>
                                 <CodyColorIcon className={styles.dashboardOnboardingCodyIcon} />
-                                <span>Cody Web</span>
+                                <span>{t('cody-web')}</span>
                             </ButtonLink>
                         </section>
                     </section>
@@ -101,13 +103,20 @@ export const CodyDashboardPage: FC<CodyDashboardPageProps> = ({ telemetryRecorde
                 <section className={styles.dashboardHero}>
                     <CodyColorIcon className={styles.dashboardCodyIcon} />
                     <H2 className={styles.dashboardHeroHeader}>
-                        Your user account doesn't have access to <span className={styles.codyGradient}>Cody</span>
+                        <Trans
+                            i18nKey="no-access-to-cody"
+                            components={{ '0': <span className={styles.codyGradient} /> }}
+                        />
                     </H2>
                     <Text className={styles.dashboardHeroTagline}>
-                        Ask your Sourcegraph admin to{' '}
-                        <Link to="/help/cody/clients/enable-cody-enterprise#enable-cody-only-for-some-users">
-                            enable Cody for you
-                        </Link>
+                        <Trans
+                            i18nKey="enable-cody-for-user"
+                            components={{
+                                '0': (
+                                    <Link to="/help/cody/clients/enable-cody-enterprise#enable-cody-only-for-some-users" />
+                                ),
+                            }}
+                        />
                     </Text>
                 </section>
             )}
@@ -143,15 +152,22 @@ const LinkSelector: FC<LinkSelectorProps> = ({ options }) => {
                 </MenuButton>
 
                 <MenuList position={Position.bottomEnd} className={styles.linkSelectorDropdown}>
-                    {options.map((option, index) => (
-                        <MenuItem
-                            key={index}
-                            className={styles.linkSelectorItem}
-                            onSelect={() => setSelectedOption(option)}
-                        >
-                            <Text className="m-0">Install Cody on {option.name}</Text>
-                        </MenuItem>
-                    ))}
+                    {options.map((option, index) => {
+                        const { t } = useTranslation('cody/dashboard')
+
+                        return (
+                            <MenuItem
+                                key={index}
+                                className={styles.linkSelectorItem}
+                                onSelect={() => setSelectedOption(option)}
+                            >
+                                <Text className="m-0">
+                                    {t('install-cody-on')}
+                                    {option.name}
+                                </Text>
+                            </MenuItem>
+                        )
+                    })}
                 </MenuList>
             </Menu>
         </section>

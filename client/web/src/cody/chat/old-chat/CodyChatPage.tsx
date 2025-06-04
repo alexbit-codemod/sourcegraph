@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { mdiCogOutline, mdiDelete, mdiDotsVertical, mdiFormatListBulleted, mdiOpenInNew, mdiPlus } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 
 import { CodyLogo } from '@sourcegraph/cody-ui'
@@ -80,6 +81,8 @@ export const CodyChatPage: React.FunctionComponent<CodyChatPageProps> = ({
     isSourcegraphDotCom,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('cody/chat/old-chat')
+
     const { pathname } = useLocation()
     const navigate = useNavigate()
 
@@ -139,19 +142,19 @@ export const CodyChatPage: React.FunctionComponent<CodyChatPageProps> = ({
 
     return (
         <Page className={classNames('d-flex flex-column', styles.page)}>
-            <PageTitle title="Cody chat" />
+            <PageTitle title={t('cody-chat-title')} />
             <PageHeader
                 actions={
                     <div className="d-flex flex-gap-1">
                         <ButtonLink variant="link" to={codyDashboardLink}>
-                            Editor extensions
+                            {t('editor-extensions-label')}
                         </ButtonLink>
                         <ButtonLink variant="secondary" to={codyDashboardLink}>
-                            Dashboard
+                            {t('dashboard-title')}
                         </ButtonLink>
                         <Button variant="primary" onClick={initializeNewChat}>
                             <Icon aria-hidden={true} svgPath={mdiPlus} />
-                            New chat
+                            {t('new-chat-button')}
                         </Button>
                     </div>
                 }
@@ -159,7 +162,7 @@ export const CodyChatPage: React.FunctionComponent<CodyChatPageProps> = ({
             >
                 <PageHeader.Heading as="h2" styleAs="h1">
                     <PageHeader.Breadcrumb icon={CodyColorIcon}>
-                        <div className="d-inline-flex align-items-center">Cody Chat</div>
+                        <div className="d-inline-flex align-items-center">{t('cody-chat-name')}</div>
                     </PageHeader.Breadcrumb>
                 </PageHeader.Heading>
             </PageHeader>
@@ -168,7 +171,7 @@ export const CodyChatPage: React.FunctionComponent<CodyChatPageProps> = ({
                 <div className={classNames('col-md-3', styles.sidebarWrapper)}>
                     <div className={styles.sidebarHeader}>
                         <H4>
-                            <b>Chats</b>
+                            <b>{t('chats-title')}</b>
                         </H4>
                         <Menu>
                             <MenuButton variant="icon" outline={false}>
@@ -179,17 +182,20 @@ export const CodyChatPage: React.FunctionComponent<CodyChatPageProps> = ({
                                 {(transcriptHistory.length > 1 || !!transcriptHistory[0]?.interactions?.length) && (
                                     <>
                                         <MenuItem onSelect={clearHistory}>
-                                            <Icon aria-hidden={true} svgPath={mdiDelete} /> Clear all chats
+                                            <Icon aria-hidden={true} svgPath={mdiDelete} />
+                                            {t('clear-all-chats-button')}
                                         </MenuItem>
                                         <MenuDivider />
                                     </>
                                 )}
                                 <MenuLink as={Link} to="/help/cody" target="_blank" rel="noopener">
-                                    <Icon aria-hidden={true} svgPath={mdiOpenInNew} /> Cody Docs & FAQ
+                                    <Icon aria-hidden={true} svgPath={mdiOpenInNew} />
+                                    {t('cody-docs-title')}& FAQ
                                 </MenuLink>
                                 {authenticatedUser?.siteAdmin && (
                                     <MenuLink as={Link} to="/site-admin/cody">
-                                        <Icon aria-hidden={true} svgPath={mdiCogOutline} /> Cody Settings
+                                        <Icon aria-hidden={true} svgPath={mdiCogOutline} />
+                                        {t('cody-settings-title')}
                                     </MenuLink>
                                 )}
                             </MenuList>
@@ -243,7 +249,7 @@ export const CodyChatPage: React.FunctionComponent<CodyChatPageProps> = ({
                                 <CodyLogo />
                                 {showMobileHistory ? 'Chats' : 'Ask Cody'}
                                 <div className="ml-2">
-                                    <Badge variant="info">Experimental</Badge>
+                                    <Badge variant="info">{t('experimental-label')}</Badge>
                                 </div>
                             </div>
                         </div>

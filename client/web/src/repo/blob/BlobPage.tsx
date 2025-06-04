@@ -6,6 +6,7 @@ import FileAlertIcon from 'mdi-react/FileAlertIcon'
 import MapSearchIcon from 'mdi-react/MapSearchIcon'
 import mermaid from 'mermaid'
 import ReactDOM, { createPortal } from 'react-dom'
+import { useTranslation } from 'react-i18next'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import type { Observable } from 'rxjs'
 import { catchError, map, startWith, switchMap } from 'rxjs/operators'
@@ -129,6 +130,8 @@ interface BlobPageInfo extends Optional<BlobInfo, 'commitID'> {
 }
 
 export const BlobPage: React.FunctionComponent<BlobPageProps> = ({ className, context, ...props }) => {
+    const { t } = useTranslation('repo/blob')
+
     const location = useLocation()
     const navigate = useNavigate()
 
@@ -491,7 +494,11 @@ export const BlobPage: React.FunctionComponent<BlobPageProps> = ({ className, co
         return (
             <>
                 {alwaysRender}
-                <HeroPage icon={AlertCircleIcon} title="Error" subtitle={<ErrorMessage error={blobInfoOrError} />} />
+                <HeroPage
+                    icon={AlertCircleIcon}
+                    title={t('error-message')}
+                    subtitle={<ErrorMessage error={blobInfoOrError} />}
+                />
             </>
         )
     }
@@ -512,7 +519,7 @@ export const BlobPage: React.FunctionComponent<BlobPageProps> = ({ className, co
             <div className={classNames(styles.placeholder, className)}>
                 <HeroPage
                     icon={MapSearchIcon}
-                    title="Not found"
+                    title={t('not-found-message')}
                     subtitle={`${filePath} does not exist at this revision.`}
                 />
             </div>
@@ -528,12 +535,10 @@ export const BlobPage: React.FunctionComponent<BlobPageProps> = ({ className, co
             <div className={classNames(styles.placeholder, className)}>
                 <HeroPage
                     icon={FileAlertIcon}
-                    title="Stored with Git LFS"
+                    title={t('git-lfs-storage-message')}
                     subtitle={
                         <div>
-                            <Text className={styles.lfsText}>
-                                This file is stored in Git Large File Storage and cannot be viewed inside Sourcegraph.
-                            </Text>
+                            <Text className={styles.lfsText}>{t('git-lfs-view-warning')}</Text>
                             {externalUrl && externalService && (
                                 <ButtonLink
                                     variant="secondary"
@@ -543,7 +548,8 @@ export const BlobPage: React.FunctionComponent<BlobPageProps> = ({ className, co
                                     className="mt-3"
                                 >
                                     <Icon as={externalService.icon} aria-hidden={true} className="mr-1" />
-                                    View file on {externalService.displayName}
+                                    {t('view-file-link')}
+                                    {externalService.displayName}
                                 </ButtonLink>
                             )}
                         </div>
@@ -596,9 +602,9 @@ export const BlobPage: React.FunctionComponent<BlobPageProps> = ({ className, co
             {!blobInfoOrError.richHTML && blobInfoOrError.aborted && (
                 <div>
                     <Alert variant="info">
-                        Syntax-highlighting this file took too long. &nbsp;
+                        {t('syntax-highlighting-timeout')}
                         <Button onClick={onExtendTimeoutClick} variant="primary" size="sm">
-                            Try again
+                            {t('try-again-prompt')}
                         </Button>
                     </Alert>
                 </div>
@@ -622,7 +628,7 @@ export const BlobPage: React.FunctionComponent<BlobPageProps> = ({ className, co
                         telemetryService={props.telemetryService}
                         telemetryRecorder={props.telemetryRecorder}
                         role="region"
-                        ariaLabel="File blob"
+                        ariaLabel={t('file-blob-label')}
                         isBlameVisible={isBlameVisible}
                         blameHunks={isErrorLike(blameHunks) ? undefined : blameHunks}
                         ocgVisibility={ocgVisibility}

@@ -1,0 +1,13 @@
+{
+  "press-slash-to-focus-search-input": "Press <0>/</0> to focus the search input",
+  "search-basics": "Search basics",
+  "docs-tips-sourcegraph": "Check out the docs for more tips on getting the most from Sourcegraph.",
+  "sourcegraph-docs-link": "Sourcegraph Docs",
+  "hidden-help-panels-message": "Some help panels are hidden.",
+  "show-all-panels-action": "Show all panels.",
+  "no-results-matched-search": "No results matched your search.",
+  "display-limit-hit": "Display limit hit.",
+  "result-limit-hit-modify-query": "<0>Result limit hit.</0> Modify your query with",
+  "count-label": "count:",
+  "search-more-items": " to search for more items."
+}

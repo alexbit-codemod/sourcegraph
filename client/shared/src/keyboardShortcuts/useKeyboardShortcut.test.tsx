@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react'
+import { useTranslation } from 'react-i18next'
 import { describe, expect, it } from 'vitest'
 
 import { MockTemporarySettings } from '../settings/temporary/testUtils'
@@ -7,10 +8,12 @@ import type { KEYBOARD_SHORTCUTS } from './keyboardShortcuts'
 import { useKeyboardShortcut } from './useKeyboardShortcut'
 
 const ShortcutUsageExample = ({ shortcut }: { shortcut: keyof typeof KEYBOARD_SHORTCUTS }) => {
+    const { t } = useTranslation('../../shared/src/keyboardShortcuts')
+
     const keyboardShortcut = useKeyboardShortcut(shortcut)
 
     if (!keyboardShortcut) {
-        return <span>Keyboard shortcut not found</span>
+        return <span>{t('keyboard-shortcut-not-found')}</span>
     }
 
     return <pre>{JSON.stringify(keyboardShortcut, null, 2)}</pre>

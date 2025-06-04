@@ -1,6 +1,7 @@
 import React from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { CodySubscriptionPlan, type CodySubscriptionStatus } from '@sourcegraph/shared/src/graphql-operations'
@@ -30,6 +31,8 @@ export const SubscriptionStats: React.FunctionComponent<SubscriptionStatsProps> 
     usageData,
     onClickUpgradeToProCTA,
 }: SubscriptionStatsProps) => {
+    const { t } = useTranslation('cody/management')
+
     const stats = usageData?.currentUser
     const codyCurrentPeriodChatLimit = stats?.codyCurrentPeriodChatLimit || 0
     const codyCurrentPeriodChatUsage = stats?.codyCurrentPeriodChatUsage || 0
@@ -61,10 +64,15 @@ export const SubscriptionStats: React.FunctionComponent<SubscriptionStatsProps> 
     return (
         <div className={styles.responsiveContainer}>
             <div className="d-flex flex-column align-items-center justify-content-center p-3">
-                {isUserOnProTier ? <ProTierIcon /> : <Text className={classNames(styles.planName, 'mb-0')}>Free</Text>}
+                {isUserOnProTier ? (
+                    <ProTierIcon />
+                ) : (
+                    <Text className={classNames(styles.planName, 'mb-0')}>{t('free')}</Text>
+                )}
                 {isUserOnProTier && subscription.cancelAtPeriodEnd && (
                     <Text className="text-muted mb-0 mt-4" size="small">
-                        Subscription ends <Timestamp date={codyProSubscriptionEndTime} />
+                        {t('subscription-ends')}
+                        <Timestamp date={codyProSubscriptionEndTime} />
                     </Text>
                 )}
                 {!isUserOnProTier && (
@@ -75,7 +83,7 @@ export const SubscriptionStats: React.FunctionComponent<SubscriptionStatsProps> 
                         className="mt-2"
                         size="sm"
                     >
-                        Upgrade plan
+                        {t('upgrade-plan')}
                     </ButtonLink>
                 )}
             </div>
@@ -85,15 +93,15 @@ export const SubscriptionStats: React.FunctionComponent<SubscriptionStatsProps> 
                     {usageData?.currentUser ? (
                         <>
                             <Text className="d-inline mb-0 text-muted">{codyCurrentPeriodCodeUsage} /</Text>{' '}
-                            <Text className="d-inline b-0 text-muted">unlimited</Text>
+                            <Text className="d-inline b-0 text-muted">{t('unlimited')}</Text>
                         </>
                     ) : (
                         <LoadingSpinner />
                     )}
                 </div>
-                <H4 className="mb-0 text-muted">Autocomplete suggestions</H4>
+                <H4 className="mb-0 text-muted">{t('autocomplete-suggestions')}</H4>
                 <Text className="text-muted mb-0" size="small">
-                    this month
+                    {t('this-month')}
                 </Text>
             </div>
             <div className="d-flex flex-column align-items-center justify-content-center p-3">
@@ -101,7 +109,7 @@ export const SubscriptionStats: React.FunctionComponent<SubscriptionStatsProps> 
                 <div className="my-2">
                     {subscription.applyProRateLimits ? (
                         <Text weight="bold" className={classNames('d-inline mb-0')}>
-                            Unlimited
+                            {t('unlimited-offer')}
                         </Text>
                     ) : usageData?.currentUser ? (
                         <>
@@ -121,16 +129,17 @@ export const SubscriptionStats: React.FunctionComponent<SubscriptionStatsProps> 
                     )}
                 </div>
                 <H4 className={classNames('mb-0', chatLimitReached ? 'text-danger' : 'text-muted')}>
-                    Chat messages and commands
+                    {t('chat-messages-commands')}
                 </H4>
                 {!subscription.applyProRateLimits &&
                     (chatLimitReached && usageRefreshTime ? (
                         <Text className="text-danger mb-0" size="small">
-                            Renews <Timestamp date={usageRefreshTime} />
+                            {t('renews')}
+                            <Timestamp date={usageRefreshTime} />
                         </Text>
                     ) : (
                         <Text className="text-muted mb-0" size="small">
-                            this month
+                            {t('this-month-notice')}
                         </Text>
                     ))}
             </div>

@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { useLazyQuery } from '@sourcegraph/http-client'
 import {
     LoadingSpinner,
@@ -37,6 +39,8 @@ interface InferenceScriptPreviewProps {
 }
 
 export const InferenceScriptPreview: React.FunctionComponent<InferenceScriptPreviewProps> = ({ script }) => {
+    const { t } = useTranslation('enterprise/codeintel/configuration/components/inference-script')
+
     const [getRepoId, repoData] = useLazyQuery<GetRepoIdResult, GetRepoIdVariables>(GET_REPO_ID, {})
     const [inferJobs, { data, loading, error }] = useLazyQuery<
         InferAutoIndexJobsForRepoResult,
@@ -65,19 +69,19 @@ export const InferenceScriptPreview: React.FunctionComponent<InferenceScriptPrev
     return (
         <div>
             <Form className={styles.actionContainer} ref={form.ref} noValidate={true} onSubmit={form.handleSubmit}>
-                <Label id="preview-label">Run your script against a repository</Label>
+                <Label id="preview-label">{t('run-script-against-repository')}</Label>
                 <div className="d-flex align-items-center">
                     <Input
                         as={RepositoryField}
                         required={true}
                         aria-label="Repository"
-                        placeholder="Example: github.com/sourcegraph/sourcegraph"
+                        placeholder={t('example-github-url')}
                         {...getDefaultInputProps(repository)}
                         className={styles.actionInput}
                     />
 
                     <Button variant="success" type="submit">
-                        Preview results
+                        {t('preview-results')}
                     </Button>
                 </div>
             </Form>
@@ -89,7 +93,7 @@ export const InferenceScriptPreview: React.FunctionComponent<InferenceScriptPrev
                 <>
                     {data.inferAutoIndexJobsForRepo.inferenceOutput && (
                         <>
-                            <Text weight="bold">Script output:</Text>
+                            <Text weight="bold">{t('script-output')}</Text>
                             <LogOutput text={data.inferAutoIndexJobsForRepo.inferenceOutput} />
                         </>
                     )}

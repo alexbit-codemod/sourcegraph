@@ -2,6 +2,7 @@ import React, { useMemo, useRef } from 'react'
 
 import classNames from 'classnames'
 import MapSearchIcon from 'mdi-react/MapSearchIcon'
+import { useTranslation } from 'react-i18next'
 import { Route, Routes } from 'react-router-dom'
 
 import type { SiteSettingFields } from '@sourcegraph/shared/src/graphql-operations'
@@ -33,17 +34,25 @@ import { SiteAdminSidebar, type SiteAdminSideBarGroups } from './SiteAdminSideba
 
 import styles from './SiteAdminArea.module.scss'
 
-const NotFoundPage: React.ComponentType<React.PropsWithChildren<{}>> = () => (
-    <HeroPage
-        icon={MapSearchIcon}
-        title="404: Not Found"
-        subtitle="Sorry, the requested site admin page was not found."
-    />
-)
+const NotFoundPage: React.ComponentType<React.PropsWithChildren<{}>> = () => {
+    const { t } = useTranslation('site-admin')
 
-const NotSiteAdminPage: React.ComponentType<React.PropsWithChildren<{}>> = () => (
-    <HeroPage icon={MapSearchIcon} title="403: Forbidden" subtitle="Only site admins are allowed here." />
-)
+    return (
+        <HeroPage
+            icon={MapSearchIcon}
+            title={t('error-404-not-found')}
+            subtitle="Sorry, the requested site admin page was not found."
+        />
+    )
+}
+
+const NotSiteAdminPage: React.ComponentType<React.PropsWithChildren<{}>> = () => {
+    const { t } = useTranslation('site-admin')
+
+    return (
+        <HeroPage icon={MapSearchIcon} title={t('error-403-forbidden')} subtitle="Only site admins are allowed here." />
+    )
+}
 
 export interface SiteAdminAreaRouteContext
     extends PlatformContextProps,
@@ -88,6 +97,8 @@ const sourcegraphOperatorSiteAdminMaintenanceBlockItems = new Set([
 ])
 
 const AuthenticatedSiteAdminArea: React.FunctionComponent<React.PropsWithChildren<SiteAdminAreaProps>> = props => {
+    const { t } = useTranslation('site-admin')
+
     const reference = useRef<HTMLDivElement>(null)
 
     const { data: externalAccounts, loading: isExternalAccountsLoading } = useUserExternalAccounts(
@@ -149,7 +160,7 @@ const AuthenticatedSiteAdminArea: React.FunctionComponent<React.PropsWithChildre
         <Page>
             <PageHeader>
                 <PageHeader.Heading as="h2" styleAs="h1">
-                    <PageHeader.Breadcrumb>Admin</PageHeader.Breadcrumb>
+                    <PageHeader.Breadcrumb>{t('admin')}</PageHeader.Breadcrumb>
                 </PageHeader.Heading>
             </PageHeader>
             <div className="d-flex my-3 flex-column flex-sm-row" ref={reference}>

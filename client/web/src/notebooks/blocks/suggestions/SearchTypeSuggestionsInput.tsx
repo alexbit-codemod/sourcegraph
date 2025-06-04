@@ -2,6 +2,7 @@ import { type ReactElement, useCallback, useEffect, useMemo, useState } from 're
 
 import type { Extension } from '@codemirror/state'
 import type { EditorView } from '@codemirror/view'
+import { useTranslation } from 'react-i18next'
 import { type Observable, of } from 'rxjs'
 import { delay, startWith } from 'rxjs/operators'
 
@@ -47,6 +48,8 @@ export const SearchTypeSuggestionsInput = <S extends SymbolMatch | PathMatch>({
     onEditorCreated,
     extension,
 }: SearchTypeSuggestionsInputProps<S>): ReactElement => {
+    const { t } = useTranslation('notebooks/blocks/suggestions')
+
     const [editor, setEditor] = useState<EditorView | null>(null)
 
     const runBlock = useCallback(() => onRunBlock(id), [onRunBlock, id])
@@ -130,19 +133,20 @@ export const SearchTypeSuggestionsInput = <S extends SymbolMatch | PathMatch>({
                     size="sm"
                     onClick={() => addExampleFilter(FilterType.repo)}
                 >
-                    Filter by repository
+                    {t('filter-by-repository')}
                 </Button>
                 <Button variant="secondary" size="sm" onClick={() => addExampleFilter(FilterType.file)}>
-                    Filter by file path
+                    {t('filter-by-file-path')}
                 </Button>
             </div>
             <div className="mt-3 mb-1">
                 {suggestionsCount !== undefined && (
                     <strong>
-                        {suggestionsCount} {pluralize('result', suggestionsCount)} found
+                        {suggestionsCount} {pluralize('result', suggestionsCount)}
+                        {t('found-message')}
                     </strong>
                 )}
-                {suggestions === LOADING && <strong>Searching...</strong>}
+                {suggestions === LOADING && <strong>{t('searching-message')}</strong>}
             </div>
             {suggestions && suggestions !== LOADING && renderSuggestions(suggestions)}
         </div>

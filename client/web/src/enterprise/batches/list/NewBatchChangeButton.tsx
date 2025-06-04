@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { mdiPlus } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { EVENT_LOGGER } from '@sourcegraph/shared/src/telemetry/web/eventLogger'
@@ -19,6 +20,8 @@ export const NewBatchChangeButton: React.FunctionComponent<React.PropsWithChildr
     to,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/batches/list')
+
     const button = (
         <Button
             disabled={typeof canCreate === 'string'}
@@ -30,7 +33,8 @@ export const NewBatchChangeButton: React.FunctionComponent<React.PropsWithChildr
                 telemetryRecorder.recordEvent('batchChanges', 'create')
             }}
         >
-            <Icon aria-hidden={true} svgPath={mdiPlus} /> Create batch change
+            <Icon aria-hidden={true} svgPath={mdiPlus} />
+            {t('create-batch-change')}
         </Button>
     )
     return typeof canCreate === 'string' ? <Tooltip content={canCreate}>{button}</Tooltip> : button

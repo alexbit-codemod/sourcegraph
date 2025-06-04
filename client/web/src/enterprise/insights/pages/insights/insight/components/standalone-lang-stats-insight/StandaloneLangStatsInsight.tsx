@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
@@ -26,6 +27,8 @@ interface StandaloneLangStatsInsightProps extends TelemetryProps, TelemetryV2Pro
 }
 
 export function StandaloneLangStatsInsight(props: StandaloneLangStatsInsightProps): React.ReactElement {
+    const { t } = useTranslation('enterprise/insights/pages/insights/insight/components/standalone-lang-stats-insight')
+
     const { insight, telemetryService, telemetryRecorder, className } = props
 
     const { state } = useLivePreviewLangStatsInsight(insight)
@@ -54,7 +57,7 @@ export function StandaloneLangStatsInsight(props: StandaloneLangStatsInsightProp
                 />
             </InsightCardHeader>
             {state.status === LivePreviewStatus.Loading || state.status === LivePreviewStatus.Intact ? (
-                <InsightCardLoading>Loading code insight</InsightCardLoading>
+                <InsightCardLoading>{t('loading-code-insight')}</InsightCardLoading>
             ) : state.status === LivePreviewStatus.Error ? (
                 <ErrorAlert error={state.error} />
             ) : (

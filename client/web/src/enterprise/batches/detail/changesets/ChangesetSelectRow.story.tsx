@@ -1,4 +1,5 @@
 import type { Meta, StoryFn, Decorator } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 import { of } from 'rxjs'
 
 import { BulkOperationType } from '@sourcegraph/shared/src/graphql-operations'
@@ -72,273 +73,275 @@ export const AllStates: StoryFn = args => {
 
     return (
         <WebStory>
-            {props => (
-                <>
-                    <H3>Configurable</H3>
-                    <MultiSelectContextProvider initialSelected={initialSelected} initialVisible={initialVisible}>
-                        <ChangesetSelectRow
-                            {...props}
-                            onSubmit={onSubmit}
-                            batchChangeID="test-123"
-                            queryAllChangesetIDs={queryAllChangesetIDs}
-                            queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
-                            queryArguments={{
-                                batchChange: 'test-123',
-                                checkState: null,
-                                onlyArchived: null,
-                                onlyPublishedByThisBatchChange: null,
-                                reviewState: null,
-                                search: null,
-                                state: null,
-                            }}
-                            telemetryRecorder={noOpTelemetryRecorder}
-                        />
-                    </MultiSelectContextProvider>
-                    <hr />
-                    <H3 className="mt-3">All visible, all selectable, none selected</H3>
-                    <MultiSelectContextProvider initialSelected={[]} initialVisible={CHANGESET_IDS}>
-                        <ChangesetSelectRow
-                            {...props}
-                            onSubmit={onSubmit}
-                            batchChangeID="test-123"
-                            queryAllChangesetIDs={queryAll100ChangesetIDs}
-                            queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
-                            queryArguments={{
-                                batchChange: 'test-123',
-                                checkState: null,
-                                onlyArchived: null,
-                                onlyPublishedByThisBatchChange: null,
-                                reviewState: null,
-                                search: null,
-                                state: null,
-                            }}
-                            telemetryRecorder={noOpTelemetryRecorder}
-                        />
-                    </MultiSelectContextProvider>
-                    <hr />
-                    <H3 className="mt-3">All visible, all selectable, half selected</H3>
-                    <MultiSelectContextProvider initialSelected={HALF_CHANGESET_IDS} initialVisible={CHANGESET_IDS}>
-                        <ChangesetSelectRow
-                            {...props}
-                            onSubmit={onSubmit}
-                            batchChangeID="test-123"
-                            queryAllChangesetIDs={queryAll100ChangesetIDs}
-                            queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
-                            queryArguments={{
-                                batchChange: 'test-123',
-                                checkState: null,
-                                onlyArchived: null,
-                                onlyPublishedByThisBatchChange: null,
-                                reviewState: null,
-                                search: null,
-                                state: null,
-                            }}
-                            telemetryRecorder={noOpTelemetryRecorder}
-                        />
-                    </MultiSelectContextProvider>
-                    <hr />
-                    <H3 className="mt-3">All visible, all selectable, all selected</H3>
-                    <MultiSelectContextProvider initialSelected={CHANGESET_IDS} initialVisible={CHANGESET_IDS}>
-                        <ChangesetSelectRow
-                            {...props}
-                            onSubmit={onSubmit}
-                            batchChangeID="test-123"
-                            queryAllChangesetIDs={queryAll100ChangesetIDs}
-                            queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
-                            queryArguments={{
-                                batchChange: 'test-123',
-                                checkState: null,
-                                onlyArchived: null,
-                                onlyPublishedByThisBatchChange: null,
-                                reviewState: null,
-                                search: null,
-                                state: null,
-                            }}
-                            telemetryRecorder={noOpTelemetryRecorder}
-                        />
-                    </MultiSelectContextProvider>
-                    <hr />
-                    <H3 className="mt-3">All visible, half selectable, none selected</H3>
-                    <MultiSelectContextProvider initialSelected={[]} initialVisible={CHANGESET_IDS}>
-                        <ChangesetSelectRow
-                            {...props}
-                            onSubmit={onSubmit}
-                            batchChangeID="test-123"
-                            queryAllChangesetIDs={queryAll50ChangesetIDs}
-                            queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
-                            queryArguments={{
-                                batchChange: 'test-123',
-                                checkState: null,
-                                onlyArchived: null,
-                                onlyPublishedByThisBatchChange: null,
-                                reviewState: null,
-                                search: null,
-                                state: null,
-                            }}
-                            telemetryRecorder={noOpTelemetryRecorder}
-                        />
-                    </MultiSelectContextProvider>
-                    <hr />
-                    <H3 className="mt-3">All visible, half selectable, half selected</H3>
-                    <MultiSelectContextProvider initialSelected={HALF_CHANGESET_IDS} initialVisible={CHANGESET_IDS}>
-                        <ChangesetSelectRow
-                            {...props}
-                            onSubmit={onSubmit}
-                            batchChangeID="test-123"
-                            queryAllChangesetIDs={queryAll50ChangesetIDs}
-                            queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
-                            queryArguments={{
-                                batchChange: 'test-123',
-                                checkState: null,
-                                onlyArchived: null,
-                                onlyPublishedByThisBatchChange: null,
-                                reviewState: null,
-                                search: null,
-                                state: null,
-                            }}
-                            telemetryRecorder={noOpTelemetryRecorder}
-                        />
-                    </MultiSelectContextProvider>
-                    <hr />
-                    <H3 className="mt-3">Half visible, all selectable, none selected</H3>
-                    <MultiSelectContextProvider initialSelected={[]} initialVisible={HALF_CHANGESET_IDS}>
-                        <ChangesetSelectRow
-                            {...props}
-                            onSubmit={onSubmit}
-                            batchChangeID="test-123"
-                            queryAllChangesetIDs={queryAll100ChangesetIDs}
-                            queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
-                            queryArguments={{
-                                batchChange: 'test-123',
-                                checkState: null,
-                                onlyArchived: null,
-                                onlyPublishedByThisBatchChange: null,
-                                reviewState: null,
-                                search: null,
-                                state: null,
-                            }}
-                            telemetryRecorder={noOpTelemetryRecorder}
-                        />
-                    </MultiSelectContextProvider>
-                    <hr />
-                    <H3 className="mt-3">Half visible, all selectable, half selected</H3>
-                    <MultiSelectContextProvider
-                        initialSelected={HALF_CHANGESET_IDS}
-                        initialVisible={HALF_CHANGESET_IDS}
-                    >
-                        <ChangesetSelectRow
-                            {...props}
-                            onSubmit={onSubmit}
-                            batchChangeID="test-123"
-                            queryAllChangesetIDs={queryAll100ChangesetIDs}
-                            queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
-                            queryArguments={{
-                                batchChange: 'test-123',
-                                checkState: null,
-                                onlyArchived: null,
-                                onlyPublishedByThisBatchChange: null,
-                                reviewState: null,
-                                search: null,
-                                state: null,
-                            }}
-                            telemetryRecorder={noOpTelemetryRecorder}
-                        />
-                    </MultiSelectContextProvider>
-                    <hr />
-                    <H3 className="mt-3">Half visible, all selectable, all selected</H3>
-                    <MultiSelectContextProvider initialSelected={CHANGESET_IDS} initialVisible={HALF_CHANGESET_IDS}>
-                        <ChangesetSelectRow
-                            {...props}
-                            onSubmit={onSubmit}
-                            batchChangeID="test-123"
-                            queryAllChangesetIDs={queryAll100ChangesetIDs}
-                            queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
-                            queryArguments={{
-                                batchChange: 'test-123',
-                                checkState: null,
-                                onlyArchived: null,
-                                onlyPublishedByThisBatchChange: null,
-                                reviewState: null,
-                                search: null,
-                                state: null,
-                            }}
-                            telemetryRecorder={noOpTelemetryRecorder}
-                        />
-                    </MultiSelectContextProvider>
-                    <hr />
-                    <H3 className="mt-3">Half visible, half selectable, none selected</H3>
-                    <MultiSelectContextProvider initialSelected={[]} initialVisible={HALF_CHANGESET_IDS}>
-                        <ChangesetSelectRow
-                            {...props}
-                            onSubmit={onSubmit}
-                            batchChangeID="test-123"
-                            queryAllChangesetIDs={queryAll50ChangesetIDs}
-                            queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
-                            queryArguments={{
-                                batchChange: 'test-123',
-                                checkState: null,
-                                onlyArchived: null,
-                                onlyPublishedByThisBatchChange: null,
-                                reviewState: null,
-                                search: null,
-                                state: null,
-                            }}
-                            telemetryRecorder={noOpTelemetryRecorder}
-                        />
-                    </MultiSelectContextProvider>
-                    <hr />
-                    <H3 className="mt-3">Half visible, half selectable, half selected</H3>
-                    <MultiSelectContextProvider
-                        initialSelected={HALF_CHANGESET_IDS}
-                        initialVisible={HALF_CHANGESET_IDS}
-                    >
-                        <ChangesetSelectRow
-                            {...props}
-                            onSubmit={onSubmit}
-                            batchChangeID="test-123"
-                            queryAllChangesetIDs={queryAll50ChangesetIDs}
-                            queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
-                            queryArguments={{
-                                batchChange: 'test-123',
-                                checkState: null,
-                                onlyArchived: null,
-                                onlyPublishedByThisBatchChange: null,
-                                reviewState: null,
-                                search: null,
-                                state: null,
-                            }}
-                            telemetryRecorder={noOpTelemetryRecorder}
-                        />
-                    </MultiSelectContextProvider>
-                    <hr />
-                    <H3 className="mt-3">
-                        Half visible, half selectable, half selected with a subset of available bulk operations
-                    </H3>
-                    <MultiSelectContextProvider
-                        initialSelected={HALF_CHANGESET_IDS}
-                        initialVisible={HALF_CHANGESET_IDS}
-                    >
-                        <ChangesetSelectRow
-                            {...props}
-                            onSubmit={onSubmit}
-                            batchChangeID="test-123"
-                            queryAllChangesetIDs={queryAll50ChangesetIDs}
-                            queryAvailableBulkOperations={commentAndDetachBulkOperationsQuery}
-                            queryArguments={{
-                                batchChange: 'test-123',
-                                checkState: null,
-                                onlyArchived: null,
-                                onlyPublishedByThisBatchChange: null,
-                                reviewState: null,
-                                search: null,
-                                state: null,
-                            }}
-                            telemetryRecorder={noOpTelemetryRecorder}
-                        />
-                    </MultiSelectContextProvider>
-                    <hr />
-                </>
-            )}
+            {props => {
+                const { t } = useTranslation('enterprise/batches/detail/changesets')
+
+                return (
+                    <>
+                        <H3>{t('configurable')}</H3>
+                        <MultiSelectContextProvider initialSelected={initialSelected} initialVisible={initialVisible}>
+                            <ChangesetSelectRow
+                                {...props}
+                                onSubmit={onSubmit}
+                                batchChangeID="test-123"
+                                queryAllChangesetIDs={queryAllChangesetIDs}
+                                queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
+                                queryArguments={{
+                                    batchChange: 'test-123',
+                                    checkState: null,
+                                    onlyArchived: null,
+                                    onlyPublishedByThisBatchChange: null,
+                                    reviewState: null,
+                                    search: null,
+                                    state: null,
+                                }}
+                                telemetryRecorder={noOpTelemetryRecorder}
+                            />
+                        </MultiSelectContextProvider>
+                        <hr />
+                        <H3 className="mt-3">{t('all-visible-all-selectable-none-selected')}</H3>
+                        <MultiSelectContextProvider initialSelected={[]} initialVisible={CHANGESET_IDS}>
+                            <ChangesetSelectRow
+                                {...props}
+                                onSubmit={onSubmit}
+                                batchChangeID="test-123"
+                                queryAllChangesetIDs={queryAll100ChangesetIDs}
+                                queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
+                                queryArguments={{
+                                    batchChange: 'test-123',
+                                    checkState: null,
+                                    onlyArchived: null,
+                                    onlyPublishedByThisBatchChange: null,
+                                    reviewState: null,
+                                    search: null,
+                                    state: null,
+                                }}
+                                telemetryRecorder={noOpTelemetryRecorder}
+                            />
+                        </MultiSelectContextProvider>
+                        <hr />
+                        <H3 className="mt-3">{t('all-visible-all-selectable-half-selected')}</H3>
+                        <MultiSelectContextProvider initialSelected={HALF_CHANGESET_IDS} initialVisible={CHANGESET_IDS}>
+                            <ChangesetSelectRow
+                                {...props}
+                                onSubmit={onSubmit}
+                                batchChangeID="test-123"
+                                queryAllChangesetIDs={queryAll100ChangesetIDs}
+                                queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
+                                queryArguments={{
+                                    batchChange: 'test-123',
+                                    checkState: null,
+                                    onlyArchived: null,
+                                    onlyPublishedByThisBatchChange: null,
+                                    reviewState: null,
+                                    search: null,
+                                    state: null,
+                                }}
+                                telemetryRecorder={noOpTelemetryRecorder}
+                            />
+                        </MultiSelectContextProvider>
+                        <hr />
+                        <H3 className="mt-3">{t('all-visible-all-selectable-all-selected')}</H3>
+                        <MultiSelectContextProvider initialSelected={CHANGESET_IDS} initialVisible={CHANGESET_IDS}>
+                            <ChangesetSelectRow
+                                {...props}
+                                onSubmit={onSubmit}
+                                batchChangeID="test-123"
+                                queryAllChangesetIDs={queryAll100ChangesetIDs}
+                                queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
+                                queryArguments={{
+                                    batchChange: 'test-123',
+                                    checkState: null,
+                                    onlyArchived: null,
+                                    onlyPublishedByThisBatchChange: null,
+                                    reviewState: null,
+                                    search: null,
+                                    state: null,
+                                }}
+                                telemetryRecorder={noOpTelemetryRecorder}
+                            />
+                        </MultiSelectContextProvider>
+                        <hr />
+                        <H3 className="mt-3">{t('all-visible-half-selectable-none-selected')}</H3>
+                        <MultiSelectContextProvider initialSelected={[]} initialVisible={CHANGESET_IDS}>
+                            <ChangesetSelectRow
+                                {...props}
+                                onSubmit={onSubmit}
+                                batchChangeID="test-123"
+                                queryAllChangesetIDs={queryAll50ChangesetIDs}
+                                queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
+                                queryArguments={{
+                                    batchChange: 'test-123',
+                                    checkState: null,
+                                    onlyArchived: null,
+                                    onlyPublishedByThisBatchChange: null,
+                                    reviewState: null,
+                                    search: null,
+                                    state: null,
+                                }}
+                                telemetryRecorder={noOpTelemetryRecorder}
+                            />
+                        </MultiSelectContextProvider>
+                        <hr />
+                        <H3 className="mt-3">{t('all-visible-half-selectable-half-selected')}</H3>
+                        <MultiSelectContextProvider initialSelected={HALF_CHANGESET_IDS} initialVisible={CHANGESET_IDS}>
+                            <ChangesetSelectRow
+                                {...props}
+                                onSubmit={onSubmit}
+                                batchChangeID="test-123"
+                                queryAllChangesetIDs={queryAll50ChangesetIDs}
+                                queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
+                                queryArguments={{
+                                    batchChange: 'test-123',
+                                    checkState: null,
+                                    onlyArchived: null,
+                                    onlyPublishedByThisBatchChange: null,
+                                    reviewState: null,
+                                    search: null,
+                                    state: null,
+                                }}
+                                telemetryRecorder={noOpTelemetryRecorder}
+                            />
+                        </MultiSelectContextProvider>
+                        <hr />
+                        <H3 className="mt-3">{t('half-visible-all-selectable-none-selected')}</H3>
+                        <MultiSelectContextProvider initialSelected={[]} initialVisible={HALF_CHANGESET_IDS}>
+                            <ChangesetSelectRow
+                                {...props}
+                                onSubmit={onSubmit}
+                                batchChangeID="test-123"
+                                queryAllChangesetIDs={queryAll100ChangesetIDs}
+                                queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
+                                queryArguments={{
+                                    batchChange: 'test-123',
+                                    checkState: null,
+                                    onlyArchived: null,
+                                    onlyPublishedByThisBatchChange: null,
+                                    reviewState: null,
+                                    search: null,
+                                    state: null,
+                                }}
+                                telemetryRecorder={noOpTelemetryRecorder}
+                            />
+                        </MultiSelectContextProvider>
+                        <hr />
+                        <H3 className="mt-3">{t('half-visible-all-selectable-half-selected')}</H3>
+                        <MultiSelectContextProvider
+                            initialSelected={HALF_CHANGESET_IDS}
+                            initialVisible={HALF_CHANGESET_IDS}
+                        >
+                            <ChangesetSelectRow
+                                {...props}
+                                onSubmit={onSubmit}
+                                batchChangeID="test-123"
+                                queryAllChangesetIDs={queryAll100ChangesetIDs}
+                                queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
+                                queryArguments={{
+                                    batchChange: 'test-123',
+                                    checkState: null,
+                                    onlyArchived: null,
+                                    onlyPublishedByThisBatchChange: null,
+                                    reviewState: null,
+                                    search: null,
+                                    state: null,
+                                }}
+                                telemetryRecorder={noOpTelemetryRecorder}
+                            />
+                        </MultiSelectContextProvider>
+                        <hr />
+                        <H3 className="mt-3">{t('half-visible-all-selectable-all-selected')}</H3>
+                        <MultiSelectContextProvider initialSelected={CHANGESET_IDS} initialVisible={HALF_CHANGESET_IDS}>
+                            <ChangesetSelectRow
+                                {...props}
+                                onSubmit={onSubmit}
+                                batchChangeID="test-123"
+                                queryAllChangesetIDs={queryAll100ChangesetIDs}
+                                queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
+                                queryArguments={{
+                                    batchChange: 'test-123',
+                                    checkState: null,
+                                    onlyArchived: null,
+                                    onlyPublishedByThisBatchChange: null,
+                                    reviewState: null,
+                                    search: null,
+                                    state: null,
+                                }}
+                                telemetryRecorder={noOpTelemetryRecorder}
+                            />
+                        </MultiSelectContextProvider>
+                        <hr />
+                        <H3 className="mt-3">{t('half-visible-half-selectable-none-selected')}</H3>
+                        <MultiSelectContextProvider initialSelected={[]} initialVisible={HALF_CHANGESET_IDS}>
+                            <ChangesetSelectRow
+                                {...props}
+                                onSubmit={onSubmit}
+                                batchChangeID="test-123"
+                                queryAllChangesetIDs={queryAll50ChangesetIDs}
+                                queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
+                                queryArguments={{
+                                    batchChange: 'test-123',
+                                    checkState: null,
+                                    onlyArchived: null,
+                                    onlyPublishedByThisBatchChange: null,
+                                    reviewState: null,
+                                    search: null,
+                                    state: null,
+                                }}
+                                telemetryRecorder={noOpTelemetryRecorder}
+                            />
+                        </MultiSelectContextProvider>
+                        <hr />
+                        <H3 className="mt-3">{t('half-visible-half-selectable-half-selected')}</H3>
+                        <MultiSelectContextProvider
+                            initialSelected={HALF_CHANGESET_IDS}
+                            initialVisible={HALF_CHANGESET_IDS}
+                        >
+                            <ChangesetSelectRow
+                                {...props}
+                                onSubmit={onSubmit}
+                                batchChangeID="test-123"
+                                queryAllChangesetIDs={queryAll50ChangesetIDs}
+                                queryAvailableBulkOperations={allAvailableBulkOperationsQuery}
+                                queryArguments={{
+                                    batchChange: 'test-123',
+                                    checkState: null,
+                                    onlyArchived: null,
+                                    onlyPublishedByThisBatchChange: null,
+                                    reviewState: null,
+                                    search: null,
+                                    state: null,
+                                }}
+                                telemetryRecorder={noOpTelemetryRecorder}
+                            />
+                        </MultiSelectContextProvider>
+                        <hr />
+                        <H3 className="mt-3">{t('half-visible-half-selectable-half-selected-with-bulk-operations')}</H3>
+                        <MultiSelectContextProvider
+                            initialSelected={HALF_CHANGESET_IDS}
+                            initialVisible={HALF_CHANGESET_IDS}
+                        >
+                            <ChangesetSelectRow
+                                {...props}
+                                onSubmit={onSubmit}
+                                batchChangeID="test-123"
+                                queryAllChangesetIDs={queryAll50ChangesetIDs}
+                                queryAvailableBulkOperations={commentAndDetachBulkOperationsQuery}
+                                queryArguments={{
+                                    batchChange: 'test-123',
+                                    checkState: null,
+                                    onlyArchived: null,
+                                    onlyPublishedByThisBatchChange: null,
+                                    reviewState: null,
+                                    search: null,
+                                    state: null,
+                                }}
+                                telemetryRecorder={noOpTelemetryRecorder}
+                            />
+                        </MultiSelectContextProvider>
+                        <hr />
+                    </>
+                )
+            }}
         </WebStory>
     )
 }

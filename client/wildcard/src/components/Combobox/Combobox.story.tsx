@@ -2,6 +2,7 @@ import { type ChangeEvent, useEffect, useState } from 'react'
 
 import { mdiSourceRepository } from '@mdi/js'
 import type { Decorator, Meta } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { BrandedStory } from '../../stories/BrandedStory'
 import { Button } from '../Button'
@@ -31,141 +32,167 @@ const config: Meta = {
 
 export default config
 
-export const ComboboxDemo = () => (
-    <>
-        <H1>Combobox UI</H1>
-        <Grid columnCount={3}>
-            <CommonSearchDemo />
-            <ComboboxOpenOnFocusDemo />
-            <ScrollableListDemo />
-            <ComboboxWithIcon />
-            <ComboboxCustomSuggestionRenderDemo />
-            <ComboboxServerSideSearchDemo />
-        </Grid>
-    </>
-)
+export const ComboboxDemo = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Combobox')
 
-const CommonSearchDemo = () => (
-    <Combobox aria-label="Choose a repo" style={{ maxWidth: '20rem' }}>
-        <ComboboxInput
-            label="Repository"
-            placeholder="Start type..."
-            message="You need to specify repo name (github.com/sg/sg) and then pick one of the suggestions items."
-        />
+    return (
+        <>
+            <H1>{t('combobox-ui')}</H1>
+            <Grid columnCount={3}>
+                <CommonSearchDemo />
+                <ComboboxOpenOnFocusDemo />
+                <ScrollableListDemo />
+                <ComboboxWithIcon />
+                <ComboboxCustomSuggestionRenderDemo />
+                <ComboboxServerSideSearchDemo />
+            </Grid>
+        </>
+    )
+}
 
-        <ComboboxPopover>
-            <ComboboxList>
-                <ComboboxOption value="github.com/sourcegraph/sourcegraph" />
-                <ComboboxOption value="github.com/sourcegraph/about" />
-                <ComboboxOption value="github.com/sourcegraph/deploy" />
-                <ComboboxOption value="github.com/sourcegraph/handbook" />
-            </ComboboxList>
-        </ComboboxPopover>
-    </Combobox>
-)
+const CommonSearchDemo = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Combobox')
 
-const ComboboxOpenOnFocusDemo = () => (
-    <Combobox aria-label="Choose a repo" openOnFocus={true} style={{ maxWidth: '20rem' }}>
-        <ComboboxInput
-            label="Repository"
-            placeholder="Focus and type..."
-            message="You don't need to type search value to see suggestions."
-        />
+    return (
+        <Combobox aria-label="Choose a repo" style={{ maxWidth: '20rem' }}>
+            <ComboboxInput
+                label={t('repository-label')}
+                placeholder={t('start-type-placeholder')}
+                message="You need to specify repo name (github.com/sg/sg) and then pick one of the suggestions items."
+            />
 
-        <ComboboxPopover>
-            <ComboboxList>
-                <ComboboxOption value="github.com/sourcegraph/sourcegraph" />
-                <ComboboxOption value="github.com/sourcegraph/about" />
-                <ComboboxOption value="github.com/sourcegraph/deploy" />
-                <ComboboxOption value="github.com/sourcegraph/handbook" />
-                <ComboboxOption value="github.com/sourcegraph/with-long-loooooong-repo-name" />
-            </ComboboxList>
-        </ComboboxPopover>
-    </Combobox>
-)
-
-const ScrollableListDemo = () => (
-    <Combobox aria-label="Choose a repo" openOnFocus={true} style={{ maxWidth: '20rem' }}>
-        <ComboboxInput
-            label="Repository"
-            placeholder="Focus and navigate with arrow"
-            message="You need to specify repo name (github.com/sg/sg) and then pick one of the suggestions items."
-        />
-
-        <ComboboxPopover>
-            <ComboboxList style={{ maxHeight: 155 }}>
-                <ComboboxOption value="github.com/sourcegraph/sourcegraph" />
-                <ComboboxOption value="github.com/sourcegraph/about" />
-                <ComboboxOption value="github.com/sourcegraph/deploy" />
-                <ComboboxOption value="github.com/sourcegraph/handbook" />
-                <ComboboxOption value="github.com/sourcegraph/4.0" />
-                <ComboboxOption value="github.com/sourcegraph/sorokin" />
-                <ComboboxOption value="github.com/sourcegraph/1.1" />
-                <ComboboxOption value="github.com/sourcegraph/2.0" />
-            </ComboboxList>
-        </ComboboxPopover>
-    </Combobox>
-)
-
-const ComboboxWithIcon = () => (
-    <Combobox aria-label="Choose a repo" openOnFocus={true} style={{ maxWidth: '20rem' }}>
-        <ComboboxInput
-            label="Repository"
-            placeholder="Focus and type..."
-            message="Note that you can render anything inside of suggestions items ans sill have text highlighting"
-        />
-
-        <ComboboxPopover>
-            <ComboboxList>
-                <ComboboxOption value="github.com/sourcegraph/sourcegraph">
-                    <Icon aria-hidden={true} svgPath={mdiSourceRepository} /> <ComboboxOptionText />
-                </ComboboxOption>
-
-                <ComboboxOption value="github.com/sourcegraph/about">
-                    <Icon aria-hidden={true} svgPath={mdiSourceRepository} /> <ComboboxOptionText />
-                </ComboboxOption>
-
-                <ComboboxOption value="github.com/sourcegraph/deploy">
-                    <Icon aria-hidden={true} svgPath={mdiSourceRepository} /> <ComboboxOptionText />
-                </ComboboxOption>
-
-                <ComboboxOption value="github.com/sourcegraph/handbook" />
-                <ComboboxOption value="github.com/sourcegraph/with-long-loooooong-repo-name" />
-            </ComboboxList>
-        </ComboboxPopover>
-    </Combobox>
-)
-
-const ComboboxCustomSuggestionRenderDemo = () => (
-    <Combobox aria-label="Choose a repo" openOnFocus={true} style={{ maxWidth: '20rem' }}>
-        <ComboboxInput
-            label="Repository"
-            placeholder="Focus and type..."
-            message="You can render anything custom in the ComboboxList component."
-        />
-
-        <ComboboxPopover>
-            <ComboboxList>
-                <ComboboxOptionGroup heading="Main sourcegraph repositories">
+            <ComboboxPopover>
+                <ComboboxList>
                     <ComboboxOption value="github.com/sourcegraph/sourcegraph" />
                     <ComboboxOption value="github.com/sourcegraph/about" />
-                    <ComboboxOption value="github.com/sourcegraph/handbook" />
-                </ComboboxOptionGroup>
-
-                <ComboboxOptionGroup heading="Infra repositories">
                     <ComboboxOption value="github.com/sourcegraph/deploy" />
-                    <ComboboxOption value="github.com/sourcegraph/with-long-loooooong-repo-name" />
-                </ComboboxOptionGroup>
+                    <ComboboxOption value="github.com/sourcegraph/handbook" />
+                </ComboboxList>
+            </ComboboxPopover>
+        </Combobox>
+    )
+}
 
-                <Button variant="secondary" size="sm" className="m-2">
-                    + Add new repository
-                </Button>
-            </ComboboxList>
-        </ComboboxPopover>
-    </Combobox>
-)
+const ComboboxOpenOnFocusDemo = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Combobox')
+
+    return (
+        <Combobox aria-label="Choose a repo" openOnFocus={true} style={{ maxWidth: '20rem' }}>
+            <ComboboxInput
+                label={t('repository-label-duplicate')}
+                placeholder={t('focus-and-type-placeholder')}
+                message="You don't need to type search value to see suggestions."
+            />
+
+            <ComboboxPopover>
+                <ComboboxList>
+                    <ComboboxOption value="github.com/sourcegraph/sourcegraph" />
+                    <ComboboxOption value="github.com/sourcegraph/about" />
+                    <ComboboxOption value="github.com/sourcegraph/deploy" />
+                    <ComboboxOption value="github.com/sourcegraph/handbook" />
+                    <ComboboxOption value="github.com/sourcegraph/with-long-loooooong-repo-name" />
+                </ComboboxList>
+            </ComboboxPopover>
+        </Combobox>
+    )
+}
+
+const ScrollableListDemo = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Combobox')
+
+    return (
+        <Combobox aria-label="Choose a repo" openOnFocus={true} style={{ maxWidth: '20rem' }}>
+            <ComboboxInput
+                label={t('repository-label-duplicate-2')}
+                placeholder={t('focus-and-navigate-arrow')}
+                message="You need to specify repo name (github.com/sg/sg) and then pick one of the suggestions items."
+            />
+
+            <ComboboxPopover>
+                <ComboboxList style={{ maxHeight: 155 }}>
+                    <ComboboxOption value="github.com/sourcegraph/sourcegraph" />
+                    <ComboboxOption value="github.com/sourcegraph/about" />
+                    <ComboboxOption value="github.com/sourcegraph/deploy" />
+                    <ComboboxOption value="github.com/sourcegraph/handbook" />
+                    <ComboboxOption value="github.com/sourcegraph/4.0" />
+                    <ComboboxOption value="github.com/sourcegraph/sorokin" />
+                    <ComboboxOption value="github.com/sourcegraph/1.1" />
+                    <ComboboxOption value="github.com/sourcegraph/2.0" />
+                </ComboboxList>
+            </ComboboxPopover>
+        </Combobox>
+    )
+}
+
+const ComboboxWithIcon = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Combobox')
+
+    return (
+        <Combobox aria-label="Choose a repo" openOnFocus={true} style={{ maxWidth: '20rem' }}>
+            <ComboboxInput
+                label={t('repository-label-duplicate-3')}
+                placeholder={t('focus-and-type-placeholder-duplicate')}
+                message="Note that you can render anything inside of suggestions items ans sill have text highlighting"
+            />
+
+            <ComboboxPopover>
+                <ComboboxList>
+                    <ComboboxOption value="github.com/sourcegraph/sourcegraph">
+                        <Icon aria-hidden={true} svgPath={mdiSourceRepository} /> <ComboboxOptionText />
+                    </ComboboxOption>
+
+                    <ComboboxOption value="github.com/sourcegraph/about">
+                        <Icon aria-hidden={true} svgPath={mdiSourceRepository} /> <ComboboxOptionText />
+                    </ComboboxOption>
+
+                    <ComboboxOption value="github.com/sourcegraph/deploy">
+                        <Icon aria-hidden={true} svgPath={mdiSourceRepository} /> <ComboboxOptionText />
+                    </ComboboxOption>
+
+                    <ComboboxOption value="github.com/sourcegraph/handbook" />
+                    <ComboboxOption value="github.com/sourcegraph/with-long-loooooong-repo-name" />
+                </ComboboxList>
+            </ComboboxPopover>
+        </Combobox>
+    )
+}
+
+const ComboboxCustomSuggestionRenderDemo = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Combobox')
+
+    return (
+        <Combobox aria-label="Choose a repo" openOnFocus={true} style={{ maxWidth: '20rem' }}>
+            <ComboboxInput
+                label={t('repository-label-duplicate-4')}
+                placeholder={t('focus-and-type-placeholder-duplicate-2')}
+                message="You can render anything custom in the ComboboxList component."
+            />
+
+            <ComboboxPopover>
+                <ComboboxList>
+                    <ComboboxOptionGroup heading="Main sourcegraph repositories">
+                        <ComboboxOption value="github.com/sourcegraph/sourcegraph" />
+                        <ComboboxOption value="github.com/sourcegraph/about" />
+                        <ComboboxOption value="github.com/sourcegraph/handbook" />
+                    </ComboboxOptionGroup>
+
+                    <ComboboxOptionGroup heading="Infra repositories">
+                        <ComboboxOption value="github.com/sourcegraph/deploy" />
+                        <ComboboxOption value="github.com/sourcegraph/with-long-loooooong-repo-name" />
+                    </ComboboxOptionGroup>
+
+                    <Button variant="secondary" size="sm" className="m-2">
+                        {t('add-new-repository')}
+                    </Button>
+                </ComboboxList>
+            </ComboboxPopover>
+        </Combobox>
+    )
+}
 
 const ComboboxServerSideSearchDemo = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Combobox')
+
     const [searchTerm, setSearchTerm] = useState('')
     const { suggestions, loading } = useRepoSuggestions(searchTerm)
 
@@ -176,8 +203,8 @@ const ComboboxServerSideSearchDemo = () => {
     return (
         <Combobox aria-label="Choose a repo" openOnFocus={true} style={{ maxWidth: '20rem' }} hidden={false}>
             <ComboboxInput
-                label="Repository"
-                placeholder="Focus and type..."
+                label={t('repository-label-duplicate-5')}
+                placeholder={t('focus-and-type-placeholder-duplicate-3')}
                 message="This combobox is connected to the mock backend API handler in a way to simulate real life case."
                 onChange={handleSearchTermChange}
             />
@@ -185,7 +212,8 @@ const ComboboxServerSideSearchDemo = () => {
             <ComboboxPopover>
                 {loading ? (
                     <div style={{ minHeight: '6rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <LoadingSpinner /> Loading
+                        <LoadingSpinner />
+                        {t('loading-message')}
                     </div>
                 ) : (
                     <ComboboxList>

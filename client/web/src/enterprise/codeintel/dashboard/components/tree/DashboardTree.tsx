@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 
 import { mdiFolderOpenOutline, mdiFolderOutline, mdiWrench } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Icon, Link, Text, Tree, Badge } from '@sourcegraph/wildcard'
 
@@ -26,6 +27,8 @@ interface DashboardTreeProps {
 }
 
 export const DashboardTree: React.FunctionComponent<DashboardTreeProps> = ({ indexes, suggestedIndexers, filter }) => {
+    const { t } = useTranslation('enterprise/codeintel/dashboard/components/tree')
+
     const shouldDisplayIndex = useCallback(
         (index: PreciseIndexFields): boolean =>
             // Valid show filter
@@ -59,7 +62,7 @@ export const DashboardTree: React.FunctionComponent<DashboardTreeProps> = ({ ind
 
     // We always have the root node
     if (filteredTreeData.length === 1) {
-        return <Text className="text-muted">No data to display.</Text>
+        return <Text className="text-muted">{t('no-data-to-display')}</Text>
     }
 
     return (
@@ -172,18 +175,23 @@ const TreeNode: React.FunctionComponent<TreeNodeProps> = ({
                 />
             ))}
 
-            {availableIndexersForRoot.map(indexer => (
-                <Badge
-                    as={Link}
-                    to={`../index-configuration?tab=form#${indexer.comparisonKey}`}
-                    variant="outlineSecondary"
-                    key={indexer.key}
-                    className={classNames('text-muted', styles.badge)}
-                >
-                    <Icon svgPath={mdiWrench} aria-hidden={true} className="mr-1 text-primary" />
-                    Configure {indexer.key}
-                </Badge>
-            ))}
+            {availableIndexersForRoot.map(indexer => {
+                const { t } = useTranslation('enterprise/codeintel/dashboard/components/tree')
+
+                return (
+                    <Badge
+                        as={Link}
+                        to={`../index-configuration?tab=form#${indexer.comparisonKey}`}
+                        variant="outlineSecondary"
+                        key={indexer.key}
+                        className={classNames('text-muted', styles.badge)}
+                    >
+                        <Icon svgPath={mdiWrench} aria-hidden={true} className="mr-1 text-primary" />
+                        {t('configure-message')}
+                        {indexer.key}
+                    </Badge>
+                )
+            })}
         </div>
     </div>
 )

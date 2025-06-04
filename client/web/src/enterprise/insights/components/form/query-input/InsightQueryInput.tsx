@@ -2,6 +2,7 @@ import type { InputHTMLAttributes } from 'react'
 
 import classNames from 'classnames'
 import LinkExternalIcon from 'mdi-react/OpenInNewIcon'
+import { useTranslation } from 'react-i18next'
 
 import type { SearchPatternType } from '@sourcegraph/shared/src/graphql-operations'
 import { QueryChangeSource, type QueryState } from '@sourcegraph/shared/src/search'
@@ -35,6 +36,8 @@ export const InsightQueryInput: React.FunctionComponent<InsightQueryInputProps> 
     className,
     ...otherProps
 }) => {
+    const { t } = useTranslation('enterprise/insights/components/form/query-input')
+
     const repoQueryPreview =
         repoQuery !== null ? getRepoQueryPreview(repoQuery) : generateRepoFiltersQuery(repositories)
     const previewQuery = `${repoQueryPreview} ${value}`.trim()
@@ -70,7 +73,8 @@ export const InsightQueryInput: React.FunctionComponent<InsightQueryInputProps> 
             )}
 
             <PreviewLink query={previewQuery} patternType={patternType} className={styles.previewButton}>
-                Preview results <LinkExternalIcon size={18} />
+                {t('preview-results')}
+                <LinkExternalIcon size={18} />
             </PreviewLink>
         </div>
     )

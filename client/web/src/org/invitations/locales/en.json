@@ -1,0 +1,12 @@
+{
+  "invitation-to-organization": "Invitation to Organization {{orgName}}",
+  "invitation-to-join-organization": "You've been invited to join the {{orgDisplayName}} organization",
+  "invited-by-link": "Invited by <0>{{senderDisplayNameSenderUsername}}</0>",
+  "invite-sent-to-recipient": "This invite was sent to <0>{{dataRecipientEmail}}</0>. Joining the {{orgDisplayName}} organization will add this as a verified email on your account.",
+  "join-organization": "Join {{orgDisplayName}}",
+  "decline-invitation": "Decline",
+  "sign-out-create-account": "Or sign out and create a new account",
+  "join-organization-message": " to join the {{orgDisplayName}} organization",
+  "generic-invitation-message": "You've been invited to join an organization.",
+  "error-message": "Error: {{error}}"
+}

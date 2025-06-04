@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { logger } from '@sourcegraph/common'
 import { Button, Modal, Input, H3, Text, Alert, Link, ErrorAlert, Form } from '@sourcegraph/wildcard'
 
@@ -20,6 +22,8 @@ export const UpdateSecretModal: React.FunctionComponent<React.PropsWithChildren<
     onCancel,
     afterUpdate,
 }) => {
+    const { t } = useTranslation('enterprise/executors/secrets')
+
     const labelId = 'updateSecret'
 
     const [value, setValue] = useState<string>('')
@@ -52,22 +56,25 @@ export const UpdateSecretModal: React.FunctionComponent<React.PropsWithChildren<
     )
     return (
         <Modal onDismiss={onCancel} aria-labelledby={labelId}>
-            <H3 id={labelId}>Update secret value for {secret.key}</H3>
-            <Text>
-                Executor secrets are available to executor jobs as environment variables. They will never appear in
-                logs.
-            </Text>
+            <H3 id={labelId}>
+                {t('update-secret-value')}
+                {secret.key}
+            </H3>
+            <Text>{t('executor-secrets-info')}</Text>
             {secret.key === 'DOCKER_AUTH_CONFIG' && (
                 <Alert variant="info" className="mt-2">
-                    This secret value will be used to{' '}
-                    <Link
-                        to="/help/admin/executors/deploy_executors#using-private-registries"
-                        rel="noopener"
-                        target="_blank"
-                    >
-                        configure docker client authentication with private registries
-                    </Link>
-                    .
+                    <Trans
+                        i18nKey="configure-docker-client-authentication"
+                        components={{
+                            '0': (
+                                <Link
+                                    to="/help/admin/executors/deploy_executors#using-private-registries"
+                                    rel="noopener"
+                                    target="_blank"
+                                />
+                            ),
+                        }}
+                    />
                 </Alert>
             )}
 
@@ -83,7 +90,7 @@ export const UpdateSecretModal: React.FunctionComponent<React.PropsWithChildren<
                         required={true}
                         spellCheck="false"
                         minLength={1}
-                        label="Value"
+                        label={t('value-label')}
                         placeholder="******"
                         value={value}
                         onChange={onChangeValue}
@@ -91,7 +98,7 @@ export const UpdateSecretModal: React.FunctionComponent<React.PropsWithChildren<
                 </div>
                 <div className="d-flex justify-content-end">
                     <Button disabled={loading} className="mr-2" onClick={onCancel} outline={true} variant="secondary">
-                        Cancel
+                        {t('cancel-button')}
                     </Button>
                     <LoaderButton
                         type="submit"
@@ -99,7 +106,7 @@ export const UpdateSecretModal: React.FunctionComponent<React.PropsWithChildren<
                         variant="primary"
                         loading={loading}
                         alwaysShowLabel={true}
-                        label="Update secret"
+                        label={t('update-secret-button')}
                     />
                 </div>
             </Form>

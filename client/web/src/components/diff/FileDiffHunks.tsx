@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { ReplaySubject } from 'rxjs'
 
 import type { FileDiffFields } from '../../graphql-operations'
@@ -36,6 +37,8 @@ export const FileDiffHunks: React.FunctionComponent<React.PropsWithChildren<File
     persistLines,
     diffMode,
 }) => {
+    const { t } = useTranslation('components/diff')
+
     /** Emits whenever the ref callback for the code element is called */
     const codeElements = useMemo(() => new ReplaySubject<HTMLElement | null>(1), [])
     const nextCodeElement = useCallback(
@@ -56,7 +59,7 @@ export const FileDiffHunks: React.FunctionComponent<React.PropsWithChildren<File
         <div className={styles.body}>
             <div className={classNames(styles.fileDiffHunks, className)} ref={nextBlobElement}>
                 {hunks.length === 0 ? (
-                    <div className="text-muted m-2">No changes</div>
+                    <div className="text-muted m-2">{t('no-changes')}</div>
                 ) : (
                     <div className={styles.container} ref={nextCodeElement}>
                         <table

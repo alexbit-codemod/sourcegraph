@@ -1,5 +1,7 @@
 import React, { useCallback, type ReactNode } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { Select } from '@sourcegraph/wildcard'
 
 import type { ViewerAffiliatedNamespacesResult } from '../graphql-operations'
@@ -31,6 +33,8 @@ export const NamespaceSelector: React.FunctionComponent<{
     onSelect: parentOnSelect,
     className,
 }) => {
+    const { t } = useTranslation('namespaces')
+
     const onSelect = useCallback<React.ChangeEventHandler<HTMLSelectElement>>(
         event => {
             if (disabled) {
@@ -58,7 +62,7 @@ export const NamespaceSelector: React.FunctionComponent<{
             className={className}
         >
             {loading ? (
-                <option>Loading...</option>
+                <option>{t('loading-message')}</option>
             ) : (
                 namespaces?.map(namespace => (
                     <option key={namespace.id} value={namespace.id}>

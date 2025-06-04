@@ -3,6 +3,7 @@ import { type FunctionComponent, useCallback, useEffect, useMemo, useState } fro
 import { useApolloClient } from '@apollo/client'
 import { mdiDelete, mdiGraph, mdiHistory, mdiRecycle, mdiRedo, mdiTimerSand } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { Navigate, useLocation, useParams, useNavigate } from 'react-router-dom'
 import { takeWhile } from 'rxjs/operators'
 
@@ -74,6 +75,8 @@ export const CodeIntelPreciseIndexPage: FunctionComponent<CodeIntelPreciseIndexP
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/codeintel/indexes/pages')
+
     const { id } = useParams<{ id: string }>()
     const navigate = useNavigate()
     const location = useLocation()
@@ -193,10 +196,12 @@ export const CodeIntelPreciseIndexPage: FunctionComponent<CodeIntelPreciseIndexP
                     {
                         text: (
                             <>
-                                Precise index of{' '}
-                                {indexOrError.projectRoot
-                                    ? `${indexOrError.projectRoot.repository.name}@${indexOrError.projectRoot.commit.abbreviatedOID}`
-                                    : 'an unknown commit'}
+                                {t('precise-index-of', {
+                                    indexOrErrorProjectRootRepositoryName: indexOrError.projectRoot.repository.name,
+                                    indexOrErrorProjectRootCommitAbbreviatedOid:
+                                        indexOrError.projectRoot.commit.abbreviatedOID,
+                                    indexOrErrorProjectRoot: indexOrError.projectRoot,
+                                })}
                             </>
                         ),
                     },
@@ -213,13 +218,13 @@ export const CodeIntelPreciseIndexPage: FunctionComponent<CodeIntelPreciseIndexP
                     <Alert variant={variantByState.get(indexOrError.state) ?? 'primary'}>
                         <span>
                             {indexOrError.state === PreciseIndexState.UPLOADING_INDEX ? (
-                                <span>Still uploading...</span>
+                                <span>{t('still-uploading')}</span>
                             ) : indexOrError.state === PreciseIndexState.DELETING ? (
-                                <span>Upload is queued for deletion.</span>
+                                <span>{t('upload-queued-for-deletion')}</span>
                             ) : indexOrError.state === PreciseIndexState.QUEUED_FOR_INDEXING ? (
                                 <span>
                                     {indexOrError.placeInQueue === 1 ? (
-                                        <>This index is next up for indexing.</>
+                                        <>{t('index-next-up-for-indexing')}</>
                                     ) : (
                                         <>
                                             {indexOrError.placeInQueue
@@ -233,7 +238,7 @@ export const CodeIntelPreciseIndexPage: FunctionComponent<CodeIntelPreciseIndexP
                             ) : indexOrError.state === PreciseIndexState.QUEUED_FOR_PROCESSING ? (
                                 <span>
                                     {indexOrError.placeInQueue === 1 ? (
-                                        <>This index is next up for processing.</>
+                                        <>{t('index-next-up-for-processing')}</>
                                     ) : (
                                         <>
                                             {indexOrError.placeInQueue
@@ -245,18 +250,20 @@ export const CodeIntelPreciseIndexPage: FunctionComponent<CodeIntelPreciseIndexP
                                     )}
                                 </span>
                             ) : indexOrError.state === PreciseIndexState.INDEXING ? (
-                                <span>Indexing in progress...</span>
+                                <span>{t('indexing-in-progress')}</span>
                             ) : indexOrError.state === PreciseIndexState.PROCESSING ? (
-                                <span>Index is currently being processed...</span>
+                                <span>{t('index-currently-being-processed')}</span>
                             ) : indexOrError.state === PreciseIndexState.COMPLETED ? (
-                                <span>Index processed successfully.</span>
+                                <span>{t('index-processed-successfully')}</span>
                             ) : indexOrError.state === PreciseIndexState.INDEXING_ERRORED ? (
                                 <span>
-                                    Index failed to index: <ErrorMessage error={indexOrError.failure} />
+                                    {t('index-failed-to-index')}
+                                    <ErrorMessage error={indexOrError.failure} />
                                 </span>
                             ) : indexOrError.state === PreciseIndexState.PROCESSING_ERRORED ? (
                                 <span>
-                                    Index failed to process: <ErrorMessage error={indexOrError.failure} />
+                                    {t('index-failed-to-process')}
+                                    <ErrorMessage error={indexOrError.failure} />
                                 </span>
                             ) : (
                                 <></>
@@ -266,10 +273,7 @@ export const CodeIntelPreciseIndexPage: FunctionComponent<CodeIntelPreciseIndexP
 
                     {indexOrError.isLatestForRepo && (
                         <Alert variant="secondary">
-                            <span>
-                                This upload can answer queries for the tip of the default branch and are targets of
-                                cross-repository find reference operations.
-                            </span>
+                            <span>{t('upload-answers-queries')}</span>
                         </Alert>
                     )}
                 </div>
@@ -294,7 +298,7 @@ export const CodeIntelPreciseIndexPage: FunctionComponent<CodeIntelPreciseIndexP
                             <span>
                                 <Icon aria-hidden={true} className="text-muted mr-2" svgPath={mdiTimerSand} />
                                 <span className="text-content" data-tab-content="Timeline">
-                                    Timeline
+                                    {t('timeline-header')}
                                 </span>
                             </span>
                         </Tab>
@@ -306,7 +310,7 @@ export const CodeIntelPreciseIndexPage: FunctionComponent<CodeIntelPreciseIndexP
                                     <span>
                                         <Icon aria-hidden={true} className="text-muted mr-2" svgPath={mdiGraph} />
                                         <span className="text-content" data-tab-content="Dependencies">
-                                            Dependencies
+                                            {t('dependencies-header')}
                                         </span>
                                     </span>
                                 </Tab>
@@ -315,7 +319,7 @@ export const CodeIntelPreciseIndexPage: FunctionComponent<CodeIntelPreciseIndexP
                                     <span>
                                         <Icon aria-hidden={true} className="text-muted mr-2" svgPath={mdiGraph} />
                                         <span className="text-content" data-tab-content="Dependents">
-                                            Dependents
+                                            {t('dependents-header')}
                                         </span>
                                     </span>
                                 </Tab>
@@ -324,7 +328,7 @@ export const CodeIntelPreciseIndexPage: FunctionComponent<CodeIntelPreciseIndexP
                                     <span>
                                         <Icon aria-hidden={true} className="text-muted mr-2" svgPath={mdiRecycle} />
                                         <span className="text-content" data-tab-content="Retention">
-                                            Retention
+                                            {t('retention-header')}
                                         </span>
                                     </span>
                                 </Tab>
@@ -334,7 +338,7 @@ export const CodeIntelPreciseIndexPage: FunctionComponent<CodeIntelPreciseIndexP
                                         <span>
                                             <Icon aria-hidden={true} className="text-muted mr-2" svgPath={mdiHistory} />
                                             <span className="text-content" data-tab-content="Audit logs">
-                                                Audit logs
+                                                {t('audit-logs-header')}
                                             </span>
                                         </span>
                                     </Tab>
@@ -391,49 +395,58 @@ interface IndexDescriptionProps {
     index: PreciseIndexFields
 }
 
-const IndexDescription: FunctionComponent<IndexDescriptionProps> = ({ index }) => (
-    <Card>
-        <CardBody>
-            <CardTitle>
-                {index.projectRoot ? (
-                    <Link to={index.projectRoot.repository.url}>{index.projectRoot.repository.name}</Link>
-                ) : (
-                    <span>Unknown repository</span>
-                )}
-            </CardTitle>
+const IndexDescription: FunctionComponent<IndexDescriptionProps> = ({ index }) => {
+    const { t } = useTranslation('enterprise/codeintel/indexes/pages')
 
-            <CardText>
-                <span className="d-block">
-                    <ProjectDescription index={index} />
-                </span>
-
-                <small className="text-mute">
-                    <PreciseIndexLastUpdated index={index} />{' '}
-                    {index.shouldReindex && (
-                        <Tooltip content="This index has been marked as replaceable by auto-indexing.">
-                            <span className={classNames(styles.tag, 'ml-1 rounded')}>
-                                (replaceable by auto-indexing)
-                            </span>
-                        </Tooltip>
+    return (
+        <Card>
+            <CardBody>
+                <CardTitle>
+                    {index.projectRoot ? (
+                        <Link to={index.projectRoot.repository.url}>{index.projectRoot.repository.name}</Link>
+                    ) : (
+                        <span>{t('unknown-repository')}</span>
                     )}
-                </small>
-            </CardText>
-        </CardBody>
-    </Card>
-)
+                </CardTitle>
+
+                <CardText>
+                    <span className="d-block">
+                        <ProjectDescription index={index} />
+                    </span>
+
+                    <small className="text-mute">
+                        <PreciseIndexLastUpdated index={index} />{' '}
+                        {index.shouldReindex && (
+                            <Tooltip content="This index has been marked as replaceable by auto-indexing.">
+                                <span className={classNames(styles.tag, 'ml-1 rounded')}>
+                                    {t('replaceable-by-auto-indexing')}
+                                </span>
+                            </Tooltip>
+                        )}
+                    </small>
+                </CardText>
+            </CardBody>
+        </Card>
+    )
+}
 
 interface CodeIntelReindexUploadProps {
     reindexUpload: () => Promise<void>
     reindexOrError?: 'loading' | 'reindexed' | ErrorLike
 }
 
-const CodeIntelReindexUpload: FunctionComponent<CodeIntelReindexUploadProps> = ({ reindexUpload, reindexOrError }) => (
-    <Tooltip content="Allow Sourcegraph to re-index this commit in the future and replace this data.">
-        <Button type="button" variant="secondary" onClick={reindexUpload} disabled={reindexOrError === 'loading'}>
-            <Icon aria-hidden={true} svgPath={mdiRedo} /> Mark index as replaceable by autoindexing
-        </Button>
-    </Tooltip>
-)
+const CodeIntelReindexUpload: FunctionComponent<CodeIntelReindexUploadProps> = ({ reindexUpload, reindexOrError }) => {
+    const { t } = useTranslation('enterprise/codeintel/indexes/pages')
+
+    return (
+        <Tooltip content="Allow Sourcegraph to re-index this commit in the future and replace this data.">
+            <Button type="button" variant="secondary" onClick={reindexUpload} disabled={reindexOrError === 'loading'}>
+                <Icon aria-hidden={true} svgPath={mdiRedo} />
+                {t('mark-index-as-replaceable')}
+            </Button>
+        </Tooltip>
+    )
+}
 
 interface CodeIntelDeleteUploadProps {
     state: PreciseIndexState
@@ -445,8 +458,10 @@ const CodeIntelDeleteUpload: FunctionComponent<CodeIntelDeleteUploadProps> = ({
     state,
     deleteUpload,
     deletionOrError,
-}) =>
-    state === PreciseIndexState.DELETING ? (
+}) => {
+    const { t } = useTranslation('enterprise/codeintel/indexes/pages')
+
+    return state === PreciseIndexState.DELETING ? (
         <></>
     ) : (
         <Tooltip
@@ -463,10 +478,12 @@ const CodeIntelDeleteUpload: FunctionComponent<CodeIntelDeleteUploadProps> = ({
                 onClick={deleteUpload}
                 disabled={deletionOrError === 'loading'}
             >
-                <Icon aria-hidden={true} svgPath={mdiDelete} /> Delete index
+                <Icon aria-hidden={true} svgPath={mdiDelete} />
+                {t('delete-index')}
             </Button>
         </Tooltip>
     )
+}
 
 const terminalStates = new Set(['COMPLETED', 'INDEXING_ERRORED', 'PROCESSING_ERRORED'])
 

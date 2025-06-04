@@ -1,6 +1,7 @@
 import React, { type FC, useState } from 'react'
 
 import { mdiArrowLeft, mdiHelpCircleOutline } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { Icon, Tooltip, Button, Text, H3 } from '@sourcegraph/wildcard'
 
@@ -26,6 +27,8 @@ const v2ShowStateTypes: { [key in ShowStates]: number } = {
 }
 
 export const SimpleSearch: FC<SimpleSearchProps> = props => {
+    const { t } = useTranslation('storm/pages/SearchPage')
+
     const [showState, setShowState] = useState<ShowStates>('default')
 
     function onSubmitWithTelemetry(event?: React.FormEvent): void {
@@ -80,12 +83,9 @@ export const SimpleSearch: FC<SimpleSearchProps> = props => {
                         }}
                     >
                         <Icon aria-label="hover icon for help tooltip" svgPath={mdiArrowLeft} />
-                        Back
+                        {t('back-button')}
                     </Button>
-                    <Text>
-                        Fill out the fields below to generate a search. Sourcegraph will generate the appropriate search
-                        query as you fill out form fields.
-                    </Text>
+                    <Text>{t('search-instructions')}</Text>
                 </div>
             )}
             {pickRender()}
@@ -97,47 +97,55 @@ interface SearchPickerProps {
     setShowState: (state: ShowStates) => void
 }
 
-const SearchPicker: FC<SearchPickerProps> = ({ setShowState }) => (
-    <div className="offset-1">
-        <Tooltip content="This is useful if you are looking for something specific, or examples of code. Error messages, class names, variable names, etc.">
-            <Button
-                onClick={() => setShowState('code')}
-                className={styles.searchButton}
-                variant="secondary"
-                outline={true}
-            >
-                <div>
-                    <H3>Find code</H3>
-                    <Text className="mt-2">Look for examples of code, specifically or with a pattern</Text>
+const SearchPicker: FC<SearchPickerProps> = ({ setShowState }) => {
+    const { t } = useTranslation('storm/pages/SearchPage')
+
+    return (
+        <div className="offset-1">
+            <Tooltip content="This is useful if you are looking for something specific, or examples of code. Error messages, class names, variable names, etc.">
+                <Button
+                    onClick={() => setShowState('code')}
+                    className={styles.searchButton}
+                    variant="secondary"
+                    outline={true}
+                >
+                    <div>
+                        <H3>{t('find-code')}</H3>
+                        <Text className="mt-2">{t('code-examples-search')}</Text>
+                        <Icon
+                            aria-label="hover icon for help tooltip"
+                            className="ml-2"
+                            svgPath={mdiHelpCircleOutline}
+                        />
+                    </div>
+                </Button>
+            </Tooltip>
+
+            <Tooltip content="This is useful if you are looking for repositories. For example, you are looking for a library you think might exist and search using repository description.">
+                <Button
+                    onClick={() => setShowState('repo')}
+                    className={styles.searchButton}
+                    variant="secondary"
+                    outline={true}
+                >
+                    <H3>{t('find-repositories')}</H3>
+                    <Text className="mt-2">{t('repository-search-instructions')}</Text>
                     <Icon aria-label="hover icon for help tooltip" className="ml-2" svgPath={mdiHelpCircleOutline} />
-                </div>
-            </Button>
-        </Tooltip>
+                </Button>
+            </Tooltip>
 
-        <Tooltip content="This is useful if you are looking for repositories. For example, you are looking for a library you think might exist and search using repository description.">
-            <Button
-                onClick={() => setShowState('repo')}
-                className={styles.searchButton}
-                variant="secondary"
-                outline={true}
-            >
-                <H3>Find repositories</H3>
-                <Text className="mt-2">Look for repositories by name, file contents, metadata, or owners</Text>
-                <Icon aria-label="hover icon for help tooltip" className="ml-2" svgPath={mdiHelpCircleOutline} />
-            </Button>
-        </Tooltip>
-
-        <Tooltip content="This is useful if you are looking for changes over time, either in commit messages, by author, or code that has changed.">
-            <Button
-                onClick={() => setShowState('changes')}
-                className={styles.searchButton}
-                variant="secondary"
-                outline={true}
-            >
-                <H3>Look for changes</H3>
-                <Text className="mt-2">Look for changes in commit messages or search over diffs in the code</Text>
-                <Icon aria-label="hover icon for help tooltip" className="ml-2" svgPath={mdiHelpCircleOutline} />
-            </Button>
-        </Tooltip>
-    </div>
-)
+            <Tooltip content="This is useful if you are looking for changes over time, either in commit messages, by author, or code that has changed.">
+                <Button
+                    onClick={() => setShowState('changes')}
+                    className={styles.searchButton}
+                    variant="secondary"
+                    outline={true}
+                >
+                    <H3>{t('find-changes')}</H3>
+                    <Text className="mt-2">{t('commit-message-search')}</Text>
+                    <Icon aria-label="hover icon for help tooltip" className="ml-2" svgPath={mdiHelpCircleOutline} />
+                </Button>
+            </Tooltip>
+        </div>
+    )
+}

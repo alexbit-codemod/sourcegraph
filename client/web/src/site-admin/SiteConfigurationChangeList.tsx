@@ -2,6 +2,7 @@ import { type FC, useState } from 'react'
 
 import { mdiChevronUp, mdiChevronDown, mdiFileDocumentOutline } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { UserAvatar } from '@sourcegraph/shared/src/components/UserAvatar'
@@ -32,6 +33,8 @@ import { SITE_CONFIGURATION_CHANGE_CONNECTION_QUERY } from './backend'
 import styles from './SiteConfigurationChangeList.module.scss'
 
 export const SiteConfigurationChangeList: FC = () => {
+    const { t } = useTranslation('site-admin')
+
     const { connection, loading, error, ...paginationProps } = usePageSwitcherPagination<
         SiteConfigurationHistoryResult,
         SiteConfigurationHistoryVariables,
@@ -50,7 +53,7 @@ export const SiteConfigurationChangeList: FC = () => {
             {!!connection?.nodes?.length && (
                 <div>
                     <Container className="mb-3">
-                        <H3>Change history</H3>
+                        <H3>{t('change-history')}</H3>
                         {loading && <ConnectionLoading />}
                         {error && <ConnectionError errors={[error.message]} />}
                         <div className="mt-4">
@@ -64,7 +67,7 @@ export const SiteConfigurationChangeList: FC = () => {
                             {...paginationProps}
                             className="mt-4"
                             totalCount={connection?.totalCount || 0}
-                            totalLabel="changes"
+                            totalLabel={t('changes-string')}
                         />
                     </Container>
                 </div>
@@ -94,6 +97,8 @@ function linesChanged(diffString: string): [number, number] {
 }
 
 export const SiteConfigurationHistoryItem: FC<SiteConfigurationHistoryItemProps> = ({ node }) => {
+    const { t } = useTranslation('site-admin')
+
     const [open, setOpen] = useState<boolean>(false)
     const icon = open ? mdiChevronUp : mdiChevronDown
     const [removedLines, addedLines] = linesChanged(node.diff)
@@ -130,7 +135,8 @@ export const SiteConfigurationHistoryItem: FC<SiteConfigurationHistoryItemProps>
                         <div className="d-flex flex-column align-items-start">
                             {editedBy}
                             <small className="text-muted">
-                                Changed <Timestamp date={node.createdAt} />
+                                {t('changed-fragment')}
+                                <Timestamp date={node.createdAt} />
                             </small>
                         </div>
                     </span>

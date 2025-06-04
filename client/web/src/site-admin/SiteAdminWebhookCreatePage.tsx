@@ -1,6 +1,7 @@
 import { type FC, useEffect } from 'react'
 
 import { mdiWebhook } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
@@ -16,6 +17,8 @@ export const SiteAdminWebhookCreatePage: FC<SiteAdminWebhookCreatePageProps> = (
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('site-admin')
+
     useEffect(() => {
         telemetryService.logPageView('SiteAdminWebhookCreatePage')
         telemetryRecorder.recordEvent('admin.webhook.create', 'view')
@@ -23,7 +26,7 @@ export const SiteAdminWebhookCreatePage: FC<SiteAdminWebhookCreatePageProps> = (
 
     return (
         <>
-            <PageTitle title="Create incoming webhook" />
+            <PageTitle title={t('create-incoming-webhook')} />
             <PageHeader
                 path={[
                     { icon: mdiWebhook },
@@ -31,7 +34,7 @@ export const SiteAdminWebhookCreatePage: FC<SiteAdminWebhookCreatePageProps> = (
                     { text: 'Create' },
                 ]}
                 headingElement="h2"
-                description="Create a new incoming webhook"
+                description={t('create-new-incoming-webhook')}
                 className="mb-3"
             />
             <WebhookCreateUpdatePage />

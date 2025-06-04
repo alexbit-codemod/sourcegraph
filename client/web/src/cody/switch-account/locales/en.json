@@ -1,0 +1,7 @@
+{
+  "switch-account": "Switch Account",
+  "different-account-signed-in": "Your Cody client is signed in with a different account <0>(@{{username}})</0>. To manage the account being used by your Cody client, sign out and sign in with the intended account.",
+  "sign-out-to-switch-accounts": "Sign out to switch accounts",
+  "or-separator": "or",
+  "continue-button": "Continue"
+}

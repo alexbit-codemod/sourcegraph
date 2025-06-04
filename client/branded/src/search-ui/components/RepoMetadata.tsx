@@ -4,6 +4,7 @@ import { mdiDelete } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
 import { sortBy } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import type { BuildSearchQueryURLParameters, QueryState } from '@sourcegraph/shared/src/search'
 import { FilterKind, findFilter } from '@sourcegraph/shared/src/search/query/query'
@@ -17,18 +18,22 @@ export interface RepoMetadataItem {
     value?: string | null
 }
 
-const MetaContent: React.FC<{ meta: RepoMetadataItem; highlight?: boolean }> = ({ meta, highlight }) => (
-    <Code>
-        <span aria-label="Repository metadata key" className={classNames({ [styles.highlight]: highlight })}>
-            {meta.key}
-        </span>
-        {meta.value ? (
-            <span aria-label="Repository metadata value">:{meta.value}</span>
-        ) : (
-            <VisuallyHidden>No metadata value</VisuallyHidden>
-        )}
-    </Code>
-)
+const MetaContent: React.FC<{ meta: RepoMetadataItem; highlight?: boolean }> = ({ meta, highlight }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/components')
+
+    return (
+        <Code>
+            <span aria-label="Repository metadata key" className={classNames({ [styles.highlight]: highlight })}>
+                {meta.key}
+            </span>
+            {meta.value ? (
+                <span aria-label="Repository metadata value">:{meta.value}</span>
+            ) : (
+                <VisuallyHidden>{t('no-metadata-value')}</VisuallyHidden>
+            )}
+        </Code>
+    )
+}
 
 interface MetaProps {
     meta: RepoMetadataItem
@@ -153,18 +158,22 @@ interface TagListProps {
     className?: string
 }
 
-const TagContent: React.FC<{ tag: Tag; highlight?: boolean }> = ({ tag, highlight }) => (
-    <Code>
-        <span aria-label="Repository metadata key" className={classNames({ [styles.highlight]: highlight })}>
-            {tag.key}
-        </span>
-        {tag.value ? (
-            <span aria-label="Repository metadata value">:{tag.value}</span>
-        ) : (
-            <VisuallyHidden>No metadata value</VisuallyHidden>
-        )}
-    </Code>
-)
+const TagContent: React.FC<{ tag: Tag; highlight?: boolean }> = ({ tag, highlight }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/components')
+
+    return (
+        <Code>
+            <span aria-label="Repository metadata key" className={classNames({ [styles.highlight]: highlight })}>
+                {tag.key}
+            </span>
+            {tag.value ? (
+                <span aria-label="Repository metadata value">:{tag.value}</span>
+            ) : (
+                <VisuallyHidden>{t('no-metadata-value-duplicate')}</VisuallyHidden>
+            )}
+        </Code>
+    )
+}
 
 // TagList is used for displaying tags (metadata or topics) for repository search results and on the repository's //
 // tree page.

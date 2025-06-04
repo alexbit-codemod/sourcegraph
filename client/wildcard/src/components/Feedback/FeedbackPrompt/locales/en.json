@@ -1,0 +1,15 @@
+{
+  "feedback-prompt-success-response": "This is a feedbackPrompt with success response",
+  "feedback-title": "Feedback",
+  "feedback-prompt-error-response": "This is a feedbackPrompt with error response",
+  "feedback-title-duplicate": "Feedback",
+  "feedback-prompt-modal": "This is a feedbackPrompt in modal",
+  "feedback-title-duplicate-2": "Feedback",
+  "feedback-received": "We‘ve received your feedback!",
+  "thank-you-message": "Thank you.",
+  "user-research-invitation": "  Want to help keep making Sourcegraph better? <0>Join us for occasional user research</0>  and share your feedback on our latest features and ideas.",
+  "send-feedback-instruction": "Send feedback to Sourcegraph",
+  "from-label": "From:",
+  "not-signed-in-message": "You're not signed in. Please tell us how to contact you if you want a reply.",
+  "privacy-policy-agreement": "By submitting your feedback, you agree to the <0>Sourcegraph Privacy Policy</0>."
+}

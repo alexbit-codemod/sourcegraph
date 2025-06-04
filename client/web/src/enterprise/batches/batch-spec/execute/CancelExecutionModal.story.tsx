@@ -1,5 +1,6 @@
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { Text } from '@sourcegraph/wildcard'
 
@@ -28,16 +29,20 @@ export default config
 
 export const CancelExecutionModalStory: StoryFn = args => (
     <WebStory>
-        {props => (
-            <CancelExecutionModal
-                {...props}
-                modalBody={<Text>Are you sure you want to cancel the current execution?</Text>}
-                isOpen={true}
-                isLoading={args.isLoading}
-                onCancel={noop}
-                onConfirm={noop}
-            />
-        )}
+        {props => {
+            const { t } = useTranslation('enterprise/batches/batch-spec/execute')
+
+            return (
+                <CancelExecutionModal
+                    {...props}
+                    modalBody={<Text>{t('cancel-current-execution-confirmation')}</Text>}
+                    isOpen={true}
+                    isLoading={args.isLoading}
+                    onCancel={noop}
+                    onConfirm={noop}
+                />
+            )
+        }}
     </WebStory>
 )
 

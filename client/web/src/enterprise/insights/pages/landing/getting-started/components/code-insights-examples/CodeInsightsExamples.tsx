@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -37,15 +38,19 @@ const CAPTURE_GROUP_INSIGHT_CREATION_UI_URL_PARAMETERS = encodeCaptureInsightURL
  * code insights landing pages.
  */
 export const CodeInsightsExamples: FunctionComponent<CodeInsightsExamplesProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/landing/getting-started/components/code-insights-examples')
+
     const { telemetryService, telemetryRecorder, ...otherProps } = props
     const { pathname, search } = useLocation()
 
     return (
         <section {...otherProps}>
-            <H2>Example insights</H2>
+            <H2>{t('example-insights-title')}</H2>
             <Text className="text-muted">
-                Here are a few example insights to show you what the tool can do.{' '}
-                <Link to={`${pathname}${search}#code-insights-templates`}>Explore more use cases.</Link>
+                <Trans
+                    i18nKey="example-insights-description"
+                    components={{ '0': <Link to={`${pathname}${search}#code-insights-templates`} /> }}
+                />
             </Text>
 
             <div className={styles.section}>

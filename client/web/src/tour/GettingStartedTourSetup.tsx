@@ -11,6 +11,7 @@ import {
 } from 'react'
 
 import { useApolloClient } from '@apollo/client'
+import { useTranslation } from 'react-i18next'
 import { useDebounce } from 'use-debounce'
 
 import { getDocumentNode, gql } from '@sourcegraph/http-client'
@@ -144,6 +145,8 @@ const ModalInner: FC<PropsWithChildren<ModalInnerProps>> = ({
     children,
     telemetryRecorder,
 }): JSX.Element => {
+    const { t } = useTranslation('tour')
+
     const [, setConfig] = useTemporarySetting('onboarding.userconfig')
     const onSubmit = (event: FormEvent): void => {
         event.preventDefault()
@@ -167,7 +170,7 @@ const ModalInner: FC<PropsWithChildren<ModalInnerProps>> = ({
                 <div className={styles.container}>
                     <div className="text-muted">{`${step} of ${totalSteps}`}</div>
                     <Button variant="link" onClick={skip}>
-                        Skip
+                        {t('skip-button')}
                     </Button>
                     <LoaderButton
                         type="submit"
@@ -197,6 +200,8 @@ const REPO_QUERY = gql`
 `
 
 const RepositoryModal: FC<ModalContentProps> = ({ step, onHandleNext, onSelect, telemetryRecorder }) => {
+    const { t } = useTranslation('tour')
+
     const [value, setValue] = useState('')
     const [isValidating, setIsValidating] = useState(false)
     const [error, setError] = useState('')
@@ -267,7 +272,7 @@ const RepositoryModal: FC<ModalContentProps> = ({ step, onHandleNext, onSelect, 
                     spellCheck={false}
                     autocomplete={true}
                     autoComplete="off"
-                    placeholder="Enter repository name"
+                    placeholder={t('enter-repository-name')}
                     onInput={handleSearchTermChange}
                     onFocus={() => setError('')}
                     error={error}
@@ -292,6 +297,8 @@ interface EmailModalProps extends ModalContentProps {
 }
 
 const EmailModal: FC<EmailModalProps> = ({ step, onHandleNext, onSelect, user, telemetryRecorder }) => {
+    const { t } = useTranslation('tour')
+
     const [email, setEmail] = useState(user.emails.find(email => email.isPrimary)?.email ?? '')
     const [error, setError] = useState('')
 
@@ -319,8 +326,8 @@ const EmailModal: FC<EmailModalProps> = ({ step, onHandleNext, onSelect, user, t
                 ref={input}
                 name="email"
                 type="email"
-                title="Enter your commit email address"
-                placeholder="Enter an email address"
+                title={t('enter-commit-email')}
+                placeholder={t('enter-email-address')}
                 autoFocus={true}
                 required={true}
                 value={email}
@@ -337,6 +344,8 @@ interface LanguageModalProps extends ModalContentProps {
 }
 
 const LanguageModal: FC<LanguageModalProps> = ({ step, onHandleNext, repo, onSelect, telemetryRecorder }) => {
+    const { t } = useTranslation('tour')
+
     const [language, setLanguage] = useState('')
     const [error, setError] = useState('')
     const { suggestions } = useLanguageCompletionSource(language)
@@ -377,7 +386,7 @@ const LanguageModal: FC<LanguageModalProps> = ({ step, onHandleNext, repo, onSel
                     spellCheck={false}
                     autocomplete={true}
                     autoComplete="off"
-                    placeholder="Enter language name"
+                    placeholder={t('enter-language-name')}
                     onInput={(event: ChangeEvent<HTMLInputElement>) => setLanguage(event.target.value)}
                     onFocus={() => setError('')}
                     error={error}

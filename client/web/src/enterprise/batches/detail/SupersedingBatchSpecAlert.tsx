@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { parseISO } from 'date-fns'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { Link } from '@sourcegraph/wildcard'
@@ -15,6 +16,8 @@ export interface SupersedingBatchSpecAlertProps {
 export const SupersedingBatchSpecAlert: React.FunctionComponent<
     React.PropsWithChildren<SupersedingBatchSpecAlertProps>
 > = ({ spec }) => {
+    const { t } = useTranslation('enterprise/batches/detail')
+
     if (!spec) {
         return <></>
     }
@@ -29,8 +32,9 @@ export const SupersedingBatchSpecAlert: React.FunctionComponent<
         <DismissibleAlert variant="info" partialStorageKey={`superseding-spec-${parseISO(spec.createdAt).getTime()}`}>
             <div className="d-flex align-items-center">
                 <div className="flex-grow-1">
-                    A <Link to={applyURL}>modified batch spec</Link> was uploaded{' '}
-                    <Timestamp date={createdAt} noAbout={true} />, but has not been applied.
+                    <Trans i18nKey="modified-batch-spec-uploaded" components={{ '0': <Link to={applyURL} /> }} />
+                    <Timestamp date={createdAt} noAbout={true} />
+                    {t('batch-spec-not-applied')}
                 </div>
             </div>
         </DismissibleAlert>

@@ -1,0 +1,13 @@
+{
+  "did-you-mean": "Did you mean:",
+  "dont-want-these": "Don't want these?",
+  "disable-smart-search": "Disable <0>Smart Search</0>",
+  "show-queries": "Show queries",
+  "hide-queries": "Hide queries",
+  "one-item-additional-results": "One item, additional results",
+  "one-item-pure-results": "One item, pure results",
+  "many-items-additional-results": "Many items, additional results",
+  "many-items-pure-results": "Many items, pure results",
+  "collapsed-additional-results": "Collapsed, additional results",
+  "collapsed-pure-results": "Collapsed, pure results"
+}

@@ -1,5 +1,6 @@
 import { type FC, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { useDebounce } from 'use-debounce'
 
 import { useMutation, useQuery } from '@sourcegraph/http-client'
@@ -71,6 +72,8 @@ function useValueSuggestions(key: string, query: string, delay = 300): { suggest
 }
 
 export const AddMetadataForm: FC<{ onDidAdd: () => void; repoID: string }> = ({ onDidAdd, repoID }) => {
+    const { t } = useTranslation('repo/RepoMetadataPage')
+
     const [key, setKey] = useState<string>('')
     const [value, setValue] = useState<string>('')
 
@@ -104,18 +107,18 @@ export const AddMetadataForm: FC<{ onDidAdd: () => void; repoID: string }> = ({ 
         <>
             {!addLoading && !addError && addCalled && (
                 <Alert className="flex-grow-1 mt-3 mb-3" variant="success">
-                    Metadata added
+                    {t('metadata-added')}
                 </Alert>
             )}
 
             <Container className="repo-metadata-page" as="section">
-                <H2>Add metadata</H2>
-                <Text>Add an additional key, or key-value pair, to this repository.</Text>
+                <H2>{t('add-metadata')}</H2>
+                <Text>{t('add-key-value-pair')}</Text>
                 <Form onSubmit={onSubmit}>
                     {!addLoading && addError && <ErrorAlert className="flex-grow-1 m-0 mb-3" error={addError} />}
                     <div className="d-flex justify-content-between align-items-center">
                         <div className="form-group flex-grow-1 mb-0 mr-4">
-                            <Label htmlFor="metadata-key">Key</Label>
+                            <Label htmlFor="metadata-key">{t('key-label')}</Label>
                             <Combobox openOnFocus={true} onSelect={setKey}>
                                 <ComboboxInput
                                     id="metadata-key"
@@ -138,7 +141,7 @@ export const AddMetadataForm: FC<{ onDidAdd: () => void; repoID: string }> = ({ 
                             </Combobox>
                         </div>
                         <div className="form-group flex-grow-1 mb-0 mr-4">
-                            <Label htmlFor="metadata-value">Value (optional)</Label>
+                            <Label htmlFor="metadata-value">{t('value-optional')}</Label>
                             <Combobox openOnFocus={true} onSelect={setValue}>
                                 <ComboboxInput
                                     id="metadata-value"
@@ -160,7 +163,12 @@ export const AddMetadataForm: FC<{ onDidAdd: () => void; repoID: string }> = ({ 
                             </Combobox>
                         </div>
                         <div className="d-flex justify-content-end mt-1">
-                            <LoaderButton variant="primary" type="submit" loading={addLoading} label="Add" />
+                            <LoaderButton
+                                variant="primary"
+                                type="submit"
+                                loading={addLoading}
+                                label={t('add-action')}
+                            />
                         </div>
                     </div>
                 </Form>

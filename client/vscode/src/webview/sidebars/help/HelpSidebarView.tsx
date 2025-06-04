@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Button, Text } from '@sourcegraph/wildcard'
 
@@ -31,6 +32,8 @@ export const HelpSidebarView: React.FunctionComponent<React.PropsWithChildren<He
     authenticatedUser,
     instanceURL,
 }) => {
+    const { t } = useTranslation('../../vscode/src/webview/sidebars/help')
+
     const [openAuthPanel, setOpenAuthPanel] = useState(false)
     const [isLightTheme, setIsLightTheme] = useState<boolean | undefined>(undefined)
 
@@ -65,21 +68,21 @@ export const HelpSidebarView: React.FunctionComponent<React.PropsWithChildren<He
                 onClick={() => onHelpItemClick(VSCE_LINK_FEEDBACK, 'Feedback')}
                 className={classNames('p-0 m-0', styles.sidebarViewButton)}
             >
-                Give feedback
+                {t('give-feedback')}
             </Button>
             <Button
                 as={VSCodeButton}
                 onClick={() => onHelpItemClick(VSCE_LINK_ISSUES, 'Issues')}
                 className={classNames('p-0 m-0', styles.sidebarViewButton)}
             >
-                Report an issue
+                {t('report-issue')}
             </Button>
             <Button
                 as={VSCodeButton}
                 onClick={() => onHelpItemClick(VSCE_LINK_TROUBLESHOOT, 'Troubleshoot')}
                 className={classNames('p-0 m-0', styles.sidebarViewButton)}
             >
-                Troubleshooting docs
+                {t('troubleshooting-docs')}
             </Button>
             <Button
                 as={VSCodeButton}
@@ -92,7 +95,7 @@ export const HelpSidebarView: React.FunctionComponent<React.PropsWithChildren<He
                     slot="start"
                     src={isLightTheme ? VSCE_SG_LOGOMARK_DARK : VSCE_SG_LOGOMARK_LIGHT}
                 />
-                Create new account
+                {t('create-new-account')}
             </Button>
             <Button
                 as={VSCodeButton}
@@ -113,8 +116,9 @@ export const HelpSidebarView: React.FunctionComponent<React.PropsWithChildren<He
                     ) : (
                         <div className="mt-1">
                             <Text className="ml-2 small">
-                                Click button below to sign out of {new URL(instanceURL).hostname}. VS Code will be
-                                reloaded upon sign out.
+                                {t('sign-out-instruction')}
+                                {new URL(instanceURL).hostname}
+                                {t('vs-code-reload-notice')}
                             </Text>
                             <Button
                                 variant="primary"
@@ -122,14 +126,14 @@ export const HelpSidebarView: React.FunctionComponent<React.PropsWithChildren<He
                                 className="font-weight-normal w-100 my-1 border-0 small"
                                 onClick={() => onLogoutClick()}
                             >
-                                Sign out
+                                {t('sign-out')}
                             </Button>
                         </div>
                     )}
                 </div>
             )}
             <Button as={VSCodeButton} className={classNames('p-0 m-0', styles.sidebarViewButton)}>
-                Version v{version}
+                {t('version-info', { version })}
             </Button>
         </div>
     )

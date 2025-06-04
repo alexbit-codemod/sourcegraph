@@ -1,0 +1,9 @@
+{
+  "detailed-description": "Detailed",
+  "high-level-overview": "High level",
+  "unit-test": "A unit test",
+  "docstring": "A docstring",
+  "improve-variable-names": "Improve variable names",
+  "code-smell": "Smell code",
+  "get-cody-in-editor": "Get Cody in your editor"
+}

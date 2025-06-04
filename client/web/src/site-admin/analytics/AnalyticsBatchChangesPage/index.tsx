@@ -1,6 +1,7 @@
 import React, { useMemo, useEffect } from 'react'
 
 import { startCase } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { useQuery } from '@sourcegraph/http-client'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -23,6 +24,8 @@ export const DEFAULT_MINS_SAVED_PER_CHANGESET = 15
 interface Props extends TelemetryV2Props {}
 
 export const AnalyticsBatchChangesPage: React.FunctionComponent<Props> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin/analytics/AnalyticsBatchChangesPage')
+
     const { dateRange, grouping } = useChartFilters({ name: 'BatchChanges', telemetryRecorder })
     const { data, error, loading } = useQuery<BatchChangesStatisticsResult, BatchChangesStatisticsVariables>(
         BATCHCHANGES_STATISTICS,
@@ -116,7 +119,7 @@ export const AnalyticsBatchChangesPage: React.FunctionComponent<Props> = ({ tele
 
     return (
         <>
-            <AnalyticsPageTitle>Batch Changes</AnalyticsPageTitle>
+            <AnalyticsPageTitle>{t('batch-changes')}</AnalyticsPageTitle>
 
             <Card className="p-3 position-relative">
                 <div className="d-flex justify-content-end align-items-stretch mb-2 text-nowrap">
@@ -135,12 +138,10 @@ export const AnalyticsBatchChangesPage: React.FunctionComponent<Props> = ({ tele
                         <HorizontalSelect<typeof grouping.value> {...grouping} />
                     </div>
                 </div>
-                <H2 className="my-3">Total time saved</H2>
+                <H2 className="my-3">{t('total-time-saved')}</H2>
                 {calculatorProps && <TimeSavedCalculator {...calculatorProps} />}
             </Card>
-            <Text className="font-italic text-center mt-2">
-                All events are generated from entries in the event logs table and are updated every 24 hours.
-            </Text>
+            <Text className="font-italic text-center mt-2">{t('event-logs-update-notice')}</Text>
         </>
     )
 }

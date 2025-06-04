@@ -1,5 +1,6 @@
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
 import { subDays } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import { H3, Code } from '@sourcegraph/wildcard'
 
@@ -41,23 +42,27 @@ Fixed.args = {
 
 export const Active: StoryFn = args => (
     <WebStory>
-        {props => (
-            <>
-                <H3>Borders demonstrate how the time changing does not cause layout shift.</H3>
-                <div className="d-flex">
-                    <span style={{ backgroundColor: 'red', width: 100 }} />
-                    <Duration {...props} start={new Date(args.start)} />
-                    <span style={{ backgroundColor: 'red', width: 100 }} />
-                </div>
-                <H3 className="mt-4">
-                    <Code>stableWidth=false</Code>
-                </H3>
-                <div className="d-flex">
-                    <span style={{ backgroundColor: 'red', width: 100 }} />
-                    <Duration {...props} start={new Date(args.start)} stableWidth={false} />
-                    <span style={{ backgroundColor: 'red', width: 100 }} />
-                </div>
-            </>
-        )}
+        {props => {
+            const { t } = useTranslation('components/time')
+
+            return (
+                <>
+                    <H3>{t('borders-layout-shift')}</H3>
+                    <div className="d-flex">
+                        <span style={{ backgroundColor: 'red', width: 100 }} />
+                        <Duration {...props} start={new Date(args.start)} />
+                        <span style={{ backgroundColor: 'red', width: 100 }} />
+                    </div>
+                    <H3 className="mt-4">
+                        <Code>{t('stable-width-false')}</Code>
+                    </H3>
+                    <div className="d-flex">
+                        <span style={{ backgroundColor: 'red', width: 100 }} />
+                        <Duration {...props} start={new Date(args.start)} stableWidth={false} />
+                        <span style={{ backgroundColor: 'red', width: 100 }} />
+                    </div>
+                </>
+            )
+        }}
     </WebStory>
 )

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
 import { Navigate, useLocation, useParams } from 'react-router-dom'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -26,6 +27,8 @@ interface UnlockAccountPageProps extends TelemetryV2Props {
 }
 
 export const UnlockAccountPage: React.FunctionComponent<React.PropsWithChildren<UnlockAccountPageProps>> = props => {
+    const { t } = useTranslation('auth')
+
     const [error, setError] = useState<Error | null>(null)
     const [loading, setLoading] = useState(true)
 
@@ -82,7 +85,7 @@ export const UnlockAccountPage: React.FunctionComponent<React.PropsWithChildren<
 
     return (
         <>
-            <PageTitle title="Unlock account" />
+            <PageTitle title={t('unlock-account')} />
             <AuthPageWrapper
                 title={
                     props.context.sourcegraphDotComMode
@@ -98,7 +101,10 @@ export const UnlockAccountPage: React.FunctionComponent<React.PropsWithChildren<
                     {((!loading && !error) || props.mockSuccess) && (
                         <>
                             <Alert variant="success" className="mb-0">
-                                Your account was unlocked. Please try to <Link to="/sign-in">sign in</Link> to continue.
+                                <Trans
+                                    i18nKey="account-unlocked-sign-in"
+                                    components={{ '0': <Link to="/sign-in" /> }}
+                                />
                             </Alert>
                         </>
                     )}

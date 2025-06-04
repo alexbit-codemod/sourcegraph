@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import classNames from 'classnames'
 import type * as H from 'history'
+import { useTranslation } from 'react-i18next'
 
 import { ContributableMenu } from '@sourcegraph/client-api'
 import { type ErrorLike, isErrorLike } from '@sourcegraph/common'
@@ -61,76 +62,82 @@ export interface CodeViewToolbarProps
     hideActions?: boolean
 }
 
-export const CodeViewToolbar: React.FunctionComponent<React.PropsWithChildren<CodeViewToolbarProps>> = props => (
-    <ul className={classNames(styles.codeViewToolbar, props.className)} data-testid="code-view-toolbar">
-        {!props.hideActions && props.extensionsController !== null && (
-            <ActionsNavItems
-                {...props}
-                listItemClass={classNames(styles.item, props.buttonProps?.listItemClass ?? props.listItemClass)}
-                actionItemClass={classNames(props.buttonProps?.actionItemClass ?? props.actionItemClass)}
-                menu={ContributableMenu.EditorTitle}
-                extensionsController={props.extensionsController}
-                platformContext={props.platformContext}
-                location={props.location}
-                scope={props.scope}
-            />
-        )}{' '}
-        {isErrorLike(props.fileInfoOrError) ? (
-            isHTTPAuthError(props.fileInfoOrError) ? (
-                <SignInButton
-                    sourcegraphURL={props.sourcegraphURL}
-                    onSignInClose={props.onSignInClose}
-                    className={classNames(props.buttonProps?.actionItemClass ?? props.actionItemClass)}
-                    iconClassName={props.actionItemIconClass}
+export const CodeViewToolbar: React.FunctionComponent<React.PropsWithChildren<CodeViewToolbarProps>> = props => {
+    const { t } = useTranslation('../../browser/src/shared/components')
+
+    return (
+        <ul className={classNames(styles.codeViewToolbar, props.className)} data-testid="code-view-toolbar">
+            {!props.hideActions && props.extensionsController !== null && (
+                <ActionsNavItems
+                    {...props}
+                    listItemClass={classNames(styles.item, props.buttonProps?.listItemClass ?? props.listItemClass)}
+                    actionItemClass={classNames(props.buttonProps?.actionItemClass ?? props.actionItemClass)}
+                    menu={ContributableMenu.EditorTitle}
+                    extensionsController={props.extensionsController}
+                    platformContext={props.platformContext}
+                    location={props.location}
+                    scope={props.scope}
                 />
-            ) : null
-        ) : (
-            <>
-                {!('blob' in props.fileInfoOrError) && props.fileInfoOrError.head && props.fileInfoOrError.base && (
-                    <li className={classNames(styles.item, props.buttonProps?.listItemClass ?? props.listItemClass)}>
-                        <OpenDiffOnSourcegraph
-                            ariaLabel="View file diff on Sourcegraph"
-                            platformContext={props.platformContext}
-                            className={classNames(props.buttonProps?.actionItemClass ?? props.actionItemClass)}
-                            iconClassName={props.actionItemIconClass}
-                            openProps={{
-                                sourcegraphURL: props.sourcegraphURL,
-                                repoName: props.fileInfoOrError.base.repoName,
-                                filePath: props.fileInfoOrError.base.filePath,
-                                revision: defaultRevisionToCommitID(props.fileInfoOrError.base).revision,
-                                commit: {
-                                    baseRev: defaultRevisionToCommitID(props.fileInfoOrError.base).revision,
-                                    headRev: defaultRevisionToCommitID(props.fileInfoOrError.head).revision,
-                                },
-                            }}
-                        />
-                    </li>
-                )}{' '}
-                {
-                    // Only show the "View file" button if we were able to fetch the file contents
-                    // from the Sourcegraph instance
-                    'blob' in props.fileInfoOrError && props.fileInfoOrError.blob.content !== undefined && (
+            )}{' '}
+            {isErrorLike(props.fileInfoOrError) ? (
+                isHTTPAuthError(props.fileInfoOrError) ? (
+                    <SignInButton
+                        sourcegraphURL={props.sourcegraphURL}
+                        onSignInClose={props.onSignInClose}
+                        className={classNames(props.buttonProps?.actionItemClass ?? props.actionItemClass)}
+                        iconClassName={props.actionItemIconClass}
+                    />
+                ) : null
+            ) : (
+                <>
+                    {!('blob' in props.fileInfoOrError) && props.fileInfoOrError.head && props.fileInfoOrError.base && (
                         <li
-                            className={classNames(
-                                styles.item,
-                                props.buttonProps?.actionItemClass ?? props.listItemClass
-                            )}
+                            className={classNames(styles.item, props.buttonProps?.listItemClass ?? props.listItemClass)}
                         >
-                            <OpenOnSourcegraph
-                                ariaLabel="View file on Sourcegraph"
+                            <OpenDiffOnSourcegraph
+                                ariaLabel={t('view-file-diff-on-sourcegraph')}
+                                platformContext={props.platformContext}
                                 className={classNames(props.buttonProps?.actionItemClass ?? props.actionItemClass)}
                                 iconClassName={props.actionItemIconClass}
                                 openProps={{
                                     sourcegraphURL: props.sourcegraphURL,
-                                    repoName: props.fileInfoOrError.blob.repoName,
-                                    filePath: props.fileInfoOrError.blob.filePath,
-                                    revision: defaultRevisionToCommitID(props.fileInfoOrError.blob).revision,
+                                    repoName: props.fileInfoOrError.base.repoName,
+                                    filePath: props.fileInfoOrError.base.filePath,
+                                    revision: defaultRevisionToCommitID(props.fileInfoOrError.base).revision,
+                                    commit: {
+                                        baseRev: defaultRevisionToCommitID(props.fileInfoOrError.base).revision,
+                                        headRev: defaultRevisionToCommitID(props.fileInfoOrError.head).revision,
+                                    },
                                 }}
                             />
                         </li>
-                    )
-                }
-            </>
-        )}
-    </ul>
-)
+                    )}{' '}
+                    {
+                        // Only show the "View file" button if we were able to fetch the file contents
+                        // from the Sourcegraph instance
+                        'blob' in props.fileInfoOrError && props.fileInfoOrError.blob.content !== undefined && (
+                            <li
+                                className={classNames(
+                                    styles.item,
+                                    props.buttonProps?.actionItemClass ?? props.listItemClass
+                                )}
+                            >
+                                <OpenOnSourcegraph
+                                    ariaLabel={t('view-file-on-sourcegraph')}
+                                    className={classNames(props.buttonProps?.actionItemClass ?? props.actionItemClass)}
+                                    iconClassName={props.actionItemIconClass}
+                                    openProps={{
+                                        sourcegraphURL: props.sourcegraphURL,
+                                        repoName: props.fileInfoOrError.blob.repoName,
+                                        filePath: props.fileInfoOrError.blob.filePath,
+                                        revision: defaultRevisionToCommitID(props.fileInfoOrError.blob).revision,
+                                    }}
+                                />
+                            </li>
+                        )
+                    }
+                </>
+            )}
+        </ul>
+    )
+}

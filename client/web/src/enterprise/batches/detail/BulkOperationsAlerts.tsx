@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import { pluralize } from '@sourcegraph/common'
@@ -28,6 +29,8 @@ export interface BulkOperationsAlertsProps {
 export const BulkOperationsAlerts: React.FunctionComponent<React.PropsWithChildren<BulkOperationsAlertsProps>> = ({
     bulkOperations,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail')
+
     // Don't show the header banners if the bulkoperations tab is open.
     const location = useLocation()
     const parameters = new URLSearchParams(location.search)
@@ -41,9 +44,12 @@ export const BulkOperationsAlerts: React.FunctionComponent<React.PropsWithChildr
         return (
             <DismissibleAlert variant="info" partialStorageKey={`bulkOperation-processing-${latestProcessingNode.id}`}>
                 <span>
-                    {processingCount} bulk {pluralize('operation', processingCount)}{' '}
-                    {pluralize('is', processingCount, 'are')} currently running. Click the{' '}
-                    <Link to="?tab=bulkoperations">bulk operations tab</Link> to view.
+                    {t('bulk-processing-count', { processingCount })}
+                    {pluralize('operation', processingCount)} {pluralize('is', processingCount, 'are')}
+                    <Trans
+                        i18nKey="bulk-operations-running-info"
+                        components={{ '0': <Link to="?tab=bulkoperations" /> }}
+                    />
                 </span>
             </DismissibleAlert>
         )
@@ -55,9 +61,12 @@ export const BulkOperationsAlerts: React.FunctionComponent<React.PropsWithChildr
         return (
             <DismissibleAlert variant="info" partialStorageKey={`bulkOperation-failed-${latestFailedNode.id}`}>
                 <span>
-                    {failedCount} bulk {pluralize('operation', failedCount)} {pluralize('has', failedCount, 'have')}{' '}
-                    recently failed running. Click the <Link to="?tab=bulkoperations">bulk operations tab</Link> to
-                    view.
+                    {t('bulk-failed-count', { failedCount })}
+                    {pluralize('operation', failedCount)} {pluralize('has', failedCount, 'have')}
+                    <Trans
+                        i18nKey="bulk-operations-failed-info"
+                        components={{ '0': <Link to="?tab=bulkoperations" /> }}
+                    />
                 </span>
             </DismissibleAlert>
         )
@@ -68,9 +77,12 @@ export const BulkOperationsAlerts: React.FunctionComponent<React.PropsWithChildr
         return (
             <DismissibleAlert variant="info" partialStorageKey={`bulkOperation-completed-${latestCompleteNode.id}`}>
                 <span>
-                    {completeCount} bulk {pluralize('operation', completeCount)}{' '}
-                    {pluralize('has', completeCount, 'have')} recently finished running. Click the{' '}
-                    <Link to="?tab=bulkoperations">bulk operations tab</Link> to view.
+                    {t('bulk-complete-count', { completeCount })}
+                    {pluralize('operation', completeCount)} {pluralize('has', completeCount, 'have')}
+                    <Trans
+                        i18nKey="bulk-operations-finished-info"
+                        components={{ '0': <Link to="?tab=bulkoperations" /> }}
+                    />
                 </span>
             </DismissibleAlert>
         )

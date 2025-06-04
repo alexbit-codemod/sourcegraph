@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
 import { mdiPlus } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { Button, Container, Icon, useDebounce } from '@sourcegraph/wildcard'
@@ -38,6 +39,8 @@ export const TeamMemberListPage: React.FunctionComponent<React.PropsWithChildren
     viewerCanAdminister,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('team/members')
+
     const [openModal, setOpenModal] = useState<OpenModal | undefined>()
     const [searchValue, setSearchValue] = useState('')
     const query = useDebounce(searchValue, 200)
@@ -62,7 +65,8 @@ export const TeamMemberListPage: React.FunctionComponent<React.PropsWithChildren
         <>
             <div className="d-flex justify-content-end mb-3">
                 <Button disabled={!viewerCanAdminister} onClick={onClickAdd} variant="primary">
-                    <Icon aria-hidden={true} svgPath={mdiPlus} /> Add member
+                    <Icon aria-hidden={true} svgPath={mdiPlus} />
+                    {t('add-member')}
                 </Button>
             </div>
             <Container className="mb-3">
@@ -70,7 +74,7 @@ export const TeamMemberListPage: React.FunctionComponent<React.PropsWithChildren
                     <ConnectionForm
                         inputValue={searchValue}
                         onInputChange={event => setSearchValue(event.target.value)}
-                        inputPlaceholder="Search teams"
+                        inputPlaceholder={t('search-teams')}
                     />
 
                     {error && <ConnectionError errors={[error.message]} />}

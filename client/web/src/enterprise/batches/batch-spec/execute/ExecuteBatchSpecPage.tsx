@@ -4,6 +4,7 @@ import { mdiProgressClock } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
 import AlertCircleIcon from 'mdi-react/AlertCircleIcon'
 import MapSearchIcon from 'mdi-react/MapSearchIcon'
+import { useTranslation } from 'react-i18next'
 import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
@@ -54,6 +55,8 @@ export const AuthenticatedExecuteBatchSpecPage: FC<AuthenticatedExecuteBatchSpec
     testContextState,
     ...props
 }) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/execute')
+
     const { batchChangeName, batchSpecID } = useParams()
     const { id } = props.namespace
 
@@ -87,14 +90,14 @@ export const AuthenticatedExecuteBatchSpecPage: FC<AuthenticatedExecuteBatchSpec
     }
 
     if (data?.node === null) {
-        return <HeroPage icon={MapSearchIcon} title="404: Not Found" />
+        return <HeroPage icon={MapSearchIcon} title={t('error-404-not-found')} />
     }
 
     if (!data?.node || data.node.__typename !== 'BatchSpec' || !batchChangeData?.batchChange) {
         if (error || batchChangeError) {
             return <HeroPage icon={AlertCircleIcon} title={String(error || batchChangeError)} />
         }
-        return <HeroPage icon={AlertCircleIcon} title="Batch change not found" />
+        return <HeroPage icon={AlertCircleIcon} title={t('error-batch-change-not-found')} />
     }
 
     return (

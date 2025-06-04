@@ -1,6 +1,7 @@
 import React from 'react'
 
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Button, CardBody, Card, H2, H3, Text } from '@sourcegraph/wildcard'
 
@@ -22,6 +23,8 @@ interface InsightCardProps extends React.HTMLAttributes<HTMLDivElement> {
  * the creation page gallery.
  */
 const InsightCard: React.FunctionComponent<React.PropsWithChildren<InsightCardProps>> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation/intro/cards')
+
     const { children, onClick, handleCreate, ...otherProps } = props
 
     return (
@@ -29,7 +32,7 @@ const InsightCard: React.FunctionComponent<React.PropsWithChildren<InsightCardPr
             {children}
 
             <Button className="mt-3 w-100" variant="secondary" onClick={handleCreate}>
-                Create
+                {t('create-action')}
             </Button>
         </Card>
     )
@@ -53,56 +56,70 @@ const InsightCardBody: React.FunctionComponent<React.PropsWithChildren<InsightCa
     )
 }
 
-const InsightCardExampleBlock: React.FunctionComponent<React.PropsWithChildren<unknown>> = props => (
-    <footer className={styles.cardFooter}>
-        <small className="text-muted">Example use</small>
-        <small className={styles.cardExampleBlock}>{props.children}</small>
-    </footer>
-)
+const InsightCardExampleBlock: React.FunctionComponent<React.PropsWithChildren<unknown>> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation/intro/cards')
 
-export const SearchInsightCard: React.FunctionComponent<React.PropsWithChildren<InsightCardProps>> = props => (
-    <InsightCard {...props}>
-        <SearchBasedInsightChart className={styles.chart} />
-        <InsightCardBody title="Track changes" className="mb-3">
-            Insight <b>based on a custom Sourcegraph search query</b> that creates visualization of the data series you
-            will define <b>manually.</b>
-        </InsightCardBody>
+    return (
+        <footer className={styles.cardFooter}>
+            <small className="text-muted">{t('example-use')}</small>
+            <small className={styles.cardExampleBlock}>{props.children}</small>
+        </footer>
+    )
+}
 
-        <InsightCardExampleBlock>Tracking architecture, naming, or language migrations.</InsightCardExampleBlock>
-    </InsightCard>
-)
+export const SearchInsightCard: React.FunctionComponent<React.PropsWithChildren<InsightCardProps>> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation/intro/cards')
 
-export const ComputeInsightCard: React.FunctionComponent<React.PropsWithChildren<InsightCardProps>> = props => (
-    <InsightCard {...props}>
-        <ComputeInsightChart className={styles.chart} />
-        <InsightCardBody title="Group results" className="mb-3">
-            Insight based on a custom Sourcegraph search query that <b>groups results by</b> repository, path, author or
-            date.
-        </InsightCardBody>
+    return (
+        <InsightCard {...props}>
+            <SearchBasedInsightChart className={styles.chart} />
+            <InsightCardBody title={t('track-changes')} className="mb-3">
+                <Trans i18nKey="insight-custom-search-visualization" components={{ '0': <b />, '1': <b /> }} />
+            </InsightCardBody>
 
-        <InsightCardExampleBlock>Tracking a migration by repository.</InsightCardExampleBlock>
-    </InsightCard>
-)
+            <InsightCardExampleBlock>{t('tracking-architecture-migrations')}</InsightCardExampleBlock>
+        </InsightCard>
+    )
+}
 
-export const LangStatsInsightCard: React.FunctionComponent<React.PropsWithChildren<InsightCardProps>> = props => (
-    <InsightCard {...props}>
-        <LangStatsInsightChart viewBox="0 0 169 148" className={styles.chart} />
-        <InsightCardBody title="Language usage">
-            Shows usage of languages in your repository based on number of lines of code.
-        </InsightCardBody>
-    </InsightCard>
-)
+export const ComputeInsightCard: React.FunctionComponent<React.PropsWithChildren<InsightCardProps>> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation/intro/cards')
 
-export const CaptureGroupInsightCard: React.FunctionComponent<React.PropsWithChildren<InsightCardProps>> = props => (
-    <InsightCard {...props}>
-        <CaptureGroupInsightChart className={styles.chart} />
+    return (
+        <InsightCard {...props}>
+            <ComputeInsightChart className={styles.chart} />
+            <InsightCardBody title={t('group-results')} className="mb-3">
+                <Trans i18nKey="insight-group-results" components={{ '0': <b /> }} />
+            </InsightCardBody>
 
-        <InsightCardBody title="Detect and track patterns" className="mb-3">
-            Data series will be generated dynamically for each unique value from the
-            <b> regular expression capture group </b> included in the search query. Chart will be updated as new values
-            appear in the code base.
-        </InsightCardBody>
+            <InsightCardExampleBlock>{t('tracking-migration-repository')}</InsightCardExampleBlock>
+        </InsightCard>
+    )
+}
 
-        <InsightCardExampleBlock>Detecting and tracking language or package versions.</InsightCardExampleBlock>
-    </InsightCard>
-)
+export const LangStatsInsightCard: React.FunctionComponent<React.PropsWithChildren<InsightCardProps>> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation/intro/cards')
+
+    return (
+        <InsightCard {...props}>
+            <LangStatsInsightChart viewBox="0 0 169 148" className={styles.chart} />
+            <InsightCardBody title={t('language-usage')}>{t('shows-language-usage')}</InsightCardBody>
+        </InsightCard>
+    )
+}
+
+export const CaptureGroupInsightCard: React.FunctionComponent<React.PropsWithChildren<InsightCardProps>> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation/intro/cards')
+
+    return (
+        <InsightCard {...props}>
+            <CaptureGroupInsightChart className={styles.chart} />
+
+            <InsightCardBody title={t('detect-track-patterns')} className="mb-3">
+                <Trans i18nKey="dynamic-data-series-unique-values" components={{ '0': <b /> }} />
+            </InsightCardBody>
+
+            <InsightCardExampleBlock>{t('detecting-tracking-versions')}</InsightCardExampleBlock>
+        </InsightCard>
+    )
+}

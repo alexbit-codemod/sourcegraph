@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 
 import { mdiOpenInNew } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import type { AuthenticatedUser } from '@sourcegraph/shared/src/auth'
 import { useTemporarySetting } from '@sourcegraph/shared/src/settings/temporary/useTemporarySetting'
@@ -53,6 +54,8 @@ const functionalityPanels = [
 export const NotebooksGettingStartedTab: React.FunctionComponent<
     React.PropsWithChildren<NotebooksGettingStartedTabProps>
 > = ({ telemetryService }) => {
+    const { t } = useTranslation('notebooks/listPage')
+
     useEffect(() => {
         // No V2 telemetry required, as this is duplicative with the view event logged in NotebooksListPage.tsx.
         telemetryService.log('NotebooksGettingStartedTabViewed')
@@ -96,33 +99,34 @@ export const NotebooksGettingStartedTab: React.FunctionComponent<
                         </video>
                     </div>
                     <div className="col-12 col-md-6">
-                        <H2>Create living documentation effortlessly</H2>
-                        <Text>
-                            Notebooks make creating and sharing knowledge something you'll want to do, not something you
-                            avoid.
-                        </Text>
-                        <H3>Use notebooks to&hellip;</H3>
+                        <H2>{t('create-living-documentation-effortlessly')}</H2>
+                        <Text>{t('notebooks-creating-sharing-knowledge')}</Text>
+                        <H3>{t('use-notebooks-to')}</H3>
                         <ul className={classNames(styles.narrowList, 'mb-0')}>
-                            <li className="mb-1">Create focused onboarding docs that stay up to date</li>
-                            <li className="mb-1">Prepare pull request walkthroughs for your teammates</li>
+                            <li className="mb-1">{t('create-focused-onboarding-docs')}</li>
+                            <li className="mb-1">{t('prepare-pull-request-walkthroughs')}</li>
+                            <li className="mb-1">{t('document-complex-systems')}</li>
+                            <li className="mb-1">{t('track-symbol-definitions')}</li>
                             <li className="mb-1">
-                                Document complex systems to make them more approachable to new engineers
-                            </li>
-                            <li className="mb-1">
-                                Track symbol definitions to ensure you're always reading the latest docs
-                            </li>
-                            <li className="mb-1">
-                                <Link target="_blank" rel="noopener noreferrer" to="/help/notebooks/notebook-embedding">
-                                    Embed
-                                </Link>{' '}
-                                the most current code anywhere you host your docs
+                                <Trans
+                                    i18nKey="embed-current-code-in-docs"
+                                    components={{
+                                        '0': (
+                                            <Link
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                to="/help/notebooks/notebook-embedding"
+                                            />
+                                        ),
+                                    }}
+                                />
                             </li>
                         </ul>
                     </div>
                 </div>
             </Container>
 
-            <H3>Example notebooks</H3>
+            <H3>{t('example-notebooks')}</H3>
             <div className={classNames(styles.row, 'row', 'mb-4')}>
                 <div className="col-12 col-md-6">
                     <Container>
@@ -131,9 +135,10 @@ export const NotebooksGettingStartedTab: React.FunctionComponent<
                             rel="noopener noreferrer"
                             to="https://sourcegraph.com/notebooks/Tm90ZWJvb2s6MQ=="
                         >
-                            Find Log4J dependencies <Icon aria-hidden={true} svgPath={mdiOpenInNew} />
+                            {t('find-log4j-dependencies')}
+                            <Icon aria-hidden={true} svgPath={mdiOpenInNew} />
                         </Link>
-                        <div className="mt-2">Find Log4J dependencies across all your code.</div>
+                        <div className="mt-2">{t('find-log4j-dependencies-across-code')}</div>
                     </Container>
                 </div>
                 <div className="col-12 col-md-6">
@@ -143,14 +148,14 @@ export const NotebooksGettingStartedTab: React.FunctionComponent<
                             rel="noopener noreferrer"
                             to="https://sourcegraph.com/notebooks/Tm90ZWJvb2s6MTM="
                         >
-                            Learn Sourcegraph / Find code across all of your repositories{' '}
+                            {t('learn-sourcegraph-find-code')}
                             <Icon aria-hidden={true} svgPath={mdiOpenInNew} />
                         </Link>
-                        <div className="mt-2">Learn how to find and reference code across all your repositories.</div>
+                        <div className="mt-2">{t('learn-find-reference-code')}</div>
                     </Container>
                 </div>
             </div>
-            <H3>Functionality</H3>
+            <H3>{t('functionality')}</H3>
             <div className={classNames(styles.row, 'row', 'mb-4')}>
                 {functionalityPanels.map(panel => (
                     <div key={panel.title} className="col-12 col-md-4">
@@ -171,20 +176,19 @@ export const NotebooksGettingStartedTab: React.FunctionComponent<
             <div className={classNames(styles.row, 'row', 'mb-4')}>
                 <div className="col-12 col-md-6">
                     <div className="mb-2">
-                        <strong>Ready to get started?</strong>
+                        <strong>{t('ready-to-get-started')}</strong>
                     </div>
-                    <div className="mb-2">
-                        Notebooks can be used for onboarding, documentation, incident response, and more.
-                    </div>
-                    <Link to={PageRoutes.NotebookCreate}>Create a notebook</Link>
+                    <div className="mb-2">{t('notebooks-for-onboarding-documentation')}</div>
+                    <Link to={PageRoutes.NotebookCreate}>{t('create-a-notebook')}</Link>
                 </div>
                 <div className="col-12 col-md-6">
                     <div className="mb-2">
-                        <strong>Learn more about notebooks</strong>
+                        <strong>{t('learn-more-about-notebooks')}</strong>
                     </div>
-                    <div className="mb-2">Read in-depth material about all of notebooks' features.</div>
+                    <div className="mb-2">{t('read-in-depth-material-notebooks-features')}</div>
                     <Link target="_blank" rel="noopener noreferrer" to="/help/notebooks">
-                        Documentation <Icon aria-hidden={true} svgPath={mdiOpenInNew} />
+                        {t('documentation')}
+                        <Icon aria-hidden={true} svgPath={mdiOpenInNew} />
                     </Link>
                 </div>
             </div>

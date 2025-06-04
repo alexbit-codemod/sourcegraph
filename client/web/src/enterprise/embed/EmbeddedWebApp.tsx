@@ -1,6 +1,7 @@
 import { type FC, Suspense, useEffect, useLayoutEffect, useMemo } from 'react'
 
 import { ApolloProvider } from '@apollo/client'
+import { useTranslation } from 'react-i18next'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import type { GraphQLClient } from '@sourcegraph/http-client'
@@ -44,6 +45,8 @@ interface Props {
     graphqlClient: GraphQLClient
 }
 export const EmbeddedWebApp: FC<Props> = ({ graphqlClient }) => {
+    const { t } = useTranslation('enterprise/embed')
+
     const { theme, setThemeSetting } = useTheme()
 
     useLayoutEffect(() => {
@@ -110,9 +113,7 @@ export const EmbeddedWebApp: FC<Props> = ({ graphqlClient }) => {
                                     <Route
                                         path="*"
                                         element={
-                                            <Alert variant="danger">
-                                                Invalid embedding route, please check the embedding URL.
-                                            </Alert>
+                                            <Alert variant="danger">{t('invalid-embedding-route-check-url')}</Alert>
                                         }
                                     />
                                 </Routes>

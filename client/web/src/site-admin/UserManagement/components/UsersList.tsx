@@ -17,6 +17,7 @@ import {
 } from '@mdi/js'
 import classNames from 'classnames'
 import { endOfDay, formatDistanceToNowStrict, startOfDay } from 'date-fns'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { logger } from '@sourcegraph/common'
 import { useQuery } from '@sourcegraph/http-client'
@@ -129,6 +130,8 @@ const dateRangeQueryParameterToVariable = (
 }
 
 export const UsersList: React.FunctionComponent<UsersListProps> = ({ onActionEnd, renderAssignmentModal }) => {
+    const { t } = useTranslation('site-admin/UserManagement/components')
+
     const [filters, setFilters] = useURLSyncedState(DEFAULT_FILTERS)
     const debouncedSearchText = useDebounce(filters.searchText, 300)
 
@@ -220,7 +223,11 @@ export const UsersList: React.FunctionComponent<UsersListProps> = ({ onActionEnd
     const onRoleAssignmentSuccess = (user: { username: string }): void => {
         handleDisplayNotification(
             <Text as="span">
-                Role(s) successfully updated for user <strong>{user.username}</strong>.
+                <Trans
+                    i18nKey="role-update-success"
+                    values={{ userUsername: <>{user.username}</> }}
+                    components={{ '0': <strong /> }}
+                />
             </Text>
         )
         closeRoleAssignmentModal()
@@ -228,7 +235,7 @@ export const UsersList: React.FunctionComponent<UsersListProps> = ({ onActionEnd
 
     return (
         <div className="position-relative">
-            <H2 className="my-4 ml-2">Users</H2>
+            <H2 className="my-4 ml-2">{t('users-label')}</H2>
             {roleAssignmentModal}
             {notification && (
                 <Alert
@@ -515,8 +522,10 @@ export const UsersList: React.FunctionComponent<UsersListProps> = ({ onActionEnd
                         ]}
                         note={
                             <Text as="span">
-                                Note: Events is the count of <Link to="/help/admin/pricing">all billable events</Link>{' '}
-                                performed by a user.
+                                <Trans
+                                    i18nKey="note-billable-events"
+                                    components={{ '0': <Link to="/help/admin/pricing" /> }}
+                                />
                             </Text>
                         }
                     />
@@ -534,6 +543,8 @@ function RenderUsernameAndEmail({
     locked,
     scimControlled,
 }: SiteUser): JSX.Element {
+    const { t } = useTranslation('site-admin/UserManagement/components')
+
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const handleOpenChange = useCallback((event: PopoverOpenEvent): void => {
         setIsOpen(event.isOpen)
@@ -581,16 +592,15 @@ function RenderUsernameAndEmail({
                 <Tooltip
                     content={
                         <Text>
-                            This user is{' '}
-                            <Link to="/help/admin/scim" target="_blank" rel="noopener">
-                                SCIM
-                            </Link>
-                            -controlled—an external system controls some of its attributes.
+                            <Trans
+                                i18nKey="scim-controlled-user"
+                                components={{ '0': <Link to="/help/admin/scim" target="_blank" rel="noopener" /> }}
+                            />
                         </Text>
                     }
                 >
                     <Badge variant="secondary" className="mr-1">
-                        SCIM
+                        {t('scim-label')}
                     </Badge>
                 </Tooltip>
             )}

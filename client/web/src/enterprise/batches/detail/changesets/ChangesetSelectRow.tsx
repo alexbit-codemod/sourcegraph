@@ -1,6 +1,7 @@
 import React, { useMemo, useContext } from 'react'
 
 import { mdiInformationOutline } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 import { of } from 'rxjs'
 
 import { pluralize } from '@sourcegraph/common'
@@ -200,6 +201,8 @@ export const ChangesetSelectRow: React.FunctionComponent<React.PropsWithChildren
     queryAvailableBulkOperations = _queryAvailableBulkOperations,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
     const { areAllVisibleSelected, selected, selectAll } = useContext(MultiSelectContext)
 
     const allChangesetIDs: string[] | undefined = useObservable(
@@ -267,7 +270,10 @@ export const ChangesetSelectRow: React.FunctionComponent<React.PropsWithChildren
                         allChangesetIDs &&
                         allChangesetIDs.length > selected.size && (
                             <Button className="py-0 px-1" onClick={selectAll} variant="link">
-                                (Select all{allChangesetIDs !== undefined && ` ${allChangesetIDs.length}`})
+                                {t('select-all-changesets', {
+                                    allChangesetIDsUndefinedAllChangesetIDsLength:
+                                        allChangesetIDs !== undefined && ` ${allChangesetIDs.length}`,
+                                })}
                             </Button>
                         )}
                 </div>
@@ -275,7 +281,7 @@ export const ChangesetSelectRow: React.FunctionComponent<React.PropsWithChildren
                 <div className="m-0 col col-md-auto">
                     <div className="row no-gutters">
                         <div className="col ml-0 ml-sm-2">
-                            <DropdownButton actions={actions} placeholder="Select action" />
+                            <DropdownButton actions={actions} placeholder={t('select-action')} />
                         </div>
                     </div>
                 </div>
@@ -285,13 +291,17 @@ export const ChangesetSelectRow: React.FunctionComponent<React.PropsWithChildren
 }
 
 const AllSelectedLabel: React.FunctionComponent<React.PropsWithChildren<{ count?: number }>> = ({ count }) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
     if (count === undefined) {
-        return <>All changesets selected</>
+        return <>{t('all-changesets-selected')}</>
     }
 
     return (
         <>
-            All {count} {pluralize('changeset', count)} selected
+            {t('all-count-selected', { count })}
+            {pluralize('changeset', count)}
+            {t('selected-count')}
         </>
     )
 }

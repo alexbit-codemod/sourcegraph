@@ -1,0 +1,15 @@
+{
+  "link-to-setup-wizard": "<0>{{spanClassNameUnderlineGoToSetupWizardSpan}}</0> to add remote repositories from GitHub, GitLab, etc.",
+  "go-to-setup-wizard": "Go to setup wizard",
+  "sourcegraph-instance-limit-warning": {
+    "true": "the limit for",
+    "false": "{{noLicenseWarningUserCount}}"
+  },
+  "contact-sourcegraph-trial-license": "contact Sourcegraph to start a free trial or purchase a license",
+  "license-expiration-notice": {
+    "true": "expired {{formatRelativeExpirationDateExpiresAt}}",
+    "false": "will expire in {{formatDistanceStrictExpiresAtDateNow}}"
+  },
+  "renew-now-link": "Renew now",
+  "contact-sourcegraph-link": "contact Sourcegraph"
+}

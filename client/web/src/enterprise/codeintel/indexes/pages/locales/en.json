@@ -1,0 +1,33 @@
+{
+  "precise-indexes-title": "Precise indexes",
+  "precise-code-intelligence-description": "Precise code intelligence index data and auto-indexing jobs.",
+  "precise-indexes-for": "Precise indexes for",
+  "view-indexes-all-repositories": "View indexes across all repositories",
+  "mark-as-replaceable": " Mark",
+  "replaceable-by-auto-indexing": "(replaceable by auto-indexing)",
+  "delete-action": " Delete",
+  "unknown-repository": "Unknown repository",
+  "replaceable-by-auto-indexing-note": "(replaceable by auto-indexing)",
+  "no-indexes-message": " No indexes.",
+  "precise-index-of": {
+    "true": "{{indexOrErrorProjectRootRepositoryName}}@{{indexOrErrorProjectRootCommitAbbreviatedOid}}",
+    "false": "an unknown commit"
+  },
+  "still-uploading": "Still uploading...",
+  "upload-queued-for-deletion": "Upload is queued for deletion.",
+  "index-next-up-for-indexing": "This index is next up for indexing.",
+  "index-next-up-for-processing": "This index is next up for processing.",
+  "indexing-in-progress": "Indexing in progress...",
+  "index-currently-being-processed": "Index is currently being processed...",
+  "index-processed-successfully": "Index processed successfully.",
+  "index-failed-to-index": "Index failed to index:",
+  "index-failed-to-process": "Index failed to process:",
+  "upload-answers-queries": "This upload can answer queries for the tip of the default branch and are targets of cross-repository find reference operations.",
+  "timeline-header": "Timeline",
+  "dependencies-header": "Dependencies",
+  "dependents-header": "Dependents",
+  "retention-header": "Retention",
+  "audit-logs-header": "Audit logs",
+  "mark-index-as-replaceable": " Mark index as replaceable by autoindexing",
+  "delete-index": " Delete index"
+}

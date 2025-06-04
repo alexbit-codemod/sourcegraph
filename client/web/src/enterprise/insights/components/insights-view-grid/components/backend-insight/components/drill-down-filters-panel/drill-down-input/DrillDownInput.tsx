@@ -1,6 +1,7 @@
 import React, { forwardRef, type InputHTMLAttributes, type PropsWithChildren, type Ref } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Button, Input, Label, type InputProps } from '@sourcegraph/wildcard'
 
@@ -37,22 +38,28 @@ interface LabelWithResetProps {
     onReset?: () => void
 }
 
-export const LabelWithReset: React.FunctionComponent<PropsWithChildren<LabelWithResetProps>> = props => (
-    <Label className={classNames(styles.label, props.className)}>
-        <span className={styles.labelText}>
-            <TruncatedText>{props.text}</TruncatedText>
+export const LabelWithReset: React.FunctionComponent<PropsWithChildren<LabelWithResetProps>> = props => {
+    const { t } = useTranslation(
+        'enterprise/insights/components/insights-view-grid/components/backend-insight/components/drill-down-filters-panel/drill-down-input'
+    )
 
-            <Button
-                variant="link"
-                size="sm"
-                disabled={props.disabled}
-                className={styles.labelResetButton}
-                onClick={props.onReset}
-            >
-                Reset
-            </Button>
-        </span>
+    return (
+        <Label className={classNames(styles.label, props.className)}>
+            <span className={styles.labelText}>
+                <TruncatedText>{props.text}</TruncatedText>
 
-        {props.children}
-    </Label>
-)
+                <Button
+                    variant="link"
+                    size="sm"
+                    disabled={props.disabled}
+                    className={styles.labelResetButton}
+                    onClick={props.onReset}
+                >
+                    {t('reset-button')}
+                </Button>
+            </span>
+
+            {props.children}
+        </Label>
+    )
+}

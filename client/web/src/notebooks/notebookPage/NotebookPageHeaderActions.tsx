@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 
 import { mdiStar, mdiStarOutline, mdiLock, mdiDotsHorizontal, mdiWeb, mdiDomain } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import type { Observable } from 'rxjs'
 import { catchError, switchMap, tap } from 'rxjs/operators'
 
@@ -68,6 +69,8 @@ export const NotebookPageHeaderActions: React.FunctionComponent<
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('notebooks/notebookPage')
+
     const [showShareModal, setShowShareModal] = useState(false)
     const toggleShareModal = useCallback(() => setShowShareModal(show => !show), [setShowShareModal])
     const [selectedShareOption, setSelectedShareOption] = useState<ShareOption | null>(
@@ -131,7 +134,7 @@ export const NotebookPageHeaderActions: React.FunctionComponent<
                         className="d-flex align-items-center"
                         data-testid="share-notebook-button"
                     >
-                        {shareIcon} Share
+                        {t('share-icon-share', { shareIcon })}
                     </Button>
                     <ShareNotebookModal
                         isOpen={showShareModal}
@@ -169,6 +172,8 @@ const NotebookSettingsDropdown: React.FunctionComponent<React.PropsWithChildren<
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('notebooks/notebookPage')
+
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const toggleDeleteModal = useCallback(() => setShowDeleteModal(show => !show), [setShowDeleteModal])
 
@@ -179,7 +184,7 @@ const NotebookSettingsDropdown: React.FunctionComponent<React.PropsWithChildren<
                     <Icon svgPath={mdiDotsHorizontal} inline={false} aria-hidden={true} />
                 </MenuButton>
                 <MenuList position={Position.bottomEnd}>
-                    <MenuHeader>Settings</MenuHeader>
+                    <MenuHeader>{t('settings')}</MenuHeader>
                     <MenuDivider />
                     <MenuItem
                         as={Button}
@@ -187,7 +192,7 @@ const NotebookSettingsDropdown: React.FunctionComponent<React.PropsWithChildren<
                         className={styles.dangerMenuItem}
                         onSelect={() => setShowDeleteModal(true)}
                     >
-                        Delete notebook
+                        {t('delete-notebook')}
                     </MenuItem>
                 </MenuList>
             </Menu>

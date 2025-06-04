@@ -1,0 +1,8 @@
+{
+  "remove-connection-with": "Remove connection with",
+  "there": "There",
+  "repo-count-and-pluralize": " <0>{{codeHostRepoCount0}}</0>  synced to Sourcegraph from '",
+  "connection-removed-warning": "'. If the connection is removed, these repositories will no longer be synced with Sourcegraph.",
+  "yes-remove-connection": "Yes, remove connection",
+  "cancel": "Cancel"
+}

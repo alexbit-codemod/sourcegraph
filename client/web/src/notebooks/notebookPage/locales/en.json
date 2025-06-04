@@ -1,0 +1,24 @@
+{
+  "private-label": "  Private",
+  "share-notebook": "Share Notebook",
+  "everyone-can-view-notebook": {
+    "true": "on Sourcegraph.com",
+    "false": "with access to the Sourcegraph instance"
+  },
+  "cancel-button": "Cancel",
+  "done-button": "Done",
+  "error-loading-notebook": "Error while loading the notebook: <0>{{notebookOrErrorMessage}}</0>",
+  "share-icon-share": "{{shareIcon}} Share",
+  "settings": "Settings",
+  "delete-notebook": "Delete notebook",
+  "error-updating-notebook": "Error while updating the notebook: <0>{{updatedNotebookOrErrorMessage}}</0>",
+  "notebook-created": "Created",
+  "notebook-creator": "by <0>@</0>",
+  "autosaving-notebook": "  Autosaving notebook...",
+  "last-updated": "Last updated",
+  "notebook-updater": "by <0>@</0>",
+  "delete-notebook-confirmation": "Delete the notebook?",
+  "action-irreversible-warning": "This action cannot be undone.",
+  "confirm-delete-notebook": "Yes, delete the notebook",
+  "error-deleting-notebook": "Error deleting notebook:"
+}

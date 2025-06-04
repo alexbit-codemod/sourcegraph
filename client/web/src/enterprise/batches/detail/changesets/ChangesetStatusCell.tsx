@@ -14,6 +14,7 @@ import {
 } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Tooltip, Icon } from '@sourcegraph/wildcard'
 
@@ -73,13 +74,17 @@ export const ChangesetStatusCell: React.FunctionComponent<React.PropsWithChildre
 
 const iconClassNames = 'm-0 text-nowrap flex-column align-items-center justify-content-center'
 
-const StatusLabel: React.FunctionComponent<{ status: string; className?: string }> = ({ status, className }) => (
-    // Relative positioning needed to avoid VisuallyHidden creating a double layer scrollbar in Chrome.
-    // Related bug: https://bugs.chromium.org/p/chromium/issues/detail?id=1154640#c15
-    <span className={classNames(className, 'position-relative')}>
-        <VisuallyHidden>Status:</VisuallyHidden> {status}
-    </span>
-)
+const StatusLabel: React.FunctionComponent<{ status: string; className?: string }> = ({ status, className }) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
+    return (
+        // Relative positioning needed to avoid VisuallyHidden creating a double layer scrollbar in Chrome.
+        // Related bug: https://bugs.chromium.org/p/chromium/issues/detail?id=1154640#c15
+        <span className={classNames(className, 'position-relative')}>
+            <VisuallyHidden>{t('status-label')}</VisuallyHidden> {status}
+        </span>
+    )
+}
 
 interface ChangesetStatusIconProps extends React.HTMLAttributes<HTMLDivElement> {
     label?: React.ReactNode

@@ -1,0 +1,18 @@
+{
+  "search-private-code": "Search your private code",
+  "have-an-account": "Have an account?",
+  "sign-in-access-token": "Sign in by entering an access token created through your user settings on Sourcegraph.",
+  "see-user-docs": "See our",
+  "user-docs-video-guide": " <0>user docs</0>  for a video guide on how to create an access token.",
+  "example-access-token": "ex 6dfc880b320dff712d9f6cfcac5cbd13ebfad1d8",
+  "access-token-label": "Access Token",
+  "example-sourcegraph-url": "ex https://sourcegraph.example.com",
+  "sourcegraph-instance-url": "Sourcegraph Instance URL",
+  "authenticate-account": "Authenticate account",
+  "unable-to-verify-token": "Unable to verify your access token for {{hostname}}. Please try again with a new access token.",
+  "welcome-message": "Welcome",
+  "sourcegraph-extension-description": "The Sourcegraph extension allows you to search millions of open source repositories without cloning them to your local machine.",
+  "developers-use-sourcegraph": "Developers use Sourcegraph every day to onboard to new code bases, find code to reuse, resolve incidents, fix security vulnerabilities, and more.",
+  "learn-more": "Learn more:",
+  "sourcegraph-vscode-extension": "Sourcegraph VS Code extension"
+}

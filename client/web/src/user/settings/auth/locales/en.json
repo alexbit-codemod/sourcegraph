@@ -1,0 +1,28 @@
+{
+  "remove-button": "Remove",
+  "add-button": "Add",
+  "disconnect-confirmation": "Disconnect {{name}}?",
+  "remove-signin-connection-warning": "You are about to remove the sign in connection with {{name}}. After removing it, you won’t be able to use {{name}} to sign in to Sourcegraph.",
+  "cancel-button": "Cancel",
+  "yes-disconnect": "Yes, disconnect {{name}}",
+  "add-gerrit-account": "Add Gerrit account",
+  "add-gerrit-account-instructions": "You are about to add a Gerrit account. Please enter your Gerrit HTTP credentials.",
+  "username-label": "Username",
+  "password-label": "Password",
+  "add-account-button": "Add account",
+  "account-security": "Account security",
+  "password-change-instructions": "Only the user may change their password. Site admins may <0>reset a user's password</0> .",
+  "sign-in-connection": "Sign in connection for",
+  "password-removed-notification": " removed. Please set a new password for your account.",
+  "password-changed-success": "Password changed!",
+  "connect-third-party-login": "Connect your account with a third-party login service to make signing in easier.",
+  "update-or-create-password": {
+    "true": "Update ",
+    "false": "Create "
+  },
+  "change-account-password": "Change your account password.",
+  "create-password-instructions": "Create a password to enable sign-in using a username/password combination.",
+  "old-password-label": "Old password",
+  "new-password-label": "New password",
+  "confirm-new-password-label": "Confirm new password"
+}

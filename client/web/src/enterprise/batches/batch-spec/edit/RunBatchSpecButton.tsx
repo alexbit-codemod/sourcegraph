@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 import { mdiInformationOutline, mdiChevronDown } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
+import { useTranslation } from 'react-i18next'
 import { animated } from 'react-spring'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -43,6 +44,8 @@ export const RunBatchSpecButton: React.FunctionComponent<React.PropsWithChildren
     onChangeOptions,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/edit')
+
     const [isOpen, setIsOpen] = useState(false)
 
     return (
@@ -62,7 +65,7 @@ export const RunBatchSpecButton: React.FunctionComponent<React.PropsWithChildren
                         aria-label={typeof isExecutionDisabled === 'string' ? isExecutionDisabled : undefined}
                         disabled={!!isExecutionDisabled}
                     >
-                        Run batch spec
+                        {t('run-batch-spec')}
                     </Button>
                 </Tooltip>
                 <PopoverTrigger
@@ -72,19 +75,19 @@ export const RunBatchSpecButton: React.FunctionComponent<React.PropsWithChildren
                     className={styles.executionOptionsMenuButton}
                 >
                     <Icon svgPath={mdiChevronDown} inline={false} aria-hidden={true} />
-                    <VisuallyHidden>Options</VisuallyHidden>
+                    <VisuallyHidden>{t('options')}</VisuallyHidden>
                 </PopoverTrigger>
             </ButtonGroup>
 
             <PopoverContent className={styles.menuList} position={Position.bottomEnd}>
-                <H3 className="pb-2 pt-3 pl-3 pr-3 m-0">Execution options</H3>
+                <H3 className="pb-2 pt-3 pl-3 pr-3 m-0">{t('execution-options')}</H3>
                 <ExecutionOption moreInfo="Toggle to run workspace executions even if cache entries exist.">
                     <Checkbox
                         name="run-without-cache"
                         id="run-without-cache"
                         checked={options.runWithoutCache}
                         onChange={() => onChangeOptions({ runWithoutCache: !options.runWithoutCache })}
-                        label="Run without cache"
+                        label={t('run-without-cache')}
                     />
                 </ExecutionOption>
                 <ExecutionOption disabled={true} disabledTooltip="Coming soon">
@@ -93,7 +96,7 @@ export const RunBatchSpecButton: React.FunctionComponent<React.PropsWithChildren
                         id="apply-when-complete"
                         checked={false}
                         disabled={true}
-                        label="Apply when complete"
+                        label={t('apply-when-complete')}
                     />
                 </ExecutionOption>
             </PopoverContent>
@@ -112,6 +115,8 @@ type ExecutionOptionProps =
       }
 
 const ExecutionOption: React.FunctionComponent<React.PropsWithChildren<ExecutionOptionProps>> = props => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/edit')
+
     const [infoReference, infoOpen, setInfoOpen, infoStyle] = useAccordion<HTMLParagraphElement>()
 
     const info = props.disabled ? (
@@ -128,7 +133,7 @@ const ExecutionOption: React.FunctionComponent<React.PropsWithChildren<Execution
         <Button className="m-0 ml-2 p-0 border-0" onClick={() => setInfoOpen(!infoOpen)}>
             <Icon aria-hidden={true} svgPath={mdiInformationOutline} />
 
-            <VisuallyHidden>More info</VisuallyHidden>
+            <VisuallyHidden>{t('more-info')}</VisuallyHidden>
         </Button>
     ) : null
 

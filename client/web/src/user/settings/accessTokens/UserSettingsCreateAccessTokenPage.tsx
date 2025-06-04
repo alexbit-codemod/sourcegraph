@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
 
 import { mdiPlus } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { concat, Subject } from 'rxjs'
 import { catchError, concatMap, tap } from 'rxjs/operators'
@@ -48,6 +49,8 @@ export const UserSettingsCreateAccessTokenPage: React.FunctionComponent<React.Pr
     onDidCreateAccessToken,
     user,
 }) => {
+    const { t } = useTranslation('user/settings/accessTokens')
+
     const navigate = useNavigate()
     const [expiryOptions, defaultExpiry] = useMemo(() => {
         const options = getExpirationOptions(window.context.accessTokensExpirationDaysOptions)
@@ -119,7 +122,7 @@ export const UserSettingsCreateAccessTokenPage: React.FunctionComponent<React.Pr
 
     return (
         <div className="user-settings-create-access-token-page">
-            <PageTitle title="Create access token" />
+            <PageTitle title={t('create-access-token')} />
             <PageHeader path={[{ text: 'New access token' }]} headingElement="h2" className="mb-3" />
 
             <Form onSubmit={onSubmit}>
@@ -130,20 +133,18 @@ export const UserSettingsCreateAccessTokenPage: React.FunctionComponent<React.Pr
                         onChange={onNoteChange}
                         required={true}
                         autoFocus={true}
-                        placeholder="What's this token for?"
+                        placeholder={t('whats-this-token-for')}
                         defaultValue={defaultNoteValue}
                         className="form-group"
-                        label="Token description"
+                        label={t('token-description')}
                     />
 
                     <div className="form-group">
                         <Label htmlFor="user-settings-create-access-token-page__scope-user:all" className="mb-0">
-                            Token scope
+                            {t('token-scope')}
                         </Label>
                         <Text>
-                            <small className="form-help text-muted">
-                                Tokens with limited user scopes are not yet supported.
-                            </small>
+                            <small className="form-help text-muted">{t('limited-user-scopes-not-supported')}</small>
                         </Text>
 
                         <Checkbox
@@ -151,8 +152,11 @@ export const UserSettingsCreateAccessTokenPage: React.FunctionComponent<React.Pr
                             checked={true}
                             label={
                                 <>
-                                    <strong>{AccessTokenScopes.UserAll}</strong> — Full control of all resources
-                                    accessible to the user account
+                                    <Trans
+                                        i18nKey="full-control-user-resources"
+                                        values={{ accessTokenScopesUserAll: <>{AccessTokenScopes.UserAll}</> }}
+                                        components={{ '0': <strong /> }}
+                                    />
                                 </>
                             }
                             value={AccessTokenScopes.UserAll}
@@ -168,8 +172,13 @@ export const UserSettingsCreateAccessTokenPage: React.FunctionComponent<React.Pr
                                 onChange={onScopesChange}
                                 label={
                                     <>
-                                        <strong>{AccessTokenScopes.SiteAdminSudo}</strong> — Ability to perform any
-                                        action as any other user
+                                        <Trans
+                                            i18nKey="site-admin-sudo-permissions"
+                                            values={{
+                                                accessTokenScopesSiteAdminSudo: <>{AccessTokenScopes.SiteAdminSudo}</>,
+                                            }}
+                                            components={{ '0': <strong /> }}
+                                        />
                                     </>
                                 }
                             />
@@ -187,9 +196,7 @@ export const UserSettingsCreateAccessTokenPage: React.FunctionComponent<React.Pr
                         message={
                             <>
                                 {expiry === undefined && (
-                                    <span className="text-danger">
-                                        Access tokens without expiration are not recommended.
-                                    </span>
+                                    <span className="text-danger">{t('access-tokens-without-expiration-warning')}</span>
                                 )}
                             </>
                         }
@@ -199,7 +206,7 @@ export const UserSettingsCreateAccessTokenPage: React.FunctionComponent<React.Pr
                                 {label}
                             </option>
                         ))}
-                        {allowNoExpiration && <option value="">No expiration</option>}
+                        {allowNoExpiration && <option value="">{t('no-expiration')}</option>}
                     </Select>
                 </Container>
                 <div className="mb-3">
@@ -213,11 +220,11 @@ export const UserSettingsCreateAccessTokenPage: React.FunctionComponent<React.Pr
                             <LoadingSpinner />
                         ) : (
                             <Icon aria-hidden={true} svgPath={mdiPlus} />
-                        )}{' '}
-                        Generate token
+                        )}
+                        {t('generate-token')}
                     </Button>
                     <Button className="ml-2 test-create-access-token-cancel" to=".." variant="secondary" as={Link}>
-                        Cancel
+                        {t('cancel')}
                     </Button>
                 </div>
             </Form>

@@ -1,6 +1,7 @@
 import React from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { FlexTextArea, H4, Input } from '@sourcegraph/wildcard'
 
@@ -31,46 +32,50 @@ export const SurveyUseCaseForm: React.FunctionComponent<SurveyUseCaseFormProps> 
     formLabelClassName,
     className,
     authenticatedUser,
-}) => (
-    <div className={classNames('mb-2', className)}>
-        <FlexTextArea
-            minRows={2}
-            maxRows={6}
-            containerClassName="mt-3"
-            label={
-                <H4 as="span" className={classNames('d-flex', styles.title, formLabelClassName)}>
-                    {SURVEY_QUESTIONS.otherUseCase}
-                </H4>
-            }
-            onChange={event => onChangeOtherUseCase(event.target.value)}
-            value={otherUseCase}
-        />
-        <FlexTextArea
-            minRows={2}
-            maxRows={6}
-            containerClassName="mt-3"
-            label={
-                <H4 as="span" className={classNames('d-flex', styles.title, formLabelClassName)}>
-                    {SURVEY_QUESTIONS.better}
-                </H4>
-            }
-            onChange={event => onChangeBetter(event.target.value)}
-            value={better}
-        />
-        {!authenticatedUser && (
-            <Input
-                className="mt-3"
+}) => {
+    const { t } = useTranslation('marketing/components')
+
+    return (
+        <div className={classNames('mb-2', className)}>
+            <FlexTextArea
+                minRows={2}
+                maxRows={6}
+                containerClassName="mt-3"
                 label={
                     <H4 as="span" className={classNames('d-flex', styles.title, formLabelClassName)}>
-                        What is your email?
+                        {SURVEY_QUESTIONS.otherUseCase}
                     </H4>
                 }
-                onChange={event => onChangeEmail(event.target.value)}
-                value={email}
-                type="email"
-                autoComplete="email"
-                name="email"
+                onChange={event => onChangeOtherUseCase(event.target.value)}
+                value={otherUseCase}
             />
-        )}
-    </div>
-)
+            <FlexTextArea
+                minRows={2}
+                maxRows={6}
+                containerClassName="mt-3"
+                label={
+                    <H4 as="span" className={classNames('d-flex', styles.title, formLabelClassName)}>
+                        {SURVEY_QUESTIONS.better}
+                    </H4>
+                }
+                onChange={event => onChangeBetter(event.target.value)}
+                value={better}
+            />
+            {!authenticatedUser && (
+                <Input
+                    className="mt-3"
+                    label={
+                        <H4 as="span" className={classNames('d-flex', styles.title, formLabelClassName)}>
+                            {t('what-is-your-email')}
+                        </H4>
+                    }
+                    onChange={event => onChangeEmail(event.target.value)}
+                    value={email}
+                    type="email"
+                    autoComplete="email"
+                    name="email"
+                />
+            )}
+        </div>
+    )
+}

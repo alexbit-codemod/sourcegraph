@@ -2,6 +2,7 @@ import React, { type ReactNode, useCallback, useEffect, useRef, useState } from 
 
 import { mdiClose, mdiCheck } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Popover, PopoverContent, Position, Button, FlexTextArea, LoadingSpinner, Link, H3, Text } from '../..'
 import { useAutoFocus, useLocalStorage } from '../../../hooks'
@@ -42,6 +43,8 @@ const FeedbackPromptContent: React.FunctionComponent<React.PropsWithChildren<Fee
     authenticatedUser,
     initialValue,
 }) => {
+    const { t } = useTranslation('../../wildcard/src/components/Feedback/FeedbackPrompt')
+
     const [text, setText] = useLocalStorage<string>(LOCAL_STORAGE_KEY_TEXT, initialValue || '')
     const textAreaReference = useRef<HTMLInputElement>(null)
     const handleTextChange = useCallback(
@@ -87,17 +90,17 @@ const FeedbackPromptContent: React.FunctionComponent<React.PropsWithChildren<Fee
             {submitResponse?.isHappinessFeedback ? (
                 <div className={styles.success}>
                     <Icon inline={false} svgPath={mdiCheck} className={styles.successTick} aria-label="Success" />
-                    <H3>We‘ve received your feedback!</H3>
+                    <H3>{t('feedback-received')}</H3>
                     <Text className="d-inline">
-                        Thank you.
+                        {t('thank-you-message')}
                         {productResearchEnabled && authenticatedUser && (
                             <>
-                                {' '}
-                                Want to help keep making Sourcegraph better?{' '}
-                                <Link to="/user/settings/product-research" onClick={onClose}>
-                                    Join us for occasional user research
-                                </Link>{' '}
-                                and share your feedback on our latest features and ideas.
+                                <Trans
+                                    i18nKey="user-research-invitation"
+                                    components={{
+                                        '0': <Link to="/user/settings/product-research" onClick={onClose} />,
+                                    }}
+                                />
                             </>
                         )}
                     </Text>
@@ -105,12 +108,13 @@ const FeedbackPromptContent: React.FunctionComponent<React.PropsWithChildren<Fee
             ) : (
                 <Form onSubmit={handleSubmit}>
                     <H3 className="mb-3" id="feedback-prompt-question">
-                        Send feedback to Sourcegraph
+                        {t('send-feedback-instruction')}
                     </H3>
 
                     {authenticatedUser && (
                         <Text className={styles.from} size="small">
-                            From: {authenticatedUser.username} ({authenticatedUser.email})
+                            {t('from-label')}
+                            {authenticatedUser.username} ({authenticatedUser.email})
                         </Text>
                     )}
                     <FlexTextArea
@@ -125,7 +129,7 @@ const FeedbackPromptContent: React.FunctionComponent<React.PropsWithChildren<Fee
                     />
                     {!authenticatedUser && (
                         <Text className="text-muted" size="small">
-                            You're not signed in. Please tell us how to contact you if you want a reply.
+                            {t('not-signed-in-message')}
                         </Text>
                     )}
 
@@ -138,8 +142,10 @@ const FeedbackPromptContent: React.FunctionComponent<React.PropsWithChildren<Fee
                     )}
                     <Text className="d-flex align-items-center justify-content-between mt-2">
                         <span>
-                            By submitting your feedback, you agree to the{' '}
-                            <Link to="https://sourcegraph.com/terms/privacy">Sourcegraph Privacy Policy</Link>.
+                            <Trans
+                                i18nKey="privacy-policy-agreement"
+                                components={{ '0': <Link to="https://sourcegraph.com/terms/privacy" /> }}
+                            />
                         </span>
                     </Text>
                     <Button

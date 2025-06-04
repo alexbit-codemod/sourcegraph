@@ -1,0 +1,11 @@
+{
+  "account-access-requests-total-count": "<0>{{dataAccessRequestsTotalCount}}</0> Account",
+  "users": "Users",
+  "account-requests": "Account requests",
+  "license-approval-info": "No licenses remaining. To approve requests, <0>purchase additional licenses</0>  or <1>remove inactive users</1>.",
+  "reject-button": "Reject",
+  "approve-button": "Approve",
+  "no-prefix": "No",
+  "requests-suffix": " requests",
+  "user-access-request-info": "Users can request access to Sourcegraph via the login page. View the documentation to learn more about <0>controlling sign up requests</0>."
+}

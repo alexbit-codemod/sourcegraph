@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { Alert, Link } from '@sourcegraph/wildcard'
 
 /**
@@ -13,12 +15,18 @@ import { Alert, Link } from '@sourcegraph/wildcard'
  */
 export const LicenseGenerationKeyWarning: React.FunctionComponent<React.PropsWithChildren<{ className?: string }>> = ({
     className = '',
-}) =>
-    window.context?.debug ? (
+}) => {
+    const { t } = useTranslation('enterprise/productSubscription')
+
+    return window.context?.debug ? (
         <Alert className={className} variant="warning">
-            License keys generated in dev mode are <strong>NOT VALID</strong>.{' '}
-            <Link to="https://sourcegraph.com/site-admin/dotcom/product/subscriptions">
-                Use Sourcegraph.com to generate valid license keys.
-            </Link>
+            <Trans
+                i18nKey="license-keys-dev-mode-not-valid"
+                components={{
+                    '0': <strong />,
+                    '1': <Link to="https://sourcegraph.com/site-admin/dotcom/product/subscriptions" />,
+                }}
+            />
         </Alert>
     ) : null
+}

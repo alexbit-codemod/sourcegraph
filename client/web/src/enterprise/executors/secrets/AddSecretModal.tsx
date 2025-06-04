@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { logger } from '@sourcegraph/common'
 import { Button, Modal, Input, H3, Text, Alert, Link, ErrorAlert, Form } from '@sourcegraph/wildcard'
 
@@ -25,6 +27,8 @@ export const AddSecretModal: React.FunctionComponent<React.PropsWithChildren<Add
     scope,
     initialKey = '',
 }) => {
+    const { t } = useTranslation('enterprise/executors/secrets')
+
     const labelId = 'addSecret'
 
     const [key, setKey] = useState<string>(initialKey)
@@ -64,11 +68,8 @@ export const AddSecretModal: React.FunctionComponent<React.PropsWithChildren<Add
 
     return (
         <Modal onDismiss={onCancel} aria-labelledby={labelId}>
-            <H3 id={labelId}>Add new executor secret</H3>
-            <Text>
-                Executor secrets are available to executor jobs as environment variables. They will never appear in
-                logs.
-            </Text>
+            <H3 id={labelId}>{t('add-new-executor-secret')}</H3>
+            <Text>{t('executor-secrets-description')}</Text>
             {error && <ErrorAlert error={error} />}
             <Form onSubmit={onSubmit}>
                 <div className="form-group">
@@ -86,24 +87,25 @@ export const AddSecretModal: React.FunctionComponent<React.PropsWithChildren<Add
                         pattern="^[A-Z][A-Z0-9_]*$"
                         message={
                             <>
-                                Must be uppercase characters, digits and underscores only. Must start with an uppercase
-                                character.{' '}
-                                <Link
-                                    to="/help/admin/executors/deploy_executors#using-private-registries"
-                                    rel="noopener"
-                                    target="_blank"
-                                >
-                                    DOCKER_AUTH_CONFIG will be used to authenticate with private registries
-                                </Link>
-                                .
+                                <Trans
+                                    i18nKey="executor-secret-requirements"
+                                    components={{
+                                        '0': (
+                                            <Link
+                                                to="/help/admin/executors/deploy_executors#using-private-registries"
+                                                rel="noopener"
+                                                target="_blank"
+                                            />
+                                        ),
+                                    }}
+                                />
                             </>
                         }
-                        label="Key"
+                        label={t('key-label')}
                     />
                     {key === 'DOCKER_AUTH_CONFIG' && (
                         <Alert variant="info" className="mt-2">
-                            This secret value will be used to configure docker client authentication with private
-                            registries.
+                            {t('docker-client-authentication-description')}
                         </Alert>
                     )}
                 </div>
@@ -116,14 +118,14 @@ export const AddSecretModal: React.FunctionComponent<React.PropsWithChildren<Add
                         required={true}
                         spellCheck="false"
                         minLength={1}
-                        label="Value"
+                        label={t('value-label')}
                         value={value}
                         onChange={onChangeValue}
                     />
                 </div>
                 <div className="d-flex justify-content-end">
                     <Button disabled={loading} className="mr-2" onClick={onCancel} outline={true} variant="secondary">
-                        Cancel
+                        {t('cancel-button')}
                     </Button>
                     <LoaderButton
                         type="submit"
@@ -131,7 +133,7 @@ export const AddSecretModal: React.FunctionComponent<React.PropsWithChildren<Add
                         variant="primary"
                         loading={loading}
                         alwaysShowLabel={true}
-                        label="Add secret"
+                        label={t('add-secret-button')}
                     />
                 </div>
             </Form>

@@ -2,6 +2,7 @@ import * as React from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { mdiApplicationEditOutline } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 import { from } from 'rxjs'
 
 import { logger } from '@sourcegraph/common'
@@ -46,6 +47,8 @@ export interface OpenInEditorActionItemProps extends TelemetryV2Props {
 let didAttemptToUpgradeSettings = false
 
 export const OpenInEditorActionItem: React.FunctionComponent<OpenInEditorActionItemProps> = props => {
+    const { t } = useTranslation('open-in-editor')
+
     const assetsRoot = props.assetsRoot ?? (window.context?.assetsRoot || '')
 
     const settingsOrError = useObservable(useMemo(() => from(props.platformContext.settings), [props.platformContext]))
@@ -96,8 +99,10 @@ export const OpenInEditorActionItem: React.FunctionComponent<OpenInEditorActionI
 
     return editors ? (
         <>
-            {editors.map(
-                (editor, index) =>
+            {editors.map((editor, index) => {
+                const { t } = useTranslation('open-in-editor')
+
+                return (
                     editor && (
                         <EditorItem
                             key={editor.id}
@@ -105,7 +110,7 @@ export const OpenInEditorActionItem: React.FunctionComponent<OpenInEditorActionI
                             icon={
                                 <img
                                     src={`${assetsRoot}/img/editors/${editor.id}.svg`}
-                                    alt={`Open file in ${editor?.name}`}
+                                    alt={t('open-file-in-editor', { editorName: editor?.name })}
                                     className={styles.icon}
                                 />
                             }
@@ -125,7 +130,8 @@ export const OpenInEditorActionItem: React.FunctionComponent<OpenInEditorActionI
                             actionType={props.actionType}
                         />
                     )
-            )}
+                )
+            })}
         </>
     ) : // We can not render the editor popover inside the dropdown view yet.
     // Since the dropdown view is only used on very limited viewport dimensions,
@@ -146,7 +152,7 @@ export const OpenInEditorActionItem: React.FunctionComponent<OpenInEditorActionI
                         ) : (
                             <img
                                 src={`${assetsRoot}/img/open-in-editor.svg`}
-                                alt="Set your preferred editor"
+                                alt={t('set-preferred-editor')}
                                 className={styles.icon}
                             />
                         )

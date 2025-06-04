@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 
 import { mdiAlertCircle } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { useQuery } from '@sourcegraph/http-client'
 import { Button, Icon } from '@sourcegraph/wildcard'
@@ -22,6 +23,8 @@ export const WebhookLogPageHeader: React.FunctionComponent<React.PropsWithChildr
     onlyErrors,
     onSetOnlyErrors: onSetErrors,
 }) => {
+    const { t } = useTranslation('site-admin/webhooks')
+
     const onErrorToggle = useCallback(() => onSetErrors(!onlyErrors), [onlyErrors, onSetErrors])
 
     const { data } = useQuery<WebhookLogPageHeaderResult>(WEBHOOK_LOG_PAGE_HEADER, {})
@@ -33,11 +36,11 @@ export const WebhookLogPageHeader: React.FunctionComponent<React.PropsWithChildr
                 <PerformanceGauge
                     count={data?.webhookLogs.totalCount}
                     countClassName={errorCount > 0 ? 'text-danger' : undefined}
-                    label="recent error"
+                    label={t('recent-error')}
                 />
             </div>
             <div className={styles.services}>
-                <PerformanceGauge count={data?.externalServices.totalCount} label="external service" />
+                <PerformanceGauge count={data?.externalServices.totalCount} label={t('external-service')} />
             </div>
             <div className={styles.errorButton}>
                 <Button variant="danger" onClick={onErrorToggle} outline={!onlyErrors}>
@@ -46,7 +49,7 @@ export const WebhookLogPageHeader: React.FunctionComponent<React.PropsWithChildr
                         aria-hidden={true}
                         svgPath={mdiAlertCircle}
                     />
-                    <span className="ml-1">Only errors</span>
+                    <span className="ml-1">{t('only-errors')}</span>
                 </Button>
             </div>
         </div>

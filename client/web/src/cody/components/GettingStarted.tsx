@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import type { AuthenticatedUser } from '@sourcegraph/shared/src/auth'
 import { H4, H5, RadioButton, Text, Button, Icon, Link } from '@sourcegraph/wildcard'
@@ -23,6 +24,8 @@ export const GettingStarted: React.FC<
         authenticatedUser: AuthenticatedUser | null
     }
 > = ({ isCodyChatPage, submitInput, authenticatedUser, ...scopeSelectorProps }) => {
+    const { t } = useTranslation('cody/components')
+
     const [conversationScope, setConversationScope] = useState<ConversationScope>(
         !isCodyChatPage || scopeSelectorProps.scope.repositories.length > 0 ? 'repo' : 'general'
     )
@@ -116,7 +119,7 @@ export const GettingStarted: React.FC<
                         <div className={styles.greetingContainer}>
                             <Icon as={CodySpeechBubbleIcon} className="h-auto w-auto" aria-hidden="true" />
                             <Text as="span" className={styles.greetingText}>
-                                Hi! I'm Cody
+                                {t('greeting-cody')}
                             </Text>
                         </div>
                     </div>
@@ -126,7 +129,7 @@ export const GettingStarted: React.FC<
                     <div className={classNames(styles.section, 'mb-3')}>
                         <fieldset>
                             <legend>
-                                <H4 className="mb-1">Choose the context for this conversation</H4>
+                                <H4 className="mb-1">{t('context-selection-prompt')}</H4>
                             </legend>
 
                             <div className={styles.radioWrapper}>
@@ -135,7 +138,7 @@ export const GettingStarted: React.FC<
                                     name="general"
                                     label={
                                         <Text as="span" size="small">
-                                            General knowledge
+                                            {t('general-knowledge-option')}
                                         </Text>
                                     }
                                     value="general"
@@ -150,7 +153,7 @@ export const GettingStarted: React.FC<
                                     name="repo"
                                     label={
                                         <Text as="span" size="small">
-                                            Specific repositories:
+                                            {t('specific-repositories-prompt')}
                                         </Text>
                                     }
                                     value="repo"
@@ -170,18 +173,17 @@ export const GettingStarted: React.FC<
                                     <>
                                         <hr className={styles.divider} />
                                         <Text size="small" className={classNames('text-muted', styles.hintTitle)}>
-                                            Why is context important?
+                                            {t('importance-of-context-question')}
                                         </Text>
                                         <Text size="small" className={classNames('text-muted', styles.hintText)}>
-                                            Without providing relevant repo(s) for context, Cody won't be able to answer
-                                            questions specific to your project.
+                                            {t('context-requirement-explanation')}
                                         </Text>
 
                                         <Text size="small" className="mb-0 text-muted">
-                                            <Text as="span" weight="bold">
-                                                Tip:
-                                            </Text>{' '}
-                                            The context selector is always available at the bottom of the screen
+                                            <Trans
+                                                i18nKey="tip-context-selector-availability"
+                                                components={{ '0': <Text as="span" weight="bold" /> }}
+                                            />
                                         </Text>
                                     </>
                                 )}
@@ -214,8 +216,10 @@ export const GettingStarted: React.FC<
                 </div>
 
                 <Text alignment="center" size="small">
-                    By using Cody, you agree to its{' '}
-                    <Link to="https://sourcegraph.com/terms/cody-notice">license and privacy statement</Link>.
+                    <Trans
+                        i18nKey="agreement-terms-and-privacy"
+                        components={{ '0': <Link to="https://sourcegraph.com/terms/cody-notice" /> }}
+                    />
                 </Text>
             </div>
         </div>

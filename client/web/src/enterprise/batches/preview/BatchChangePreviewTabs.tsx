@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 
 import { mdiSourceBranch, mdiFileDocument } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -48,6 +49,8 @@ export const BatchChangePreviewTabs: React.FunctionComponent<React.PropsWithChil
     spec,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/batches/preview')
+
     // We track the current tab in a URL parameter so that tabs are easy to navigate to
     // and share.
     const navigate = useNavigate()
@@ -78,7 +81,7 @@ export const BatchChangePreviewTabs: React.FunctionComponent<React.PropsWithChil
                     <span>
                         <Icon aria-hidden={true} className="text-muted mr-1" svgPath={mdiSourceBranch} />
                         <span className="text-content" data-tab-content="Preview changesets">
-                            Preview changesets
+                            {t('preview-changesets')}
                         </span>{' '}
                         <Badge variant="secondary" pill={true} className="ml-1">
                             {spec.applyPreview.totalCount}
@@ -89,7 +92,7 @@ export const BatchChangePreviewTabs: React.FunctionComponent<React.PropsWithChil
                     <span>
                         <Icon aria-hidden={true} className="text-muted mr-1" svgPath={mdiFileDocument} />{' '}
                         <span className="text-content" data-tab-content="Spec">
-                            Spec
+                            {t('spec')}
                         </span>
                     </span>
                 </Tab>

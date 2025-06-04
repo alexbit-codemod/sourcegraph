@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { mdiCircleOffOutline } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 import { type Location, useLocation, useNavigate } from 'react-router-dom'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
@@ -101,6 +102,8 @@ export const RepoDashboardPage: React.FunctionComponent<RepoDashboardPageProps> 
     indexingEnabled = window.context?.codeIntelAutoIndexingEnabled,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/codeintel/dashboard/pages')
+
     useEffect(() => {
         telemetryService.logPageView('CodeIntelRepoDashboard')
         telemetryRecorder.recordEvent('repo.codeIntel.dashboard', 'view')
@@ -221,16 +224,17 @@ export const RepoDashboardPage: React.FunctionComponent<RepoDashboardPageProps> 
                     {
                         text: (
                             <>
-                                Code intelligence summary for <RepoLink repoName={repo.name} to={null} />
+                                {t('code-intelligence-summary')}
+                                <RepoLink repoName={repo.name} to={null} />
                             </>
                         ),
                     },
                 ]}
-                description="View the latest indexes and suggestions for this repository."
+                description={t('view-latest-indexes-suggestions')}
                 className="mb-3"
                 actions={
                     authenticatedUser?.siteAdmin && (
-                        <Link to="/site-admin/code-graph/dashboard">View global dashboard</Link>
+                        <Link to="/site-admin/code-graph/dashboard">{t('view-global-dashboard')}</Link>
                     )
                 }
             />
@@ -238,16 +242,14 @@ export const RepoDashboardPage: React.FunctionComponent<RepoDashboardPageProps> 
                 <>
                     <Alert variant={data.commitGraph.stale ? 'primary' : 'success'} aria-live="off">
                         {data.commitGraph.stale ? (
-                            <>
-                                Repository commit graph is currently stale and is queued to be refreshed. Refreshing the
-                                commit graph updates which uploads are visible from which commits.
-                            </>
+                            <>{t('commit-graph-stale-refresh')}</>
                         ) : (
-                            <>Repository commit graph is currently up to date.</>
+                            <>{t('commit-graph-up-to-date')}</>
                         )}{' '}
                         {data.commitGraph.updatedAt && (
                             <>
-                                Last refreshed <Timestamp date={data.commitGraph.updatedAt} now={now} />.
+                                {t('last-refreshed-time')}
+                                <Timestamp date={data.commitGraph.updatedAt} now={now} />.
                             </>
                         )}
                     </Alert>
@@ -259,21 +261,21 @@ export const RepoDashboardPage: React.FunctionComponent<RepoDashboardPageProps> 
                                 <small className="d-block">
                                     {data.summary.lastIndexScan ? (
                                         <>
-                                            This repository was scanned for auto-indexing{' '}
+                                            {t('repository-scanned-auto-indexing')}
                                             <Timestamp date={data.summary.lastIndexScan} />.
                                         </>
                                     ) : (
-                                        <>This repository has never been scanned for auto-indexing.</>
+                                        <>{t('never-scanned-auto-indexing')}</>
                                     )}
                                 </small>
                                 <small className="d-block">
                                     {data.summary.lastUploadRetentionScan ? (
                                         <>
-                                            The indexes of this repository were last considered for expiration{' '}
+                                            {t('indexes-last-considered-expiration')}
                                             <Timestamp date={data.summary.lastUploadRetentionScan} />.
                                         </>
                                     ) : (
-                                        <> The indexes of this repository have never been considered for expiration.</>
+                                        <>{t('never-considered-expiration')}</>
                                     )}
                                 </small>
                             </div>
@@ -286,14 +288,14 @@ export const RepoDashboardPage: React.FunctionComponent<RepoDashboardPageProps> 
                                 {indexingEnabled && (
                                     <div>
                                         <Label className={styles.radioGroup}>
-                                            Show:
+                                            {t('show-options')}
                                             <RadioButton
                                                 name="show-filter"
                                                 id="show-all"
                                                 value="all"
                                                 checked={filterState.show === 'all'}
                                                 onChange={event => handleFilterChange(event.target.value, 'show')}
-                                                label="All"
+                                                label={t('option-all')}
                                                 wrapperClassName="ml-2 mr-3"
                                             />
                                             <RadioButton
@@ -302,7 +304,7 @@ export const RepoDashboardPage: React.FunctionComponent<RepoDashboardPageProps> 
                                                 value="indexes"
                                                 checked={filterState.show === 'indexes'}
                                                 onChange={event => handleFilterChange(event.target.value, 'show')}
-                                                label="Indexes"
+                                                label={t('option-indexes')}
                                                 wrapperClassName="mr-3"
                                             />
                                             <RadioButton
@@ -311,7 +313,7 @@ export const RepoDashboardPage: React.FunctionComponent<RepoDashboardPageProps> 
                                                 value="suggestions"
                                                 checked={filterState.show === 'suggestions'}
                                                 onChange={event => handleFilterChange(event.target.value, 'show')}
-                                                label="Suggestions"
+                                                label={t('option-suggestions')}
                                             />
                                         </Label>
                                     </div>
@@ -327,7 +329,7 @@ export const RepoDashboardPage: React.FunctionComponent<RepoDashboardPageProps> 
                                         labelClassName="mb-0 mr-2"
                                         isCustomStyle={true}
                                     >
-                                        <option value="all">All</option>
+                                        <option value="all">{t('all-option')}</option>
                                         {[...languageKeys].sort().map(key => (
                                             <option key={key} value={key}>
                                                 {key}
@@ -345,9 +347,9 @@ export const RepoDashboardPage: React.FunctionComponent<RepoDashboardPageProps> 
                                             labelClassName="mb-0 mr-2"
                                             isCustomStyle={true}
                                         >
-                                            <option value="all">Most recent attempt</option>
-                                            <option value="success">Most recent success</option>
-                                            <option value="error">Most recent failure</option>
+                                            <option value="all">{t('most-recent-attempt')}</option>
+                                            <option value="success">{t('most-recent-success')}</option>
+                                            <option value="error">{t('most-recent-failure')}</option>
                                         </Select>
                                     )}
                                 </div>

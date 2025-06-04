@@ -3,6 +3,7 @@ import React from 'react'
 import { mdiDotsVertical } from '@mdi/js'
 import classNames from 'classnames'
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import {
     Button,
@@ -37,6 +38,8 @@ export interface DashboardMenuProps {
 }
 
 export const DashboardMenu: React.FunctionComponent<React.PropsWithChildren<DashboardMenuProps>> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/dashboards/dashboard-view/components/dashboard-menu')
+
     const { dashboard, tooltipText, className, onSelect = noop } = props
 
     const { dashboard: dashboardPermission } = useUiFeatures()
@@ -60,7 +63,7 @@ export const DashboardMenu: React.FunctionComponent<React.PropsWithChildren<Dash
                             className={styles.menuItem}
                             onSelect={() => onSelect(DashboardMenuAction.Configure)}
                         >
-                            Configure dashboard
+                            {t('configure-dashboard')}
                         </MenuItem>
                     </Tooltip>
                 )}
@@ -74,7 +77,7 @@ export const DashboardMenu: React.FunctionComponent<React.PropsWithChildren<Dash
                         data-testid="copy-link"
                         onSelect={() => onSelect(DashboardMenuAction.CopyLink)}
                     >
-                        Copy link
+                        {t('copy-link')}
                     </MenuItem>
                 )}
 
@@ -84,7 +87,7 @@ export const DashboardMenu: React.FunctionComponent<React.PropsWithChildren<Dash
                     className={styles.menuItem}
                     onSelect={() => onSelect(DashboardMenuAction.ResetGridLayout)}
                 >
-                    Reset grid layout
+                    {t('reset-grid-layout')}
                 </MenuItem>
 
                 {(menuPermissions.configure.display || menuPermissions.copy.display) &&
@@ -99,7 +102,7 @@ export const DashboardMenu: React.FunctionComponent<React.PropsWithChildren<Dash
                             className={classNames(styles.menuItem, styles.menuItemDanger)}
                             onSelect={() => onSelect(DashboardMenuAction.Delete)}
                         >
-                            Delete
+                            {t('delete-action')}
                         </MenuItem>
                     </Tooltip>
                 )}

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } fro
 
 import { mdiPlus } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, type Location, type NavigateFunction } from 'react-router-dom'
 import { of } from 'rxjs'
 import { catchError, map } from 'rxjs/operators'
@@ -74,6 +75,8 @@ export const CodeMonitoringPage: React.FunctionComponent<React.PropsWithChildren
     testForceTab,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/code-monitoring')
+
     const userHasCodeMonitors = useObservable(
         useMemo(
             () =>
@@ -160,22 +163,21 @@ export const CodeMonitoringPage: React.FunctionComponent<React.PropsWithChildren
 
     return (
         <div className="code-monitoring-page" data-testid="code-monitoring-page">
-            <PageTitle title="Code Monitoring" />
+            <PageTitle title={t('code-monitoring-title')} />
             <PageHeader
                 actions={
                     authenticatedUser && (
                         <Button to="/code-monitoring/new" variant="primary" as={Link}>
-                            <Icon aria-hidden={true} svgPath={mdiPlus} /> Create a code monitor
+                            <Icon aria-hidden={true} svgPath={mdiPlus} />
+                            {t('create-code-monitor')}
                         </Button>
                     )
                 }
-                description={
-                    <>Watch your code for changes and trigger actions to get notifications, send webhooks, and more.</>
-                }
+                description={<>{t('code-monitoring-description')}</>}
                 className="mb-3"
             >
                 <PageHeader.Heading as="h2" styleAs="h1">
-                    <PageHeader.Breadcrumb icon={CodeMonitoringLogo}>Code monitoring</PageHeader.Breadcrumb>
+                    <PageHeader.Breadcrumb icon={CodeMonitoringLogo}>{t('code-monitoring')}</PageHeader.Breadcrumb>
                 </PageHeader.Heading>
             </PageHeader>
 

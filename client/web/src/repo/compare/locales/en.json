@@ -1,0 +1,5 @@
+{
+  "select-revision-or-git-revspec": "Select a revision or provide a <0>Git revspec</0>  for more fine-grained comparisons",
+  "compare-changes-across-revisions": "Compare changes across revisions",
+  "invalid-comparison-specifier": "Invalid comparison specifier"
+}

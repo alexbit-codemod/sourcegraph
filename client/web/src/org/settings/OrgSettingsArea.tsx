@@ -1,6 +1,7 @@
 import React, { type FC } from 'react'
 
 import MapSearchIcon from 'mdi-react/MapSearchIcon'
+import { useTranslation } from 'react-i18next'
 import { Route, Routes } from 'react-router-dom'
 
 import { LoadingSpinner } from '@sourcegraph/wildcard'
@@ -15,13 +16,17 @@ import type { OrgAreaRouteContext } from '../area/OrgArea'
 
 import { OrgSettingsSidebar, type OrgSettingsSidebarItems } from './OrgSettingsSidebar'
 
-const NotFoundPage: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => (
-    <HeroPage
-        icon={MapSearchIcon}
-        title="404: Not Found"
-        subtitle="Sorry, the requested organization page was not found."
-    />
-)
+const NotFoundPage: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
+    const { t } = useTranslation('org/settings')
+
+    return (
+        <HeroPage
+            icon={MapSearchIcon}
+            title={t('error-404-not-found')}
+            subtitle="Sorry, the requested organization page was not found."
+        />
+    )
+}
 
 export interface OrgSettingsAreaRoute extends RouteV6Descriptor<OrgSettingsAreaRouteContext> {}
 

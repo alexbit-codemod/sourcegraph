@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import type { ErrorLike } from '@sourcegraph/common'
 import { useQuery } from '@sourcegraph/http-client'
 import { useTemporarySetting } from '@sourcegraph/shared/src/settings/temporary'
@@ -84,6 +86,8 @@ function filterAuthProviders(
 }
 
 export const ExternalAccountsModal: React.FunctionComponent<ExternalAccountsModalProps> = props => {
+    const { t } = useTranslation('external-account-modal')
+
     const [seenAuthzProviders, setSeenAuthzProviders] = useTemporarySetting('user.seenAuthProviders', [])
 
     const [userExternalAccounts, setUserExternalAccounts] = useState<{
@@ -166,8 +170,8 @@ export const ExternalAccountsModal: React.FunctionComponent<ExternalAccountsModa
             <div className={styles.title}>
                 <BrandLogo variant="symbol" isLightTheme={props.isLightTheme} disableSymbolSpin={true} />
                 <div>
-                    <H2>Sourcegraph setup: permissions & security</H2>
-                    <Text>Connect external identities to your account to access private repositories.</Text>
+                    <H2>{t('sourcegraph-setup-permissions')}& security</H2>
+                    <Text>{t('connect-external-identities-access-private-repositories')}</Text>
                 </div>
             </div>
             <hr />
@@ -185,7 +189,7 @@ export const ExternalAccountsModal: React.FunctionComponent<ExternalAccountsModa
             )}
             <hr />
             <Button onClick={onDismiss} className={styles.skip} size="lg" variant="secondary" outline={true}>
-                Done
+                {t('done-message')}
             </Button>
         </Modal>
     )

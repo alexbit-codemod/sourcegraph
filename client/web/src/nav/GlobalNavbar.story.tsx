@@ -1,4 +1,5 @@
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { NOOP_TELEMETRY_SERVICE } from '@sourcegraph/shared/src/telemetry/telemetryService'
 import { updateJSContextBatchChangesLicense } from '@sourcegraph/shared/src/testing/batches'
@@ -87,25 +88,27 @@ const config: Meta<typeof GlobalNavbar> = {
 export default config
 
 export const Default: StoryFn<GlobalNavbarProps> = props => {
+    const { t } = useTranslation('nav')
+
     window.context.codeSearchEnabledOnInstance = true
     window.context.codyEnabledOnInstance = true
     window.context.codyEnabledForCurrentUser = true
     return (
         <Grid columnCount={1}>
             <div>
-                <H3 className="ml-2">Anonymous viewer</H3>
+                <H3 className="ml-2">{t('anonymous-viewer')}</H3>
                 <GlobalNavbar {...props} />
             </div>
             <div>
-                <H3 className="ml-2">Anonymous viewer with all possible nav items</H3>
+                <H3 className="ml-2">{t('anonymous-viewer-all-nav-items')}</H3>
                 <GlobalNavbar {...props} {...allNavItemsProps} />
             </div>
             <div>
-                <H3 className="ml-2">Authenticated user with all possible nav items</H3>
+                <H3 className="ml-2">{t('authenticated-user-all-nav-items')}</H3>
                 <GlobalNavbar {...props} {...allNavItemsProps} {...allAuthenticatedNavItemsProps} />
             </div>
             <div>
-                <H3 className="ml-2">Authenticated user with all possible nav items and search input</H3>
+                <H3 className="ml-2">{t('authenticated-user-all-nav-items-search-input')}</H3>
                 <GlobalNavbar
                     {...props}
                     {...allNavItemsProps}
@@ -118,25 +121,27 @@ export const Default: StoryFn<GlobalNavbarProps> = props => {
 }
 
 export const CodyOnly: StoryFn<GlobalNavbarProps> = props => {
+    const { t } = useTranslation('nav')
+
     window.context.codeSearchEnabledOnInstance = false
     window.context.codyEnabledOnInstance = true
     window.context.codyEnabledForCurrentUser = true
     return (
         <Grid columnCount={1}>
             <div>
-                <H3 className="ml-2">Anonymous viewer</H3>
+                <H3 className="ml-2">{t('anonymous-viewer-duplicate-1')}</H3>
                 <GlobalNavbar {...props} />
             </div>
             <div>
-                <H3 className="ml-2">Anonymous viewer with all possible nav items</H3>
+                <H3 className="ml-2">{t('anonymous-viewer-all-nav-items-duplicate-1')}</H3>
                 <GlobalNavbar {...props} {...allNavItemsProps} />
             </div>
             <div>
-                <H3 className="ml-2">Authenticated user with all possible nav items</H3>
+                <H3 className="ml-2">{t('authenticated-user-all-nav-items-duplicate-1')}</H3>
                 <GlobalNavbar {...props} {...allNavItemsProps} {...allAuthenticatedNavItemsProps} />
             </div>
             <div>
-                <H3 className="ml-2">Authenticated user with all possible nav items and search input</H3>
+                <H3 className="ml-2">{t('authenticated-user-all-nav-items-search-input-duplicate-1')}</H3>
                 <GlobalNavbar
                     {...props}
                     {...allNavItemsProps}
@@ -149,25 +154,27 @@ export const CodyOnly: StoryFn<GlobalNavbarProps> = props => {
 }
 
 export const UserNotLicensedForCody: StoryFn<GlobalNavbarProps> = props => {
+    const { t } = useTranslation('nav')
+
     window.context.codeSearchEnabledOnInstance = true
     window.context.codyEnabledOnInstance = true
     window.context.codyEnabledForCurrentUser = false
     return (
         <Grid columnCount={1}>
             <div>
-                <H3 className="ml-2">Anonymous viewer</H3>
+                <H3 className="ml-2">{t('anonymous-viewer-duplicate-2')}</H3>
                 <GlobalNavbar {...props} />
             </div>
             <div>
-                <H3 className="ml-2">Anonymous viewer with all possible nav items</H3>
+                <H3 className="ml-2">{t('anonymous-viewer-all-nav-items-duplicate-2')}</H3>
                 <GlobalNavbar {...props} {...allNavItemsProps} />
             </div>
             <div>
-                <H3 className="ml-2">Authenticated user with all possible nav items</H3>
+                <H3 className="ml-2">{t('authenticated-user-all-nav-items-duplicate-2')}</H3>
                 <GlobalNavbar {...props} {...allNavItemsProps} {...allAuthenticatedNavItemsProps} />
             </div>
             <div>
-                <H3 className="ml-2">Authenticated user with all possible nav items and search input</H3>
+                <H3 className="ml-2">{t('authenticated-user-all-nav-items-search-input-duplicate-2')}</H3>
                 <GlobalNavbar
                     {...props}
                     {...allNavItemsProps}
@@ -180,25 +187,27 @@ export const UserNotLicensedForCody: StoryFn<GlobalNavbarProps> = props => {
 }
 
 export const CodeSearchOnly: StoryFn<GlobalNavbarProps> = props => {
+    const { t } = useTranslation('nav')
+
     window.context.codeSearchEnabledOnInstance = true
     window.context.codyEnabledOnInstance = false
     window.context.codyEnabledForCurrentUser = false
     return (
         <Grid columnCount={1}>
             <div>
-                <H3 className="ml-2">Anonymous viewer</H3>
+                <H3 className="ml-2">{t('anonymous-viewer-duplicate-3')}</H3>
                 <GlobalNavbar {...props} />
             </div>
             <div>
-                <H3 className="ml-2">Anonymous viewer with all possible nav items</H3>
+                <H3 className="ml-2">{t('anonymous-viewer-all-nav-items-duplicate-3')}</H3>
                 <GlobalNavbar {...props} {...allNavItemsProps} />
             </div>
             <div>
-                <H3 className="ml-2">Authenticated user with all possible nav items</H3>
+                <H3 className="ml-2">{t('authenticated-user-all-nav-items-duplicate-3')}</H3>
                 <GlobalNavbar {...props} {...allNavItemsProps} {...allAuthenticatedNavItemsProps} />
             </div>
             <div>
-                <H3 className="ml-2">Authenticated user with all possible nav items and search input</H3>
+                <H3 className="ml-2">{t('authenticated-user-all-nav-items-search-input-duplicate-3')}</H3>
                 <GlobalNavbar
                     {...props}
                     {...allNavItemsProps}

@@ -2,6 +2,7 @@ import { type FC, useMemo } from 'react'
 
 import { mdiStar, mdiStarOutline } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { renderMarkdown, pluralize } from '@sourcegraph/common'
@@ -31,6 +32,8 @@ function getNotebookDescription(blocks: NotebookFields['blocks']): string {
 }
 
 export const NotebookNode: FC<NotebookNodeProps> = ({ node }: NotebookNodeProps) => {
+    const { t } = useTranslation('notebooks/listPage')
+
     const description = useMemo(() => getNotebookDescription(node.blocks), [node.blocks])
 
     return (
@@ -41,14 +44,15 @@ export const NotebookNode: FC<NotebookNodeProps> = ({ node }: NotebookNodeProps)
                 </Link>
                 {!node.public && (
                     <Badge variant="secondary" pill={true} className={classNames('ml-1', styles.privateBadge)} as="div">
-                        Private
+                        {t('private-label')}
                     </Badge>
                 )}
             </div>
             {description && <div className={classNames('text-muted mt-1', styles.description)}>{description}</div>}
             <div className={classNames('text-muted mt-2 d-flex align-items-center', styles.meta)}>
                 <span className="mr-3">
-                    Created by {node.creator ? <strong>@{node.creator.username}</strong> : <span>unknown user</span>}
+                    {t('created-by-label')}
+                    {node.creator ? <strong>@{node.creator.username}</strong> : <span>{t('unknown-user-label')}</span>}
                 </span>
                 <span className="mr-3">
                     {node.blocks.length} {pluralize('block', node.blocks.length, 'blocks')}
@@ -72,10 +76,12 @@ export const NotebookNode: FC<NotebookNodeProps> = ({ node }: NotebookNodeProps)
                     </span>
                 </span>
                 <span className="mr-3">
-                    Updated <Timestamp date={node.updatedAt} noAbout={true} />
+                    {t('updated-label')}
+                    <Timestamp date={node.updatedAt} noAbout={true} />
                 </span>
                 <span className="mr-3">
-                    Created <Timestamp date={node.createdAt} noAbout={true} />
+                    {t('created-label')}
+                    <Timestamp date={node.createdAt} noAbout={true} />
                 </span>
             </div>
         </li>

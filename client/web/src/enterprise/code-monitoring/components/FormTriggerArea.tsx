@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { mdiCheck, mdiHelpCircle, mdiOpenInNew, mdiRadioboxBlank } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { LazyQueryInputFormControl } from '@sourcegraph/branded'
 import type { QueryState } from '@sourcegraph/shared/src/search'
@@ -99,6 +100,8 @@ export const FormTriggerArea: React.FunctionComponent<React.PropsWithChildren<Tr
     cardLinkClassName,
     isSourcegraphDotCom,
 }) => {
+    const { t } = useTranslation('enterprise/code-monitoring/components')
+
     const [expanded, setExpanded] = useState(startExpanded)
 
     // Focus card when collapsing
@@ -217,14 +220,12 @@ export const FormTriggerArea: React.FunctionComponent<React.PropsWithChildren<Tr
 
     return (
         <>
-            <H3>Trigger</H3>
+            <H3>{t('trigger')}</H3>
             {expanded && (
                 <Card className={classNames(cardClassName, 'p-3')}>
-                    <div className="font-weight-bold">When there are new search results</div>
-                    <span className="text-muted">
-                        This trigger will fire when new search results are found for a given search query.
-                    </span>
-                    <span className="mt-4">Search query</span>
+                    <div className="font-weight-bold">{t('new-search-results-notification')}</div>
+                    <span className="text-muted">{t('new-search-results-trigger-description')}</span>
+                    <span className="mt-4">{t('search-query')}</span>
                     <div>
                         <div className="my-2">
                             <div
@@ -248,7 +249,7 @@ export const FormTriggerArea: React.FunctionComponent<React.PropsWithChildren<Tr
                                 rel="noopener noreferrer"
                                 className="test-preview-link d-flex align-items-center flex-gap-1 my-1"
                             >
-                                Preview results{' '}
+                                {t('preview-results')}
                                 <Icon aria-label="Open in new window" className="ml-1" svgPath={mdiOpenInNew} />
                             </Link>
                         </div>
@@ -260,8 +261,11 @@ export const FormTriggerArea: React.FunctionComponent<React.PropsWithChildren<Tr
                                     hint={`Code monitors support keyword, standard, literal and regex search. The default is ${defaultPatternType}`}
                                     dataTestid="patterntype-checkbox"
                                 >
-                                    Is <Code>patternType:keyword</Code>, <Code>standard</Code>, <Code>literal</Code> or{' '}
-                                    <Code>regexp</Code>
+                                    {t('is')}
+                                    <Code>{t('pattern-type-keyword')}</Code>, <Code>{t('standard')}</Code>,{' '}
+                                    <Code>{t('literal')}</Code>
+                                    {t('or')}
+                                    <Code>{t('regexp')}</Code>
                                 </ValidQueryChecklistItem>
                             </li>
                             <li>
@@ -270,7 +274,11 @@ export const FormTriggerArea: React.FunctionComponent<React.PropsWithChildren<Tr
                                     hint="type:diff targets code present in new commits, while type:commit targets commit messages"
                                     dataTestid="type-checkbox"
                                 >
-                                    Contains a <Code>type:diff</Code> or <Code>type:commit</Code> filter
+                                    {t('contains-a')}
+                                    <Code>{t('type-diff')}</Code>
+                                    {t('or')}
+                                    <Code>{t('type-commit')}</Code>
+                                    {t('filter')}
                                 </ValidQueryChecklistItem>
                             </li>
                             {/* Enforce repo filter on sourcegraph.com because otherwise it's too easy to generate a lot of load */}
@@ -281,13 +289,15 @@ export const FormTriggerArea: React.FunctionComponent<React.PropsWithChildren<Tr
                                         hint="The repo: filter is required to narrow down your search."
                                         dataTestid="repo-checkbox"
                                     >
-                                        Contains a <Code>repo:</Code> filter
+                                        {t('contains-a-repo-filter')}
+                                        <Code>{t('repo')}</Code>
+                                        {t('filter')}
                                     </ValidQueryChecklistItem>
                                 </li>
                             )}
                             <li>
                                 <ValidQueryChecklistItem checked={isValidQuery} dataTestid="valid-checkbox">
-                                    Is a valid search query
+                                    {t('valid-search-query')}
                                 </ValidQueryChecklistItem>
                             </li>
                         </ul>
@@ -301,10 +311,10 @@ export const FormTriggerArea: React.FunctionComponent<React.PropsWithChildren<Tr
                             disabled={!isTriggerQueryComplete}
                             variant="secondary"
                         >
-                            Continue
+                            {t('continue')}
                         </Button>
                         <Button onClick={cancelForm} outline={true} variant="secondary">
-                            Cancel
+                            {t('cancel')}
                         </Button>
                     </div>
                 </Card>
@@ -319,7 +329,7 @@ export const FormTriggerArea: React.FunctionComponent<React.PropsWithChildren<Tr
                 >
                     <div className="d-flex flex-wrap justify-content-between align-items-center w-100">
                         <div>
-                            <VisuallyHidden>Edit trigger: </VisuallyHidden>
+                            <VisuallyHidden>{t('edit-trigger')}</VisuallyHidden>
                             <div
                                 className={classNames(
                                     'font-weight-bold',
@@ -328,7 +338,7 @@ export const FormTriggerArea: React.FunctionComponent<React.PropsWithChildren<Tr
                                         : classNames(cardLinkClassName, styles.triggerLabel)
                                 )}
                             >
-                                When there are new search results
+                                {t('edit-new-search-results-notification')}
                             </div>
                             {triggerCompleted ? (
                                 <Code
@@ -338,25 +348,22 @@ export const FormTriggerArea: React.FunctionComponent<React.PropsWithChildren<Tr
                                     {query}
                                 </Code>
                             ) : (
-                                <span className="text-muted">
-                                    This trigger will fire when new search results are found for a given search query.
-                                </span>
+                                <span className="text-muted">{t('edit-new-search-results-trigger-description')}</span>
                             )}
                         </div>
                         {triggerCompleted && (
                             <Button variant="link" as="div" className="p-0">
-                                Edit
+                                {t('edit')}
                             </Button>
                         )}
                     </div>
                 </Card>
             )}
             <small className="text-muted">
-                {' '}
-                What other events would you like to monitor?{' '}
-                <Link to="mailto:feedback@sourcegraph.com" target="_blank" rel="noopener">
-                    Share feedback.
-                </Link>
+                <Trans
+                    i18nKey="monitor-other-events"
+                    components={{ '0': <Link to="mailto:feedback@sourcegraph.com" target="_blank" rel="noopener" /> }}
+                />
             </small>
         </>
     )

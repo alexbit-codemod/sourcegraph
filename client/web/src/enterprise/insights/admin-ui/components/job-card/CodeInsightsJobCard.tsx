@@ -3,6 +3,7 @@ import { type ChangeEvent, type FC, type PropsWithChildren, useId } from 'react'
 import { mdiAlertCircle, mdiCheckCircle, mdiHelp, mdiMoonNew, mdiTimerSand } from '@mdi/js'
 import classNames from 'classnames'
 import { timeFormat } from 'd3-time-format'
+import { useTranslation } from 'react-i18next'
 
 import { SyntaxHighlightedSearchQuery } from '@sourcegraph/branded'
 import {
@@ -33,6 +34,8 @@ interface CodeInsightsJobCardProps {
 }
 
 export const CodeInsightsJobCard: FC<CodeInsightsJobCardProps> = props => {
+    const { t } = useTranslation('enterprise/insights/admin-ui/components/job-card')
+
     const {
         selected,
         job: {
@@ -81,14 +84,14 @@ export const CodeInsightsJobCard: FC<CodeInsightsJobCardProps> = props => {
                         </H3>
                     )}
 
-                    <small className="text-muted">From</small>
-                    <Pill className={styles.insightJobSubtitle}>{insightViewTitle} insight</Pill>
+                    <small className="text-muted">{t('from-label')}</small>
+                    <Pill className={styles.insightJobSubtitle}>{t('insight-view-title', { insightViewTitle })}</Pill>
                 </header>
 
                 <span className={styles.insightJobMainInfo}>
-                    {percentComplete !== null && <span>{percentComplete}% completed</span>}
+                    {percentComplete !== null && <span>{t('percent-complete', { percentComplete })}</span>}
                     <span className={styles.insightJobQueryBlock}>
-                        Series query:{' '}
+                        {t('series-query-label')}
                         <SyntaxHighlightedSearchQuery query={seriesSearchQuery} className={styles.insightJobQuery} />
                     </span>
                 </span>
@@ -157,12 +160,14 @@ interface InsightJobErrorsProps {
 }
 
 const InsightJobErrors: FC<InsightJobErrorsProps> = props => {
+    const { t } = useTranslation('enterprise/insights/admin-ui/components/job-card')
+
     const { errors } = props
 
     return (
         <Popover>
             <PopoverTrigger as={Button} size="sm" outline={true} variant="danger" className={styles.errorsTrigger}>
-                Show errors log
+                {t('show-errors-log')}
             </PopoverTrigger>
             <PopoverContent className={styles.errorsContent} focusLocked={false}>
                 {errors.map(error => (

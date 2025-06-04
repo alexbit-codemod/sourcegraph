@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import type { UseShowMorePaginationResult } from '../../components/FilteredConnection/hooks/useShowMorePagination'
 import {
     ConnectionError,
@@ -30,25 +32,29 @@ export const RevisionsPopoverTab: React.FunctionComponent<React.PropsWithChildre
     hasNextPage,
     fetchMore,
     inputAriaLabel,
-}) => (
-    <ConnectionPopoverContainer>
-        <ConnectionPopoverForm
-            inputValue={inputValue}
-            onInputChange={event => onInputChange(event.target.value)}
-            autoFocus={true}
-            inputPlaceholder="Find..."
-            compact={true}
-            inputAriaLabel={inputAriaLabel}
-        />
-        <SummaryContainer compact={true}>{query && summary}</SummaryContainer>
-        {error && <ConnectionError errors={[error.message]} compact={true} />}
-        <ConnectionPopoverList>{children}</ConnectionPopoverList>
-        {loading && <ConnectionLoading compact={true} />}
-        {!loading && connection && (
-            <SummaryContainer compact={true}>
-                {!query && summary}
-                {hasNextPage && <ShowMoreButton compact={true} onClick={fetchMore} />}
-            </SummaryContainer>
-        )}
-    </ConnectionPopoverContainer>
-)
+}) => {
+    const { t } = useTranslation('repo/RevisionsPopover')
+
+    return (
+        <ConnectionPopoverContainer>
+            <ConnectionPopoverForm
+                inputValue={inputValue}
+                onInputChange={event => onInputChange(event.target.value)}
+                autoFocus={true}
+                inputPlaceholder={t('find-message')}
+                compact={true}
+                inputAriaLabel={inputAriaLabel}
+            />
+            <SummaryContainer compact={true}>{query && summary}</SummaryContainer>
+            {error && <ConnectionError errors={[error.message]} compact={true} />}
+            <ConnectionPopoverList>{children}</ConnectionPopoverList>
+            {loading && <ConnectionLoading compact={true} />}
+            {!loading && connection && (
+                <SummaryContainer compact={true}>
+                    {!query && summary}
+                    {hasNextPage && <ShowMoreButton compact={true} onClick={fetchMore} />}
+                </SummaryContainer>
+            )}
+        </ConnectionPopoverContainer>
+    )
+}

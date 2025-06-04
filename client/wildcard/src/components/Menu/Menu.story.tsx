@@ -1,5 +1,6 @@
 import type { Meta, StoryFn } from '@storybook/react'
 import { noop } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { BrandedStory } from '../../stories/BrandedStory'
 import { Link } from '../Link'
@@ -22,26 +23,30 @@ const config: Meta = {
 
 export default config
 
-export const MenuExample: StoryFn = () => (
-    <Menu>
-        <MenuButton variant="primary" outline={true}>
-            Actions <span aria-hidden={true}>▾</span>
-        </MenuButton>
+export const MenuExample: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Menu')
 
-        <MenuList>
-            <MenuHeader>This is a menu</MenuHeader>
-            <MenuItem onSelect={() => alert('Clicked!')}>Click me</MenuItem>
-            <MenuItem onSelect={() => alert('Clicked!')}>Alternative action</MenuItem>
-            <MenuItem onSelect={noop} disabled={true}>
-                I'm disabled
-            </MenuItem>
-            <MenuDivider />
-            <MenuLink as={Link} to="https://www.example.com">
-                Go somewhere
-            </MenuLink>
-            <MenuLink disabled={true} as={Link} to="https://www.example.com">
-                Disabled link
-            </MenuLink>
-        </MenuList>
-    </Menu>
-)
+    return (
+        <Menu>
+            <MenuButton variant="primary" outline={true}>
+                <Trans i18nKey="actions-dropdown" components={{ '0': <span aria-hidden={true} /> }} />
+            </MenuButton>
+
+            <MenuList>
+                <MenuHeader>{t('menu-description')}</MenuHeader>
+                <MenuItem onSelect={() => alert('Clicked!')}>{t('click-button')}</MenuItem>
+                <MenuItem onSelect={() => alert('Clicked!')}>{t('alternative-action')}</MenuItem>
+                <MenuItem onSelect={noop} disabled={true}>
+                    {t('disabled-message')}
+                </MenuItem>
+                <MenuDivider />
+                <MenuLink as={Link} to="https://www.example.com">
+                    {t('go-somewhere')}
+                </MenuLink>
+                <MenuLink disabled={true} as={Link} to="https://www.example.com">
+                    {t('disabled-link')}
+                </MenuLink>
+            </MenuList>
+        </Menu>
+    )
+}

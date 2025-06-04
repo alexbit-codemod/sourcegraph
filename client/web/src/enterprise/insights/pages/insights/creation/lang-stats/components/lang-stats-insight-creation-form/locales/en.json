@@ -1,0 +1,7 @@
+{
+  "repository-label": "Repository",
+  "example-repository-url": "Example: github.com/sourcegraph/sourcegraph",
+  "title-label": "Title",
+  "example-title-format": "Example: Language Usage in RepositoryName",
+  "threshold-other-category": "Threshold of ‘Other’ category"
+}

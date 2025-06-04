@@ -1,0 +1,6 @@
+{
+  "product-status-badges": "Product status badges",
+  "product-badges-description": "We often want to label different parts of our products with badges to ensure they are accurately presented to users.",
+  "linked-product-status-badges": "Linked product status badges",
+  "linked-product-badges-description": "In some cases, we will want to automatically link to a relevant docs page for a particular status. This is also possible!"
+}

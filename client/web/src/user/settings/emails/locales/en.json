@@ -1,0 +1,13 @@
+{
+  "emails-title": "Emails",
+  "email-verification-not-configured": "Sourcegraph is not configured to send email verifications. Newly added email addresses must be manually verified by a site admin.",
+  "no-emails-message": "No emails",
+  "save-button": "Save",
+  "add-email-address": "Add email address",
+  "add-action": "Add",
+  "verified-status": "Verified",
+  "not-verified": "Not verified",
+  "primary-label": "Primary",
+  "resend-verification-email": "Resend verification email",
+  "remove-action": "Remove"
+}

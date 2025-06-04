@@ -1,0 +1,7 @@
+{
+  "approximate-count-limit-warning": "This is an approximate count of the results returned because you hit a limit. Try increasing the limit using the",
+  "count-label": "count:",
+  "filter-instructions": " filter in the search query, or select",
+  "count-all-filter": "count:all",
+  "filter-list-instructions": " from the filter list."
+}

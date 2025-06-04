@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import { Container, H3, Link, ProductStatusBadge, Text } from '@sourcegraph/wildcard'
@@ -52,6 +53,8 @@ interface CommitSigningIntegrationsProps {
 export const CommitSigningIntegrations: React.FunctionComponent<
     React.PropsWithChildren<CommitSigningIntegrationsProps>
 > = ({ connectionResult, readOnly }) => {
+    const { t } = useTranslation('enterprise/batches/settings')
+
     const { loading, hasNextPage, fetchMore, connection, error, refetchAll } = connectionResult
 
     const location = useLocation()
@@ -65,16 +68,16 @@ export const CommitSigningIntegrations: React.FunctionComponent<
     return (
         <Container>
             <H3>
-                Commit signing integrations
+                {t('commit-signing-integrations')}
                 <ProductStatusBadge status="beta" className="ml-2" />
             </H3>
             <Text>
-                Connect GitHub Apps to enable Batch Changes to sign commits for your changesets.{' '}
+                {t('connect-github-apps-batch-changes')}
                 {readOnly ? (
                     'Contact your site admin to manage connections.'
                 ) : (
                     <Link to="/help/admin/config/batch_changes#commit-signing-for-github" target="_blank">
-                        See how Batch Changes GitHub App configuration works.
+                        {t('batch-changes-github-app-configuration')}
                     </Link>
                 )}
             </Text>
@@ -87,7 +90,7 @@ export const CommitSigningIntegrations: React.FunctionComponent<
                         variant="success"
                         partialStorageKey={`batch-changes-commit-signing-integration-success-${appName}`}
                     >
-                        GitHub App {appName?.length ? `"${appName}" ` : ''}successfully connected.
+                        {t('github-app-successfully-connected', { appName, appNameLength: appName?.length })}
                     </DismissibleAlert>
                 )}
                 {shouldShowError && <GitHubAppFailureAlert error={setupError} />}
@@ -118,9 +121,7 @@ export const CommitSigningIntegrations: React.FunctionComponent<
                     </SummaryContainer>
                 )}
             </ConnectionContainer>
-            <Text className="mb-0">
-                Code host not present? Batch Changes only supports commit signing on GitHub code hosts today.
-            </Text>
+            <Text className="mb-0">{t('code-host-support-commit-signing')}</Text>
         </Container>
     )
 }

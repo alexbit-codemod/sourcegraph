@@ -1,0 +1,6 @@
+{
+  "new-url-detected": "New URL detected",
+  "sourcegraph-url-changed": "Your Sourcegraph instance URL has changed.",
+  "reload-vs-code-for-sourcegraph": "Please reload VS Code to use the Sourcegraph extension.",
+  "reload-vs-code-button": "Reload VS Code"
+}

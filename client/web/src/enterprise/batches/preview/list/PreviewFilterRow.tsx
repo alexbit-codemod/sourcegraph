@@ -1,5 +1,6 @@
 import React, { type FC, useCallback, useContext, useEffect, useRef } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Input, Form } from '@sourcegraph/wildcard'
@@ -17,6 +18,8 @@ export interface PreviewFilters {
 export interface PreviewFilterRowProps {}
 
 export const PreviewFilterRow: FC<PreviewFilterRowProps> = props => {
+    const { t } = useTranslation('enterprise/batches/preview/list')
+
     const location = useLocation()
     const navigate = useNavigate()
 
@@ -91,7 +94,7 @@ export const PreviewFilterRow: FC<PreviewFilterRowProps> = props => {
                         type="search"
                         ref={searchElement}
                         defaultValue={filters.search ?? undefined}
-                        placeholder="Search title and repository name"
+                        placeholder={t('search-title-repository-name')}
                         aria-label="Search title and repository name"
                     />
                 </Form>
@@ -102,7 +105,7 @@ export const PreviewFilterRow: FC<PreviewFilterRowProps> = props => {
                     <div className="col mb-2 ml-0 ml-md-2">
                         <ChangesetFilter<ChangesetState>
                             values={Object.values(ChangesetState)}
-                            label="Current state"
+                            label={t('current-state')}
                             selected={filters.currentState ?? undefined}
                             onChange={setCurrentState}
                             className="w-100"
@@ -111,7 +114,7 @@ export const PreviewFilterRow: FC<PreviewFilterRowProps> = props => {
                     <div className="col mb-2 ml-2">
                         <ChangesetFilter<ChangesetSpecOperation>
                             values={Object.values(ChangesetSpecOperation)}
-                            label="Actions"
+                            label={t('actions')}
                             selected={filters.action ?? undefined}
                             onChange={setAction}
                             className="w-100"

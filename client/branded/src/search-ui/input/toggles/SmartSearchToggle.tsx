@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { mdiClose, mdiRadioboxBlank, mdiRadioboxMarked } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import {
     Button,
@@ -79,6 +80,8 @@ export const SmartSearchToggle: React.FunctionComponent<SmartSearchToggleProps> 
 const SmartSearchToggleMenu: React.FunctionComponent<
     Pick<SmartSearchToggleProps, 'onSelect' | 'isActive'> & { closeMenu: () => void }
 > = ({ onSelect, isActive, closeMenu }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/input/toggles')
+
     const [visibleIsEnabled, setVisibleIsEnabled] = useState(isActive)
     useEffect(() => {
         setVisibleIsEnabled(isActive)
@@ -104,7 +107,7 @@ const SmartSearchToggleMenu: React.FunctionComponent<
         >
             <div className="d-flex align-items-center px-3 py-2">
                 <H4 as={H2} id="smart-search-popover-header" className="m-0 flex-1">
-                    Smart Search
+                    {t('smart-search-title')}
                 </H4>
                 <Button onClick={() => closeMenu()} variant="icon" aria-label="Close">
                     <Icon aria-hidden={true} svgPath={mdiClose} />
@@ -113,14 +116,14 @@ const SmartSearchToggleMenu: React.FunctionComponent<
             <RadioItem
                 value={true}
                 header="Enable"
-                description="Suggest variations of your query to find more results that may relate."
+                description={t('suggest-variations-query')}
                 isChecked={visibleIsEnabled}
                 onSelect={onChange}
             />
             <RadioItem
                 value={false}
                 header="Disable"
-                description="Only show results that precisely match your query."
+                description={t('exact-match-results')}
                 isChecked={!visibleIsEnabled}
                 onSelect={onChange}
             />

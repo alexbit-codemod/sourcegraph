@@ -1,0 +1,18 @@
+{
+  "unmatched-status": "Unmatched",
+  "toggle-details": {
+    "true": "Hide",
+    "false": "Show"
+  },
+  "request-action": "Request",
+  "recent-error": "recent error",
+  "external-service": "external service",
+  "only-errors": "Only errors",
+  "dog-sound-1": "dog",
+  "dog-sound-2": "dog",
+  "wolf-sound-1": "wolf",
+  "dog-sound-3": "dog",
+  "dog-sound-4": "dog",
+  "wolf-sound-2": "wolf",
+  "dog-sound-5": "dog"
+}

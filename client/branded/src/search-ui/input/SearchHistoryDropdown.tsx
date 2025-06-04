@@ -10,6 +10,7 @@ import React, {
 
 import { mdiClockOutline } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { pluralize } from '@sourcegraph/common'
 import type { RecentSearch } from '@sourcegraph/shared/src/settings/temporary/recentSearches'
@@ -98,6 +99,8 @@ interface SearchHistoryEntriesProps {
 }
 
 const SearchHistoryEntries: React.FunctionComponent<SearchHistoryEntriesProps> = ({ recentSearches, onSelect }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/input')
+
     const { isOpen } = usePopoverContext()
     const [selectedIndex, setSelectedIndex] = useState(0)
     const selectedIndexRef = useRef(selectedIndex)
@@ -146,7 +149,7 @@ const SearchHistoryEntries: React.FunctionComponent<SearchHistoryEntriesProps> =
     }
 
     if (recentSearches.length === 0) {
-        return <div className="text-muted px-3 py-2">Your recent searches will appear here</div>
+        return <div className="text-muted px-3 py-2">{t('recent-searches')}</div>
     }
 
     return (

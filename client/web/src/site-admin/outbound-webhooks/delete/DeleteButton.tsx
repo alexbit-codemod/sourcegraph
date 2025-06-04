@@ -2,6 +2,7 @@ import type { FC } from 'react'
 
 import { mdiAlertCircle, mdiDelete } from '@mdi/js'
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { useMutation } from '@sourcegraph/http-client'
 import { Button, Icon, LoadingSpinner, Tooltip } from '@sourcegraph/wildcard'
@@ -16,6 +17,8 @@ export interface DeleteButtonProps {
 }
 
 export const DeleteButton: FC<DeleteButtonProps> = ({ className, id, onDeleted }) => {
+    const { t } = useTranslation('site-admin/outbound-webhooks/delete')
+
     const [deleteOutboundWebhook, { error, loading }] = useMutation<
         DeleteOutboundWebhookResult,
         DeleteOutboundWebhookVariables
@@ -51,7 +54,8 @@ export const DeleteButton: FC<DeleteButtonProps> = ({ className, id, onDeleted }
                 deleteOutboundWebhook().catch(noop)
             }}
         >
-            <Icon aria-hidden={true} svgPath={mdiDelete} /> Delete
+            <Icon aria-hidden={true} svgPath={mdiDelete} />
+            {t('delete-action')}
         </Button>
     )
 }

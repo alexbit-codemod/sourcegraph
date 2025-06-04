@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 
 import { mdiMenuDown } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import type { SearchContextFields } from '@sourcegraph/shared/src/graphql-operations'
 import { Menu, MenuButton, MenuDivider, MenuItem, MenuList, Icon, Tooltip } from '@sourcegraph/wildcard'
@@ -46,6 +47,8 @@ export interface SearchContextOwnerDropdownProps {
 export const SearchContextOwnerDropdown: React.FunctionComponent<
     React.PropsWithChildren<SearchContextOwnerDropdownProps>
 > = ({ isDisabled, authenticatedUser, selectedNamespace, setSelectedNamespace }) => {
+    const { t } = useTranslation('enterprise/searchContexts')
+
     const selectedUserNamespace = useMemo(() => getSelectedNamespaceFromUser(authenticatedUser), [authenticatedUser])
     return (
         <Menu>
@@ -62,7 +65,7 @@ export const SearchContextOwnerDropdown: React.FunctionComponent<
             </Tooltip>
             <MenuList className={styles.menuList}>
                 <MenuItem onSelect={() => setSelectedNamespace(selectedUserNamespace)}>
-                    @{authenticatedUser.username} <span className="text-muted">(you)</span>
+                    @{authenticatedUser.username} <span className="text-muted">{t('you-fragment')}</span>
                 </MenuItem>
                 {authenticatedUser.organizations.nodes.map(org => (
                     <MenuItem
@@ -76,8 +79,8 @@ export const SearchContextOwnerDropdown: React.FunctionComponent<
                     <>
                         <MenuDivider />
                         <MenuItem onSelect={() => setSelectedNamespace({ id: null, type: 'global-owner', name: '' })}>
-                            <div>Global owner</div>
-                            <div className="text-muted">Available to everyone.</div>
+                            <div>{t('global-owner')}</div>
+                            <div className="text-muted">{t('available-to-everyone')}</div>
                         </MenuItem>
                     </>
                 )}

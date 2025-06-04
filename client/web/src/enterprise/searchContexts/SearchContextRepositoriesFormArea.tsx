@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 
 import { mdiCheck } from '@mdi/js'
 import * as jsonc from 'jsonc-parser'
+import { useTranslation } from 'react-i18next'
 import type { Observable } from 'rxjs'
 import { delay, mergeMap, startWith, tap } from 'rxjs/operators'
 
@@ -84,6 +85,8 @@ export interface SearchContextRepositoriesFormAreaProps extends TelemetryProps, 
 export const SearchContextRepositoriesFormArea: React.FunctionComponent<
     React.PropsWithChildren<SearchContextRepositoriesFormAreaProps>
 > = ({ isLightTheme, telemetryService, repositories, onChange, validateRepositories, telemetryRecorder }) => {
+    const { t } = useTranslation('enterprise/searchContexts')
+
     const [hasTestedConfig, setHasTestedConfig] = useState(false)
     const [triggerTestConfig, triggerTestConfigErrors] = useEventObservable(
         useCallback(
@@ -145,7 +148,7 @@ export const SearchContextRepositoriesFormArea: React.FunctionComponent<
             />
             {triggerTestConfigErrors && triggerTestConfigErrors !== LOADING && triggerTestConfigErrors.length > 0 && (
                 <Alert className="my-2" variant="danger">
-                    <strong>The following problems were found:</strong>
+                    <strong>{t('problems-found')}</strong>
                     <ul className="mt-2">
                         {triggerTestConfigErrors.map(error => (
                             <li key={error.message}>{error.message}</li>
@@ -172,7 +175,7 @@ export const SearchContextRepositoriesFormArea: React.FunctionComponent<
                         >
                             <Icon svgPath={mdiCheck} inline={false} aria-hidden={true} />{' '}
                         </Icon>
-                        <span>Valid configuration</span>
+                        <span>{t('valid-configuration')}</span>
                     </span>
                 ) : (
                     testConfigButtonText

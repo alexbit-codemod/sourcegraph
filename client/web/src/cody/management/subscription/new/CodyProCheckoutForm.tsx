@@ -5,6 +5,7 @@ import { AddressElement, useStripe, useElements, CardNumberElement } from '@stri
 import type { Stripe, StripeCardNumberElement } from '@stripe/stripe-js'
 import type { StripeAddressElementChangeEvent } from '@stripe/stripe-js/dist/stripe-js/elements/address'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { pluralize } from '@sourcegraph/common'
@@ -96,6 +97,8 @@ export const CodyProCheckoutForm: React.FunctionComponent<CodyProCheckoutFormPro
     subscription,
     customerEmail,
 }) => {
+    const { t } = useTranslation('cody/management/subscription/new')
+
     const stripe = useStripe()
     const elements = useElements()
     const navigate = useNavigate()
@@ -283,10 +286,12 @@ export const CodyProCheckoutForm: React.FunctionComponent<CodyProCheckoutFormPro
         <>
             {initialSeatCount + planChange.seatCountDiff >= 30 && (
                 <CodyAlert variant="purple">
-                    <H3>Explore an enterprise plan</H3>
+                    <H3>{t('explore-enterprise-plan')}</H3>
                     <Text className="mb-0">
-                        Team plans are limited to 50 users.{' '}
-                        <Link to="https://sourcegraph.com/contact/sales/">Contact sales</Link> to learn more.
+                        <Trans
+                            i18nKey="team-plans-limited-to-50-users"
+                            components={{ '0': <Link to="https://sourcegraph.com/contact/sales/" /> }}
+                        />
                     </Text>
                 </CodyAlert>
             )}
@@ -309,7 +314,8 @@ export const CodyProCheckoutForm: React.FunctionComponent<CodyProCheckoutFormPro
                     </div>
                     <div>
                         <H2 className="font-medium">
-                            Purchase {planChange.seatCountDiff} {pluralize('seat', planChange.seatCountDiff)}
+                            {t('purchase-button')}
+                            {planChange.seatCountDiff} {pluralize('seat', planChange.seatCountDiff)}
                         </H2>
                         {addSeats ? (
                             <Form onSubmit={handlePlanChangeSubmit}>
@@ -325,7 +331,7 @@ export const CodyProCheckoutForm: React.FunctionComponent<CodyProCheckoutFormPro
                                             outline={true}
                                             className="p-0 m-0 mt-2 mb-2 border-0 w-100 font-weight-normal d-flex justify-content-between align-items-center"
                                         >
-                                            <H4 className="m-0">Show credit card and billing info</H4>
+                                            <H4 className="m-0">{t('show-credit-card-billing-info')}</H4>
                                             <Icon
                                                 aria-hidden={true}
                                                 svgPath={
@@ -364,14 +370,16 @@ export const CodyProCheckoutForm: React.FunctionComponent<CodyProCheckoutFormPro
 
                                 <div>
                                     <Text size="small" className={styles.disclaimer}>
-                                        By clicking the button, you agree to the{' '}
-                                        <Link to="/terms/cloud">Terms of Service</Link> and acknowledge that the{' '}
-                                        <Link to="/terms/privacy">Privacy Statement</Link> applies. Your subscription
-                                        will renew automatically by charging your payment method on file until you{' '}
-                                        <Link to="/docs/cody/usage-and-pricing#downgrading-from-pro-to-free">
-                                            cancel
-                                        </Link>
-                                        . You may cancel at any time prior to the next billing cycle.
+                                        <Trans
+                                            i18nKey="terms-of-service-agreement"
+                                            components={{
+                                                '0': <Link to="/terms/cloud" />,
+                                                '1': <Link to="/terms/privacy" />,
+                                                '2': (
+                                                    <Link to="/docs/cody/usage-and-pricing#downgrading-from-pro-to-free" />
+                                                ),
+                                            }}
+                                        />
                                     </Text>
                                 </div>
                             </Form>
@@ -379,7 +387,7 @@ export const CodyProCheckoutForm: React.FunctionComponent<CodyProCheckoutFormPro
                             <Form onSubmit={handleSubscribeSubmit}>
                                 <StripeCardDetails className="mb-4" onFocus={() => setErrorMessage('')} />
 
-                                <Text className="mb-2 font-medium text-sm">Email</Text>
+                                <Text className="mb-2 font-medium text-sm">{t('email-label')}</Text>
                                 <Text className="ml-3 mb-4 font-medium text-sm">{customerEmail || ''} </Text>
 
                                 <StripeAddressElement onFocus={() => setErrorMessage('')} />
@@ -403,14 +411,16 @@ export const CodyProCheckoutForm: React.FunctionComponent<CodyProCheckoutFormPro
 
                                 <div>
                                     <Text size="small" className={styles.disclaimer}>
-                                        By clicking the button, you agree to the{' '}
-                                        <Link to="/terms/cloud">Terms of Service</Link> and acknowledge that the{' '}
-                                        <Link to="/terms/privacy">Privacy Statement</Link> applies. Your subscription
-                                        will renew automatically by charging your payment method on file until you{' '}
-                                        <Link to="/docs/cody/usage-and-pricing#downgrading-from-pro-to-free">
-                                            cancel
-                                        </Link>
-                                        . You may cancel at any time prior to the next billing cycle.
+                                        <Trans
+                                            i18nKey="subscription-renewal-agreement"
+                                            components={{
+                                                '0': <Link to="/terms/cloud" />,
+                                                '1': <Link to="/terms/privacy" />,
+                                                '2': (
+                                                    <Link to="/docs/cody/usage-and-pricing#downgrading-from-pro-to-free" />
+                                                ),
+                                            }}
+                                        />
                                     </Text>
                                 </div>
                             </Form>
@@ -428,60 +438,71 @@ const SeatCountSelector: React.FunctionComponent<{
     min: number
     max: number
     setCount: (count: number) => void
-}> = ({ header, current, min, max, setCount }) => (
-    <>
-        <H2 className="font-medium mb-3c">{header}</H2>
-        <div className="d-flex flex-row align-items-center pb-3c mb-3c border-bottom">
-            <div className="flex-1">${SEAT_PRICE} per seat / month</div>
-            <Button
-                disabled={current === min}
-                onClick={() => setCount(current > min ? current - 1 : current)}
-                className="px-3c py-2 border-0"
-            >
-                <Icon aria-hidden={true} svgPath={mdiMinusThick} className={styles.plusMinusButton} />
-            </Button>
-            <div className={styles.seatCountSelectorValue}>{current}</div>
-            <Button
-                disabled={current === max}
-                onClick={() => setCount(current < max ? current + 1 : current)}
-                className="px-3c py-2 border-0"
-            >
-                <Icon aria-hidden={true} svgPath={mdiPlusThick} className={styles.plusMinusButton} />
-            </Button>
-        </div>
-    </>
-)
+}> = ({ header, current, min, max, setCount }) => {
+    const { t } = useTranslation('cody/management/subscription/new')
+
+    return (
+        <>
+            <H2 className="font-medium mb-3c">{header}</H2>
+            <div className="d-flex flex-row align-items-center pb-3c mb-3c border-bottom">
+                <div className="flex-1">{t('seat-price-per-month', { SEAT_PRICE })}</div>
+                <Button
+                    disabled={current === min}
+                    onClick={() => setCount(current > min ? current - 1 : current)}
+                    className="px-3c py-2 border-0"
+                >
+                    <Icon aria-hidden={true} svgPath={mdiMinusThick} className={styles.plusMinusButton} />
+                </Button>
+                <div className={styles.seatCountSelectorValue}>{current}</div>
+                <Button
+                    disabled={current === max}
+                    onClick={() => setCount(current < max ? current + 1 : current)}
+                    className="px-3c py-2 border-0"
+                >
+                    <Icon aria-hidden={true} svgPath={mdiPlusThick} className={styles.plusMinusButton} />
+                </Button>
+            </div>
+        </>
+    )
+}
 
 const Summary: React.FunctionComponent<{
     addSeats: boolean
     isLoading: boolean
     initialSeatCount: number
     change: TeamSizeChange
-}> = ({ addSeats, isLoading, initialSeatCount, change }) => (
-    <>
-        <H2 className="font-medium mb-3c">Summary</H2>
-        {addSeats && (
-            <PriceOrSpinner price={change.priceDueNow} isLoading={isLoading}>
-                Pro-rated cost for this month
+}> = ({ addSeats, isLoading, initialSeatCount, change }) => {
+    const { t } = useTranslation('cody/management/subscription/new')
+
+    return (
+        <>
+            <H2 className="font-medium mb-3c">{t('summary-label')}</H2>
+            {addSeats && (
+                <PriceOrSpinner price={change.priceDueNow} isLoading={isLoading}>
+                    {t('pro-rated-cost-this-month')}
+                </PriceOrSpinner>
+            )}
+            <PriceOrSpinner price={change.monthlyPriceDiff} isLoading={isLoading}>
+                {addSeats ? 'Adding ' : ''} {change.seatCountDiff} {pluralize('seat', change.seatCountDiff)}
             </PriceOrSpinner>
-        )}
-        <PriceOrSpinner price={change.monthlyPriceDiff} isLoading={isLoading}>
-            {addSeats ? 'Adding ' : ''} {change.seatCountDiff} {pluralize('seat', change.seatCountDiff)}
-        </PriceOrSpinner>
-        {addSeats && (
-            <PriceOrSpinner price={change.newMonthlyPrice} isLoading={isLoading}>
-                New total for {initialSeatCount + change.seatCountDiff}{' '}
-                {pluralize('seat', initialSeatCount + change.seatCountDiff)}
-            </PriceOrSpinner>
-        )}
-        {addSeats && (
-            <Text size="small" className={styles.disclaimer}>
-                New seats are pro-rated this month, and will be charged at the full rate{' '}
-                {change.dueDate ? `on ${new Date(change.dueDate).toLocaleDateString()}` : 'next month'}.
-            </Text>
-        )}
-    </>
-)
+            {addSeats && (
+                <PriceOrSpinner price={change.newMonthlyPrice} isLoading={isLoading}>
+                    {t('new-total-for')}
+                    {initialSeatCount + change.seatCountDiff}{' '}
+                    {pluralize('seat', initialSeatCount + change.seatCountDiff)}
+                </PriceOrSpinner>
+            )}
+            {addSeats && (
+                <Text size="small" className={styles.disclaimer}>
+                    {t('new-seats-pro-rated', {
+                        newDateChangeDueDateToLocaleDateString: new Date(change.dueDate).toLocaleDateString(),
+                        changeDueDate: change.dueDate,
+                    })}
+                </Text>
+            )}
+        </>
+    )
+}
 
 interface PriceOrSpinnerProps {
     price: number
@@ -489,15 +510,19 @@ interface PriceOrSpinnerProps {
     children: React.ReactNode
 }
 
-const PriceOrSpinner: React.FunctionComponent<PriceOrSpinnerProps> = ({ price, isLoading, children }) => (
-    <div className="d-flex flex-row align-items-center mb-4">
-        <div className="flex-1">{children}</div>
-        <div className={styles.price}>
-            {isLoading ? (
-                <LoadingSpinner className={styles.lineHeightLoadingSpinner} />
-            ) : (
-                <strong>${price} / month</strong>
-            )}
+const PriceOrSpinner: React.FunctionComponent<PriceOrSpinnerProps> = ({ price, isLoading, children }) => {
+    const { t } = useTranslation('cody/management/subscription/new')
+
+    return (
+        <div className="d-flex flex-row align-items-center mb-4">
+            <div className="flex-1">{children}</div>
+            <div className={styles.price}>
+                {isLoading ? (
+                    <LoadingSpinner className={styles.lineHeightLoadingSpinner} />
+                ) : (
+                    <strong>{t('price-per-month', { price })}</strong>
+                )}
+            </div>
         </div>
-    </div>
-)
+    )
+}

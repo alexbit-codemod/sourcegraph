@@ -1,0 +1,6 @@
+{
+  "add-to-query": "<0>add</0> to your query",
+  "go-to-suggestion": "<0>go to</0> the suggestion",
+  "execute-command": "<0>execute</0> the command",
+  "press-shortcut-to-info": "Press <0>{{shortcutDisplayNameShortcut}}</0> to {{info}}."
+}

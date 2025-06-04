@@ -1,0 +1,8 @@
+{
+  "status-label": "Status:",
+  "select-filter-placeholder": "Select filter...",
+  "all-filters-selected-message": "All filters are selected",
+  "no-options-message": "No options",
+  "state-label": "State",
+  "queue-position-label": "Queue position"
+}

@@ -1,6 +1,7 @@
 import { Suspense, type HTMLAttributes, type ReactElement, type MouseEvent } from 'react'
 
 import { mdiPlay } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 import { useDebouncedCallback } from 'use-debounce'
 
 import { pluralize } from '@sourcegraph/common'
@@ -88,6 +89,8 @@ interface AggregationChartCardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export function AggregationChartCard(props: AggregationChartCardProps): ReactElement | null {
+    const { t } = useTranslation('search/results/components/aggregation/components/aggregation-chart-card')
+
     const {
         data,
         error,
@@ -107,7 +110,7 @@ export function AggregationChartCard(props: AggregationChartCardProps): ReactEle
     if (loading) {
         return (
             <AggregationTextContent size={size} className={className}>
-                {showLoading && <span className={styles.loading}>Loading</span>}
+                {showLoading && <span className={styles.loading}>{t('loading-message')}</span>}
             </AggregationTextContent>
         )
     }
@@ -129,11 +132,11 @@ export function AggregationChartCard(props: AggregationChartCardProps): ReactEle
                 {aggregationError.type === NotAvailableReasonType.TIMEOUT_EXTENSION_AVAILABLE ? (
                     <Button variant="link" size="sm" className={styles.errorButton} onClick={onExtendTimeout}>
                         <Icon aria-hidden={true} svgPath={mdiPlay} className="mr-1" />
-                        Run aggregation
+                        {t('run-aggregation-message')}
                     </Button>
                 ) : (
                     <>
-                        We couldn’t provide an aggregation for this query.{' '}
+                        {t('aggregation-error-message')}
                         <ErrorMessage error={aggregationError.error} />{' '}
                         <Link to="/help/code_insights/explanations/search_results_aggregations">Learn more</Link>
                     </>
@@ -153,7 +156,7 @@ export function AggregationChartCard(props: AggregationChartCardProps): ReactEle
     if (aggregationData.length === 0) {
         return (
             <AggregationTextContent size={size} className={className}>
-                No data to display
+                {t('no-data-display-message')}
             </AggregationTextContent>
         )
     }

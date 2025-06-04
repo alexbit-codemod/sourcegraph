@@ -2,6 +2,7 @@ import React from 'react'
 
 import { mdiClose } from '@mdi/js'
 import { omit } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { Toggle } from '@sourcegraph/branded/src/components/Toggle'
 import { isMacPlatform } from '@sourcegraph/common'
@@ -38,6 +39,8 @@ export const KeyboardShortcutsHelp: React.FunctionComponent<React.PropsWithChild
     isOpen,
     onDismiss,
 }) => {
+    const { t } = useTranslation('components/KeyboardShortcutsHelp')
+
     const [characterKeyShortcutsEnabled, setCharacterKeyShortcutsEnabled] = useTemporarySetting(
         'characterKeyShortcuts.enabled',
         true
@@ -52,7 +55,7 @@ export const KeyboardShortcutsHelp: React.FunctionComponent<React.PropsWithChild
             containerClassName={styles.modalContainer}
         >
             <div className={styles.modalHeader}>
-                <H4 id={MODAL_LABEL_ID}>Keyboard shortcuts</H4>
+                <H4 id={MODAL_LABEL_ID}>{t('keyboard-shortcuts')}</H4>
                 <Button variant="icon" aria-label="Close" onClick={onDismiss}>
                     <Icon aria-hidden={true} svgPath={mdiClose} />
                 </Button>
@@ -82,10 +85,10 @@ export const KeyboardShortcutsHelp: React.FunctionComponent<React.PropsWithChild
                     <Toggle
                         value={characterKeyShortcutsEnabled}
                         onToggle={() => setCharacterKeyShortcutsEnabled(previous => !previous)}
-                        title="Toggle character key shortcuts"
+                        title={t('toggle-character-key-shortcuts')}
                         className="mr-2"
                     />
-                    Character key shortcuts {characterKeyShortcutsEnabled ? 'enabled ' : 'disabled'}
+                    {t('character-key-shortcuts-status', { characterKeyShortcutsEnabled })}
                 </Label>
             </div>
         </Modal>

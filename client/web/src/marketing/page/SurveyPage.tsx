@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { useParams, useLocation } from 'react-router-dom'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -27,6 +28,8 @@ const getScoreFromString = (score?: string): number | undefined =>
     score ? Math.max(0, Math.min(10, Math.round(+score))) : undefined
 
 export const SurveyPage: React.FunctionComponent<React.PropsWithChildren<SurveyPageProps>> = props => {
+    const { t } = useTranslation('marketing/page')
+
     const location = useLocation()
     const matchParameters = useParams<{ score?: string }>()
     const score = props.forceScore || matchParameters.score
@@ -39,11 +42,11 @@ export const SurveyPage: React.FunctionComponent<React.PropsWithChildren<SurveyP
     if (score === 'thanks') {
         return (
             <div className={styles.surveyPage}>
-                <PageTitle title="Thanks" />
+                <PageTitle title={t('thanks-message')} />
                 <HeroPage
-                    title="Thanks for the feedback!"
+                    title={t('thanks-feedback-message')}
                     body={<TweetFeedback score={location.state.score} feedback={location.state.feedback} />}
-                    cta={<FeedbackText headerText="Anything else?" />}
+                    cta={<FeedbackText headerText={t('anything-else-question')} />}
                 />
             </div>
         )
@@ -51,9 +54,9 @@ export const SurveyPage: React.FunctionComponent<React.PropsWithChildren<SurveyP
 
     return (
         <div className={styles.surveyPage}>
-            <PageTitle title="Almost there..." />
+            <PageTitle title={t('almost-there-message')} />
             <HeroPage
-                title="Almost there..."
+                title={t('almost-there-follow-up')}
                 cta={
                     <SurveyForm
                         score={getScoreFromString(score)}

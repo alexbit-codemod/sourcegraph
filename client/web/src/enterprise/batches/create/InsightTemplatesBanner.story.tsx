@@ -1,4 +1,5 @@
 import type { Meta, StoryFn, Decorator } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { WebStory } from '../../../components/WebStory'
 
@@ -14,13 +15,25 @@ const config: Meta = {
 export default config
 
 export const CreatingNewBatchChangeFromInsight: StoryFn = () => (
-    <WebStory>{props => <InsightTemplatesBanner {...props} insightTitle="My Go Insight" type="create" />}</WebStory>
+    <WebStory>
+        {props => {
+            const { t } = useTranslation('enterprise/batches/create')
+
+            return <InsightTemplatesBanner {...props} insightTitle={t('my-go-insight-1')} type="create" />
+        }}
+    </WebStory>
 )
 
 CreatingNewBatchChangeFromInsight.storyName = 'Creating new batch change from insight'
 
 export const EditingBatchSpecFromInsightTemplate: StoryFn = () => (
-    <WebStory>{props => <InsightTemplatesBanner {...props} insightTitle="My Go Insight" type="edit" />}</WebStory>
+    <WebStory>
+        {props => {
+            const { t } = useTranslation('enterprise/batches/create')
+
+            return <InsightTemplatesBanner {...props} insightTitle={t('my-go-insight-2')} type="edit" />
+        }}
+    </WebStory>
 )
 
 EditingBatchSpecFromInsightTemplate.storyName = 'Editing a batch spec from an insight template'

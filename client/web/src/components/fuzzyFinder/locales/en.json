@@ -1,0 +1,10 @@
+{
+  "error-message": "Error:",
+  "find-files": "Find files",
+  "experimental-notice": "Experimental",
+  "fuzzy-query-prompt": "Enter a fuzzy query",
+  "navigation-instructions": "Press <0>↑</0><1>↓</1> to navigate through results",
+  "searching-everywhere": " Searching everywhere",
+  "searching-in-repo": " Searching in this repository",
+  "results-count": " out of"
+}

@@ -1,0 +1,11 @@
+{
+  "search-label": "Search",
+  "total-time-saved": "Total time saved",
+  "suggestions-label": "Suggestions",
+  "promote-editor-extension": "Promote the",
+  "editor-extension-description": "editor extension",
+  "and-space": "  and",
+  "src-cli-description": "src CLI",
+  "search-where-they-work": "  to your users to allow them to search where they work.",
+  "event-logs-update-info": "All events are generated from entries in the event logs table and are updated every 24 hours."
+}

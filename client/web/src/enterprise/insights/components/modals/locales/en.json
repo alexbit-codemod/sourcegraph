@@ -1,0 +1,9 @@
+{
+  "delete-quote": "Delete '",
+  "confirm-delete-insight": "Are you sure you want to delete insight",
+  "delete-warning": "? This can't be undone.",
+  "export-data-insight-confirmation": "Export data for '{{insightTitle}}' insight?",
+  "csv-archive-data-explanation": "This will create a CSV archive of all data for this Code Insight, including <0>  data that has been archived</0> .",
+  "data-permission-notice": "This will only include data that you are permitted to see.",
+  "export-data-as-csv": "Export data as CSV"
+}

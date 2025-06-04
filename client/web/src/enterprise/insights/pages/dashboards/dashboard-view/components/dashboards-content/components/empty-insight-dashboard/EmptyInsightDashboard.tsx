@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 
 import { mdiPlus } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { Button, Link, Card, Tooltip, Icon } from '@sourcegraph/wildcard'
 
@@ -19,6 +20,10 @@ interface EmptyCustomDashboardProps {
  * Custom empty dashboard state provides ability to add existing insights to the dashboard.
  */
 export const EmptyCustomDashboard: FC<EmptyCustomDashboardProps> = props => {
+    const { t } = useTranslation(
+        'enterprise/insights/pages/dashboards/dashboard-view/components/dashboards-content/components/empty-insight-dashboard'
+    )
+
     const { dashboard, onAddInsightRequest } = props
 
     const {
@@ -39,12 +44,14 @@ export const EmptyCustomDashboard: FC<EmptyCustomDashboardProps> = props => {
                 <Tooltip content={permissions.tooltip} placement="right">
                     <Card className={styles.itemCard}>
                         <Icon svgPath={mdiPlus} inline={false} aria-hidden={true} height="2rem" width="2rem" />
-                        <span>Add insights</span>
+                        <span>{t('add-insights')}</span>
                     </Card>
                 </Tooltip>
             </Button>
             <span className="d-flex justify-content-center mt-3">
-                <Link to={encodeDashboardIdQueryParam('/insights/create', dashboard.id)}>or, create new insight</Link>
+                <Link to={encodeDashboardIdQueryParam('/insights/create', dashboard.id)}>
+                    {t('create-new-insight')}
+                </Link>
             </span>
         </section>
     )

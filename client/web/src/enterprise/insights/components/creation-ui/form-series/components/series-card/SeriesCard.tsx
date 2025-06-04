@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Button, Card } from '@sourcegraph/wildcard'
 
@@ -30,6 +31,8 @@ interface SeriesCardProps {
  * Renders series card component, visual list item of series (name, color, query)
  * */
 export function SeriesCard(props: SeriesCardProps): ReactElement {
+    const { t } = useTranslation('enterprise/insights/components/creation-ui/form-series/components/series-card')
+
     const { disabled, name, query, stroke: color = DEFAULT_DATA_SERIES_COLOR, className, onEdit, onRemove } = props
 
     return (
@@ -72,7 +75,7 @@ export function SeriesCard(props: SeriesCardProps): ReactElement {
                     disabled={disabled}
                     className="border-0"
                 >
-                    Edit
+                    {t('edit-action')}
                 </Button>
 
                 <Button
@@ -83,7 +86,7 @@ export function SeriesCard(props: SeriesCardProps): ReactElement {
                     variant="danger"
                     outline={true}
                 >
-                    Remove
+                    {t('remove-action')}
                 </Button>
             </div>
         </Card>

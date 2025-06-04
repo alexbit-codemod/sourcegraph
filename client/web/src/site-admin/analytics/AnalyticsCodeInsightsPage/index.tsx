@@ -1,6 +1,7 @@
 import React, { useMemo, useEffect } from 'react'
 
 import { startCase } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { useQuery } from '@sourcegraph/http-client'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -40,6 +41,8 @@ export const calculateMinutesSaved = (data: typeof MinutesSaved): number =>
 interface Props extends TelemetryV2Props {}
 
 export const AnalyticsCodeInsightsPage: React.FunctionComponent<Props> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin/analytics/AnalyticsCodeInsightsPage')
+
     const { dateRange, aggregation, grouping } = useChartFilters({
         name: 'Insights',
         aggregation: 'count',
@@ -159,7 +162,7 @@ export const AnalyticsCodeInsightsPage: React.FunctionComponent<Props> = ({ tele
 
     return (
         <>
-            <AnalyticsPageTitle>Insights</AnalyticsPageTitle>
+            <AnalyticsPageTitle>{t('insights-title')}</AnalyticsPageTitle>
             <Card className="p-3">
                 <div className="d-flex justify-content-end align-items-stretch mb-2 text-nowrap">
                     <HorizontalSelect<typeof dateRange.value> {...dateRange} />
@@ -185,12 +188,10 @@ export const AnalyticsCodeInsightsPage: React.FunctionComponent<Props> = ({ tele
                     </div>
                 )}
 
-                <H2 className="my-3">Total time saved</H2>
-                <Text>Coming soon...</Text>
+                <H2 className="my-3">{t('total-time-saved')}</H2>
+                <Text>{t('coming-soon-message')}</Text>
             </Card>
-            <Text className="font-italic text-center mt-2">
-                Some metrics are generated from entries in the event logs table and are updated every 24 hours.
-            </Text>
+            <Text className="font-italic text-center mt-2">{t('metrics-update-info')}</Text>
         </>
     )
 }

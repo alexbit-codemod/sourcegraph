@@ -2,6 +2,7 @@ import React from 'react'
 
 import { mdiCheckCircle, mdiCloseCircle, mdiShieldRemove } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { Icon, Label } from '@sourcegraph/wildcard'
@@ -51,6 +52,8 @@ export const ProductLicenseValidity: React.FunctionComponent<
         className?: string
     }>
 > = ({ license: { info, revokedAt, revokeReason }, variant, className = '' }) => {
+    const { t } = useTranslation('enterprise/dotcom/productSubscriptions')
+
     const expiresAt = info?.expiresAt ?? 0
     const isExpired = isProductLicenseExpired(expiresAt)
     const isRevoked = !!revokedAt
@@ -71,7 +74,7 @@ export const ProductLicenseValidity: React.FunctionComponent<
             {timestampSuffix}
             {!isExpired && isRevoked && revokeReason && (
                 <>
-                    <Label className="ml-2 mb-0 d-inline">Reason:</Label> {revokeReason}
+                    <Label className="ml-2 mb-0 d-inline">{t('reason')}</Label> {revokeReason}
                 </>
             )}
         </div>

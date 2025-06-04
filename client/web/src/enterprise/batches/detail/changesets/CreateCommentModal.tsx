@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { asError, isErrorLike } from '@sourcegraph/common'
 import { Button, TextArea, Modal, H3, Text, ErrorAlert, Form } from '@sourcegraph/wildcard'
 
@@ -24,6 +26,8 @@ export const CreateCommentModal: React.FunctionComponent<React.PropsWithChildren
     changesetIDs,
     createChangesetComments = _createChangesetComments,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
     const [isLoading, setIsLoading] = useState<boolean | Error>(false)
     const [commentBody, setCommentBody] = useState<string>('')
 
@@ -47,8 +51,8 @@ export const CreateCommentModal: React.FunctionComponent<React.PropsWithChildren
 
     return (
         <Modal onDismiss={onCancel} aria-labelledby={LABEL_ID}>
-            <H3 id={LABEL_ID}>Post a bulk comment on changesets</H3>
-            <Text className="mb-4">Use this feature to create a bulk comment on all the selected code hosts.</Text>
+            <H3 id={LABEL_ID}>{t('post-bulk-comment-on-changesets')}</H3>
+            <Text className="mb-4">{t('feature-create-bulk-comment-selected-code-hosts')}</Text>
             {isErrorLike(isLoading) && <ErrorAlert error={isLoading} />}
             <Form onSubmit={onSubmit}>
                 <div className="form-group">
@@ -61,7 +65,7 @@ export const CreateCommentModal: React.FunctionComponent<React.PropsWithChildren
                         minLength={1}
                         value={commentBody}
                         onChange={onChangeInput}
-                        label="Comment text"
+                        label={t('comment-text-placeholder')}
                     />
                 </div>
                 <div className="d-flex justify-content-end">
@@ -72,7 +76,7 @@ export const CreateCommentModal: React.FunctionComponent<React.PropsWithChildren
                         outline={true}
                         variant="secondary"
                     >
-                        Cancel
+                        {t('cancel-button-text')}
                     </Button>
                     <LoaderButton
                         type="submit"
@@ -80,7 +84,7 @@ export const CreateCommentModal: React.FunctionComponent<React.PropsWithChildren
                         variant="primary"
                         loading={isLoading === true}
                         alwaysShowLabel={true}
-                        label="Post comments"
+                        label={t('post-comments-button-text')}
                     />
                 </div>
             </Form>

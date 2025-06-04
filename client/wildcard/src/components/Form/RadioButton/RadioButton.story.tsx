@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 
 import type { Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { H1, H2 } from '../..'
 import { BrandedStory } from '../../../stories/BrandedStory'
@@ -26,6 +27,8 @@ const config: Meta = {
 export default config
 
 const BaseRadio = ({ name, ...props }: Pick<RadioButtonProps, 'name' | 'isValid' | 'disabled'>) => {
+    const { t } = useTranslation('../../wildcard/src/components/Form/RadioButton')
+
     const [selected, setSelected] = React.useState('')
 
     const handleChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(event => {
@@ -40,7 +43,7 @@ const BaseRadio = ({ name, ...props }: Pick<RadioButtonProps, 'name' | 'isValid'
                 value="first"
                 checked={selected === 'first'}
                 onChange={handleChange}
-                label="First"
+                label={t('first-message')}
                 message="Hello world!"
                 {...props}
             />
@@ -50,7 +53,7 @@ const BaseRadio = ({ name, ...props }: Pick<RadioButtonProps, 'name' | 'isValid'
                 value="second"
                 checked={selected === 'second'}
                 onChange={handleChange}
-                label="Second"
+                label={t('second-message')}
                 message="Hello world!"
                 {...props}
             />
@@ -60,7 +63,7 @@ const BaseRadio = ({ name, ...props }: Pick<RadioButtonProps, 'name' | 'isValid'
                 value="third"
                 checked={selected === 'third'}
                 onChange={handleChange}
-                label="Third"
+                label={t('third-message')}
                 message="Hello world!"
                 {...props}
             />
@@ -68,29 +71,33 @@ const BaseRadio = ({ name, ...props }: Pick<RadioButtonProps, 'name' | 'isValid'
     )
 }
 
-export const RadioExamples: StoryFn = () => (
-    <>
-        <H1>Radio</H1>
-        <Grid columnCount={4}>
-            <div>
-                <H2>Standard</H2>
-                <BaseRadio name="standard-example" />
-            </div>
-            <div>
-                <H2>Valid</H2>
-                <BaseRadio name="valid-example" isValid={true} />
-            </div>
-            <div>
-                <H2>Invalid</H2>
-                <BaseRadio name="invalid-example" isValid={false} />
-            </div>
-            <div>
-                <H2>Disabled</H2>
-                <BaseRadio name="disabled-example" disabled={true} />
-            </div>
-        </Grid>
-    </>
-)
+export const RadioExamples: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Form/RadioButton')
+
+    return (
+        <>
+            <H1>{t('radio-label')}</H1>
+            <Grid columnCount={4}>
+                <div>
+                    <H2>{t('standard-label')}</H2>
+                    <BaseRadio name="standard-example" />
+                </div>
+                <div>
+                    <H2>{t('valid-label')}</H2>
+                    <BaseRadio name="valid-example" isValid={true} />
+                </div>
+                <div>
+                    <H2>{t('invalid-label')}</H2>
+                    <BaseRadio name="invalid-example" isValid={false} />
+                </div>
+                <div>
+                    <H2>{t('disabled-label')}</H2>
+                    <BaseRadio name="disabled-example" disabled={true} />
+                </div>
+            </Grid>
+        </>
+    )
+}
 
 RadioExamples.parameters = {
     chromatic: {

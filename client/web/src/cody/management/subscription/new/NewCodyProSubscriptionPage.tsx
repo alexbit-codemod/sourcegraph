@@ -7,6 +7,7 @@ import { Elements } from '@stripe/react-stripe-js'
 // the lazily loaded router module.
 import { loadStripe } from '@stripe/stripe-js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { Navigate, useSearchParams } from 'react-router-dom'
 
 import { useQuery } from '@sourcegraph/http-client'
@@ -47,6 +48,8 @@ const AuthenticatedNewCodyProSubscriptionPage: FunctionComponent<NewCodyProSubsc
     authenticatedUser,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('cody/management/subscription/new')
+
     const [urlSearchParams] = useSearchParams()
     const addSeats = !!urlSearchParams.get('addSeats')
     const isTeam = addSeats || parseInt(urlSearchParams.get('seats') || '', 10) > 1
@@ -114,7 +117,7 @@ const AuthenticatedNewCodyProSubscriptionPage: FunctionComponent<NewCodyProSubsc
     if (userCodyPlanError) {
         return (
             <PageWithHeader>
-                <Alert variant="danger">Failed to fetch user Cody plan data</Alert>
+                <Alert variant="danger">{t('failed-to-fetch-user-cody-plan-data')}</Alert>
             </PageWithHeader>
         )
     }
@@ -122,7 +125,7 @@ const AuthenticatedNewCodyProSubscriptionPage: FunctionComponent<NewCodyProSubsc
     if (addSeats && subscriptionQueryResult.isError) {
         return (
             <PageWithHeader>
-                <Alert variant="danger">Failed to fetch subscription data</Alert>
+                <Alert variant="danger">{t('failed-to-fetch-subscription-data')}</Alert>
             </PageWithHeader>
         )
     }
@@ -130,7 +133,7 @@ const AuthenticatedNewCodyProSubscriptionPage: FunctionComponent<NewCodyProSubsc
     if (addSeats && !subscriptionQueryResult.isLoading && !subscription) {
         return (
             <PageWithHeader>
-                <Alert variant="danger">Subscription data is not available</Alert>
+                <Alert variant="danger">{t('subscription-data-not-available')}</Alert>
             </PageWithHeader>
         )
     }

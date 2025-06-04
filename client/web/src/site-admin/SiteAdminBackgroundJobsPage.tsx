@@ -12,6 +12,7 @@ import {
     mdiShape,
 } from '@mdi/js'
 import { format } from 'date-fns'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { pluralize } from '@sourcegraph/common'
@@ -65,6 +66,8 @@ const routineTypeToIcon: Record<BackgroundRoutineType, string> = {
 export const SiteAdminBackgroundJobsPage: React.FunctionComponent<
     React.PropsWithChildren<SiteAdminBackgroundJobsPageProps>
 > = ({ telemetryService, telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin')
+
     // Log page view
     useEffect(() => {
         telemetryService.logPageView('SiteAdminBackgroundJobs')
@@ -91,7 +94,7 @@ export const SiteAdminBackgroundJobsPage: React.FunctionComponent<
 
     return (
         <div>
-            <PageTitle title="Background jobs - Admin" />
+            <PageTitle title={t('background-jobs-admin')} />
             <Button variant="secondary" onClick={togglePolling} className="float-right">
                 {polling ? 'Pause polling' : 'Resume polling'}
             </Button>
@@ -100,32 +103,32 @@ export const SiteAdminBackgroundJobsPage: React.FunctionComponent<
                 headingElement="h2"
                 description={
                     <>
-                        This page lists{' '}
-                        <Link to="/help/admin/workers" target="_blank" rel="noopener noreferrer">
-                            all running jobs
-                        </Link>
-                        , their routines, recent runs, any errors, timings, and stats.
+                        <Trans
+                            i18nKey="background-jobs-description"
+                            components={{
+                                '0': <Link to="/help/admin/workers" target="_blank" rel="noopener noreferrer" />,
+                            }}
+                        />
                     </>
                 }
                 className="mb-3"
             />
-            <Text>Terminology:</Text>
+            <Text>{t('terminology-header')}</Text>
             <ul>
                 <li>
-                    <strong>Job</strong>: a bag of routines, started when the Cody app is launched
+                    <Trans i18nKey="job-definition" components={{ '0': <strong /> }} />
                 </li>
                 <li>
-                    <strong>Routine</strong>: a background process that repeatedly executes its task indefinitely, using
-                    an interval passed at start
+                    <Trans i18nKey="routine-definition" components={{ '0': <strong /> }} />
                 </li>
                 <li>
-                    <strong>Run</strong>: a single execution of a routine's task
+                    <Trans i18nKey="run-definition" components={{ '0': <strong /> }} />
                 </li>
                 <li>
-                    <strong>Host</strong>: a Sourcegraph instance that starts some jobs when launched
+                    <Trans i18nKey="host-definition" components={{ '0': <strong /> }} />
                 </li>
                 <li>
-                    <strong>Instance</strong>: a job ran on a host
+                    <Trans i18nKey="instance-definition" components={{ '0': <strong /> }} />
                 </li>
             </ul>
             <Container className="mb-3">
@@ -140,6 +143,8 @@ export const SiteAdminBackgroundJobsPage: React.FunctionComponent<
 const JobList: React.FunctionComponent<{
     jobs: BackgroundJob[]
 }> = ({ jobs }) => {
+    const { t } = useTranslation('site-admin')
+
     const [onlyShowProblematic, setOnlyShowProblematic] = useSessionStorage(
         'site-admin.background-jobs.only-show-problematic-routines',
         false
@@ -173,11 +178,11 @@ const JobList: React.FunctionComponent<{
                                 selectClassName={styles.filterSelect}
                                 defaultValue={onlyShowProblematic ? 'problematic' : 'all'}
                             >
-                                <option value="all">Show all routines</option>
-                                <option value="problematic">Only show problematic routines</option>
+                                <option value="all">{t('show-all-routines')}</option>
+                                <option value="problematic">{t('show-problematic-routines')}</option>
                             </Select>
                         </div>
-                        <div className="text-center">Fastest / avg / slowest run (ms)</div>
+                        <div className="text-center">{t('run-duration-stats')}</div>
                     </div>
                     <ul className="list-group list-group-flush">
                         {jobsToDisplay.map(job => (
@@ -280,6 +285,8 @@ const LegendList: React.FunctionComponent<{ jobs: BackgroundJob[]; hostNameCount
 )
 
 const RoutineItem: React.FunctionComponent<{ routine: BackgroundRoutine }> = ({ routine }) => {
+    const { t } = useTranslation('site-admin')
+
     const allHostNames = routine.recentRuns
         .map(run => run.hostName) // get host name
         .filter((host, index, hosts) => hosts.indexOf(host) === index) // deduplicate
@@ -289,7 +296,7 @@ const RoutineItem: React.FunctionComponent<{ routine: BackgroundRoutine }> = ({ 
 
     const recentRunsTooltipContent = (
         <div>
-            {commonHostName ? <Text className="mb-0">All on “{commonHostName}”:</Text> : ''}
+            {commonHostName ? <Text className="mb-0">{t('common-host-name-info', { commonHostName })}</Text> : ''}
             <ul className="pl-4">
                 {routine.recentRuns.map(run => (
                     <li key={run.at}>
@@ -300,11 +307,19 @@ const RoutineItem: React.FunctionComponent<{ routine: BackgroundRoutine }> = ({ 
                                 ''
                             )}{' '}
                             <Timestamp date={new Date(run.at)} noAbout={true} />
-                            {commonHostName ? '' : ` on the host called “${run.hostName}”,`} for{' '}
-                            <span className={getRunDurationTextClass(run.durationMs, routine.intervalMs)}>
-                                {run.durationMs}ms
-                            </span>
-                            .{run.errorMessage ? ` Error: ${run.errorMessage}` : ''}
+                            <Trans
+                                i18nKey="run-duration-info"
+                                values={{
+                                    runHostName: run.hostName,
+                                    commonHostName,
+                                    runErrorMessage: run.errorMessage,
+                                }}
+                                components={{
+                                    '0': (
+                                        <span className={getRunDurationTextClass(run.durationMs, routine.intervalMs)} />
+                                    ),
+                                }}
+                            />
                         </Text>
                     </li>
                 ))}
@@ -334,35 +349,70 @@ const RoutineItem: React.FunctionComponent<{ routine: BackgroundRoutine }> = ({ 
                 <Text className="mb-0 ml-4 text-muted">
                     {routine.intervalMs ? (
                         <>
-                            {routine.type === 'DB_BACKED' ? 'Checks queue ' : 'Runs '}every{' '}
-                            <strong>{formatDurationLong(routine.intervalMs)}</strong>.{' '}
+                            <Trans
+                                i18nKey="routine-interval-info"
+                                values={{
+                                    routineTypeDbBacked: routine.type === 'DB_BACKED',
+                                    formatDurationLongRoutineIntervalMs: <>{formatDurationLong(routine.intervalMs)}</>,
+                                }}
+                                components={{ '0': <strong /> }}
+                            />
                         </>
                     ) : null}
                     {routine.recentRuns.length > 0 ? (
                         <Tooltip content={recentRunsTooltipContent}>
                             <span>
-                                <strong>
-                                    <span className={recentRunsWithErrors.length ? 'text-danger' : 'text-success'}>{`${
-                                        recentRunsWithErrors.length
-                                    } ${pluralize('error', recentRunsWithErrors.length)}`}</span>
-                                </strong>
-                                <span className={styles.linkColor}>*</span> in the last{' '}
-                                {`${routine.recentRuns.length} ${pluralize('run', routine.recentRuns.length)}`}.{' '}
+                                <Trans
+                                    i18nKey="recent-runs-with-errors"
+                                    values={{
+                                        spanClassNameRecentRunsWithErrorsLengthTextDangerTextSuccessRecentRunsWithErrorsLengthPluralizeErrorRecentRunsWithErrorsLengthSpan:
+                                            (
+                                                <>
+                                                    <span
+                                                        className={
+                                                            recentRunsWithErrors.length ? 'text-danger' : 'text-success'
+                                                        }
+                                                    >{`${recentRunsWithErrors.length} ${pluralize(
+                                                        'error',
+                                                        recentRunsWithErrors.length
+                                                    )}`}</span>
+                                                </>
+                                            ),
+                                        routineRecentRunsLength: routine.recentRuns.length,
+                                        pluralizeRunRoutineRecentRunsLength: pluralize(
+                                            'run',
+                                            routine.recentRuns.length
+                                        ),
+                                    }}
+                                    components={{ '0': <strong />, '1': <span className={styles.linkColor} /> }}
+                                />
                             </span>
                         </Tooltip>
                     ) : null}
                     {routine.stats.runCount ? (
                         <>
-                            <span className={routine.stats.errorCount ? 'text-danger' : 'text-success'}>
-                                <strong>
-                                    {routine.stats.errorCount} {pluralize('error', routine.stats.errorCount)}
-                                </strong>
-                            </span>{' '}
-                            in <strong>{routine.stats.runCount}</strong> {pluralize('run', routine.stats.runCount)}
+                            <Trans
+                                i18nKey="routine-error-stats"
+                                values={{
+                                    strongRoutineStatsErrorCountPluralizeErrorRoutineStatsErrorCountStrong: (
+                                        <>
+                                            <strong>
+                                                {routine.stats.errorCount}{' '}
+                                                {pluralize('error', routine.stats.errorCount)}
+                                            </strong>
+                                        </>
+                                    ),
+                                    routineStatsRunCount: <>{routine.stats.runCount}</>,
+                                }}
+                                components={{
+                                    '0': <span className={routine.stats.errorCount ? 'text-danger' : 'text-success'} />,
+                                    '1': <strong />,
+                                }}
+                            />
+                            {pluralize('run', routine.stats.runCount)}
                             {routine.stats.since ? (
                                 <>
-                                    {' '}
-                                    in the last{' '}
+                                    {t('last-stats-info')}
                                     <Timestamp date={new Date(routine.stats.since)} noAbout={true} noAgo={true} />.
                                 </>
                             ) : null}
@@ -388,7 +438,7 @@ const RoutineItem: React.FunctionComponent<{ routine: BackgroundRoutine }> = ({ 
                         </div>
                     </Tooltip>
                 ) : (
-                    <span className="text-muted">No stats yet.</span>
+                    <span className="text-muted">{t('no-stats-message')}</span>
                 )}
             </div>
         </div>

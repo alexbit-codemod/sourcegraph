@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import type { ErrorLike } from '@sourcegraph/common'
 import { useMutation, useQuery } from '@sourcegraph/http-client'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -62,6 +64,8 @@ interface Props extends TelemetryV2Props {
 }
 
 export const UserSettingsSecurityPage: React.FunctionComponent<React.PropsWithChildren<Props>> = props => {
+    const { t } = useTranslation('user/settings/auth')
+
     const [oldPassword, setOldPassword] = useState<string>('')
     const [newPassword, setNewPassword] = useState<string>('')
     const [newPasswordConfirmation, setNewPasswordConfirmation] = useState<string>('')
@@ -160,21 +164,24 @@ export const UserSettingsSecurityPage: React.FunctionComponent<React.PropsWithCh
 
     return (
         <>
-            <PageTitle title="Account security" />
+            <PageTitle title={t('account-security')} />
 
             {props.authenticatedUser.id !== props.user.id && (
                 <Alert variant="danger">
-                    Only the user may change their password. Site admins may{' '}
-                    <Link to={`/site-admin/users?query=${encodeURIComponent(props.user.username)}`}>
-                        reset a user's password
-                    </Link>
-                    .
+                    <Trans
+                        i18nKey="password-change-instructions"
+                        components={{
+                            '0': <Link to={`/site-admin/users?query=${encodeURIComponent(props.user.username)}`} />,
+                        }}
+                    />
                 </Alert>
             )}
 
             {accounts.lastRemoved && (
                 <Alert role="alert" variant="warning">
-                    Sign in connection for {accounts.lastRemoved} removed. Please set a new password for your account.
+                    {t('sign-in-connection')}
+                    {accounts.lastRemoved}
+                    {t('password-removed-notification')}
                 </Alert>
             )}
 
@@ -182,14 +189,14 @@ export const UserSettingsSecurityPage: React.FunctionComponent<React.PropsWithCh
 
             {saved && (
                 <Alert className="mb-3" variant="success">
-                    Password changed!
+                    {t('password-changed-success')}
                 </Alert>
             )}
 
             <PageHeader
                 headingElement="h2"
                 path={[{ text: 'Account security' }]}
-                description="Connect your account with a third-party login service to make signing in easier."
+                description={t('connect-third-party-login')}
                 className="mb-3 user-settings-account-security-page"
             />
 
@@ -218,11 +225,13 @@ export const UserSettingsSecurityPage: React.FunctionComponent<React.PropsWithCh
             {props.context.authProviders.some(provider => provider.isBuiltin) && (
                 <>
                     <hr className="my-4" />
-                    <H3 className="mb-3">{props.user.builtinAuth ? 'Update ' : 'Create '}Password</H3>
+                    <H3 className="mb-3">
+                        {t('update-or-create-password', { propsUserBuiltinAuth: props.user.builtinAuth })}
+                    </H3>
                     {props.user.builtinAuth ? (
-                        <Text>Change your account password.</Text>
+                        <Text>{t('change-account-password')}</Text>
                     ) : (
-                        <Text>Create a password to enable sign-in using a username/password combination.</Text>
+                        <Text>{t('create-password-instructions')}</Text>
                     )}
                     <Container>
                         <Form onSubmit={handleSubmit}>
@@ -236,7 +245,7 @@ export const UserSettingsSecurityPage: React.FunctionComponent<React.PropsWithCh
                             />
                             {props.user.builtinAuth && (
                                 <div className="form-group">
-                                    <Label htmlFor="oldPassword">Old password</Label>
+                                    <Label htmlFor="oldPassword">{t('old-password-label')}</Label>
                                     <PasswordInput
                                         value={oldPassword}
                                         onChange={onOldPasswordFieldChange}
@@ -251,7 +260,7 @@ export const UserSettingsSecurityPage: React.FunctionComponent<React.PropsWithCh
                             )}
 
                             <div className="form-group">
-                                <Label htmlFor="newPassword">New password</Label>
+                                <Label htmlFor="newPassword">{t('new-password-label')}</Label>
                                 <PasswordInput
                                     value={newPassword}
                                     onChange={onNewPasswordFieldChange}
@@ -268,7 +277,7 @@ export const UserSettingsSecurityPage: React.FunctionComponent<React.PropsWithCh
                                 </small>
                             </div>
                             <div className="form-group">
-                                <Label htmlFor="newPasswordConfirmation">Confirm new password</Label>
+                                <Label htmlFor="newPasswordConfirmation">{t('confirm-new-password-label')}</Label>
                                 <PasswordInput
                                     value={newPasswordConfirmation}
                                     onChange={onNewPasswordConfirmationFieldChange}

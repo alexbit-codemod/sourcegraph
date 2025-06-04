@@ -1,5 +1,7 @@
 import type { HTMLAttributes, FC } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { useDeepMemo, BarChart, LegendList, LegendItem, useDebounce, ErrorAlert } from '@sourcegraph/wildcard'
 
 import type { GroupByField } from '../../../../../../../graphql-operations'
@@ -31,6 +33,8 @@ interface ComputeLivePreviewProps extends HTMLAttributes<HTMLElement> {
 }
 
 export const ComputeLivePreview: FC<ComputeLivePreviewProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation/compute/components')
+
     const { disabled, repositories, series, groupBy, ...attribute } = props
 
     const settings = useDebounce(
@@ -61,13 +65,17 @@ export const ComputeLivePreview: FC<ComputeLivePreviewProps> = props => {
 
             <LivePreviewCard>
                 {state.status === LivePreviewStatus.Loading ? (
-                    <LivePreviewLoading>Loading code insight</LivePreviewLoading>
+                    <LivePreviewLoading>{t('loading-code-insight')}</LivePreviewLoading>
                 ) : state.status === LivePreviewStatus.Error ? (
                     <ErrorAlert error={state.error} className="m-0" />
                 ) : (
                     <LivePreviewChart>
-                        {parent =>
-                            state.status === LivePreviewStatus.Data ? (
+                        {parent => {
+                            const { t } = useTranslation(
+                                'enterprise/insights/pages/insights/creation/compute/components'
+                            )
+
+                            return state.status === LivePreviewStatus.Data ? (
                                 <BarChart
                                     width={parent.width}
                                     height={parent.height}
@@ -88,10 +96,10 @@ export const ComputeLivePreview: FC<ComputeLivePreviewProps> = props => {
                                         // doesn't support types inferring if component has a generic parameter.
                                         {...(COMPUTE_MOCK_CHART as CategoricalChartContent<unknown>)}
                                     />
-                                    <LivePreviewBanner>You’ll see your insight’s chart preview here</LivePreviewBanner>
+                                    <LivePreviewBanner>{t('insights-chart-preview')}</LivePreviewBanner>
                                 </>
                             )
-                        }
+                        }}
                     </LivePreviewChart>
                 )}
 

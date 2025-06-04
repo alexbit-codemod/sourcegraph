@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 
 import { logger } from '@sourcegraph/common'
@@ -65,6 +66,8 @@ export const SiteInitPage: React.FunctionComponent<React.PropsWithChildren<Props
     context,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('site-admin/init')
+
     // This page is never shown on dotcom, to keep the API surface
     // of this component clean, we don't expose this option.
     const sourcegraphDotComMode = false
@@ -81,7 +84,7 @@ export const SiteInitPage: React.FunctionComponent<React.PropsWithChildren<Props
 
     return (
         <>
-            <PageTitle title="Site initialization" />
+            <PageTitle title={t('site-initialization')} />
             <AuthPageWrapper
                 title="Welcome to Sourcegraph"
                 description="Create an admin account to get started"
@@ -94,15 +97,18 @@ export const SiteInitPage: React.FunctionComponent<React.PropsWithChildren<Props
                     // the site_config DB table.
                     <Container>
                         <Text className="mb-0">
-                            You're signed in as <strong>{authenticatedUser.username}</strong>. A site admin must
-                            initialize Sourcegraph before you can continue.
+                            <Trans
+                                i18nKey="user-signed-in-admin-initialization-required"
+                                values={{ authenticatedUserUsername: <>{authenticatedUser.username}</> }}
+                                components={{ '0': <strong /> }}
+                            />
                         </Text>
                     </Container>
                 ) : (
                     <Container>
                         <SignUpForm
                             className="w-100"
-                            buttonLabel="Create admin account and continue"
+                            buttonLabel={t('create-admin-account-and-continue')}
                             onSignUp={initSite}
                             // This page is never shown on dotcom, to keep the API surface
                             // of this component clean, we don't expose this option.

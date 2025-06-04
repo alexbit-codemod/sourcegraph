@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { BrandedStory } from '../../../../../../stories/BrandedStory'
 import { H2 } from '../../../../../Typography'
@@ -89,21 +90,25 @@ const ACTIVE_POINT: MinimumPointInfo = {
     xValue: new Date('2020-05-07T19:21:40.286Z'),
 }
 
-export const TooltipLayoutDemo: StoryFn = () => (
-    <div className="d-flex flex-column" style={{ gap: 20 }}>
-        <div>
-            <H2>Regular tooltip</H2>
-            <TooltipContent stacked={false} series={SERIES_WITH_DATA} activePoint={ACTIVE_POINT} />
-        </div>
+export const TooltipLayoutDemo: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Charts/components/line-chart/components/tooltip')
 
-        <div>
-            <H2>With stacked value</H2>
-            <TooltipContent stacked={true} series={SERIES_WITH_DATA} activePoint={ACTIVE_POINT} />
-        </div>
+    return (
+        <div className="d-flex flex-column" style={{ gap: 20 }}>
+            <div>
+                <H2>{t('regular-tooltip')}</H2>
+                <TooltipContent stacked={false} series={SERIES_WITH_DATA} activePoint={ACTIVE_POINT} />
+            </div>
 
-        <div>
-            <H2>With long named series</H2>
-            <TooltipContent stacked={true} series={LONG_NAMED_SERIES_WITH_DATA} activePoint={ACTIVE_POINT} />
+            <div>
+                <H2>{t('stacked-value-tooltip')}</H2>
+                <TooltipContent stacked={true} series={SERIES_WITH_DATA} activePoint={ACTIVE_POINT} />
+            </div>
+
+            <div>
+                <H2>{t('long-named-series-tooltip')}</H2>
+                <TooltipContent stacked={true} series={LONG_NAMED_SERIES_WITH_DATA} activePoint={ACTIVE_POINT} />
+            </div>
         </div>
-    </div>
-)
+    )
+}

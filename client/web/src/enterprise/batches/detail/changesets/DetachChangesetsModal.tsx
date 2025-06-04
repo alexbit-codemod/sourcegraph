@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { asError, isErrorLike } from '@sourcegraph/common'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
@@ -28,6 +30,8 @@ export const DetachChangesetsModal: React.FunctionComponent<React.PropsWithChild
     telemetryRecorder,
     detachChangesets = _detachChangesets,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
     const [isLoading, setIsLoading] = useState<boolean | Error>(false)
 
     const onSubmit = useCallback<React.FormEventHandler>(async () => {
@@ -46,8 +50,8 @@ export const DetachChangesetsModal: React.FunctionComponent<React.PropsWithChild
 
     return (
         <Modal onDismiss={onCancel} aria-labelledby={labelId}>
-            <H3 id={labelId}>Detach changesets</H3>
-            <Text className="mb-4">Are you sure you want to detach the selected changesets?</Text>
+            <H3 id={labelId}>{t('detach-changesets')}</H3>
+            <Text className="mb-4">{t('confirm-detach-changesets')}</Text>
             {isErrorLike(isLoading) && <ErrorAlert error={isLoading} />}
             <div className="d-flex justify-content-end">
                 <Button
@@ -57,7 +61,7 @@ export const DetachChangesetsModal: React.FunctionComponent<React.PropsWithChild
                     outline={true}
                     variant="secondary"
                 >
-                    Cancel
+                    {t('cancel-button')}
                 </Button>
                 <LoaderButton
                     onClick={onSubmit}
@@ -65,7 +69,7 @@ export const DetachChangesetsModal: React.FunctionComponent<React.PropsWithChild
                     variant="primary"
                     loading={isLoading === true}
                     alwaysShowLabel={true}
-                    label="Detach"
+                    label={t('detach-label')}
                 />
             </div>
         </Modal>

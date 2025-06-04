@@ -1,6 +1,7 @@
 import type { FC, FormHTMLAttributes, ReactNode } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import {
     Card,
@@ -52,6 +53,8 @@ export interface RenderPropertyInputs {
 }
 
 export const CaptureGroupCreationForm: FC<CaptureGroupCreationFormProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation/capture-group/components')
+
     const {
         form,
         title,
@@ -86,32 +89,38 @@ export const CaptureGroupCreationForm: FC<CaptureGroupCreationFormProps> = props
                 title="Data series"
                 subtitle={
                     <>
-                        Generated dynamically for each unique value from the regular expression capture group.{' '}
-                        <Link
-                            to="/help/code_insights/explanations/automatically_generated_data_series"
-                            target="_blank"
-                            rel="noopener"
-                        >
-                            Learn more.
-                        </Link>
+                        <Trans
+                            i18nKey="generated-dynamically-for-unique-values"
+                            components={{
+                                '0': (
+                                    <Link
+                                        to="/help/code_insights/explanations/automatically_generated_data_series"
+                                        target="_blank"
+                                        rel="noopener"
+                                    />
+                                ),
+                            }}
+                        />
                     </>
                 }
             >
                 <Card className="p-3">
                     <Label className="w-100" id="capture-group-query-label">
-                        <div className="mb-2">Search query</div>
+                        <div className="mb-2">{t('search-query')}</div>
 
                         <small className={classNames('mb-3', 'text-muted', 'd-block', 'font-weight-normal')}>
-                            Search query must contain a properly formatted regular expression with at least one{' '}
-                            <Link
-                                to="/help/code_insights/explanations/automatically_generated_data_series#regular-expression-capture-group-resources"
-                                target="_blank"
-                                rel="noopener"
-                            >
-                                capture group.
-                            </Link>{' '}
-                            The capture group cannot match file or repository names, it can match only the file
-                            contents.
+                            <Trans
+                                i18nKey="search-query-formatting-requirements"
+                                components={{
+                                    '0': (
+                                        <Link
+                                            to="/help/code_insights/explanations/automatically_generated_data_series#regular-expression-capture-group-resources"
+                                            target="_blank"
+                                            rel="noopener"
+                                        />
+                                    ),
+                                }}
+                            />
                         </small>
 
                         <Input
@@ -120,7 +129,7 @@ export const CaptureGroupCreationForm: FC<CaptureGroupCreationFormProps> = props
                             // Set repo query to preview only when search query mode is activated
                             repoQuery={repoMode.input.value === 'search-query' ? repoQuery.input.value.query : null}
                             repositories={repositories.input.value}
-                            placeholder="Example: file:\.pom$ <java\.version>(.*)</java\.version>"
+                            placeholder={t('example-file-regex')}
                             aria-labelledby="capture-group-query-label"
                             {...getDefaultInputProps(query)}
                         />
@@ -133,28 +142,36 @@ export const CaptureGroupCreationForm: FC<CaptureGroupCreationFormProps> = props
                     )}
 
                     <CaptureGroupSeriesInfoBadge>
-                        <b className="font-weight-medium">Name</b> and <b className="font-weight-medium">color</b> of
-                        each data series will be generated automatically. Chart will display{' '}
-                        <b className="font-weight-medium">up to {licensed ? '20' : '10'}</b> data series.
+                        <Trans
+                            i18nKey="data-series-name-and-color-automatic-generation"
+                            components={{
+                                '0': <b className="font-weight-medium" />,
+                                '1': <b className="font-weight-medium" />,
+                                '2': <b className="font-weight-medium" />,
+                            }}
+                        />
                     </CaptureGroupSeriesInfoBadge>
 
                     <small className="mt-3">
-                        Explore{' '}
-                        <Link
-                            to="/help/code_insights/references/common_use_cases#automatic-version-and-pattern-tracking"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            example queries
-                        </Link>{' '}
-                        and learn more about{' '}
-                        <Link
-                            to="/help/code_insights/explanations/automatically_generated_data_series"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            automatically generated data series
-                        </Link>
+                        <Trans
+                            i18nKey="explore-example-queries-and-learn-more"
+                            components={{
+                                '0': (
+                                    <Link
+                                        to="/help/code_insights/references/common_use_cases#automatic-version-and-pattern-tracking"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    />
+                                ),
+                                '1': (
+                                    <Link
+                                        to="/help/code_insights/explanations/automatically_generated_data_series"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    />
+                                ),
+                            }}
+                        />
                     </small>
                 </Card>
             </FormGroup>
@@ -163,10 +180,10 @@ export const CaptureGroupCreationForm: FC<CaptureGroupCreationFormProps> = props
 
             <FormGroup name="chart settings group" title="Chart settings">
                 <Input
-                    label="Title"
+                    label={t('title')}
                     required={true}
                     message="Shown as the title for your insight"
-                    placeholder="Example: Migration to React function components"
+                    placeholder={t('example-migration-to-react-components')}
                     {...getDefaultInputProps(title)}
                     className="d-flex flex-column"
                 />

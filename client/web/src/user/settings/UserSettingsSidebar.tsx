@@ -2,6 +2,7 @@ import { type FC, useState, useCallback } from 'react'
 
 import { mdiMenu, mdiPlus } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { ProductStatusBadge, Button, Link, Icon, type ProductStatusType, Tooltip } from '@sourcegraph/wildcard'
 
@@ -36,6 +37,8 @@ export interface UserSettingsSidebarProps extends UserSettingsAreaRouteContext, 
 
 /** Sidebar for user account pages. */
 export const UserSettingsSidebar: FC<UserSettingsSidebarProps> = props => {
+    const { t } = useTranslation('user/settings')
+
     const { user } = props
     const [isMobileExpanded, setIsMobileExpanded] = useState(false)
     const collapseMobileSidebar = useCallback((): void => setIsMobileExpanded(false), [])
@@ -59,11 +62,11 @@ export const UserSettingsSidebar: FC<UserSettingsSidebarProps> = props => {
         <>
             <Button className="d-sm-none align-self-start mb-3" onClick={() => setIsMobileExpanded(!isMobileExpanded)}>
                 <Icon aria-hidden={true} svgPath={mdiMenu} className="mr-2" />
-                {isMobileExpanded ? 'Hide' : 'Show'} menu
+                {t('toggle-menu', { isMobileExpanded })}
             </Button>
             <div className={classNames(props.className, 'd-sm-block', !isMobileExpanded && 'd-none')}>
                 <SidebarGroup>
-                    <SidebarGroupHeader label="Account" />
+                    <SidebarGroupHeader label={t('account-label')} />
                     {props.items.map(
                         ({ label, to, exact, status, condition = () => true }) =>
                             condition(context) && (
@@ -80,7 +83,7 @@ export const UserSettingsSidebar: FC<UserSettingsSidebarProps> = props => {
                 </SidebarGroup>
                 {(props.user.organizations.nodes.length > 0 || !siteAdminViewingOtherUser) && (
                     <SidebarGroup>
-                        <SidebarGroupHeader label="Your organizations" />
+                        <SidebarGroupHeader label={t('your-organizations-label')} />
                         {props.user.organizations.nodes.map(org => (
                             <SidebarNavItem
                                 key={org.id}
@@ -97,7 +100,7 @@ export const UserSettingsSidebar: FC<UserSettingsSidebarProps> = props => {
                         {!siteAdminViewingOtherUser &&
                             (window.context.sourcegraphDotComMode ? (
                                 <SidebarNavItem to="./about-organizations" onClick={collapseMobileSidebar}>
-                                    About organizations
+                                    {t('about-organizations')}
                                 </SidebarNavItem>
                             ) : (
                                 <div className={styles.newOrgBtnWrapper}>
@@ -109,26 +112,30 @@ export const UserSettingsSidebar: FC<UserSettingsSidebarProps> = props => {
                                         as={Link}
                                         onClick={collapseMobileSidebar}
                                     >
-                                        <Icon aria-hidden={true} svgPath={mdiPlus} /> New organization
+                                        <Icon aria-hidden={true} svgPath={mdiPlus} />
+                                        {t('new-organization-label')}
                                     </Button>
                                 </div>
                             ))}
                     </SidebarGroup>
                 )}
                 <SidebarGroup>
-                    <SidebarGroupHeader label="Other actions" />
+                    <SidebarGroupHeader label={t('other-actions-label')} />
                     {!siteAdminViewingOtherUser && (
                         <SidebarNavItem to="/api/console" onClick={collapseMobileSidebar}>
-                            API console
+                            {t('api-console-label')}
                         </SidebarNavItem>
                     )}
                     {props.authenticatedUser.siteAdmin && (
                         <SidebarNavItem to="/site-admin" onClick={collapseMobileSidebar}>
-                            Site admin
+                            {t('site-admin-label')}
                         </SidebarNavItem>
                     )}
                 </SidebarGroup>
-                <div>Version: {window.context.version}</div>
+                <div>
+                    {t('version-label')}
+                    {window.context.version}
+                </div>
             </div>
         </>
     )

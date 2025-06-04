@@ -1,6 +1,7 @@
 import React from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Link, H3, Badge, Tooltip } from '@sourcegraph/wildcard'
 
@@ -20,6 +21,8 @@ export interface ExternalChangesetInfoCellProps {
 export const ExternalChangesetInfoCell: React.FunctionComponent<
     React.PropsWithChildren<ExternalChangesetInfoCellProps>
 > = ({ node, viewerCanAdminister, className }) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
     const changesetTitle =
         isImporting(node) || importingFailed(node) ? (
             `Importing changeset ${node.externalID ? `#${node.externalID}` : ''}`
@@ -52,7 +55,7 @@ export const ExternalChangesetInfoCell: React.FunctionComponent<
                 {node.commitVerification?.verified && (
                     <Tooltip content="This commit was signed and verified by the code host.">
                         <Badge pill={true} className="mr-2">
-                            Verified
+                            {t('verified-status')}
                         </Badge>
                     </Tooltip>
                 )}

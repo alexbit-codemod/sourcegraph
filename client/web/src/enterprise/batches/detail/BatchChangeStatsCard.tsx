@@ -5,6 +5,7 @@ import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
 import CheckCircleOutlineIcon from 'mdi-react/CheckCircleOutlineIcon'
 import ProgressCheckIcon from 'mdi-react/ProgressCheckIcon'
+import { useTranslation } from 'react-i18next'
 
 import { pluralize } from '@sourcegraph/common'
 import { Badge, Icon, Heading, H3, H4, Tooltip } from '@sourcegraph/wildcard'
@@ -44,6 +45,8 @@ export const BatchChangeStatsCard: React.FunctionComponent<React.PropsWithChildr
     batchChange,
     className,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail')
+
     const { changesetsStats: stats, diffStat } = batchChange
     const BatchChangeStatusIcon = stats.isCompleted ? CheckCircleOutlineIcon : ProgressCheckIcon
     const otherStats = stats.failed + stats.retrying + stats.scheduled + stats.processing
@@ -80,7 +83,8 @@ export const BatchChangeStatsCard: React.FunctionComponent<React.PropsWithChildr
                         label={
                             <H4 className="font-weight-normal text-muted m-0">
                                 {stats.unpublished}{' '}
-                                <VisuallyHidden>{pluralize('changeset', stats.unpublished)}</VisuallyHidden> unpublished
+                                <VisuallyHidden>{pluralize('changeset', stats.unpublished)}</VisuallyHidden>
+                                {t('unpublished-status')}
                             </H4>
                         }
                         className={classNames(styles.batchChangeStatsCardStat, 'd-flex flex-grow-0 px-2 text-truncate')}
@@ -88,8 +92,8 @@ export const BatchChangeStatsCard: React.FunctionComponent<React.PropsWithChildr
                     <ChangesetStatusDraft
                         label={
                             <H4 className="font-weight-normal text-muted m-0">
-                                {stats.draft} <VisuallyHidden>{pluralize('changeset', stats.draft)}</VisuallyHidden>{' '}
-                                draft
+                                {stats.draft} <VisuallyHidden>{pluralize('changeset', stats.draft)}</VisuallyHidden>
+                                {t('draft-status')}
                             </H4>
                         }
                         className={classNames(styles.batchChangeStatsCardStat, 'd-flex flex-grow-0 px-2 text-truncate')}
@@ -97,7 +101,8 @@ export const BatchChangeStatsCard: React.FunctionComponent<React.PropsWithChildr
                     <ChangesetStatusOpen
                         label={
                             <H4 className="font-weight-normal text-muted m-0">
-                                {stats.open} <VisuallyHidden>{pluralize('changeset', stats.open)}</VisuallyHidden> open
+                                {stats.open} <VisuallyHidden>{pluralize('changeset', stats.open)}</VisuallyHidden>
+                                {t('open-status')}
                             </H4>
                         }
                         className={classNames(styles.batchChangeStatsCardStat, 'd-flex flex-grow-0 px-2 text-truncate')}
@@ -105,8 +110,8 @@ export const BatchChangeStatsCard: React.FunctionComponent<React.PropsWithChildr
                     <ChangesetStatusClosed
                         label={
                             <H4 className="font-weight-normal text-muted m-0">
-                                {stats.closed} <VisuallyHidden>{pluralize('changeset', stats.closed)}</VisuallyHidden>{' '}
-                                closed
+                                {stats.closed} <VisuallyHidden>{pluralize('changeset', stats.closed)}</VisuallyHidden>
+                                {t('closed-status')}
                             </H4>
                         }
                         className={classNames(styles.batchChangeStatsCardStat, 'd-flex flex-grow-0 px-2 text-truncate')}
@@ -114,8 +119,8 @@ export const BatchChangeStatsCard: React.FunctionComponent<React.PropsWithChildr
                     <ChangesetStatusMerged
                         label={
                             <H4 className="font-weight-normal text-muted m-0">
-                                {stats.merged} <VisuallyHidden>{pluralize('changeset', stats.merged)}</VisuallyHidden>{' '}
-                                merged
+                                {stats.merged} <VisuallyHidden>{pluralize('changeset', stats.merged)}</VisuallyHidden>
+                                {t('merged-status')}
                             </H4>
                         }
                         className={classNames(styles.batchChangeStatsCardStat, 'd-flex flex-grow-0 pl-2 text-truncate')}
@@ -124,7 +129,8 @@ export const BatchChangeStatsCard: React.FunctionComponent<React.PropsWithChildr
                         label={
                             <H4 className="font-weight-normal text-muted m-0">
                                 {stats.archived}{' '}
-                                <VisuallyHidden>{pluralize('changeset', stats.archived)}</VisuallyHidden> archived
+                                <VisuallyHidden>{pluralize('changeset', stats.archived)}</VisuallyHidden>
+                                {t('archived-status')}
                                 <Tooltip content={ARCHIVED_TOOLTIP}>
                                     <Icon
                                         aria-label={ARCHIVED_TOOLTIP}

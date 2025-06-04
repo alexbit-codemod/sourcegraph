@@ -2,6 +2,7 @@ import { type FC, type MouseEventHandler, useRef } from 'react'
 
 import classNames from 'classnames'
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import {
     Badge,
@@ -35,6 +36,8 @@ type ShareLinkModalProps = ModalProps & {
 }
 
 export const ShareLinkModal: FC<ShareLinkModalProps> = props => {
+    const { t } = useTranslation('enterprise/insights/components/modals/ShareLinkModal')
+
     const { insight, isOpen, onDismiss, ...attributes } = props
 
     const shareableUrl = `${window.location.origin}/insights/${insight.id}`
@@ -54,7 +57,7 @@ export const ShareLinkModal: FC<ShareLinkModalProps> = props => {
 
     return (
         <Modal className={classNames(styles.container)} {...attributes} isOpen={isOpen} onDismiss={onDismiss}>
-            <H3>Get shareable link</H3>
+            <H3>{t('get-shareable-link')}</H3>
 
             <ShareLinkModalContent insight={insight} />
 
@@ -69,7 +72,7 @@ export const ShareLinkModal: FC<ShareLinkModalProps> = props => {
                             data-placement="bottom"
                             onClick={handleClick}
                         >
-                            Copy link
+                            {t('copy-link')}
                         </Button>
                     </Tooltip>
                 }
@@ -114,33 +117,39 @@ const ShareLinkModalContent: FC<ShareLinkModalContentProps> = props => {
     return <GlobalContent />
 }
 
-const PrivateContent: FC = () => (
-    <span>
-        <Text>
-            Only you can see this insight, because it's only on private dashboards. Add this insight to public
-            dashboards to share with others.
-        </Text>
-        <Text>
-            <em>
-                The “all insights” dashboard shows you all insights available to you regardless of their visibility to
-                others.
-            </em>
-        </Text>
-    </span>
-)
+const PrivateContent: FC = () => {
+    const { t } = useTranslation('enterprise/insights/components/modals/ShareLinkModal')
 
-const OrganizationContent: FC<{ organizations: string[] }> = ({ organizations }) => (
-    <span>
-        <Text className="mb-2">Only people added to the following organizations can see this insight:</Text>
-        {organizations.map(organization => (
-            <Badge variant="secondary" key={organization} className="mr-2">
-                {organization}
-            </Badge>
-        ))}
-    </span>
-)
+    return (
+        <span>
+            <Text>{t('private-insight-visibility')}</Text>
+            <Text>
+                <em>{t('all-insights-dashboard-info')}</em>
+            </Text>
+        </span>
+    )
+}
 
-const GlobalContent: FC = () => <>Everyone on your Sourcegraph instance can see this insight.</>
+const OrganizationContent: FC<{ organizations: string[] }> = ({ organizations }) => {
+    const { t } = useTranslation('enterprise/insights/components/modals/ShareLinkModal')
+
+    return (
+        <span>
+            <Text className="mb-2">{t('organization-visibility-restriction')}</Text>
+            {organizations.map(organization => (
+                <Badge variant="secondary" key={organization} className="mr-2">
+                    {organization}
+                </Badge>
+            ))}
+        </span>
+    )
+}
+
+const GlobalContent: FC = () => {
+    const { t } = useTranslation('enterprise/insights/components/modals/ShareLinkModal')
+
+    return <>{t('instance-wide-insight-visibility')}</>
+}
 
 enum ShareablePermission {
     Private,

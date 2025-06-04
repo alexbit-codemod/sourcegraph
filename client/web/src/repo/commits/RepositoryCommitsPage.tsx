@@ -1,6 +1,7 @@
 import { type FC, useEffect, useMemo } from 'react'
 
 import { capitalize } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import { basename, pluralize } from '@sourcegraph/common'
@@ -131,6 +132,8 @@ export interface RepositoryCommitsPageProps extends RevisionSpec, BreadcrumbSett
 
 // A page that shows a repository's commits at the current revision.
 export const RepositoryCommitsPage: FC<RepositoryCommitsPageProps> = props => {
+    const { t } = useTranslation('repo/commits')
+
     const { useBreadcrumb, repo } = props
     const location = useLocation()
     const { filePath = '' } = parseBrowserRepoURL(location.pathname)
@@ -236,18 +239,24 @@ export const RepositoryCommitsPage: FC<RepositoryCommitsPageProps> = props => {
                     <Heading as="h2" styleAs="h1">
                         {filePath ? (
                             <>
-                                View {pluralize(getRefType(sourceType), 0)} inside <Code>{basename(filePath)}</Code>
+                                {t('view-action')}
+                                {pluralize(getRefType(sourceType), 0)}
+                                {t('inside-label')}
+                                <Code>{basename(filePath)}</Code>
                             </>
                         ) : (
                             <>
-                                View {pluralize(getRefType(sourceType), 0)} from this{' '}
-                                {isPerforceDepotSource(sourceType) ? 'depot' : 'repository'}
+                                {t('view-action-duplicate')}
+                                {pluralize(getRefType(sourceType), 0)}
+                                {t('source-repository-label', {
+                                    isPerforceDepotSourceSourceType: isPerforceDepotSource(sourceType),
+                                })}
                             </>
                         )}
                     </Heading>
 
                     <Heading as="h3" styleAs="h2">
-                        Changes
+                        {t('changes-header')}
                     </Heading>
 
                     {error && <ErrorAlert error={error} className="w-100 mb-0" />}

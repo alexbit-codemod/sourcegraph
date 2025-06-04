@@ -1,0 +1,9 @@
+{
+  "copy-access-token-warning": "Copy the new access token now. You won't be able to see it again.",
+  "example-usage": "Example usage",
+  "created-message": " , created",
+  "last-used-message": "Last used",
+  "created-by-username": "  by <0>{{nodeCreatorUsername}}</0>",
+  "expires-message": "  | Expires",
+  "delete-action": "Delete"
+}

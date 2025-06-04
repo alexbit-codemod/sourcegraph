@@ -2,6 +2,7 @@ import type React from 'react'
 import { useEffect } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { UserAvatar } from '@sourcegraph/shared/src/components/UserAvatar'
@@ -23,6 +24,8 @@ export const CodySwitchAccountPage: React.FunctionComponent<CodySwitchAccountPag
     authenticatedUser,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('cody/switch-account')
+
     useEffect(() => {
         telemetryRecorder.recordEvent('cody.switch-account', 'view')
     }, [telemetryRecorder])
@@ -43,20 +46,23 @@ export const CodySwitchAccountPage: React.FunctionComponent<CodySwitchAccountPag
 
     return (
         <Page className="d-flex flex-column">
-            <PageTitle title="Switch Account" />
+            <PageTitle title={t('switch-account')} />
             <div className="flex-1" />
             <Card className={classNames('d-flex flex-column flex-1 mx-auto p-4', styles.switchAccountCard)}>
                 <Text>
-                    Your Cody client is signed in with a different account <strong>(@{username})</strong>. To manage the
-                    account being used by your Cody client, sign out and sign in with the intended account.
+                    <Trans
+                        i18nKey="different-account-signed-in"
+                        values={{ username }}
+                        components={{ '0': <strong /> }}
+                    />
                 </Text>
                 <Button to="/-/sign-out" as={AnchorLink} variant="primary" className="mt-3">
-                    Sign out to switch accounts
+                    {t('sign-out-to-switch-accounts')}
                 </Button>
                 <div className="my-4 d-flex align-items-center justify-content-center">
                     <hr className="flex-1" />
                     <Text className="text-muted mb-0 px-2" size="small">
-                        or
+                        {t('or-separator')}
                     </Text>
                     <hr className="flex-1" />
                 </div>
@@ -73,7 +79,7 @@ export const CodySwitchAccountPage: React.FunctionComponent<CodySwitchAccountPag
                     </div>
                 </div>
                 <ButtonLink to={CodyProRoutes.Manage} variant="secondary">
-                    Continue
+                    {t('continue-button')}
                 </ButtonLink>
             </Card>
             <div className="flex-1" />

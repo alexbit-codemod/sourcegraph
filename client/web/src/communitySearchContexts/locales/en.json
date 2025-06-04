@@ -1,0 +1,9 @@
+{
+  "context-colon": "context:",
+  "search-examples": "Search examples",
+  "search-label": "Search",
+  "repositories-label": " Repositories",
+  "using-syntax-in-query": "Using the syntax",
+  "context-colon-duplicate": "context:",
+  "search-repositories-description": "  in a query will search these repositories:"
+}

@@ -5,6 +5,7 @@ import { mdiCancel, mdiClose, mdiDetails, mdiMapSearch, mdiReload, mdiSecurity }
 import classNames from 'classnames'
 import { intervalToDuration, formatDuration } from 'date-fns'
 import { capitalize, noop } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 import { animated, useSpring } from 'react-spring'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
@@ -108,6 +109,8 @@ export const PermissionsSyncJobsTable: React.FunctionComponent<React.PropsWithCh
     userID,
     repoID,
 }) => {
+    const { t } = useTranslation('site-admin/permissions-center')
+
     useEffect(() => {
         telemetryService.logPageView('PermissionsSyncJobsTable')
         if (userID) {
@@ -303,7 +306,7 @@ export const PermissionsSyncJobsTable: React.FunctionComponent<React.PropsWithCh
                     {...paginationProps}
                     className="mt-4"
                     totalCount={connection?.totalCount ?? null}
-                    totalLabel="permissions sync jobs"
+                    totalLabel={t('permissions-sync-jobs-title')}
                 />
             </>
         )
@@ -311,15 +314,16 @@ export const PermissionsSyncJobsTable: React.FunctionComponent<React.PropsWithCh
 
     return (
         <div>
-            <PageTitle title="Permissions - Admin" />
+            <PageTitle title={t('permissions-admin-title')} />
             <PageHeader
                 path={[{ text: 'Permissions' }]}
                 headingElement="h2"
                 description={
                     <>
-                        List of permissions sync jobs. A permission sync job fetches the newest permissions for a given
-                        repository or user from the respective code host. Learn more about{' '}
-                        <Link to="/help/admin/permissions/syncing">permissions syncing</Link>.
+                        <Trans
+                            i18nKey="permissions-sync-jobs-description"
+                            components={{ '0': <Link to="/help/admin/permissions/syncing" /> }}
+                        />
                     </>
                 }
                 actions={
@@ -408,7 +412,7 @@ export const PermissionsSyncJobsTable: React.FunctionComponent<React.PropsWithCh
                     {...paginationProps}
                     className="mt-4"
                     totalCount={connection?.totalCount ?? null}
-                    totalLabel="permissions sync jobs"
+                    totalLabel={t('permissions-sync-jobs-title-duplicate')}
                 />
             </Container>
         </div>
@@ -544,6 +548,8 @@ interface PermissionsSyncJobReasonGroupPickerProps {
 }
 
 const PermissionsSyncJobReasonGroupPicker: FC<PermissionsSyncJobReasonGroupPickerProps> = props => {
+    const { t } = useTranslation('site-admin/permissions-center')
+
     const { onChange, value } = props
 
     const handleSelect = (event: ChangeEvent<HTMLSelectElement>): void => {
@@ -553,11 +559,11 @@ const PermissionsSyncJobReasonGroupPicker: FC<PermissionsSyncJobReasonGroupPicke
 
     return (
         <Select id="reasonSelector" value={stringToReason(value) || ''} label="Reason" onChange={handleSelect}>
-            <option value="">Any</option>
-            <option value={PermissionsSyncJobReasonGroup.MANUAL}>Manual</option>
-            <option value={PermissionsSyncJobReasonGroup.SCHEDULE}>Schedule</option>
-            <option value={PermissionsSyncJobReasonGroup.SOURCEGRAPH}>Sourcegraph</option>
-            <option value={PermissionsSyncJobReasonGroup.WEBHOOK}>Webhook</option>
+            <option value="">{t('any-option')}</option>
+            <option value={PermissionsSyncJobReasonGroup.MANUAL}>{t('manual-option')}</option>
+            <option value={PermissionsSyncJobReasonGroup.SCHEDULE}>{t('schedule-option')}</option>
+            <option value={PermissionsSyncJobReasonGroup.SOURCEGRAPH}>{t('sourcegraph-option')}</option>
+            <option value={PermissionsSyncJobReasonGroup.WEBHOOK}>{t('webhook-option')}</option>
         </Select>
     )
 }
@@ -569,6 +575,8 @@ interface PermissionsSyncJobStatePickerProps {
 }
 
 const PermissionsSyncJobStatePicker: FC<PermissionsSyncJobStatePickerProps> = props => {
+    const { t } = useTranslation('site-admin/permissions-center')
+
     const { onChange, onPartialSuccessChange, value } = props
 
     const handleSelect = (event: ChangeEvent<HTMLSelectElement>): void => {
@@ -593,14 +601,14 @@ const PermissionsSyncJobStatePicker: FC<PermissionsSyncJobStatePickerProps> = pr
     const selectedValue = value === 'partial' ? 'partial' : stringToState(value) || ''
     return (
         <Select id="stateSelector" value={selectedValue} label="State" onChange={handleSelect}>
-            <option value="">Any</option>
-            <option value={PermissionsSyncJobState.CANCELED}>Canceled</option>
-            <option value={PermissionsSyncJobState.COMPLETED}>Completed</option>
-            <option value={PermissionsSyncJobState.ERRORED}>Errored</option>
-            <option value={PermissionsSyncJobState.FAILED}>Failed</option>
-            <option value={PermissionsSyncJobState.PROCESSING}>Processing</option>
-            <option value={PermissionsSyncJobState.QUEUED}>Queued</option>
-            <option value="partial">Partial</option>
+            <option value="">{t('any-option-duplicate')}</option>
+            <option value={PermissionsSyncJobState.CANCELED}>{t('canceled-status')}</option>
+            <option value={PermissionsSyncJobState.COMPLETED}>{t('completed-status')}</option>
+            <option value={PermissionsSyncJobState.ERRORED}>{t('errored-status')}</option>
+            <option value={PermissionsSyncJobState.FAILED}>{t('failed-status')}</option>
+            <option value={PermissionsSyncJobState.PROCESSING}>{t('processing-status')}</option>
+            <option value={PermissionsSyncJobState.QUEUED}>{t('queued-status')}</option>
+            <option value="partial">{t('partial-status')}</option>
         </Select>
     )
 }
@@ -611,6 +619,8 @@ interface PermissionsSyncJobSearchTypePickerProps {
 }
 
 const PermissionsSyncJobSearchTypePicker: FC<PermissionsSyncJobSearchTypePickerProps> = props => {
+    const { t } = useTranslation('site-admin/permissions-center')
+
     const { onChange, value } = props
 
     const handleSelect = (event: ChangeEvent<HTMLSelectElement>): void => {
@@ -620,9 +630,9 @@ const PermissionsSyncJobSearchTypePicker: FC<PermissionsSyncJobSearchTypePickerP
 
     return (
         <Select id="searchTypeSelector" value={stringToSearchType(value) || ''} label="Search" onChange={handleSelect}>
-            <option value="">Choose User/Repository</option>
-            <option value={PermissionsSyncJobsSearchType.USER}>User</option>
-            <option value={PermissionsSyncJobsSearchType.REPOSITORY}>Repository</option>
+            <option value="">{t('choose-user-repository')}</option>
+            <option value={PermissionsSyncJobsSearchType.USER}>{t('user-label')}</option>
+            <option value={PermissionsSyncJobsSearchType.REPOSITORY}>{t('repository-label')}</option>
         </Select>
     )
 }
@@ -662,12 +672,16 @@ const PermissionsSyncJobSearchPane: FC<PermissionsSyncJobSearchPaneProps> = prop
     )
 }
 
-const EmptyList: React.FunctionComponent<React.PropsWithChildren<{}>> = () => (
-    <div className="text-muted text-center mb-3 w-100">
-        <Icon className="icon" svgPath={mdiMapSearch} inline={false} aria-hidden={true} />
-        <div className="pt-2">No permissions sync jobs have been found.</div>
-    </div>
-)
+const EmptyList: React.FunctionComponent<React.PropsWithChildren<{}>> = () => {
+    const { t } = useTranslation('site-admin/permissions-center')
+
+    return (
+        <div className="text-muted text-center mb-3 w-100">
+            <Icon className="icon" svgPath={mdiMapSearch} inline={false} aria-hidden={true} />
+            <div className="pt-2">{t('no-permissions-sync-jobs-found')}</div>
+        </div>
+    )
+}
 
 const finalState = (state: PermissionsSyncJobState): boolean =>
     state !== PermissionsSyncJobState.QUEUED && state !== PermissionsSyncJobState.PROCESSING

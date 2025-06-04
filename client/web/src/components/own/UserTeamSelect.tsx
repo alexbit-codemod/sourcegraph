@@ -3,6 +3,7 @@ import React, { type ButtonHTMLAttributes, forwardRef, useEffect, useState } fro
 import classNames from 'classnames'
 import ChevronDownIcon from 'mdi-react/ChevronDownIcon'
 import ChevronUpIcon from 'mdi-react/ChevronUpIcon'
+import { useTranslation } from 'react-i18next'
 
 import { TeamAvatar } from '@sourcegraph/shared/src/components/TeamAvatar'
 import { UserAvatar } from '@sourcegraph/shared/src/components/UserAvatar'
@@ -112,6 +113,8 @@ export const UserTeamSelectContent: React.FunctionComponent<UserTeamSelectConten
     onSelectUser,
     onSelectTeam,
 }) => {
+    const { t } = useTranslation('components/own')
+
     const [search, setSearch] = useState<string>('')
 
     const { data, loading, error } = useUserSelectSearch(search)
@@ -147,7 +150,7 @@ export const UserTeamSelectContent: React.FunctionComponent<UserTeamSelectConten
                 value={search}
                 autoFocus={true}
                 spellCheck={false}
-                placeholder="Search users and teams"
+                placeholder={t('search-users-and-teams')}
                 aria-label="Search users and teams"
                 inputClassName={styles.comboboxInput}
                 className={styles.comboboxInputContainer}

@@ -3,6 +3,7 @@ import React, { useMemo } from 'react'
 import { mdiClose, mdiCheckCircle } from '@mdi/js'
 import classNames from 'classnames'
 import { chunk, upperFirst } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import type { TourTaskType } from '@sourcegraph/shared/src/settings/temporary'
 import { Badge, Button, Icon, Text } from '@sourcegraph/wildcard'
@@ -27,37 +28,45 @@ const Header: React.FunctionComponent<React.PropsWithChildren<{ onClose: () => v
     children,
     onClose,
     title = 'Quick start',
-}) => (
-    <div className="d-flex align-items-start">
-        <Text className={styles.title}>{title}</Text>
-        <Badge className="ml-2" variant="warning">
-            Experimental
-        </Badge>
-        <Button
-            className="ml-auto"
-            variant="icon"
-            data-testid="tour-close-btn"
-            onClick={onClose}
-            aria-label="Close quick start"
-        >
-            <Icon aria-hidden={true} svgPath={mdiClose} /> {children}
-        </Button>
-    </div>
-)
+}) => {
+    const { t } = useTranslation('tour/components/Tour')
+
+    return (
+        <div className="d-flex align-items-start">
+            <Text className={styles.title}>{title}</Text>
+            <Badge className="ml-2" variant="warning">
+                {t('experimental-feature')}
+            </Badge>
+            <Button
+                className="ml-auto"
+                variant="icon"
+                data-testid="tour-close-btn"
+                onClick={onClose}
+                aria-label="Close quick start"
+            >
+                <Icon aria-hidden={true} svgPath={mdiClose} /> {children}
+            </Button>
+        </div>
+    )
+}
 
 const Footer: React.FunctionComponent<React.PropsWithChildren<{ completedCount: number; totalCount: number }>> = ({
     completedCount,
     totalCount,
-}) => (
-    <Text alignment="right" className="mt-2 mb-0">
-        <Icon
-            className={classNames('mr-1', completedCount === 0 ? 'text-muted' : 'text-success')}
-            aria-hidden={true}
-            svgPath={mdiCheckCircle}
-        />
-        {completedCount} of {totalCount} completed
-    </Text>
-)
+}) => {
+    const { t } = useTranslation('tour/components/Tour')
+
+    return (
+        <Text alignment="right" className="mt-2 mb-0">
+            <Icon
+                className={classNames('mr-1', completedCount === 0 ? 'text-muted' : 'text-success')}
+                aria-hidden={true}
+                svgPath={mdiCheckCircle}
+            />
+            {t('completed-count-summary', { completedCount, totalCount })}
+        </Text>
+    )
+}
 
 const CompletedItem: React.FunctionComponent<React.PropsWithChildren<{}>> = ({ children }) => (
     <li className="d-flex align-items-start">
@@ -80,6 +89,8 @@ export const TourContent: React.FunctionComponent<React.PropsWithChildren<TourCo
     keepCompletedTasks,
     height = 18,
 }) => {
+    const { t } = useTranslation('tour/components/Tour')
+
     const { completedCount, totalCount, completedTasks, completedTaskChunks, ongoingTasks } = useMemo(() => {
         const completedTasks = tasks.filter(task => task.completed === 100)
         if (keepCompletedTasks) {
@@ -105,7 +116,7 @@ export const TourContent: React.FunctionComponent<React.PropsWithChildren<TourCo
         <div className={className} data-testid="tour-content">
             {isHorizontal && onClose && (
                 <Header onClose={onClose} title={title}>
-                    Don't show again
+                    {t('dont-show-again')}
                 </Header>
             )}
             <MarketingBlock
@@ -123,7 +134,7 @@ export const TourContent: React.FunctionComponent<React.PropsWithChildren<TourCo
                 >
                     {isHorizontal && completedTaskChunks.length > 0 && (
                         <div className={classNames('pl-2 flex-grow-1', styles.completedItems)}>
-                            <Text className={styles.title}>Completed</Text>
+                            <Text className={styles.title}>{t('completed-status')}</Text>
                             <div className={styles.completedItemsInner}>
                                 {completedTaskChunks.map((completedTaskChunk, index) => (
                                     <ul key={index} className="p-0 m-0 list-unstyled text-nowrap">

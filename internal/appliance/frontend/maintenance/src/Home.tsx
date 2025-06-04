@@ -1,4 +1,5 @@
 import { CircularProgress, Typography } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 import './App.css'
 
@@ -7,6 +8,8 @@ import { useOutletContext } from 'react-router-dom'
 import { OutletContext } from './Frame'
 
 export const Home: React.FC = () => {
+    const { t } = useTranslation('../../../internal/appliance/frontend/maintenance/src')
+
     const context = useOutletContext<OutletContext>()
 
     return (
@@ -14,11 +17,11 @@ export const Home: React.FC = () => {
             <CircularProgress size={18} />
             {context.online || context.needsLogin ? (
                 <>
-                    <Typography>Appliance connected. Please wait...</Typography>
+                    <Typography>{t('appliance-connected-please-wait')}</Typography>
                 </>
             ) : (
                 <>
-                    <Typography>Please wait, while the Sourcegraph Appliance connects...</Typography>
+                    <Typography>{t('connecting-sourcegraph-appliance')}</Typography>
                 </>
             )}
         </div>

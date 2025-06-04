@@ -3,6 +3,7 @@ import React, { useMemo } from 'react'
 import { mdiCog, mdiFileOutline, mdiSourceCommit, mdiGlasses, mdiInformationOutline } from '@mdi/js'
 import classNames from 'classnames'
 import { escapeRegExp } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { metadataToTag, TagList, topicToTag } from '@sourcegraph/branded'
 import { encodeURIPathComponent, numberWithCommas, pluralize } from '@sourcegraph/common'
@@ -80,6 +81,8 @@ const ExtraInfoSection: React.FC<{
     className?: string
     hasWritePermissions?: boolean
 }> = ({ repo, className, hasWritePermissions }) => {
+    const { t } = useTranslation('repo/tree')
+
     const [enableRepositoryMetadata] = useFeatureFlag('repository-metadata', true)
 
     const queryState = useNavbarQueryState(state => state.queryState)
@@ -97,13 +100,16 @@ const ExtraInfoSection: React.FC<{
     return (
         <Card className={className}>
             <ExtraInfoSectionItem>
-                <ExtraInfoSectionItemHeader title="Description" tooltip="Synchronized from the code host" />
+                <ExtraInfoSectionItemHeader title={t('description')} tooltip="Synchronized from the code host" />
                 {repo.description && <Text>{repo.description}</Text>}
             </ExtraInfoSectionItem>
             {/* Not all code hosts support the concept of "topics", hence we only show topics if we have them */}
             {topicTags.length > 0 && (
                 <ExtraInfoSectionItem>
-                    <ExtraInfoSectionItemHeader title="Topics" tooltip={<>Topics synced from the code host</>} />
+                    <ExtraInfoSectionItemHeader
+                        title={t('topics')}
+                        tooltip={<>{t('topics-synced-from-code-host')}</>}
+                    />
                     <TagList tags={topicTags} />
                 </ExtraInfoSectionItem>
             )}
@@ -113,13 +119,12 @@ const ExtraInfoSection: React.FC<{
                         title="Metadata"
                         tooltip={
                             <>
-                                Repository metadata allows you to search, filter and navigate between repositories.
-                                Users with the Repository metadata write role can add repository metadata via the web,
-                                cli or API. Learn more about{' '}
-                                <Link to="/help/admin/repo/metadata" className={styles.linkDark}>
-                                    Repository Metadata
-                                </Link>
-                                .
+                                <Trans
+                                    i18nKey="repository-metadata-description"
+                                    components={{
+                                        '0': <Link to="/help/admin/repo/metadata" className={styles.linkDark} />,
+                                    }}
+                                />
                             </>
                         }
                     >
@@ -138,7 +143,11 @@ const ExtraInfoSection: React.FC<{
                             </Tooltip>
                         )}
                     </ExtraInfoSectionItemHeader>
-                    {metadataTags.length ? <TagList tags={metadataTags} /> : <Text className="text-muted">None</Text>}
+                    {metadataTags.length ? (
+                        <TagList tags={metadataTags} />
+                    ) : (
+                        <Text className="text-muted">{t('none')}</Text>
+                    )}
                 </ExtraInfoSectionItem>
             )}
         </Card>
@@ -158,6 +167,8 @@ interface TreePageContentProps extends TelemetryProps, PlatformContextProps {
 }
 
 export const TreePageContent: React.FunctionComponent<React.PropsWithChildren<TreePageContentProps>> = props => {
+    const { t } = useTranslation('repo/tree')
+
     const { filePath, tree, treeWithHistory, repo, revision, isPackage, showOwnership } = props
 
     const isRoot = filePath === ''
@@ -223,12 +234,12 @@ export const TreePageContent: React.FunctionComponent<React.PropsWithChildren<Tr
                     <div className={styles.contributors}>
                         {enableOwnershipPanels && showOwnership && (
                             <Card>
-                                <CardHeader className={panelStyles.cardColHeaderWrapper}>Own</CardHeader>
+                                <CardHeader className={panelStyles.cardColHeaderWrapper}>{t('own')}</CardHeader>
                                 <Ownership {...props} />
                             </Card>
                         )}
                         <Card className={enableOwnershipPanels && showOwnership ? 'mt-3' : undefined}>
-                            <CardHeader className={panelStyles.cardColHeaderWrapper}>Contributors</CardHeader>
+                            <CardHeader className={panelStyles.cardColHeaderWrapper}>{t('contributors')}</CardHeader>
                             <Contributors {...props} />
                         </Card>
                     </div>
@@ -286,6 +297,8 @@ const CONTRIBUTORS_QUERY = gql`
 interface ContributorsProps extends TreePageContentProps {}
 
 const Contributors: React.FC<ContributorsProps> = ({ repo, filePath }) => {
+    const { t } = useTranslation('repo/tree')
+
     const spec: QuerySpec = {
         revisionRange: '',
         after: '',
@@ -352,7 +365,7 @@ const Contributors: React.FC<ContributorsProps> = ({ repo, filePath }) => {
                                         filePath ? 'path=' + encodeURIComponent(filePath) : ''
                                     }`}
                                 >
-                                    Show more
+                                    {t('show-more-1')}
                                 </Link>
                             </small>
                         )}
@@ -408,6 +421,8 @@ const OWNERS_QUERY = gql`
 interface OwnershipProps extends TreePageContentProps {}
 
 const Ownership: React.FC<OwnershipProps> = ({ repo, filePath }) => {
+    const { t } = useTranslation('repo/tree')
+
     const { data, error, loading } = useQuery<TreePageOwnershipResult, TreePageOwnershipVariables>(OWNERS_QUERY, {
         variables: {
             first: 5,
@@ -457,7 +472,7 @@ const Ownership: React.FC<OwnershipProps> = ({ repo, filePath }) => {
                     {connection && (
                         <small>
                             <Link to={`${repo.url}/-/own?${filePath ? 'path=' + encodeURIComponent(filePath) : ''}`}>
-                                Show more
+                                {t('show-more-2')}
                             </Link>
                         </small>
                     )}
@@ -472,6 +487,8 @@ interface OwnerNodeProps {
 }
 
 const OwnerNode: React.FC<OwnerNodeProps> = ({ node }) => {
+    const { t } = useTranslation('repo/tree')
+
     const owner = node?.owner
     const primaryReason =
         node.reasons.find(reason => reason.__typename === 'AssignedOwner') ||
@@ -501,17 +518,19 @@ const OwnerNode: React.FC<OwnerNodeProps> = ({ node }) => {
             <td className={contributorsStyles.commits}>
                 {primaryReason?.__typename === 'AssignedOwner' && (
                     <Badge tooltip="Owner assigned through sourcegraph" className={styles.badge} variant="merged">
-                        owner
+                        {t('owner-label')}
                     </Badge>
                 )}
                 {primaryReason?.__typename === 'RecentContributorOwnershipSignal' && (
                     <Badge tooltip={primaryReason.description} className={styles.badge} variant="secondary">
-                        <Icon aria-label={primaryReason.title} svgPath={mdiFileOutline} /> changes
+                        <Icon aria-label={primaryReason.title} svgPath={mdiFileOutline} />
+                        {t('changes-label')}
                     </Badge>
                 )}
                 {primaryReason?.__typename === 'RecentViewOwnershipSignal' && (
                     <Badge tooltip={primaryReason.description} className={styles.badge} variant="secondary">
-                        <Icon aria-label={primaryReason.title} svgPath={mdiGlasses} /> views
+                        <Icon aria-label={primaryReason.title} svgPath={mdiGlasses} />
+                        {t('views-label')}
                     </Badge>
                 )}
                 {node.reasons.length > 1 && (

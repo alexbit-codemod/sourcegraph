@@ -1,5 +1,7 @@
 import * as React from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import type { PlatformContextProps } from '@sourcegraph/shared/src/platform/context'
 import type { SettingsCascadeProps } from '@sourcegraph/shared/src/settings/settings'
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -18,22 +20,19 @@ interface Props extends PlatformContextProps, SettingsCascadeProps, TelemetryPro
 }
 
 export const SiteAdminSettingsPage: React.FunctionComponent<React.PropsWithChildren<Props>> = props => {
+    const { t } = useTranslation('site-admin')
+
     const isLightTheme = useIsLightTheme()
 
     return (
         <>
-            <PageTitle title="Global settings" />
+            <PageTitle title={t('global-settings-title')} />
             <SettingsArea
                 {...props}
                 isLightTheme={isLightTheme}
                 subject={props.site}
                 authenticatedUser={props.authenticatedUser}
-                extraHeader={
-                    <Text>
-                        Global settings apply to all organizations and users. Settings for a user or organization
-                        override global settings.
-                    </Text>
-                }
+                extraHeader={<Text>{t('global-settings-description')}</Text>}
             />
         </>
     )

@@ -2,6 +2,7 @@ import React, { useMemo, useEffect } from 'react'
 
 import classNames from 'classnames'
 import { startCase } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { useQuery } from '@sourcegraph/http-client'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -25,6 +26,8 @@ import styles from './index.module.scss'
 interface Props extends TelemetryV2Props {}
 
 export const AnalyticsExtensionsPage: React.FunctionComponent<Props> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin/analytics/AnalyticsExtensionsPage')
+
     const { dateRange, aggregation, grouping } = useChartFilters({ name: 'Extensions', telemetryRecorder })
     const { data, error, loading } = useQuery<ExtensionsStatisticsResult, ExtensionsStatisticsVariables>(
         EXTENSIONS_STATISTICS,
@@ -181,7 +184,7 @@ export const AnalyticsExtensionsPage: React.FunctionComponent<Props> = ({ teleme
 
     return (
         <>
-            <AnalyticsPageTitle>Search extensions</AnalyticsPageTitle>
+            <AnalyticsPageTitle>{t('search-extensions')}</AnalyticsPageTitle>
 
             <Card className="p-3 position-relative">
                 <div className="d-flex justify-content-end align-items-stretch mb-2 text-nowrap">
@@ -207,41 +210,42 @@ export const AnalyticsExtensionsPage: React.FunctionComponent<Props> = ({ teleme
                         </div>
                     </div>
                 )}
-                <H2 className="my-3">Total time saved</H2>
+                <H2 className="my-3">{t('total-time-saved')}</H2>
                 {calculatorProps && <TimeSavedCalculatorGroup {...calculatorProps} />}
                 <div className={styles.suggestionBox}>
-                    <H4 className="my-3">Suggestions</H4>
+                    <H4 className="my-3">{t('suggestions')}</H4>
                     <div className={classNames(styles.border, 'mb-3')} />
                     {installationStats && (
                         <ul className="mb-3 pl-3">
                             <Text as="li">
-                                {installationStats.vscode}% of users have installed the{' '}
+                                {installationStats.vscode}
+                                {t('percentage-users-installed-extension')}
                                 <AnchorLink to="/help/integration/editor" target="_blank">
-                                    VS Code extension
+                                    {t('vs-code-extension-promotion')}
                                 </AnchorLink>
-                                . Promote installation to increase the value.
+                                {t('installation-value-promotion')}
                             </Text>
                             <Text as="li">
-                                {installationStats.jetbrains}% of users have installed the{' '}
+                                {installationStats.jetbrains}
+                                {t('percentage-users-installed-jetbrains-plugin')}
                                 <AnchorLink to="/help/integration/editor" target="_blank">
-                                    JetBrains plugin
+                                    {t('jetbrains-plugin-promotion')}
                                 </AnchorLink>
-                                . Promote installation to increase the value.
+                                {t('installation-value-promotion-jetbrains')}
                             </Text>
                             <Text as="li">
-                                {installationStats.browser}% of users have installed the{' '}
+                                {installationStats.browser}
+                                {t('percentage-users-installed-browser-extension')}
                                 <AnchorLink to="/help/integration/browser_extension" target="_blank">
-                                    browser extension
+                                    {t('browser-extension-promotion')}
                                 </AnchorLink>
-                                . Promote installation to increase the value.
+                                {t('installation-value-promotion-browser')}
                             </Text>
                         </ul>
                     )}
                 </div>
             </Card>
-            <Text className="font-italic text-center mt-2">
-                All events are generated from entries in the event logs table and are updated every 24 hours.
-            </Text>
+            <Text className="font-italic text-center mt-2">{t('event-logs-update-notice')}</Text>
         </>
     )
 }

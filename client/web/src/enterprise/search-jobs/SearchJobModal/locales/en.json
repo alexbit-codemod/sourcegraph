@@ -1,0 +1,16 @@
+{
+  "delete-search-job-confirmation": "Do you want to delete this search job?",
+  "delete-search-job-note": "<0>Note:</0> All query runs across all repositories will be stopped or canceled. In case if the search job is still running search results will be deleted.",
+  "cancel-button": "Cancel",
+  "deleting-status": " Deleting",
+  "rerun-search-job-confirmation": "Do you want to re-run this search job?",
+  "rerun-search-job-note": "<0>Note:</0> Re-run will create a new search job, the current search job will be cancelled.",
+  "cancel-button-rerun": "Cancel",
+  "rerunning-status": " Re-running",
+  "rerun-button": "Rerun",
+  "stop-search-job-confirmation": "Do you want to stop this search job?",
+  "stop-search-job-note": "<0>Note:</0> All query runs across all repositories and revisions will be stopped. You can re-run this search job later.",
+  "close-button": "Close",
+  "stopping-status": " Stopping",
+  "yes-stop-search-job": "Yes - stop this search job."
+}

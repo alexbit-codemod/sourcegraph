@@ -1,5 +1,6 @@
 import React, { type FC, useEffect, useState, useCallback, useMemo } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -36,6 +37,8 @@ export const ExternalServiceEditPage: FC<Props> = ({
     autoFocusForm,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('components/externalServices')
+
     const { externalServiceID } = useParams()
     const navigate = useNavigate()
 
@@ -125,7 +128,7 @@ export const ExternalServiceEditPage: FC<Props> = ({
                             to={`/site-admin/external-services/${encodeURIComponent(externalService.id)}`}
                             variant="secondary"
                         >
-                            Cancel
+                            {t('cancel-button')}
                         </ButtonLink>
                     }
                 />
@@ -156,9 +159,11 @@ export const ExternalServiceEditPage: FC<Props> = ({
     return (
         <div>
             {externalService ? (
-                <PageTitle title={`Code host - ${externalService.displayName}`} />
+                <PageTitle
+                    title={t('code-host-display-name', { externalServiceDisplayName: externalService.displayName })}
+                />
             ) : (
-                <PageTitle title="Code host" />
+                <PageTitle title={t('code-host-label')} />
             )}
             {combinedError !== undefined && !combinedLoading && <ErrorAlert className="mb-3" error={combinedError} />}
             {externalService && renderService(externalService)}

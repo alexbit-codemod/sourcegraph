@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import { mdiClipboardPulseOutline } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import type { Progress, StreamingResultsState } from '@sourcegraph/shared/src/search/stream'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -52,14 +53,17 @@ export const StreamingProgress: React.FunctionComponent<React.PropsWithChildren<
     )
 }
 
-const TraceLink: React.FunctionComponent<{ showTrace?: boolean; trace?: string }> = ({ showTrace, trace }) =>
-    showTrace && trace ? (
+const TraceLink: React.FunctionComponent<{ showTrace?: boolean; trace?: string }> = ({ showTrace, trace }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/results/progress')
+
+    return showTrace && trace ? (
         <small className={classNames('d-flex align-items-center', styles.count)}>
             <Link to={trace}>
                 <Icon aria-hidden={true} className="mr-2" svgPath={mdiClipboardPulseOutline} />
-                View trace
+                {t('view-trace')}
             </Link>
         </small>
     ) : (
         <></>
     )
+}

@@ -3,6 +3,7 @@ import React, { useEffect, useMemo } from 'react'
 import { mdiAccount, mdiCommentOutline, mdiSourceRepository } from '@mdi/js'
 import classNames from 'classnames'
 import { format } from 'date-fns'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { useQuery } from '@sourcegraph/http-client'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -27,6 +28,8 @@ import styles from './index.module.scss'
 interface Props extends TelemetryV2Props {}
 
 export const AnalyticsOverviewPage: React.FunctionComponent<Props> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('site-admin/analytics/AnalyticsOverviewPage')
+
     const { dateRange } = useChartFilters({ name: 'Overview', telemetryRecorder })
     const { data, error, loading } = useQuery<OverviewStatisticsResult, OverviewStatisticsVariables>(
         OVERVIEW_STATISTICS,
@@ -75,7 +78,7 @@ export const AnalyticsOverviewPage: React.FunctionComponent<Props> = ({ telemetr
     const changelogUrl = getChangelogUrl(data.site.productVersion)
     return (
         <>
-            <AnalyticsPageTitle>Overview</AnalyticsPageTitle>
+            <AnalyticsPageTitle>{t('overview')}</AnalyticsPageTitle>
 
             <Card className="p-3" data-testid="product-certificate">
                 <div className="d-flex justify-content-between align-items-start mb-3 text-nowrap">
@@ -86,7 +89,7 @@ export const AnalyticsOverviewPage: React.FunctionComponent<Props> = ({ telemetr
                         </div>
                         <div className="d-flex">
                             <Text className="text-muted">
-                                Version{' '}
+                                {t('version-label')}
                                 {changelogUrl ? (
                                     <Link to={changelogUrl} className={styles.purple}>
                                         {data.site.productVersion}
@@ -104,17 +107,24 @@ export const AnalyticsOverviewPage: React.FunctionComponent<Props> = ({ telemetr
                                             rel="noopener"
                                             className="ml-1"
                                         >
-                                            Upgrade
+                                            {t('upgrade-button')}
                                         </AnchorLink>
                                     ) : null}
                                     <Text className="text-muted mx-2">|</Text>
                                     <Text className="text-muted">
-                                        License
-                                        {isProductLicenseExpired(licenseExpiresAt) ? ' expired on ' : ' valid until '}
-                                        <span title={format(licenseExpiresAt, 'PPpp')}>
-                                            {format(licenseExpiresAt, 'yyyy-MM-dd')}
-                                        </span>{' '}
-                                        ({formatRelativeExpirationDate(licenseExpiresAt)})
+                                        <Trans
+                                            i18nKey="license-info"
+                                            values={{
+                                                isProductLicenseExpiredLicenseExpiresAt:
+                                                    isProductLicenseExpired(licenseExpiresAt),
+                                                formatLicenseExpiresAtYyyyMmDd: (
+                                                    <>{format(licenseExpiresAt, 'yyyy-MM-dd')}</>
+                                                ),
+                                                formatRelativeExpirationDateLicenseExpiresAt:
+                                                    formatRelativeExpirationDate(licenseExpiresAt),
+                                            }}
+                                            components={{ '0': <span title={format(licenseExpiresAt, 'PPpp')} /> }}
+                                        />
                                     </Text>
                                 </>
                             ) : (
@@ -124,7 +134,7 @@ export const AnalyticsOverviewPage: React.FunctionComponent<Props> = ({ telemetr
                                     rel="noopener"
                                     className="ml-1"
                                 >
-                                    Get license
+                                    {t('get-license-button')}
                                 </AnchorLink>
                             )}
                         </div>

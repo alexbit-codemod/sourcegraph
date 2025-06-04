@@ -1,5 +1,7 @@
 import type { FC, FormEventHandler, ReactNode, FormHTMLAttributes } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { Input, FormGroup, getDefaultInputProps, type useFieldAPI, type SubmissionErrors } from '@sourcegraph/wildcard'
 
 import {
@@ -43,6 +45,8 @@ export interface RenderPropertyInputs {
  * UI layer only, all controlled data should be managed by consumer of this component.
  */
 export const SearchInsightCreationForm: FC<CreationSearchInsightFormProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation/search-insight/components')
+
     const {
         handleSubmit,
         submitErrors,
@@ -93,10 +97,10 @@ export const SearchInsightCreationForm: FC<CreationSearchInsightFormProps> = pro
 
             <FormGroup name="chart settings group" title="Chart settings">
                 <Input
-                    label="Title"
+                    label={t('title')}
                     required={true}
                     message="Shown as the title for your insight"
-                    placeholder="Example: Migration to React function components"
+                    placeholder={t('example-migration-to-react-function-components')}
                     className="d-flex flex-column"
                     {...getDefaultInputProps(title)}
                 />

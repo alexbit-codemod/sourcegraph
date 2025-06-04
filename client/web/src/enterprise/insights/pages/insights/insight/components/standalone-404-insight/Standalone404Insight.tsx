@@ -1,21 +1,27 @@
 import type { FunctionComponent } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { Button, Link, H2, Text } from '@sourcegraph/wildcard'
 
 import styles from './Standalone404Insight.module.scss'
 
-export const Standalone404Insight: FunctionComponent = () => (
-    <div className={styles.container}>
-        <GraphicInsightChart className={styles.chart} />
+export const Standalone404Insight: FunctionComponent = () => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/insight/components/standalone-404-insight')
 
-        <H2 className="mb-3">Insight not found</H2>
-        <Text>Insight may not exist or you may not have permission to view it.</Text>
+    return (
+        <div className={styles.container}>
+            <GraphicInsightChart className={styles.chart} />
 
-        <Button as={Link} to="/insights/all" variant="primary" className={styles.redirectButton}>
-            Go to 'All insights'
-        </Button>
-    </div>
-)
+            <H2 className="mb-3">{t('insight-not-found')}</H2>
+            <Text>{t('insight-permission-error')}</Text>
+
+            <Button as={Link} to="/insights/all" variant="primary" className={styles.redirectButton}>
+                {t('go-to-all-insights')}
+            </Button>
+        </div>
+    )
+}
 
 const GraphicInsightChart: FunctionComponent<{ className: string }> = ({ className }) => (
     <svg width="263" height="134" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>

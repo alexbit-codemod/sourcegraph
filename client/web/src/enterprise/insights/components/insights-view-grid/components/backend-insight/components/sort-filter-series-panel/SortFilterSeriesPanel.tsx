@@ -1,6 +1,7 @@
 import type { ButtonHTMLAttributes, ChangeEventHandler, FC, FocusEventHandler, PropsWithChildren } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Button, ButtonGroup, Input } from '@sourcegraph/wildcard'
 
@@ -22,6 +23,10 @@ interface SortFilterSeriesPanelProps {
 }
 
 export const SortFilterSeriesPanel: FC<SortFilterSeriesPanelProps> = props => {
+    const { t } = useTranslation(
+        'enterprise/insights/components/insights-view-grid/components/backend-insight/components/sort-filter-series-panel'
+    )
+
     const { value, isNumSamplesFilterAvailable, onChange } = props
 
     const handleToggle = (sortOptions: SeriesSortOptionsInput): void => {
@@ -72,7 +77,7 @@ export const SortFilterSeriesPanel: FC<SortFilterSeriesPanelProps> = props => {
         <section>
             <section className={classNames(styles.togglesContainer)}>
                 <div className="d-flex flex-column">
-                    <small className={styles.label}>Sort by result count</small>
+                    <small className={styles.label}>{t('sort-by-result-count')}</small>
                     <ButtonGroup className={styles.toggleGroup}>
                         <ToggleButton
                             aria-label="Sort by result count with descending order"
@@ -80,7 +85,7 @@ export const SortFilterSeriesPanel: FC<SortFilterSeriesPanelProps> = props => {
                             value={{ mode: SeriesSortMode.RESULT_COUNT, direction: SeriesSortDirection.DESC }}
                             onToggle={handleToggle}
                         >
-                            Highest
+                            {t('highest-option')}
                         </ToggleButton>
                         <ToggleButton
                             aria-label="Sort by result count with ascending order"
@@ -88,12 +93,12 @@ export const SortFilterSeriesPanel: FC<SortFilterSeriesPanelProps> = props => {
                             value={{ mode: SeriesSortMode.RESULT_COUNT, direction: SeriesSortDirection.ASC }}
                             onToggle={handleToggle}
                         >
-                            Lowest
+                            {t('lowest-option')}
                         </ToggleButton>
                     </ButtonGroup>
                 </div>
                 <div className="d-flex flex-column">
-                    <small className={styles.label}>Sort by name</small>
+                    <small className={styles.label}>{t('sort-by-name')}</small>
                     <ButtonGroup className={styles.toggleGroup}>
                         <ToggleButton
                             aria-label="Sort by name with ascending order"
@@ -114,7 +119,7 @@ export const SortFilterSeriesPanel: FC<SortFilterSeriesPanelProps> = props => {
                     </ButtonGroup>
                 </div>
                 <div className="d-flex flex-column">
-                    <small className={styles.label}>Sort by date added</small>
+                    <small className={styles.label}>{t('sort-by-date-added')}</small>
                     <ButtonGroup className={styles.toggleGroup}>
                         <ToggleButton
                             aria-label="Sort by date with descending order"
@@ -122,7 +127,7 @@ export const SortFilterSeriesPanel: FC<SortFilterSeriesPanelProps> = props => {
                             value={{ mode: SeriesSortMode.DATE_ADDED, direction: SeriesSortDirection.DESC }}
                             onToggle={handleToggle}
                         >
-                            Newest
+                            {t('newest-option')}
                         </ToggleButton>
                         <ToggleButton
                             aria-label="Sort by date with ascending order"
@@ -130,15 +135,18 @@ export const SortFilterSeriesPanel: FC<SortFilterSeriesPanelProps> = props => {
                             value={{ mode: SeriesSortMode.DATE_ADDED, direction: SeriesSortDirection.ASC }}
                             onToggle={handleToggle}
                         >
-                            Oldest
+                            {t('oldest-option')}
                         </ToggleButton>
                     </ButtonGroup>
                 </div>
             </section>
             <section className={styles.footer}>
                 <span>
-                    Max number of data series to display{' '}
-                    <small className="text-muted">(max {MAX_NUMBER_OF_SERIES})</small>
+                    <Trans
+                        i18nKey="max-data-series-display"
+                        values={{ MAX_NUMBER_OF_SERIES }}
+                        components={{ '0': <small className="text-muted" /> }}
+                    />
                 </span>
                 <Input
                     type="number"
@@ -156,7 +164,10 @@ export const SortFilterSeriesPanel: FC<SortFilterSeriesPanelProps> = props => {
             {isNumSamplesFilterAvailable && (
                 <section className={styles.footer}>
                     <span>
-                        Max number of series points to display <small className="text-muted">(max 90)</small>
+                        <Trans
+                            i18nKey="max-series-points-display"
+                            components={{ '0': <small className="text-muted" /> }}
+                        />
                     </span>
                     <Input
                         type="number"

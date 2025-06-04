@@ -11,6 +11,7 @@ import {
     mdiSourceRepository,
 } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { useQuery, gql } from '@sourcegraph/http-client'
@@ -68,6 +69,8 @@ interface RepoLinkPickerProps {
 }
 
 export const RepoLinkPicker: FC<RepoLinkPickerProps> = props => {
+    const { t } = useTranslation('repo')
+
     const { repositoryURL, repositoryName, disabled, className } = props
 
     const navigate = useNavigate()
@@ -130,7 +133,7 @@ export const RepoLinkPicker: FC<RepoLinkPickerProps> = props => {
                     <Combobox aria-label="Choose a repo" className={styles.combobox} onSelect={handleSelect}>
                         <ComboboxInput
                             value={searchTerm}
-                            placeholder="Search repository..."
+                            placeholder={t('search-repository-placeholder')}
                             status={loading ? 'loading' : 'initial'}
                             autoFocus={true}
                             onChange={event => setSearchTerm(event.target.value)}

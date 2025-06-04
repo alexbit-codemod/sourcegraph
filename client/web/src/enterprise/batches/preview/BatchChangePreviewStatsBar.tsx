@@ -2,6 +2,7 @@ import React, { useContext, useMemo } from 'react'
 
 import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { pluralize } from '@sourcegraph/common'
 import { Badge, H2, H3, H4, useObservable } from '@sourcegraph/wildcard'
@@ -41,6 +42,8 @@ export interface BatchChangePreviewStatsBarProps {
 export const BatchChangePreviewStatsBar: React.FunctionComponent<
     React.PropsWithChildren<BatchChangePreviewStatsBarProps>
 > = ({ batchSpec, diffStat, queryApplyPreviewStats = _queryApplyPreviewStats }) => {
+    const { t } = useTranslation('enterprise/batches/preview')
+
     // `BatchChangePreviewContext` is responsible for managing the overrideable
     // publication states for preview changesets on the clientside.
     const { publicationStates } = useContext(BatchChangePreviewContext)
@@ -60,11 +63,9 @@ export const BatchChangePreviewStatsBar: React.FunctionComponent<
     return (
         <div className="d-flex flex-wrap mb-3 align-items-center">
             <H2 className="m-0 align-self-center">
-                <VisuallyHidden>
-                    This is a preview of the changesets generated from executing the batch spec.
-                </VisuallyHidden>
+                <VisuallyHidden>{t('changeset-preview-batch-spec')}</VisuallyHidden>
                 <Badge variant="info" className="text-uppercase mb-0" aria-hidden={true}>
-                    Preview
+                    {t('preview-label')}
                 </Badge>
             </H2>
             <div className={classNames(styles.batchChangePreviewStatsBarDivider, 'd-none d-sm-block mx-3')} />

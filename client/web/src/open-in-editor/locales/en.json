@@ -1,0 +1,18 @@
+{
+  "open-file-in-editor": "Open file in {{editorName}}",
+  "set-preferred-editor": "Set your preferred editor",
+  "close-button": "Close",
+  "preferred-editor-setting": "Set your preferred editor",
+  "editor-integration-instructions": "Open this and other files directly in your editor. Set your path and editor to get started. Update any time in your user settings.",
+  "default-projects-path-label": "Default projects path",
+  "default-projects-path-example": "/Users/username/projects",
+  "repository-checkout-directory-instructions": "The directory that contains your repository checkouts. For example, if this repository is checked out to",
+  "example-repository-path": "/Users/username/projects/cody",
+  "set-default-projects-path-instructions": ", then set your default projects path to",
+  "default-projects-path": "/Users/username/projects",
+  "alternative-editor-setup-link": "Use a different editor? <0>Set up another editor</0>",
+  "save-button": "Save",
+  "setup-completion-message": "You’re all set",
+  "modify-editor-paths-instructions": "You can modify or add additional editor paths in your <0>user settings</0>  at any time.",
+  "close-message": "Close"
+}

@@ -1,0 +1,19 @@
+{
+  "grok-your-entire-codebase": "Grok your entire codebase",
+  "code-search-introduction": "Code Search, along with complementary tools, helps devs find, fix, and onboard to new code quickly.",
+  "talk-to-product-expert": "Talk to a product expert",
+  "find-out-more": "Find out more",
+  "find-fix-code-in-any-code-host": "Find and fix code in any code host, language, or repository",
+  "code-search-integrates-with-cody": "Code Search integrates with Cody 🤝",
+  "use-cody-in-code-search": "Use Cody in Code Search to explain code, generate unit tests, transpile code, improve variable names and a ton more!",
+  "understand-your-code-dependencies": "Understand your code and its dependencies",
+  "complete-code-reviews-impact-of-changes": "Complete code reviews, get up to speed on unfamiliar code, and determine the impact of code changes with the confidence of compiler-accurate code navigation.",
+  "find-out-more-about-code-navigation": "Find out more about Code Navigation",
+  "automate-large-scale-code-changes": "Automate large-scale code changes",
+  "find-and-make-code-changes-programmatically": "Find all occurrences of code to change with Code Search and programmatically make those changes by creating a declarative specification file.",
+  "indeed-uses-batch-changes": "Read how Indeed uses Batch Changes to accelerate deployment",
+  "code-search-works-great-with": "Code Search also works great with...",
+  "code-monitoring": "Code Monitoring",
+  "insights": "Insights",
+  "notebooks": "Notebooks"
+}

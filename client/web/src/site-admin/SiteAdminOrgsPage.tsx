@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { mdiCog, mdiAccount, mdiDelete, mdiPlus } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 import { Subject } from 'rxjs'
 
 import { asError, isErrorLike, pluralize } from '@sourcegraph/common'
@@ -28,6 +29,8 @@ interface OrgNodeProps {
 }
 
 const OrgNode: React.FunctionComponent<React.PropsWithChildren<OrgNodeProps>> = ({ node, onDidUpdate }) => {
+    const { t } = useTranslation('site-admin')
+
     const [loading, setLoading] = useState<boolean | Error>(false)
 
     const deleteOrg = useCallback(() => {
@@ -61,7 +64,8 @@ const OrgNode: React.FunctionComponent<React.PropsWithChildren<OrgNodeProps>> = 
                 <div>
                     <Tooltip content="Organization settings">
                         <Button to={`${orgURL(node.name)}/settings`} variant="secondary" size="sm" as={Link}>
-                            <Icon aria-hidden={true} svgPath={mdiCog} /> Settings
+                            <Icon aria-hidden={true} svgPath={mdiCog} />
+                            {t('settings')}
                         </Button>
                     </Tooltip>{' '}
                     <Tooltip content="Organization members">
@@ -101,6 +105,8 @@ export const SiteAdminOrgsPage: React.FunctionComponent<React.PropsWithChildren<
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('site-admin')
+
     const orgUpdates = useMemo(() => new Subject<void>(), [])
     const onDidUpdateOrg = useCallback((): void => orgUpdates.next(), [orgUpdates])
 
@@ -111,17 +117,19 @@ export const SiteAdminOrgsPage: React.FunctionComponent<React.PropsWithChildren<
 
     return (
         <div className="site-admin-orgs-page">
-            <PageTitle title="Organizations - Admin" />
+            <PageTitle title={t('organizations-admin-title')} />
             <div className="d-flex justify-content-between align-items-center mb-3">
-                <H2 className="mb-0">Organizations</H2>
+                <H2 className="mb-0">{t('organizations')}</H2>
                 <Button to="/organizations/new" className="test-create-org-button" variant="primary" as={Link}>
-                    <Icon aria-hidden={true} svgPath={mdiPlus} /> Create organization
+                    <Icon aria-hidden={true} svgPath={mdiPlus} />
+                    {t('create-organization')}
                 </Button>
             </div>
             <Text>
-                An organization is a set of users with associated configuration. See{' '}
-                <Link to="/help/admin/organizations">Sourcegraph documentation</Link> for information about configuring
-                organizations.
+                <Trans
+                    i18nKey="organization-description"
+                    components={{ '0': <Link to="/help/admin/organizations" /> }}
+                />
             </Text>
             <FilteredConnection<OrganizationFields, Omit<OrgNodeProps, 'node'>>
                 className="list-group list-group-flush mt-3"

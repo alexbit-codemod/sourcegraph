@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
 import { mdiAlertCircle, mdiDownload } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { asError, isErrorLike } from '@sourcegraph/common'
 import { Button, LoadingSpinner, Icon, Tooltip } from '@sourcegraph/wildcard'
@@ -21,6 +22,8 @@ type State = DownloadState | Error
 export const DownloadDiffButton: React.FunctionComponent<React.PropsWithChildren<DownloadDiffButtonProps>> = ({
     changesetID,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
     const [state, setState] = useState<State>(DownloadState.READY)
 
     const loadDiff = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
@@ -82,7 +85,7 @@ export const DownloadDiffButton: React.FunctionComponent<React.PropsWithChildren
                 size="sm"
             >
                 {icon}
-                <span className="pl-1">Download generated diff</span>
+                <span className="pl-1">{t('download-generated-diff')}</span>
             </Button>
         </Tooltip>
     )

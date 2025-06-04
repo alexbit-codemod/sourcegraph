@@ -5,6 +5,7 @@ import { EditorState } from '@codemirror/state'
 import { EditorView } from '@codemirror/view'
 import { mdiChevronDown, mdiChevronRight, mdiClose } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { gql, useQuery } from '@sourcegraph/http-client'
 import {
@@ -69,6 +70,8 @@ import { EventLoggingDebugToggle } from './settings/eventLoggingDebug'
 import styles from './DeveloperDialog.module.scss'
 
 export const DeveloperDialog: FC<{}> = () => {
+    const { t } = useTranslation('devsettings')
+
     const counter = useOverrideCounter()
     const index = useDeveloperSettings(settings => settings.selectedTab)
 
@@ -78,11 +81,8 @@ export const DeveloperDialog: FC<{}> = () => {
             className={styles.dialog}
             onDismiss={() => toggleDevSettingsDialog(false)}
         >
-            <H3>Developer Settings</H3>
-            <Text>
-                You can temporarily override settings here for development purposes. Any changes will be stored locally
-                in your browser only.
-            </Text>
+            <H3>{t('developer-settings')}</H3>
+            <Text>{t('temporary-settings-description')}</Text>
             <Tabs
                 lazy={true}
                 behavior="memoize"
@@ -93,19 +93,19 @@ export const DeveloperDialog: FC<{}> = () => {
             >
                 <TabList>
                     <Tab>
-                        Feature flags{' '}
+                        {t('feature-flags-label')}
                         <Badge pill={true}>
                             {counter.featureFlags}/{FEATURE_FLAGS.length}
                         </Badge>
                     </Tab>
                     <Tab>
-                        Temporary settings{' '}
+                        {t('temporary-settings-label')}
                         <Badge pill={true}>
                             {counter.temporarySettings}/{TEMPORARY_SETTINGS_KEYS.length}
                         </Badge>
                     </Tab>
-                    <Tab>Misc</Tab>
-                    <Tab>Zoekt</Tab>
+                    <Tab>{t('miscellaneous')}</Tab>
+                    <Tab>{t('zoekt')}</Tab>
                 </TabList>
                 <TabPanels className="overflow-hidden flex-1 min-w-0 d-flex">
                     <TabPanel className={styles.content}>
@@ -140,6 +140,8 @@ const EVALUATED_FEATURE_FLAGS = gql`
 `
 
 const FeatureFlags: FC<{}> = () => {
+    const { t } = useTranslation('devsettings')
+
     const { view, filter } = useDeveloperSettings(settings => settings.featureFlags)
     const { data, loading } = useQuery<DeveloperSettingsEvaluatedFeatureFlagsResult>(EVALUATED_FEATURE_FLAGS, {
         fetchPolicy: 'cache-first',
@@ -157,7 +159,7 @@ const FeatureFlags: FC<{}> = () => {
         return (
             <div className="d-flex mt-3 align-items-center">
                 <LoadingSpinner />
-                <span>Loading flags...</span>
+                <span>{t('loading-flags')}</span>
             </div>
         )
     }
@@ -169,13 +171,11 @@ const FeatureFlags: FC<{}> = () => {
     return (
         <>
             <Alert variant="info" className="my-2">
-                Click on the respective "Override value" entry to cycle through enabled, disabled and not set. If the
-                feature flag is used on the server, reload the page via the reload button to apply them to the intial
-                page load as well.
+                {t('override-value-instructions')}
             </Alert>
             <div className="d-flex align-items-center my-2">
                 <Label className="mb-0" htmlFor="feature-flag-view">
-                    View: &nbsp;
+                    {t('view-label')}
                 </Label>
                 <Select
                     id="feature-flag-view"
@@ -185,30 +185,30 @@ const FeatureFlags: FC<{}> = () => {
                     onChange={event => setDeveloperSettingsFeatureFlags({ view: event.target.value.trim() })}
                     disabled={hasFilter}
                 >
-                    <option>All</option>
-                    <option>Enabled</option>
-                    <option>Overridden</option>
+                    <option>{t('all-label')}</option>
+                    <option>{t('enabled-label')}</option>
+                    <option>{t('overridden-label')}</option>
                 </Select>
                 <Label className="ml-3 mb-0" htmlFor="feature-flag-filter">
-                    Filter: &nbsp;
+                    {t('filter-label')}
                 </Label>
                 <FilterInput
                     id="feature-flag-filter"
                     value={filter}
                     onChange={value => setDeveloperSettingsFeatureFlags({ filter: value })}
-                    placeholder="Filter feature flags..."
+                    placeholder={t('filter-feature-flags-placeholder')}
                 />
                 <ReloadButton className="ml-3 flex-1" variant="primary">
-                    Reload
+                    {t('reload-button')}
                 </ReloadButton>
             </div>
             <div className="flex-1 overflow-auto min-h-0 mt-2">
                 <table>
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th className="text-center">Override</th>
-                            <th className="text-center">Actual</th>
+                            <th>{t('name-label')}</th>
+                            <th className="text-center">{t('override-label')}</th>
+                            <th className="text-center">{t('actual-label')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -274,6 +274,8 @@ const FeatureFlagOverride: FC<{ featureFlag: FeatureFlagName; filter: string; se
 )
 
 const TemporarySettingsPanel: FC<{}> = () => {
+    const { t } = useTranslation('devsettings')
+
     const { view, filter } = useDeveloperSettings(settings => settings.temporarySettings)
 
     const hasFilter = !!filter
@@ -285,13 +287,11 @@ const TemporarySettingsPanel: FC<{}> = () => {
     return (
         <>
             <Alert variant="info" className="my-2">
-                Because we cannot check the validity of a temporary settings value, this UI only allows you to intercept
-                and reset a temporary setting. Due to the nature of the API only the current (overridden or actual)
-                value is shown.
+                {t('temporary-settings-warning')}
             </Alert>
             <div className="d-flex align-items-center my-2">
                 <Label className="mb-0" htmlFor="temporary-settings-view">
-                    View:&nbsp;
+                    {t('view-label-2')}
                 </Label>
                 <Select
                     id="temporary-settings-view"
@@ -301,17 +301,17 @@ const TemporarySettingsPanel: FC<{}> = () => {
                     onChange={event => setDeveloperSettingsTemporarySettings({ view: event.target.value.trim() })}
                     disabled={hasFilter}
                 >
-                    <option>All</option>
-                    <option>Overridden</option>
+                    <option>{t('all-label-2')}</option>
+                    <option>{t('overridden-label-2')}</option>
                 </Select>
                 <Label className="ml-3 mb-0" htmlFor="temporary-settings-filter">
-                    Filter: &nbsp;
+                    {t('filter-label-2')}
                 </Label>
                 <FilterInput
                     id="temporary-settings-filter"
                     value={filter}
                     onChange={value => setDeveloperSettingsTemporarySettings({ filter: value })}
-                    placeholder="Filter temporary settings..."
+                    placeholder={t('filter-temporary-settings-placeholder')}
                 />
             </div>
             <div className="flex-1 overflow-auto min-h-0 mt-2">
@@ -319,9 +319,9 @@ const TemporarySettingsPanel: FC<{}> = () => {
                     <thead>
                         <tr>
                             <th />
-                            <th>Name</th>
-                            <th className="text-center">Value</th>
-                            <th className="text-center">Actions</th>
+                            <th>{t('name-label-2')}</th>
+                            <th className="text-center">{t('value-label')}</th>
+                            <th className="text-center">{t('actions-label')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -416,6 +416,8 @@ const TemporarySettingOverride: FC<{ setting: keyof TemporarySettings; filter: s
 )
 
 const ZoektSettings: FC<{}> = () => {
+    const { t } = useTranslation('devsettings')
+
     const { searchOptions } = useDeveloperSettings(settings => settings.zoekt)
 
     const [inputValue, setInputValue] = useState<string>(searchOptions)
@@ -442,13 +444,13 @@ const ZoektSettings: FC<{}> = () => {
 
     return (
         <div className="mt-2 d-flex flex-column">
-            <H4>Search Options</H4>
-            <Text>Enter a valid JSON below. Missing values are replaced with defaults.</Text>
+            <H4>{t('search-options-label')}</H4>
+            <Text>{t('json-input-instructions')}</Text>
             <Container className="p-1">
                 <CodeMirrorEditor value={inputValue} extensions={extensions} />
             </Container>
             <Button variant="primary" className="mt-2 align-self-end" onClick={handleClick}>
-                Apply
+                {t('apply-button')}
             </Button>
         </div>
     )

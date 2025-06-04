@@ -1,6 +1,7 @@
 import React, { useContext, useMemo, useState } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { lastValueFrom } from 'rxjs'
 
@@ -51,6 +52,8 @@ interface StandaloneBackendInsight extends TelemetryProps, TelemetryV2Props {
 }
 
 export const StandaloneBackendInsight: React.FunctionComponent<StandaloneBackendInsight> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/insight/components/standalone-backend-insight')
+
     const { telemetryService, telemetryRecorder, insight, className } = props
     const navigate = useNavigate()
     const { updateInsight } = useContext(CodeInsightsBackendContext)
@@ -192,7 +195,7 @@ export const StandaloneBackendInsight: React.FunctionComponent<StandaloneBackend
                 {error ? (
                     <BackendInsightErrorAlert error={error} />
                 ) : loading || !insightData ? (
-                    <InsightCardLoading>Loading code insight</InsightCardLoading>
+                    <InsightCardLoading>{t('loading-code-insight')}</InsightCardLoading>
                 ) : (
                     <BackendInsightChart
                         {...insightData}

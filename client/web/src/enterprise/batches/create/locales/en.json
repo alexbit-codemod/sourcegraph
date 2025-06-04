@@ -1,0 +1,22 @@
+{
+  "let-sourcegraph-help-refactor-code": "Let Sourcegraph help you refactor your code by preparing a Batch Change from your search query",
+  "sourcegraph-refactor-batch-change": "Let Sourcegraph help you refactor your code by preparing a batch change from your search query.",
+  "let-sourcegraph-help-with-batch-change": "Let Sourcegraph help you with <0>{{insightTitle}}</0> by preparing a relevant <1>batch change</1>.",
+  "my-go-insight-1": "My Go Insight",
+  "my-go-insight-2": "My Go Insight",
+  "write-batch-spec-yaml-file": "1. Write a batch spec YAML file",
+  "batch-spec-description": "The batch spec ( <0>syntax reference</0> ) describes what the batch change does. You'll provide it when previewing, creating, and updating batch changes. We recommend committing it to source control.",
+  "examples-header": "Examples",
+  "preview-batch-change-sourcegraph-cli": "2. Preview the batch change with Sourcegraph CLI",
+  "use-sourcegraph-cli-preview": "Use the <0>Sourcegraph CLI (src)</0>  to preview the commits and changesets that your batch change will make:",
+  "follow-url-for-preview": "Follow the URL printed in your terminal to see the preview and (when you're ready) create the batch change.",
+  "create-batch-change-title": "Create batch change",
+  "create-batch-change-steps": "Follow these steps to create a Batch Change. Need help? View the <0>documentation.</0>",
+  "create-new-batch-change-title": "Create new batch change",
+  "license-changeset-limit": "Your license only allows for {{maxUnlicensedChangesets}} changesets per batch change",
+  "batch-spec-execution-warning": " You can execute this batch spec and see how it operates, but if more than {{maxUnlicensedChangesets}} changesets are generated, you won't be able to apply the batch change and actually publish the changesets to the code host.",
+  "batch-change-name-label": "Batch change name",
+  "batch-change-name-description": "Give it a short, descriptive name to reference the batch change on Sourcegraph. Do not include confidential information. <0>Only letters, numbers, _, and - are allowed.</0>",
+  "cancel-button": "Cancel",
+  "create-button": "Create"
+}

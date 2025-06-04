@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { logger } from '@sourcegraph/common'
@@ -26,6 +27,8 @@ export const FileOwnershipPanel: React.FunctionComponent<OwnershipPanelProps & T
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('repo/blob/own')
+
     React.useEffect(() => {
         telemetryService.log('OwnershipPanelOpened')
         telemetryRecorder.recordEvent('repo.blob.ownershipPanel', 'open')
@@ -45,7 +48,8 @@ export const FileOwnershipPanel: React.FunctionComponent<OwnershipPanelProps & T
     if (loading) {
         return (
             <div className={classNames(styles.loaderWrapper, 'text-muted')}>
-                <LoadingSpinner inline={true} className="mr-1" /> Loading...
+                <LoadingSpinner inline={true} className="mr-1" />
+                {t('loading-indicator')}
             </div>
         )
     }

@@ -1,0 +1,13 @@
+{
+  "track-what-matters-in-your-code": "Track what matters in your code",
+  "code-insights-description": "Code Insights provides precise answers about the trends and composition of your codebase. It transforms code into a queryable database and lets you create customizable visual dashboards in seconds.",
+  "use-code-insights-to": "Use Code Insights to...",
+  "track-migrations-adoption-deprecations": "Track migrations, adoption, and deprecations",
+  "detect-versions-of-languages-packages-infrastructure": "Detect versions of languages, packages, or infrastructure",
+  "ensure-removal-of-security-vulnerabilities": "Ensure removal of security vulnerabilities",
+  "track-code-smells-ownership-configurations": "Track code smells, ownership, and configurations",
+  "see-more-use-cases": "See more use cases",
+  "resources": "Resources",
+  "documentation": "Documentation",
+  "product-page": "Product page"
+}

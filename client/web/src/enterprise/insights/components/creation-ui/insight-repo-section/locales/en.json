@@ -1,0 +1,11 @@
+{
+  "repositories-query": "Repositories query",
+  "find-and-choose-repository": "Find and choose at least 1 repository to run insight",
+  "search-repositories": "Search repositories...",
+  "repositories-query-whitespace": "Repositories query",
+  "example-repo-format": "Example: repo:sourcegraph/*",
+  "hint-regular-expressions": "Hint: you can use regular expressions within each of the",
+  "repo-prefix": "repo:",
+  "data-points-backfill": "Data points will be automatically backfilled using the list of repositories resulting from today’s search. Future data points will use the list refreshed for every snapshot.",
+  "repositories-count": "Repositories count: {{repositoriesNumber}}"
+}

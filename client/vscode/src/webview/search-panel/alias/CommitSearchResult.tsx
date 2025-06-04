@@ -1,6 +1,7 @@
 import React from 'react'
 
 import VisuallyHidden from '@reach/visually-hidden'
+import { useTranslation } from 'react-i18next'
 
 import { LegacyResultContainer, CommitSearchResultMatch } from '@sourcegraph/branded'
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
@@ -34,6 +35,8 @@ export const CommitSearchResult: React.FunctionComponent<Props> = ({
     as,
     index,
 }) => {
+    const { t } = useTranslation('../../vscode/src/webview/search-panel/alias')
+
     /**
      * Use the custom hook useIsTruncated to check if overflow: ellipsis is activated for the element
      * We want to do it on mouse enter as browser window size might change after the element has been
@@ -70,11 +73,11 @@ export const CommitSearchResult: React.FunctionComponent<Props> = ({
             {result.type === 'commit' && (
                 <Button className="btn-text-link" onClick={() => openCommit(getCommitMatchUrl(result))}>
                     <Code className={styles.commitOid}>
-                        <VisuallyHidden>Commit hash:</VisuallyHidden>
+                        <VisuallyHidden>{t('commit-hash')}</VisuallyHidden>
                         {result.oid.slice(0, 7)}
                         <VisuallyHidden>,</VisuallyHidden>
                     </Code>{' '}
-                    <VisuallyHidden>Committed</VisuallyHidden>
+                    <VisuallyHidden>{t('committed-status')}</VisuallyHidden>
                     <Timestamp date={result.authorDate} noAbout={true} strict={true} />
                 </Button>
             )}

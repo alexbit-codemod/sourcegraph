@@ -11,6 +11,7 @@ import {
 import { gql, useQuery } from '@apollo/client'
 import classNames from 'classnames'
 import LinkExternalIcon from 'mdi-react/OpenInNewIcon'
+import { useTranslation } from 'react-i18next'
 
 import { SyntaxHighlightedSearchQuery } from '@sourcegraph/branded'
 import { SearchPatternType } from '@sourcegraph/shared/src/graphql-operations'
@@ -75,11 +76,13 @@ interface SmartRepoSettingSectionProps {
  * strat-scoped insight repo query UI.
  */
 export const SmartRepoSettingSection: FC<SmartRepoSettingSectionProps> = props => {
+    const { t } = useTranslation('enterprise/insights/components/creation-ui/insight-repo-section')
+
     const { repoQuery } = props
 
     return (
         <FormGroup name="insight repositories" title="Targeted repositories">
-            <SmartSearchQueryRepoField repoQuery={repoQuery} label="Repositories query" />
+            <SmartSearchQueryRepoField repoQuery={repoQuery} label={t('repositories-query')} />
         </FormGroup>
     )
 }
@@ -132,6 +135,8 @@ interface RepositoriesURLsPickerProps {
 }
 
 function RepositoriesURLsPicker(props: RepositoriesURLsPickerProps): ReactElement {
+    const { t } = useTranslation('enterprise/insights/components/creation-ui/insight-repo-section')
+
     const { repositories, 'aria-labelledby': ariaLabelledby } = props
 
     const { value, disabled, ...attributes } = getDefaultInputProps(repositories)
@@ -140,8 +145,8 @@ function RepositoriesURLsPicker(props: RepositoriesURLsPickerProps): ReactElemen
     return (
         <RepositoriesField
             id="repositories-id"
-            description="Find and choose at least 1 repository to run insight"
-            placeholder="Search repositories..."
+            description={t('find-and-choose-repository')}
+            placeholder={t('search-repositories')}
             aria-labelledby={ariaLabelledby}
             aria-invalid={!!repositories.meta.error}
             value={fieldValue}
@@ -213,6 +218,8 @@ interface SmartSearchQueryRepoFieldProps {
 }
 
 function SmartSearchQueryRepoField(props: SmartSearchQueryRepoFieldProps): ReactElement {
+    const { t } = useTranslation('enterprise/insights/components/creation-ui/insight-repo-section')
+
     const { repoQuery, label, 'aria-labelledby': ariaLabelledby } = props
 
     const { value, onChange, disabled, ...attributes } = repoQuery.input
@@ -245,7 +252,7 @@ function SmartSearchQueryRepoField(props: SmartSearchQueryRepoFieldProps): React
             <LabelComponent className={styles.repoLabel} id="search-repo-query">
                 {label && (
                     <span className={styles.repoLabelText}>
-                        Repositories query
+                        {t('repositories-query-whitespace')}
                         <RepositoriesCount repoQuery={repoQuery} />
                     </span>
                 )}
@@ -254,7 +261,7 @@ function SmartSearchQueryRepoField(props: SmartSearchQueryRepoFieldProps): React
                     as={Field}
                     queryState={queryState}
                     status={fieldStatus}
-                    placeholder="Example: repo:sourcegraph/*"
+                    placeholder={t('example-repo-format')}
                     aria-labelledby={ariaLabelledby ?? 'search-repo-query'}
                     className={styles.repoInput}
                     onChange={handleOnChange}
@@ -283,7 +290,8 @@ function SmartSearchQueryRepoField(props: SmartSearchQueryRepoFieldProps): React
             <InputDescription>
                 <ul>
                     <li>
-                        Hint: you can use regular expressions within each of the <Code weight="bold">repo:</Code>{' '}
+                        {t('hint-regular-expressions')}
+                        <Code weight="bold">{t('repo-prefix')}</Code>{' '}
                         <Link
                             to="/help/code_search/reference/queries#repository-search"
                             target="_blank"
@@ -292,10 +300,7 @@ function SmartSearchQueryRepoField(props: SmartSearchQueryRepoFieldProps): React
                             filters
                         </Link>
                     </li>
-                    <li>
-                        Data points will be automatically backfilled using the list of repositories resulting from
-                        today’s search. Future data points will use the list refreshed for every snapshot.
-                    </li>
+                    <li>{t('data-points-backfill')}</li>
                 </ul>
             </InputDescription>
         </div>
@@ -370,6 +375,8 @@ interface RepositoriesCountProps {
 }
 
 function RepositoriesCount(props: RepositoriesCountProps): ReactElement {
+    const { t } = useTranslation('enterprise/insights/components/creation-ui/insight-repo-section')
+
     const { repoQuery, className } = props
 
     const query = useDebounce(!repoQuery.input.disabled ? repoQuery.input.value.query : '', 500)
@@ -385,7 +392,7 @@ function RepositoriesCount(props: RepositoriesCountProps): ReactElement {
 
     return (
         <span className={classNames(className, 'text-muted font-weight-normal')}>
-            Repositories count: {repositoriesNumber}
+            {t('repositories-count', { repositoriesNumber })}
         </span>
     )
 }

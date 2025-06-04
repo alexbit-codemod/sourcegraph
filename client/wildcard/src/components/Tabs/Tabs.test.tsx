@@ -1,35 +1,44 @@
 import { render, type RenderResult, cleanup, fireEvent } from '@testing-library/react'
+import { useTranslation } from 'react-i18next'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import { Tab, TabList, TabPanel, TabPanels, Tabs, type TabsProps } from './Tabs'
 
 const TabsTest = (props: TabsProps) => <Tabs {...props} />
 
-const TabsChildren = () => (
-    <>
-        <TabList>
-            <Tab>Tab 1</Tab>
-            <Tab>Tab 2</Tab>
-        </TabList>
-        <TabPanels>
-            <TabPanel>Panel 1</TabPanel>
-            <TabPanel>Panel 2</TabPanel>
-        </TabPanels>
-    </>
-)
+const TabsChildren = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Tabs')
 
-const TabsChildrenWithActions = () => (
-    <>
-        <TabList actions={<div>Actions</div>}>
-            <Tab>Tab 1</Tab>
-            <Tab>Tab 2</Tab>
-        </TabList>
-        <TabPanels>
-            <TabPanel>Panel 1</TabPanel>
-            <TabPanel>Panel 2</TabPanel>
-        </TabPanels>
-    </>
-)
+    return (
+        <>
+            <TabList>
+                <Tab>{t('tab-1')}</Tab>
+                <Tab>{t('tab-2')}</Tab>
+            </TabList>
+            <TabPanels>
+                <TabPanel>{t('panel-1')}</TabPanel>
+                <TabPanel>{t('panel-2')}</TabPanel>
+            </TabPanels>
+        </>
+    )
+}
+
+const TabsChildrenWithActions = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Tabs')
+
+    return (
+        <>
+            <TabList actions={<div>{t('actions')}</div>}>
+                <Tab>{t('tab-1-duplicate')}</Tab>
+                <Tab>{t('tab-2-duplicate')}</Tab>
+            </TabList>
+            <TabPanels>
+                <TabPanel>{t('panel-1-duplicate')}</TabPanel>
+                <TabPanel>{t('panel-2-duplicate')}</TabPanel>
+            </TabPanels>
+        </>
+    )
+}
 
 describe('Tabs', () => {
     let queries: RenderResult

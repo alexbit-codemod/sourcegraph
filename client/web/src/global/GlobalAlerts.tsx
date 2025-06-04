@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 
 import classNames from 'classnames'
 import { parseISO, differenceInDays } from 'date-fns'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { renderMarkdown } from '@sourcegraph/common'
 import { gql, useQuery } from '@sourcegraph/http-client'
@@ -47,6 +48,8 @@ const adminOnboardingRemovedAlerts = ['externalURL', 'email.smtp', 'enable repos
  * Fetches and displays relevant global alerts at the top of the page
  */
 export const GlobalAlerts: React.FunctionComponent<Props> = ({ authenticatedUser, telemetryRecorder }) => {
+    const { t } = useTranslation('global')
+
     const settings = useSettings()
     const [isAdminOnboardingEnabled] = useFeatureFlag('admin-onboarding', true)
     const { data } = useQuery<GlobalAlertsSiteFlagsResult, GlobalAlertsSiteFlagsVariables>(QUERY, {
@@ -133,10 +136,20 @@ export const GlobalAlerts: React.FunctionComponent<Props> = ({ authenticatedUser
                     className={styles.alert}
                 >
                     <div>
-                        <strong>Warning!</strong> This build uses data from the proxied API:{' '}
-                        <Link className={styles.proxyLink} target="__blank" to={process.env.SOURCEGRAPH_API_URL}>
-                            {process.env.SOURCEGRAPH_API_URL}
-                        </Link>
+                        <Trans
+                            i18nKey="warning-proxied-api-data"
+                            values={{ processEnvSourcegraphApiUrl: <>{process.env.SOURCEGRAPH_API_URL}</> }}
+                            components={{
+                                '0': <strong />,
+                                '1': (
+                                    <Link
+                                        className={styles.proxyLink}
+                                        target="__blank"
+                                        to={process.env.SOURCEGRAPH_API_URL}
+                                    />
+                                ),
+                            }}
+                        />
                     </div>
                     .
                 </DismissibleAlert>

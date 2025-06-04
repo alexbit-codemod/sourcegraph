@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import { Container, H3, Link, Text } from '@sourcegraph/wildcard'
@@ -72,6 +73,8 @@ const CodeHostConnections: React.FunctionComponent<React.PropsWithChildren<CodeH
     connectionResult,
     gitHubAppKind,
 }) => {
+    const { t } = useTranslation('enterprise/batches/settings')
+
     const { loading, hasNextPage, fetchMore, connection, error, refetchAll } = connectionResult
     const location = useLocation()
     const success = new URLSearchParams(location.search).get('success') === 'true'
@@ -81,7 +84,7 @@ const CodeHostConnections: React.FunctionComponent<React.PropsWithChildren<CodeH
     const shouldShowError = !success && setupError && gitHubAppKind !== GitHubAppKind.COMMIT_SIGNING
     return (
         <Container className="mb-3">
-            <H3>Code host credentials</H3>
+            <H3>{t('code-host-credentials')}</H3>
             {headerLine}
             <ConnectionContainer className="mb-3">
                 {error && <ConnectionError errors={[error.message]} />}
@@ -92,7 +95,7 @@ const CodeHostConnections: React.FunctionComponent<React.PropsWithChildren<CodeH
                         variant="success"
                         partialStorageKey={`batch-changes-github-app-integration-success-${appName}`}
                     >
-                        GitHub App {appName?.length ? `"${appName}" ` : ''} successfully connected.
+                        {t('github-app-connection-success', { appName, appNameLength: appName?.length })}
                     </DismissibleAlert>
                 )}
                 {shouldShowError && <GitHubAppFailureAlert error={setupError} />}
@@ -123,11 +126,12 @@ const CodeHostConnections: React.FunctionComponent<React.PropsWithChildren<CodeH
                 )}
             </ConnectionContainer>
             <Text className="mb-0">
-                Code host not present? Site admins can add a code host in{' '}
-                <Link to="/help/admin/external_service" target="_blank" rel="noopener noreferrer">
-                    the manage repositories settings
-                </Link>
-                .
+                <Trans
+                    i18nKey="code-host-not-present-message"
+                    components={{
+                        '0': <Link to="/help/admin/external_service" target="_blank" rel="noopener noreferrer" />,
+                    }}
+                />
             </Text>
         </Container>
     )

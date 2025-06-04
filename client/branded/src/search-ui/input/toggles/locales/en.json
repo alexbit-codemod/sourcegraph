@@ -1,0 +1,8 @@
+{
+  "smart-search-title": "Smart Search",
+  "suggest-variations-query": "Suggest variations of your query to find more results that may relate.",
+  "exact-match-results": "Only show results that precisely match your query.",
+  "case-sensitivity": "Case sensitivity",
+  "regular-expression": "Regular expression",
+  "structural-search": "Structural search"
+}

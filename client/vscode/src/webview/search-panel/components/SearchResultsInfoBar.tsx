@@ -2,6 +2,7 @@ import React, { useCallback, useMemo } from 'react'
 
 import { mdiLink } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { FilterKind, findFilter } from '@sourcegraph/shared/src/search/query/query'
 import { Button, Icon, Tooltip } from '@sourcegraph/wildcard'
@@ -58,6 +59,8 @@ const ExperimentalActionButton: React.FunctionComponent<
 export const SearchResultsInfoBar: React.FunctionComponent<
     React.PropsWithChildren<SearchResultsInfoBarProps>
 > = props => {
+    const { t } = useTranslation('../../vscode/src/webview/search-panel/components')
+
     const {
         extensionCoreAPI,
         platformContext,
@@ -117,12 +120,12 @@ export const SearchResultsInfoBar: React.FunctionComponent<
                         button={
                             <>
                                 <Icon aria-hidden={true} className="mr-1" as={CodeMonitoringLogo} />
-                                Monitor
+                                {t('monitor-label')}
                             </>
                         }
                         icon={<BookmarkRadialGradientIcon />}
-                        title="Monitor code for changes"
-                        copyText="Create a monitor and get notified when your code changes. Free for registered users."
+                        title={t('monitor-code-for-changes')}
+                        copyText={t('create-monitor-notify-code-changes')}
                         source="CodeMonitor"
                         viewEventName="VSCECodeMonitorCTAShown"
                         returnTo={`/code-monitoring/new?${searchParameters.toString()}`}
@@ -144,19 +147,20 @@ export const SearchResultsInfoBar: React.FunctionComponent<
         instanceURL,
     ])
 
-    const ShareLinkButton = useMemo(
-        () => (
+    const ShareLinkButton = useMemo(() => {
+        const { t } = useTranslation('../../vscode/src/webview/search-panel/components')
+
+        return (
             <Tooltip content="Share results link">
                 <li className={classNames('mr-2', styles.navItem)}>
                     <Button variant="secondary" outline={true} size="sm" onClick={onShareResultsClick}>
                         <Icon aria-hidden={true} className="mr-1" svgPath={mdiLink} />
-                        Share
+                        {t('share-label')}
                     </Button>
                 </li>
             </Tooltip>
-        ),
-        [onShareResultsClick]
-    )
+        )
+    }, [onShareResultsClick])
 
     return (
         <div className={classNames('flex-grow-1 my-2', styles.searchResultsInfoBar)} data-testid="results-info-bar">

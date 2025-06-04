@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 
 import { mdiBitbucket, mdiGithub, mdiGitlab } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { type Observable, of } from 'rxjs'
 import { fromFetch } from 'rxjs/fetch'
 import { catchError, switchMap } from 'rxjs/operators'
@@ -63,6 +64,8 @@ export const SignUpForm: React.FunctionComponent<React.PropsWithChildren<SignUpF
     experimental = false,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('auth')
+
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<Error | null>(null)
 
@@ -143,7 +146,7 @@ export const SignUpForm: React.FunctionComponent<React.PropsWithChildren<SignUpF
             {/* eslint-disable-next-line react/forbid-elements */}
             <form className={classNames('test-signup-form', className)} onSubmit={handleSubmit} noValidate={true}>
                 <SignupEmailField
-                    label="Email"
+                    label={t('email-label')}
                     loading={loading}
                     nextEmailFieldChange={nextEmailFieldChange}
                     emailState={emailState}
@@ -151,7 +154,7 @@ export const SignUpForm: React.FunctionComponent<React.PropsWithChildren<SignUpF
                 />
                 <div className="form-group d-flex flex-column align-content-start">
                     <Label>
-                        Username
+                        {t('username-label')}
                         <LoaderInput
                             className={classNames(deriveInputClassName(usernameState))}
                             loading={usernameState.kind === 'LOADING'}
@@ -172,7 +175,7 @@ export const SignUpForm: React.FunctionComponent<React.PropsWithChildren<SignUpF
                 </div>
                 <div className="form-group d-flex flex-column align-content-start">
                     <Label>
-                        Password
+                        {t('password-label')}
                         <LoaderInput
                             className={classNames(deriveInputClassName(passwordState))}
                             loading={passwordState.kind === 'LOADING'}
@@ -209,43 +212,46 @@ export const SignUpForm: React.FunctionComponent<React.PropsWithChildren<SignUpF
                 {context.sourcegraphDotComMode && (
                     <>
                         {externalAuthProviders.length > 0 && <OrDivider className="my-4" />}
-                        {externalAuthProviders.map((provider, index) => (
-                            // Use index as key because display name may not be unique. This is OK
-                            // here because this list will not be updated during this component's lifetime.
-                            <div className="mb-2" key={index}>
-                                <Button
-                                    to={provider.authenticationURL}
-                                    display="block"
-                                    onClick={onClickExternalAuthSignup(provider.serviceType)}
-                                    variant="secondary"
-                                    as={AnchorLink}
-                                >
-                                    {provider.serviceType === 'github' ? (
-                                        <Icon aria-hidden={true} svgPath={mdiGithub} />
-                                    ) : provider.serviceType === 'gitlab' ? (
-                                        <Icon aria-hidden={true} svgPath={mdiGitlab} />
-                                    ) : provider.serviceType === 'bitbucketCloud' ? (
-                                        <Icon aria-hidden={true} svPath={mdiBitbucket} />
-                                    ) : null}{' '}
-                                    Continue with {provider.displayName}
-                                </Button>
-                            </div>
-                        ))}
+                        {externalAuthProviders.map((provider, index) => {
+                            const { t } = useTranslation('auth')
+
+                            return (
+                                // Use index as key because display name may not be unique. This is OK
+                                // here because this list will not be updated during this component's lifetime.
+                                <div className="mb-2" key={index}>
+                                    <Button
+                                        to={provider.authenticationURL}
+                                        display="block"
+                                        onClick={onClickExternalAuthSignup(provider.serviceType)}
+                                        variant="secondary"
+                                        as={AnchorLink}
+                                    >
+                                        {provider.serviceType === 'github' ? (
+                                            <Icon aria-hidden={true} svgPath={mdiGithub} />
+                                        ) : provider.serviceType === 'gitlab' ? (
+                                            <Icon aria-hidden={true} svgPath={mdiGitlab} />
+                                        ) : provider.serviceType === 'bitbucketCloud' ? (
+                                            <Icon aria-hidden={true} svPath={mdiBitbucket} />
+                                        ) : null}
+                                        {t('continue-with-label')}
+                                        {provider.displayName}
+                                    </Button>
+                                </div>
+                            )
+                        })}
                     </>
                 )}
 
                 {!experimental && (
                     <Text className="mt-3 mb-0">
                         <small className="form-text text-muted">
-                            By signing up, you agree to our{' '}
-                            <Link to="https://sourcegraph.com/terms" target="_blank" rel="noopener">
-                                Terms of Service
-                            </Link>{' '}
-                            and{' '}
-                            <Link to="https://sourcegraph.com/privacy" target="_blank" rel="noopener">
-                                Privacy Policy
-                            </Link>
-                            .
+                            <Trans
+                                i18nKey="signup-agreement-label"
+                                components={{
+                                    '0': <Link to="https://sourcegraph.com/terms" target="_blank" rel="noopener" />,
+                                    '1': <Link to="https://sourcegraph.com/privacy" target="_blank" rel="noopener" />,
+                                }}
+                            />
                         </small>
                     </Text>
                 )}

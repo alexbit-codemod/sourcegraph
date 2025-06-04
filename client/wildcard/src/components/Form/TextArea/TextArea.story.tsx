@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
 import type { Meta } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { H1 } from '../..'
 import { BrandedStory } from '../../../stories/BrandedStory'
@@ -30,6 +31,8 @@ const config: Meta = {
 export default config
 
 export const TextAreaExamples: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Form/TextArea')
+
     const [value, setValue] = useState('')
 
     const handleChange = useCallback<React.ChangeEventHandler<HTMLTextAreaElement>>(event => {
@@ -44,17 +47,17 @@ export const TextAreaExamples: React.FunctionComponent<React.PropsWithChildren<u
                     <TextArea
                         onChange={handleChange}
                         value={value}
-                        label="Standard example"
-                        placeholder="Please type here..."
+                        label={t('standard-example')}
+                        placeholder={t('please-type-here-placeholder')}
                     />
                 </div>
                 <div>
                     <TextArea
                         value=""
-                        label="Disabled example"
+                        label={t('disabled-example')}
                         disabled={true}
                         message="This is helper text as needed."
-                        placeholder="Please type here..."
+                        placeholder={t('please-type-here-placeholder-duplicate')}
                     />
                 </div>
                 <div>
@@ -62,17 +65,17 @@ export const TextAreaExamples: React.FunctionComponent<React.PropsWithChildren<u
                         onChange={handleChange}
                         isValid={false}
                         value={value}
-                        label="Error example"
+                        label={t('error-example')}
                         message="show an error message"
-                        placeholder="Please type here..."
+                        placeholder={t('please-type-here-placeholder-duplicate-2')}
                     />
                 </div>
                 <div>
                     <TextArea
                         onChange={handleChange}
                         value={value}
-                        label="Small example"
-                        placeholder="Please type here..."
+                        label={t('small-example')}
+                        placeholder={t('please-type-here-placeholder-duplicate-3')}
                         size="small"
                     />
                 </div>

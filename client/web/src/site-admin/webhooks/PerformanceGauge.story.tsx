@@ -1,4 +1,5 @@
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { WebStory } from '../../components/WebStory'
 
@@ -19,28 +20,78 @@ const config: Meta = {
 
 export default config
 
-export const Loading: StoryFn = () => <WebStory>{() => <PerformanceGauge label="dog" />}</WebStory>
+export const Loading: StoryFn = () => (
+    <WebStory>
+        {() => {
+            const { t } = useTranslation('site-admin/webhooks')
 
-export const Zero: StoryFn = () => <WebStory>{() => <PerformanceGauge count={0} label="dog" />}</WebStory>
+            return <PerformanceGauge label={t('dog-sound-1')} />
+        }}
+    </WebStory>
+)
+
+export const Zero: StoryFn = () => (
+    <WebStory>
+        {() => {
+            const { t } = useTranslation('site-admin/webhooks')
+
+            return <PerformanceGauge count={0} label={t('dog-sound-2')} />
+        }}
+    </WebStory>
+)
 
 export const ZeroWithExplicitPlural: StoryFn = () => (
-    <WebStory>{() => <PerformanceGauge count={0} label="wolf" plural="wolves" />}</WebStory>
+    <WebStory>
+        {() => {
+            const { t } = useTranslation('site-admin/webhooks')
+
+            return <PerformanceGauge count={0} label={t('wolf-sound-1')} plural="wolves" />
+        }}
+    </WebStory>
 )
 
 ZeroWithExplicitPlural.storyName = 'zero with explicit plural'
 
-export const One: StoryFn = () => <WebStory>{() => <PerformanceGauge count={1} label="dog" />}</WebStory>
+export const One: StoryFn = () => (
+    <WebStory>
+        {() => {
+            const { t } = useTranslation('site-admin/webhooks')
 
-export const Many: StoryFn = () => <WebStory>{() => <PerformanceGauge count={42} label="dog" />}</WebStory>
+            return <PerformanceGauge count={1} label={t('dog-sound-3')} />
+        }}
+    </WebStory>
+)
+
+export const Many: StoryFn = () => (
+    <WebStory>
+        {() => {
+            const { t } = useTranslation('site-admin/webhooks')
+
+            return <PerformanceGauge count={42} label={t('dog-sound-4')} />
+        }}
+    </WebStory>
+)
 
 export const ManyWithExplicitPlural: StoryFn = () => (
-    <WebStory>{() => <PerformanceGauge count={42} label="wolf" plural="wolves" />}</WebStory>
+    <WebStory>
+        {() => {
+            const { t } = useTranslation('site-admin/webhooks')
+
+            return <PerformanceGauge count={42} label={t('wolf-sound-2')} plural="wolves" />
+        }}
+    </WebStory>
 )
 
 ManyWithExplicitPlural.storyName = 'many with explicit plural'
 
 export const ClassOverrides: StoryFn = () => (
-    <WebStory>{() => <StyledPerformanceGauge count={42} label="dog" />}</WebStory>
+    <WebStory>
+        {() => {
+            const { t } = useTranslation('site-admin/webhooks')
+
+            return <StyledPerformanceGauge count={42} label={t('dog-sound-5')} />
+        }}
+    </WebStory>
 )
 
 ClassOverrides.storyName = 'class overrides'

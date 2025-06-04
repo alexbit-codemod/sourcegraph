@@ -1,0 +1,12 @@
+{
+  "add-member": " Add member",
+  "search-teams": "Search teams",
+  "remove-member-intro": "Remove",
+  "remove-member-confirmation": " from {{teamName}}?",
+  "cancel-action": "Cancel",
+  "remove-member-label": "Remove member",
+  "add-members-to-team": "Add members to {{teamName}}",
+  "new-members-header": "New members",
+  "cancel-button": "Cancel",
+  "add-members-label": "Add members"
+}

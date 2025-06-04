@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { pluralize } from '@sourcegraph/common'
@@ -133,6 +134,8 @@ export const OrgSettingsMembersPage: React.FunctionComponent<Props> = ({
     onOrganizationUpdate,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('org/settings/members')
+
     React.useEffect(() => {
         EVENT_LOGGER.logViewEvent('OrgMembers')
         telemetryRecorder.recordEvent('org.members', 'view')
@@ -201,7 +204,7 @@ export const OrgSettingsMembersPage: React.FunctionComponent<Props> = ({
 
     return (
         <div className="org-settings-members-page">
-            <PageTitle title={`Members - ${org.name}`} />
+            <PageTitle title={t('members-org-name', { orgName: org.name })} />
             <PageHeader
                 path={[{ text: authenticatedUser?.siteAdmin ? 'Add or invite member' : 'Invite member' }]}
                 headingElement="h2"
@@ -223,7 +226,7 @@ export const OrgSettingsMembersPage: React.FunctionComponent<Props> = ({
                     className="mb-3"
                     actions={
                         <Input
-                            placeholder="Search by username or display name"
+                            placeholder={t('search-username-display-name')}
                             onChange={event => setSearchQuery(event.target.value || '')}
                             value={searchQuery}
                             autoComplete="off"
@@ -235,11 +238,9 @@ export const OrgSettingsMembersPage: React.FunctionComponent<Props> = ({
                         />
                     }
                 />
-                {onlyMemberRemovalAttempted && (
-                    <Alert variant="warning">You can’t remove the only member of an organization</Alert>
-                )}
+                {onlyMemberRemovalAttempted && <Alert variant="warning">{t('cannot-remove-only-member')}</Alert>}
                 {connection?.totalCount === 0 ? (
-                    <Alert variant="warning">No members found based on the search query.</Alert>
+                    <Alert variant="warning">{t('no-members-found-search-query')}</Alert>
                 ) : null}
                 {loading && <LoadingSpinner />}
                 {error && <ErrorAlert className="mb-3" error={error} />}

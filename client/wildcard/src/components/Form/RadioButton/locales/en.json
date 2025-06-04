@@ -1,0 +1,10 @@
+{
+  "first-message": "First",
+  "second-message": "Second",
+  "third-message": "Third",
+  "radio-label": "Radio",
+  "standard-label": "Standard",
+  "valid-label": "Valid",
+  "invalid-label": "Invalid",
+  "disabled-label": "Disabled"
+}

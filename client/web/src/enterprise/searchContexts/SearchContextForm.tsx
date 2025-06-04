@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { from, of, throwError, type Observable } from 'rxjs'
 import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators'
@@ -138,6 +139,8 @@ type RepositoriesParseResult =
       }
 
 export const SearchContextForm: React.FunctionComponent<React.PropsWithChildren<SearchContextFormProps>> = props => {
+    const { t } = useTranslation('enterprise/searchContexts')
+
     const { authenticatedUser, onSubmit, searchContext, deleteSearchContext, isSourcegraphDotCom, platformContext } =
         props
     const navigate = useNavigate()
@@ -164,7 +167,7 @@ export const SearchContextForm: React.FunctionComponent<React.PropsWithChildren<
     const searchContextSpecPreview = isValidName ? (
         getSearchContextSpecPreview(selectedNamespace, name)
     ) : (
-        <div className="text-danger">Invalid context name</div>
+        <div className="text-danger">{t('invalid-context-name')}</div>
     )
 
     const [hasRepositoriesConfigChanged, setHasRepositoriesConfigChanged] = useState(false)
@@ -319,7 +322,7 @@ export const SearchContextForm: React.FunctionComponent<React.PropsWithChildren<
             <Container className="mb-3">
                 <div className="d-flex">
                     <div className="mr-2">
-                        <div className="mb-2">Owner</div>
+                        <div className="mb-2">{t('owner')}</div>
                         <SearchContextOwnerDropdown
                             isDisabled={!!searchContext}
                             selectedNamespace={selectedNamespace}
@@ -331,7 +334,7 @@ export const SearchContextForm: React.FunctionComponent<React.PropsWithChildren<
                         className="flex-1 mb-0"
                         inputClassName={styles.searchContextFormNameInput}
                         aria-labelledby="context-name-label"
-                        label={<span className="font-weight-normal">Context name</span>}
+                        label={<span className="font-weight-normal">{t('context-name')}</span>}
                         data-testid="search-context-name-input"
                         value={name}
                         pattern="^[a-zA-Z0-9_\-\/\.]+$"
@@ -344,31 +347,38 @@ export const SearchContextForm: React.FunctionComponent<React.PropsWithChildren<
                 </div>
                 <div className="text-muted my-2">
                     <small>
-                        The best context names are short and semantic. {MAX_NAME_LENGTH} characters max. Alphanumeric
-                        and <kbd>.</kbd>
-                        <kbd>_</kbd>
-                        <kbd>/</kbd>
-                        <kbd>-</kbd> characters only.
+                        <Trans
+                            i18nKey="context-name-description"
+                            values={{ MAX_NAME_LENGTH }}
+                            components={{ '0': <kbd />, '1': <kbd />, '2': <kbd />, '3': <kbd /> }}
+                        />
                     </small>
                 </div>
                 <div>
-                    <div className={classNames('mb-1', styles.searchContextFormPreviewTitle)}>Preview</div>
+                    <div className={classNames('mb-1', styles.searchContextFormPreviewTitle)}>{t('preview')}</div>
                     {searchContextSpecPreview}
                 </div>
                 <hr aria-hidden={true} className={classNames('my-4', styles.searchContextFormDivider)} />
                 <TextArea
                     label={
                         <>
-                            Description <span className="text-muted">(optional)</span>
+                            <Trans
+                                i18nKey="description-optional"
+                                components={{ '0': <span className="text-muted" /> }}
+                            />
                         </>
                     }
                     message={
                         <span className="font-weight-normal">
-                            <span>Markdown formatting is supported</span>
+                            <span>{t('markdown-support')}</span>
                             <span aria-hidden={true} className="px-1">
                                 &middot;
                             </span>
-                            <span>{MAX_DESCRIPTION_LENGTH - description.length} characters remaining</span>
+                            <span>
+                                {t('characters-remaining', {
+                                    maxDescriptionLengthDescriptionLength: MAX_DESCRIPTION_LENGTH - description.length,
+                                })}
+                            </span>
                         </span>
                     }
                     className="w-100 mb-2"
@@ -384,7 +394,7 @@ export const SearchContextForm: React.FunctionComponent<React.PropsWithChildren<
                     }}
                 />
                 <div className={classNames('mt-3', styles.searchContextFormVisibility)}>
-                    <div className="mb-3">Visibility</div>
+                    <div className="mb-3">{t('visibility')}</div>
                     {visibilityRadioButtons.map((radio, index) => (
                         <React.Fragment key={radio.visibility}>
                             <RadioButton
@@ -411,13 +421,20 @@ export const SearchContextForm: React.FunctionComponent<React.PropsWithChildren<
                 </div>
                 <hr aria-hidden={true} className={classNames('my-4', styles.searchContextFormDivider)} />
                 <div>
-                    <div className="mb-1">Choose repositories and revisions</div>
+                    <div className="mb-1">{t('choose-repositories-revisions')}</div>
                     <div className="text-muted mb-3">
-                        For a dynamic set of repositories and revisions, such as for project or team repos, use a{' '}
-                        <Link target="_blank" rel="noopener" to="/help/code_search/how-to/search_contexts">
-                            search query
-                        </Link>
-                        . For a static set, use the JSON configuration.
+                        <Trans
+                            i18nKey="dynamic-repositories-instructions"
+                            components={{
+                                '0': (
+                                    <Link
+                                        target="_blank"
+                                        rel="noopener"
+                                        to="/help/code_search/how-to/search_contexts"
+                                    />
+                                ),
+                            }}
+                        />
                     </div>
                     <div>
                         <RadioButton
@@ -428,7 +445,7 @@ export const SearchContextForm: React.FunctionComponent<React.PropsWithChildren<
                             checked={contextType === 'dynamic'}
                             required={true}
                             onChange={() => setContextType('dynamic')}
-                            label={<>Search query</>}
+                            label={<>{t('search-query')}</>}
                         />
                         <div className={styles.searchContextFormQuery} data-testid="search-context-dynamic-query">
                             <LazyQueryInputFormControl
@@ -442,15 +459,19 @@ export const SearchContextForm: React.FunctionComponent<React.PropsWithChildren<
                         </div>
                         <div className={classNames(styles.searchContextFormQueryLabel, 'text-muted')}>
                             <small>
-                                Valid filters: <SyntaxHighlightedSearchQuery query="repo" />,{' '}
+                                {t('valid-filters')}
+                                <SyntaxHighlightedSearchQuery query="repo" />,{' '}
                                 <SyntaxHighlightedSearchQuery query="rev" />,{' '}
                                 <SyntaxHighlightedSearchQuery query="file" /> ,{' '}
                                 <SyntaxHighlightedSearchQuery query="lang" />,{' '}
                                 <SyntaxHighlightedSearchQuery query="case" />,{' '}
-                                <SyntaxHighlightedSearchQuery query="fork" />, and{' '}
+                                <SyntaxHighlightedSearchQuery query="fork" />
+                                {t('and-separator')}
                                 <SyntaxHighlightedSearchQuery query="visibility" />.{' '}
-                                <SyntaxHighlightedSearchQuery query="OR" /> and{' '}
-                                <SyntaxHighlightedSearchQuery query="AND" /> expressions are also allowed.
+                                <SyntaxHighlightedSearchQuery query="OR" />
+                                {t('and-allowed')}
+                                <SyntaxHighlightedSearchQuery query="AND" />
+                                {t('expressions-allowed')}
                             </small>
                         </div>
                     </div>
@@ -463,7 +484,7 @@ export const SearchContextForm: React.FunctionComponent<React.PropsWithChildren<
                             checked={contextType === 'static'}
                             required={true}
                             onChange={() => setContextType('static')}
-                            label={<> JSON configuration </>}
+                            label={<>{t('json-configuration')}</>}
                         />
                         <div className={styles.searchContextFormStaticConfig}>
                             <SearchContextRepositoriesFormArea
@@ -479,7 +500,8 @@ export const SearchContextForm: React.FunctionComponent<React.PropsWithChildren<
                 </div>
                 {isErrorLike(searchContextOrError) && (
                     <Alert className="mt-3" variant="danger">
-                        Failed to create search context: {searchContextOrError.message}
+                        {t('failed-to-create-context')}
+                        {searchContextOrError.message}
                     </Alert>
                 )}
             </Container>
@@ -494,7 +516,7 @@ export const SearchContextForm: React.FunctionComponent<React.PropsWithChildren<
                     {!searchContext ? 'Create search context' : 'Save'}
                 </Button>
                 <Button onClick={onCancel} outline={true} variant="secondary">
-                    Cancel
+                    {t('cancel')}
                 </Button>
                 {searchContext && (
                     <>
@@ -505,7 +527,7 @@ export const SearchContextForm: React.FunctionComponent<React.PropsWithChildren<
                             outline={true}
                             variant="danger"
                         >
-                            Delete
+                            {t('delete')}
                         </Button>
                         <DeleteSearchContextModal
                             isOpen={showDeleteModal}

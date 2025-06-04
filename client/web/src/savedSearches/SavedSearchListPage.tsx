@@ -3,6 +3,7 @@ import * as React from 'react'
 import { mdiMessageTextOutline, mdiCog, mdiDelete, mdiPlus } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { Subject, Subscription } from 'rxjs'
 import { catchError, map, switchMap } from 'rxjs/operators'
@@ -140,6 +141,8 @@ class SavedSearchNode extends React.PureComponent<NodeProps, NodeState> {
 interface Props extends NamespaceProps, TelemetryV2Props {}
 
 export const SavedSearchListPage: React.FunctionComponent<Props> = props => {
+    const { t } = useTranslation('savedSearches')
+
     React.useEffect(() => {
         EVENT_LOGGER.logViewEvent('SavedSearchListPage')
         props.telemetryRecorder.recordEvent(`${props.namespace.__typename.toLowerCase()}.savedSearches.list`, 'view')
@@ -160,14 +163,15 @@ export const SavedSearchListPage: React.FunctionComponent<Props> = props => {
             <PageHeader
                 actions={
                     <Button to="add" className="test-add-saved-search-button" variant="primary" as={Link}>
-                        <Icon aria-hidden={true} svgPath={mdiPlus} /> Add saved search
+                        <Icon aria-hidden={true} svgPath={mdiPlus} />
+                        {t('add-saved-search')}
                     </Button>
                 }
                 className="mb-3"
             >
-                <PageTitle title="Saved searches" />
+                <PageTitle title={t('saved-searches-label')} />
                 <PageHeader.Heading as="h3" styleAs="h2">
-                    <PageHeader.Breadcrumb>Saved searches</PageHeader.Breadcrumb>
+                    <PageHeader.Breadcrumb>{t('saved-searches-title')}</PageHeader.Breadcrumb>
                 </PageHeader.Heading>
             </PageHeader>
             <SavedSearchListPageContent
@@ -196,6 +200,8 @@ const SavedSearchListPageContent: React.FunctionComponent<React.PropsWithChildre
     loading,
     ...props
 }) => {
+    const { t } = useTranslation('savedSearches')
+
     const location = useLocation()
     const searchPatternType = useNavbarQueryState(state => state.searchPatternType)
     const callbackReference = useCallbackRef<HTMLAnchorElement>(null, ref => ref?.focus())
@@ -209,7 +215,7 @@ const SavedSearchListPageContent: React.FunctionComponent<React.PropsWithChildre
     }
 
     if (savedSearches.length === 0) {
-        return <Container className="text-center text-muted">You haven't created a saved search yet.</Container>
+        return <Container className="text-center text-muted">{t('no-saved-searches-message')}</Container>
     }
 
     return (

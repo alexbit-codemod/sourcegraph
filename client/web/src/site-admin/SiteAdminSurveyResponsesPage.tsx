@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { Subscription } from 'rxjs'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
@@ -88,11 +89,21 @@ function scoreToClassSuffix(score: number): typeof BADGE_VARIANTS[number] {
     return score > 8 ? 'success' : score > 6 ? 'info' : 'danger'
 }
 
-const ScoreBadge: React.FunctionComponent<React.PropsWithChildren<{ score: number }>> = props => (
-    <Badge className="ml-4" pill={true} variant={scoreToClassSuffix(props.score)} tooltip={`${props.score} out of 10`}>
-        Score: {props.score}
-    </Badge>
-)
+const ScoreBadge: React.FunctionComponent<React.PropsWithChildren<{ score: number }>> = props => {
+    const { t } = useTranslation('site-admin')
+
+    return (
+        <Badge
+            className="ml-4"
+            pill={true}
+            variant={scoreToClassSuffix(props.score)}
+            tooltip={`${props.score} out of 10`}
+        >
+            {t('score-label')}
+            {props.score}
+        </Badge>
+    )
+}
 
 const SurveyResponseNode: React.FunctionComponent<SurveyResponseNodeProps> = props => (
     <li className="list-group-item py-2">
@@ -140,16 +151,20 @@ const SurveyResponseNode: React.FunctionComponent<SurveyResponseNodeProps> = pro
 
 const UserSurveyResponsesHeader: React.FunctionComponent<
     React.PropsWithChildren<{ nodes: UserWithSurveyResponseFields[] }>
-> = () => (
-    <thead>
-        <tr>
-            <th>User</th>
-            <th>Last active on Sourcegraph</th>
-            <th>Latest survey response</th>
-            <th />
-        </tr>
-    </thead>
-)
+> = () => {
+    const { t } = useTranslation('site-admin')
+
+    return (
+        <thead>
+            <tr>
+                <th>{t('user-label')}</th>
+                <th>{t('last-active-sourcegraph')}</th>
+                <th>{t('latest-survey-response')}</th>
+                <th />
+            </tr>
+        </thead>
+    )
+}
 
 interface UserSurveyResponseNodeProps {
     /**
@@ -322,6 +337,8 @@ const LAST_TAB_STORAGE_KEY = 'site-admin-survey-responses-last-tab'
 export const SiteAdminSurveyResponsesPage: React.FunctionComponent<React.PropsWithChildren<Props>> = ({
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('site-admin')
+
     const [persistedTabIndex, setPersistedTabIndex] = useLocalStorage(LAST_TAB_STORAGE_KEY, 0)
 
     useEffect(() => {
@@ -331,22 +348,18 @@ export const SiteAdminSurveyResponsesPage: React.FunctionComponent<React.PropsWi
 
     return (
         <div className="site-admin-survey-responses-page">
-            <PageTitle title="User feedback survey - Admin" />
-            <H2>User feedback survey</H2>
-            <Text>
-                After using Sourcegraph for a few days, users are presented with a request to answer "How likely is it
-                that you would recommend Sourcegraph to a friend?" on a scale from 0–10 and to provide some feedback.
-                Responses are visible below (and are also sent to Sourcegraph).
-            </Text>
+            <PageTitle title={t('user-feedback-survey-admin')} />
+            <H2>{t('user-feedback-survey')}</H2>
+            <Text>{t('user-feedback-survey-description')}</Text>
 
             <SiteAdminSurveyResponsesSummary />
 
-            <H3>Responses</H3>
+            <H3>{t('responses-label')}</H3>
 
             <Tabs defaultIndex={persistedTabIndex} onChange={setPersistedTabIndex}>
                 <TabList>
-                    <Tab>Chronological feed</Tab>
-                    <Tab>Sort by user</Tab>
+                    <Tab>{t('chronological-feed-label')}</Tab>
+                    <Tab>{t('sort-by-user')}</Tab>
                 </TabList>
                 <TabPanels>
                     <TabPanel>

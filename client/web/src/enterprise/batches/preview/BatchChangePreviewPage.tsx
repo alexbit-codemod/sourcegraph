@@ -1,6 +1,7 @@
 import { type FC, useEffect } from 'react'
 
 import AlertCircleIcon from 'mdi-react/AlertCircleIcon'
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import { useQuery } from '@sourcegraph/http-client'
@@ -33,6 +34,8 @@ export interface BatchChangePreviewPageProps extends Omit<BatchChangePreviewProp
 }
 
 export const BatchChangePreviewPage: FC<BatchChangePreviewPageProps> = props => {
+    const { t } = useTranslation('enterprise/batches/preview')
+
     const { batchSpecID } = useParams()
 
     const { authenticatedUser, telemetryService, telemetryRecorder, queryApplyPreviewStats } = props
@@ -58,7 +61,7 @@ export const BatchChangePreviewPage: FC<BatchChangePreviewPageProps> = props => 
         )
     }
     if (data?.node?.__typename !== 'BatchSpec') {
-        return <HeroPage icon={AlertCircleIcon} title="Batch spec not found" />
+        return <HeroPage icon={AlertCircleIcon} title={t('batch-spec-not-found')} />
     }
     const spec = data.node
 
@@ -66,7 +69,7 @@ export const BatchChangePreviewPage: FC<BatchChangePreviewPageProps> = props => 
         <MultiSelectContextProvider>
             <BatchChangePreviewContextProvider>
                 <div className="pb-5">
-                    <PageTitle title="Apply batch spec" />
+                    <PageTitle title={t('apply-batch-spec')} />
                     <PageHeader
                         path={[
                             {
@@ -118,6 +121,8 @@ export const BatchChangePreviewPage: FC<BatchChangePreviewPageProps> = props => 
  * both around.
  */
 export const NewBatchChangePreviewPage: FC<BatchChangePreviewPageProps> = props => {
+    const { t } = useTranslation('enterprise/batches/preview')
+
     const { batchSpecID } = useParams()
 
     const {
@@ -159,7 +164,7 @@ export const NewBatchChangePreviewPage: FC<BatchChangePreviewPageProps> = props 
     }
     // If there weren't any errors and we just didn't receive any data
     if (data?.node?.__typename !== 'BatchSpec') {
-        return <HeroPage icon={AlertCircleIcon} title="Batch spec not found" />
+        return <HeroPage icon={AlertCircleIcon} title={t('duplicate-batch-spec-not-found')} />
     }
 
     const spec = data.node
@@ -190,12 +195,9 @@ export const NewBatchChangePreviewPage: FC<BatchChangePreviewPageProps> = props 
                     {exceedsLicense(spec.applyPreview.totalCount) && (
                         <Alert variant="warning">
                             <div className="mb-2">
-                                <strong>
-                                    Your license only allows for {maxUnlicensedChangesets} changesets per batch change
-                                </strong>
+                                <strong>{t('license-limitations-changesets', { maxUnlicensedChangesets })}</strong>
                             </div>
-                            Since more than {maxUnlicensedChangesets} changesets are generated, you won't be able to
-                            apply the batch change and actually publish the changesets to the code host.
+                            {t('exceeding-changesets-warning', { maxUnlicensedChangesets })}
                         </Alert>
                     )}
                     <PreviewList

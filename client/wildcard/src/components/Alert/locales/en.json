@@ -1,0 +1,12 @@
+{
+  "alerts": "Alerts",
+  "contextual-feedback-messages": "Provide contextual feedback messages for typical user actions with the handful of available and flexible alert messages.",
+  "too-many-matching-repositories": "Too many matching repositories",
+  "repo-filter-instructions": " Use a 'repo:' filter to narrow your search.",
+  "too-many-matching-repositories-duplicate": "Too many matching repositories",
+  "repo-filter-instructions-duplicate": " Use a 'repo:' filter to narrow your search.",
+  "dismiss-button": "Dismiss",
+  "too-many-matching-repositories-another": "Too many matching repositories",
+  "repo-filter-instructions-another": " Use a 'repo:' filter to narrow your search.",
+  "dismiss-button-another": "Dismiss"
+}

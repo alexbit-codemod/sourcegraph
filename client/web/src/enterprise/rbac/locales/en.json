@@ -1,0 +1,6 @@
+{
+  "roles-admin": "Roles - Admin",
+  "roles-description-access-control": "Roles are a part of the <0>Role-Based Access Control system</0> for Sourcegraph and represent a set of in-product permissions. Use the <1>user administration page</1> to assign roles.",
+  "create-role": " Create role",
+  "roles-label": "Roles"
+}

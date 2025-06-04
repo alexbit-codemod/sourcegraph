@@ -1,0 +1,11 @@
+{
+  "role-update-success": "Role(s) successfully updated for user <0>{{userUsername}}</0>.",
+  "users-label": "Users",
+  "note-billable-events": "Note: Events is the count of <0>all billable events</0>  performed by a user.",
+  "scim-controlled-user": "This user is <0>SCIM</0> -controlled—an external system controls some of its attributes.",
+  "scim-label": "SCIM",
+  "no-actions-available": "No actions available",
+  "clear-button": " Clear",
+  "cancel-button": "Cancel",
+  "apply-button": "Apply"
+}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { Button, CircularProgress, Stack, Typography } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 import { changeStage } from './debugBar'
 
@@ -8,6 +9,8 @@ const TestAdminUIGoodMs = 1 * 1000
 const WaitBeforeLaunchMs = 3 * 1000
 
 export const WaitForAdmin: React.FC = () => {
+    const { t } = useTranslation('../../../internal/appliance/frontend/maintenance/src')
+
     const [waitingForBalancer, setWaitingForBalancer] = useState<boolean>(false)
     const [launching, setLaunching] = useState<boolean>(false)
 
@@ -37,32 +40,28 @@ export const WaitForAdmin: React.FC = () => {
 
     return (
         <div className="wait-for-admin">
-            <Typography variant="h5">Waiting For The Admin To Return</Typography>
+            <Typography variant="h5">{t('waiting-for-admin-to-return')}</Typography>
             <div>
-                <Typography sx={{ m: 2 }}>
-                    The appliance is ready. We were waiting for you to set its security before opening it up.
-                </Typography>
-                <Typography sx={{ m: 2 }}>
-                    Now that you're back, please press the button below to launch the Administration UI.
-                </Typography>
+                <Typography sx={{ m: 2 }}>{t('appliance-ready-security-setup')}</Typography>
+                <Typography sx={{ m: 2 }}>{t('press-button-launch-admin-ui')}</Typography>
             </div>
             <Button
                 variant="contained"
                 onClick={() => setWaitingForBalancer(true)}
                 disabled={launching || waitingForBalancer}
             >
-                Launch Admin UI
+                {t('launch-admin-ui-button')}
             </Button>
             {launching && (
                 <Stack direction="row" spacing={2}>
                     <CircularProgress size={32} />
-                    <Typography variant="h5">Launching Admin UI... Please wait...</Typography>
+                    <Typography variant="h5">{t('launching-admin-ui-please-wait')}</Typography>
                 </Stack>
             )}
             {waitingForBalancer && (
                 <Stack direction="row" spacing={2}>
                     <CircularProgress size={32} />
-                    <Typography variant="h5">Waiting for Admin UI to be ready... Please wait...</Typography>
+                    <Typography variant="h5">{t('waiting-for-admin-ui-to-be-ready')}</Typography>
                 </Stack>
             )}
         </div>

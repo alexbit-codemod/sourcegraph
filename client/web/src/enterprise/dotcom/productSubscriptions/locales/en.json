@@ -1,0 +1,7 @@
+{
+  "identifier": "ID",
+  "subscription-plan": "Plan",
+  "reason": "Reason:",
+  "no-plan-selected": "No plan selected",
+  "account-deleted": "(Account deleted)"
+}

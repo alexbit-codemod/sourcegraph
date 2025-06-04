@@ -1,6 +1,7 @@
 import { type FC, useState } from 'react'
 
 import type { Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { SearchPatternType } from '@sourcegraph/shared/src/graphql-operations'
 import { H2 } from '@sourcegraph/wildcard'
@@ -33,37 +34,39 @@ last line
 `
 
 const QueryInputStory: FC<{}> = () => {
+    const { t } = useTranslation('../../branded/src/search-ui/input')
+
     const [counter, setCounter] = useState(0)
     const [onChange, setOnChange] = useState('')
 
     return (
         <>
             <div className="m-3">
-                <H2>'literal' search pattern</H2>
+                <H2>{t('literal-search-pattern')}</H2>
                 <BaseCodeMirrorQueryInput {...defaultProps} patternType={SearchPatternType.literal} />
             </div>
             <div className="m-3">
-                <H2>'regexp' search pattern</H2>
+                <H2>{t('regexp-search-pattern')}</H2>
                 <BaseCodeMirrorQueryInput {...defaultProps} patternType={SearchPatternType.regexp} />
             </div>
             <div className="m-3">
-                <H2>'standard' search pattern</H2>
+                <H2>{t('standard-search-pattern-1')}</H2>
                 <BaseCodeMirrorQueryInput {...defaultProps} patternType={SearchPatternType.standard} />
             </div>
             <div className="m-3">
-                <H2>'standard' search pattern</H2>
+                <H2>{t('standard-search-pattern-2')}</H2>
                 <BaseCodeMirrorQueryInput {...defaultProps} patternType={SearchPatternType.standard} />
             </div>
             <div className="m-3">
-                <H2>autoFocus: true</H2>
+                <H2>{t('auto-focus-true')}</H2>
                 <BaseCodeMirrorQueryInput {...defaultProps} autoFocus={true} patternType={SearchPatternType.standard} />
             </div>
             <div className="m-3">
-                <H2>readOnly: true</H2>
+                <H2>{t('read-only-true')}</H2>
                 <BaseCodeMirrorQueryInput {...defaultProps} readOnly={true} patternType={SearchPatternType.standard} />
             </div>
             <div className="m-3">
-                <H2>multiLine: true</H2>
+                <H2>{t('multi-line-true')}</H2>
                 <BaseCodeMirrorQueryInput
                     {...defaultProps}
                     value={multiLineValue}
@@ -72,7 +75,7 @@ const QueryInputStory: FC<{}> = () => {
                 />
             </div>
             <div className="m-3">
-                <H2>multiLine: false (default)</H2>
+                <H2>{t('multi-line-false-default')}</H2>
                 <BaseCodeMirrorQueryInput
                     {...defaultProps}
                     value={multiLineValue}
@@ -80,7 +83,7 @@ const QueryInputStory: FC<{}> = () => {
                 />
             </div>
             <div className="m-3">
-                <H2>Event handlers</H2>
+                <H2>{t('event-handlers')}</H2>
                 <BaseCodeMirrorQueryInput
                     {...defaultProps}
                     patternType={SearchPatternType.standard}
@@ -90,8 +93,8 @@ const QueryInputStory: FC<{}> = () => {
                     }}
                     onChange={setOnChange}
                 />
-                <div>onEnter: Enter pressed {counter} time(s)</div>
-                <div>onChange: {onChange}</div>
+                <div>{t('on-enter-pressed', { counter })}</div>
+                <div>{t('on-change-handler', { onChange })}</div>
             </div>
         </>
     )

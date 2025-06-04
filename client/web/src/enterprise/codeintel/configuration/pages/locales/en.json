@@ -1,0 +1,132 @@
+{
+  "code-graph-inference-script-title": "Code graph inference script",
+  "code-graph-inference-script-description": "Code graph inference script",
+  "lua-script-auto-indexing-reference": "Lua script that emits complete and/or partial auto-indexing job specifications. See the <0>reference guide</0> for more information. The following implementations can also be used as reference of the API:",
+  "code-graph-data-repository-index-configuration-title": "Code graph data repository index configuration",
+  "code-graph-data-repository-index-configuration-title-alt": "Code graph data repository index configuration",
+  "index-job-configuration-description": "Provide explicit index job configuration to customize how this repository is indexed. See the <0>reference guide</0>  for more information.",
+  "form-label": "Form",
+  "raw-label": "Raw",
+  "code-graph-data-configuration": "Code graph data configuration for",
+  "rules-that-control": "Rules that control",
+  "data-retention-behavior": " data retention behavior of code graph data.",
+  "auto-indexing": "auto-indexing and",
+  "additional-configuration-policies": "View <0>additional configuration policies</0> that do not affect this repository.",
+  "custom-policies": "Custom policies",
+  "default-policies": "Default policies",
+  "applies-to": "Applies to",
+  "of": " of",
+  "head-tip-default-branch": "HEAD (tip of default branch)",
+  "commit-pattern": " (tip of default branch)",
+  "branches-matching-pattern": "commit <0>{{policyPattern}}</0>",
+  "all-branches": "branches matching <0>{{policyPattern}}</0>",
+  "tags-matching-pattern": "all branches",
+  "all-tags": "tags matching <0>{{policyPattern}}</0>",
+  "repositories": "all tags",
+  "or": "repositories",
+  "all-repositories": ", or",
+  "index-matching-branches": "all repositories",
+  "younger-than": "Index",
+  "keep-precise-indexes": "  of matching branches",
+  "for-after-upload": "  younger than",
+  "matching-commits": "Keep precise indexes providing intelligence for",
+  "of-matching-branches": "for",
+  "": "matching commits",
+  "create-or-update-code-graph-policy": {
+    "true": "Create a new",
+    "false": "Update a"
+  },
+  "create-or-update-global-code-graph-policy": {
+    "true": "Create a new",
+    "false": "Update a"
+  },
+  "auto-indexing-and": "auto-indexing and",
+  "protected-configuration-policy-warning": "This configuration policy is protected. Protected configuration policies may not be deleted and only the retention duration and indexing options are editable.",
+  "create-or-update-policy": {
+    "true": "Create",
+    "false": "Update"
+  },
+  "saving-message": " Saving...",
+  "cancel-button": "Cancel",
+  "delete-policy": " Delete policy",
+  "deleting-message": " Deleting...",
+  "global-policies-disabled-warning": "This Sourcegraph instance has disabled global policies for auto-indexing. Create a more constrained policy targeting an explicit set of repositories to enable this policy. <0>See autoindexing docs.</0>",
+  "create-global-configuration-policy-link": "Alternatively, <0>create global configuration policy</0> that applies to more than this repository.",
+  "create-repository-policy-warning": "To create a policy that applies to a particular repository, visit that repository's code graph settings.",
+  "policy-name-label": "Policy name",
+  "custom-policy-description": {
+    "true": "global ",
+    "false": ""
+  },
+  "custom-policy-description_select_2": {
+    "true": "indexing ",
+    "false": "$t('custom-policy-description_select_3', { \"value\": \"{{policyRetentionEnabled}}\" })"
+  },
+  "custom-policy-description_select_3": {
+    "true": "retention ",
+    "false": ""
+  },
+  "custom-policy-description_select_4": {
+    "true": " for {{displayRepoNameRepoName}}",
+    "false": ""
+  },
+  "policy-matching-revisions-question": {
+    "true": "commits",
+    "false": "$t('policy-matching-revisions-question_select_2', { \"value\": \"{{policyTypeGitObjectTypeGitTree}}\" })"
+  },
+  "policy-matching-revisions-question_select_2": {
+    "true": "branches",
+    "false": "$t('policy-matching-revisions-question_select_3', { \"value\": \"{{policyTypeGitObjectTypeGitTag}}\" })"
+  },
+  "policy-matching-revisions-question_select_3": {
+    "true": "tags",
+    "false": ""
+  },
+  "configuration-policies-repository-warning": {
+    "true": "this repository",
+    "false": "matching repositories"
+  },
+  "branches-label": "Branches",
+  "tags-label": "Tags",
+  "matching-label": "matching",
+  "supply-value-warning": "Please supply a value.",
+  "pattern-not-match-warning": {
+    "true": "tags",
+    "false": "branches"
+  },
+  "this-policy-label": "  this policy",
+  "matching-tag-or-branch-message": {
+    "true": "tag",
+    "false": "branch"
+  },
+  "matching-tags-or-branches-message": {
+    "true": "tags",
+    "false": "branches"
+  },
+  "showing-preview-message": "(showing only {{previewPreviewLength}})",
+  "show-all-or-limited-preview-message": {
+    "true": "tags",
+    "false": "branches"
+  },
+  "repositories-matching-policy-question": "Which repositories match this policy?",
+  "configuration-policies-repositories-warning": "Configuration policies can apply to one, a set, or to all repositories on a Sourcegraph instance. Specify a set of repositories using a <0>glob pattern</0>.",
+  "policy-applies-to-all-repositories": "This policy applies to <0>all repositories</0>  on this Sourcegraph instance",
+  "add-repository-pattern-warning": "Add a repository pattern if you wish to limit the number of repositories with auto indexing.",
+  "add-repository-pattern-button": "Add repository pattern",
+  "automatic-indexing-warning": {
+    "true": "",
+    "false": " repositories and"
+  },
+  "automatic-indexing-warning_select_2": {
+    "true": "this repository",
+    "false": "matching repositories"
+  },
+  "see-repository-index-configuration-link": "See this repository's <0>index configuration</0>.",
+  "ignore-commits-age-label": "Ignore commits older than a given age",
+  "apply-to-all-matching-branches-label": "Apply to all commits on matching branches",
+  "precise-code-intelligence-retention-header": "Precise code intelligence index retention",
+  "precise-code-intelligence-index-expiration-warning": "Precise code intelligence indexes will expire once they no longer serve data for a revision matched by a configuration policy. Expired indexes are removed once they are no longer referenced by any unexpired index. Enabling retention keeps data for matching revisions longer than the default.",
+  "tip-default-branch-retention-warning": "Precise code intelligence indexes serving data for the tip of the default branch are retained implicitly.",
+  "expire-matching-indexes-age-label": "Expire matching indexes older than a given age",
+  "apply-to-all-matching-branches-label-duplicate": "Apply to all commits on matching branches"
+}

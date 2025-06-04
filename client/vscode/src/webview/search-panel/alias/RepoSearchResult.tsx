@@ -3,6 +3,7 @@ import React from 'react'
 import { mdiSourceFork, mdiArchive, mdiLock } from '@mdi/js'
 import classNames from 'classnames'
 import SourceRepositoryIcon from 'mdi-react/SourceRepositoryIcon'
+import { useTranslation } from 'react-i18next'
 
 import { LegacyResultContainer } from '@sourcegraph/branded'
 import { displayRepoName } from '@sourcegraph/shared/src/components/RepoLink'
@@ -29,6 +30,8 @@ export const RepoSearchResult: React.FunctionComponent<RepoSearchResultProps> = 
     as,
     index,
 }) => {
+    const { t } = useTranslation('../../vscode/src/webview/search-panel/alias')
+
     /**
      * Use the custom hook useIsTruncated to check if overflow: ellipsis is activated for the element
      * We want to do it on mouse enter as browser window size might change after the element has been
@@ -51,7 +54,7 @@ export const RepoSearchResult: React.FunctionComponent<RepoSearchResultProps> = 
             <div className={classNames(styles.searchResultMatch, 'p-2 flex-column')}>
                 <div className="d-flex align-items-center flex-row">
                     <div className={styles.matchType}>
-                        <small>Repository match</small>
+                        <small>{t('repository-match')}</small>
                     </div>
                     {result.fork && (
                         <>
@@ -64,7 +67,7 @@ export const RepoSearchResult: React.FunctionComponent<RepoSearchResultProps> = 
                                 />
                             </div>
                             <div>
-                                <small>Fork</small>
+                                <small>{t('fork')}</small>
                             </div>
                         </>
                     )}
@@ -79,7 +82,7 @@ export const RepoSearchResult: React.FunctionComponent<RepoSearchResultProps> = 
                                 />
                             </div>
                             <div>
-                                <small>Archived</small>
+                                <small>{t('archived')}</small>
                             </div>
                         </>
                     )}
@@ -94,7 +97,7 @@ export const RepoSearchResult: React.FunctionComponent<RepoSearchResultProps> = 
                                 />
                             </div>
                             <div>
-                                <small>Private</small>
+                                <small>{t('private')}</small>
                             </div>
                         </>
                     )}

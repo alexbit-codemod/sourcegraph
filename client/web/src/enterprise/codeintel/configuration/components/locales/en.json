@@ -1,0 +1,42 @@
+{
+  "add-repository-pattern": "Add Repository Pattern",
+  "no-matching-repositories": "This set of repository patterns does not match any repository.",
+  "repositories-matched-by-filter": " repositories are matched by this filter. The maximum",
+  "setting-is": "  setting is",
+  "repositories": " repositories.",
+  "too-many-matching-repositories": "Too many matching repositories",
+  "repository-matches": " repository matches",
+  "repositories-match": " repositories match",
+  "this-pattern": "this pattern",
+  "number-of-patterns": "these {{repositoryPatternsFilterPatternPatternLength}} patterns",
+  "showing-repositories": "(showing only {{previewRepositoriesLength}})",
+  "show-all-or-limited-repositories": "Show {{nextFetchLimitPreviewTotalCountAll}}{{nextFetchLimit}} repositories",
+  "infer-configuration": "Infer configuration",
+  "no-policies-found": "No policies found.",
+  "documentation-header": "Documentation",
+  "data-retention-policies-header": "Data retention policies",
+  "auto-indexing-policies-header": "Auto-indexing policies",
+  "custom-label": "Custom",
+  "custom-hour-pluralization": "hour{{customValueInHours1S}}",
+  "plural-s": "s",
+  "value-required": "Please supply a value.",
+  "positive-value-required": "Please supply a positive value.",
+  "max-duration-exceeded": "Please supply a value no greater than {{maxDuration}}.",
+  "create-new-global-policy": "Create new {{repoGlobal}} policy",
+  "actions": "Actions",
+  "create-new-head-policy": "Create new {{repoGlobal}} policy for HEAD",
+  "match-tip-default-branch": {
+    "true": "within this repository",
+    "false": "across multiple repositories"
+  },
+  "create-new-global-branch-policy": "Create new {{repoGlobal}} branch policy",
+  "match-multiple-branches": {
+    "true": "within this repository",
+    "false": "across multiple repositories"
+  },
+  "create-new-global-tag-policy": "Create new {{repoGlobal}} tag policy",
+  "match-multiple-tags": {
+    "true": "within this repository",
+    "false": "across multiple repositories"
+  }
+}

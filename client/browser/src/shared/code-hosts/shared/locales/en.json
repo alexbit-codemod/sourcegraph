@@ -1,0 +1,14 @@
+{
+  "sign-in-to-sourcegraph": "Sign in to Sourcegraph",
+  "sign-into-sourcegraph-hover-tooltips": "Sign into Sourcegraph to get hover tooltips, go to definition and more",
+  "sign-into-sourcegraph-hover-tooltips-duplicate": "Sign into Sourcegraph to get hover tooltips, go to definition and more",
+  "error-message": "Error",
+  "repository-not-found": "Repository not found",
+  "repository-does-not-exist-sourcegraph": "The repository does not exist on the configured Sourcegraph instance {{sourcegraphURL}}",
+  "repository-does-not-exist-sourcegraph-duplicate": "The repository does not exist on the configured Sourcegraph instance {{sourcegraphURL}}",
+  "view-repository-sourcegraph": "View repository on Sourcegraph",
+  "view-repository-sourcegraph-duplicate": "View repository on Sourcegraph",
+  "configure-sourcegraph": "Configure Sourcegraph",
+  "setup-sourcegraph-private-repositories": "Set up Sourcegraph for search and code navigation on private repositories",
+  "setup-sourcegraph-private-repositories-duplicate": "Set up Sourcegraph for search and code navigation on private repositories"
+}

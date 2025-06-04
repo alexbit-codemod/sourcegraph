@@ -1,0 +1,13 @@
+{
+  "view-action": "View",
+  "inside-label": " inside",
+  "view-action-duplicate": "View",
+  "source-repository-label": {
+    "true": "depot",
+    "false": "repository"
+  },
+  "changes-header": "Changes",
+  "authored-and-ref-action-type": " authored and {{refActionType}}",
+  "and": " and",
+  "browse-files-at-ref-id": " Browse files at @{{abbreviatedRefID}}"
+}

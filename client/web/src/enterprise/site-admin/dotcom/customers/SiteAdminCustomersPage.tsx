@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { type Observable, Subject } from 'rxjs'
 import { map } from 'rxjs/operators'
 
@@ -48,6 +49,8 @@ interface Props extends TelemetryV2Props {}
  * Displays a list of customers associated with user accounts on Sourcegraph.com.
  */
 export const SiteAdminProductCustomersPage: React.FunctionComponent<React.PropsWithChildren<Props>> = props => {
+    const { t } = useTranslation('enterprise/site-admin/dotcom/customers')
+
     useEffect(() => props.telemetryRecorder.recordEvent('admin.customers', 'view'), [props.telemetryRecorder])
 
     const updates = useMemo(() => new Subject<void>(), [])
@@ -55,9 +58,9 @@ export const SiteAdminProductCustomersPage: React.FunctionComponent<React.PropsW
 
     return (
         <div className="site-admin-customers-page">
-            <PageTitle title="Customers" />
+            <PageTitle title={t('customers-quote')} />
             <div className="d-flex justify-content-between align-items-center mb-1">
-                <H2 className="mb-0">Customers</H2>
+                <H2 className="mb-0">{t('customers')}</H2>
             </div>
             <FilteredConnection<
                 CustomerFields,

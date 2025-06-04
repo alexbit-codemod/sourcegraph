@@ -1,0 +1,8 @@
+{
+  "code-insights-jobs": "Code Insights jobs",
+  "actionable-code-insights-queued-jobs-list": "List of actionable Code Insights queued jobs",
+  "search-jobs-by-title-or-series-label": "Search jobs by title or series label",
+  "loading-code-insights-job": " Loading code insights job",
+  "no-code-insight-jobs-yet": " No code insight jobs yet. Enable code insights and <0>create</0> at least one insight to see its jobs here.",
+  "jobs": "jobs"
+}

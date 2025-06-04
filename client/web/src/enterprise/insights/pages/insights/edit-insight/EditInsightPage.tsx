@@ -1,6 +1,7 @@
 import { type FC, useContext, useMemo } from 'react'
 
 import MapSearchIcon from 'mdi-react/MapSearchIcon'
+import { useTranslation, Trans } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -28,6 +29,8 @@ import { useEditPageHandlers } from './hooks/use-edit-page-handlers'
 interface EditInsightPageProps extends TelemetryV2Props {}
 
 export const EditInsightPage: FC<EditInsightPageProps> = ({ telemetryRecorder }) => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/edit-insight')
+
     /** Normalized insight id <type insight>.insight.<name of insight> */
     const { insightId } = useParams()
 
@@ -46,22 +49,22 @@ export const EditInsightPage: FC<EditInsightPageProps> = ({ telemetryRecorder })
     }
 
     if (!insight) {
-        return <HeroPage icon={MapSearchIcon} title="Oops, we couldn't find that insight" />
+        return <HeroPage icon={MapSearchIcon} title={t('oops-could-not-find-insight')} />
     }
 
     return (
         <CodeInsightsPage>
-            <PageTitle title="Edit insight - Code Insights" />
+            <PageTitle title={t('edit-insight-code-insights')} />
 
             <PageHeader
                 className="mb-3"
                 path={[{ icon: CodeInsightsIcon, to: '/insights' }, { text: 'Edit insight' }]}
                 description={
                     <Text className="text-muted">
-                        Insights analyze your code based on any search query.{' '}
-                        <Link to="/help/code_insights" target="_blank" rel="noopener">
-                            Learn more.
-                        </Link>
+                        <Trans
+                            i18nKey="insights-analyze-code-learn-more"
+                            components={{ '0': <Link to="/help/code_insights" target="_blank" rel="noopener" /> }}
+                        />
                     </Text>
                 }
             />

@@ -1,6 +1,7 @@
 import React, { type FC, useEffect, useState } from 'react'
 
 import { mdiHelpCircleOutline } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryService } from '@sourcegraph/shared/src/telemetry/telemetryService'
@@ -75,6 +76,8 @@ const getQuery = ({
 }
 
 export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUpdate, onSubmit }) => {
+    const { t } = useTranslation('storm/pages/SearchPage')
+
     const [repoPattern, setRepoPattern] = useState<string>('')
     const [repoNames, setRepoNames] = useState<string>('')
     const [filePaths, setFilePaths] = useState<string>('')
@@ -119,7 +122,7 @@ export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                 <div id="contentFilterSection">
                     <div className="form-group row">
                         <Label htmlFor="repoName" className="col-4 col-form-label">
-                            Match literal string
+                            {t('match-literal-string')}
                             <Tooltip content="Search for matching content with an exact match.">
                                 <Icon
                                     aria-label="hover icon for help tooltip"
@@ -134,7 +137,7 @@ export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                                 <Input
                                     disabled={regexpContent?.length > 0}
                                     id="repoName"
-                                    placeholder="class CustomerManager"
+                                    placeholder={t('class-customer-manager')}
                                     type="text"
                                     onChange={event => setLiteralContent(event.target.value)}
                                 />
@@ -144,7 +147,7 @@ export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
 
                     <div className="form-group row">
                         <Label htmlFor="repoName" className="col-4 col-form-label">
-                            Match regular expression
+                            {t('match-regular-expression')}
                             <Tooltip content="Search for matching content using a regular expression.">
                                 <Icon
                                     aria-label="hover icon for help tooltip"
@@ -159,7 +162,7 @@ export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                                 <Input
                                     disabled={literalContent?.length > 0}
                                     id="repoName"
-                                    placeholder="class \w*Manager"
+                                    placeholder={t('class-regex-manager')}
                                     type="text"
                                     onChange={event => setRegexpContent(event.target.value)}
                                 />
@@ -173,7 +176,7 @@ export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                 <div id="repoFilterSection">
                     <div className="form-group row">
                         <Label htmlFor="repoName" className="col-4 col-form-label">
-                            In these repos
+                            {t('in-these-repos')}
                             <Tooltip content="Match repository names exactly.">
                                 <Icon
                                     aria-label="hover icon for help tooltip"
@@ -187,7 +190,7 @@ export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                             <div className="input-group">
                                 <Input
                                     id="repoName"
-                                    placeholder="sourcegraph/sourcegraph"
+                                    placeholder={t('sourcegraph-repo')}
                                     type="text"
                                     onChange={event => setRepoNames(event.target.value)}
                                 />
@@ -197,7 +200,7 @@ export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
 
                     <div className="form-group row">
                         <Label htmlFor="repoNamePatterns" className="col-4 col-form-label">
-                            In matching repos
+                            {t('in-matching-repos')}
                             <Tooltip content="Use a regular expression pattern to match against repository names.">
                                 <Icon
                                     aria-label="hover icon for help tooltip"
@@ -210,7 +213,7 @@ export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                             <Input
                                 id="repoNamePatterns"
                                 name="repoNamePatterns"
-                                placeholder="sourcegraph.*"
+                                placeholder={t('sourcegraph-regex')}
                                 type="text"
                                 onChange={event => setRepoPattern(event.target.value)}
                             />
@@ -222,7 +225,7 @@ export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                             <Select
                                 label={
                                     <div>
-                                        Search over repository forks?
+                                        {t('search-over-repository-forks')}
                                         <Tooltip content="Choose an option to include or exclude forks from the search, or search only over forks.">
                                             <Icon
                                                 aria-label="hover icon for help tooltip"
@@ -237,9 +240,9 @@ export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                                 name="searchForks"
                                 onChange={event => setUseForks(event.target.value)}
                             >
-                                <option value="no">No</option>
-                                <option value="yes">Yes</option>
-                                <option value="only">Only forks</option>
+                                <option value="no">{t('no')}</option>
+                                <option value="yes">{t('yes')}</option>
+                                <option value="only">{t('only-forks')}</option>
                             </Select>
                         </div>
 
@@ -247,7 +250,7 @@ export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                             <Select
                                 label={
                                     <div>
-                                        Search over archived repositories?
+                                        {t('search-over-archived-repositories')}
                                         <Tooltip content="Choose an option to include or exclude archived repos from the search, or search only over archived repos.">
                                             <Icon
                                                 aria-label="hover icon for help tooltip"
@@ -262,9 +265,9 @@ export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                                 name="searchArchive"
                                 onChange={event => setUseArchive(event.target.value)}
                             >
-                                <option value="no">No</option>
-                                <option value="yes">Yes</option>
-                                <option value="only">Only archives</option>
+                                <option value="no">{t('no-archives')}</option>
+                                <option value="yes">{t('yes-archives')}</option>
+                                <option value="only">{t('only-archives')}</option>
                             </Select>
                         </div>
                     </div>
@@ -274,7 +277,7 @@ export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
 
                 <div className="form-group row">
                     <Label htmlFor="filePathPattern" className="col-4 col-form-label">
-                        In matching file paths
+                        {t('in-matching-file-paths')}
                         <Tooltip content="Use a regular expression pattern to match against file paths, for example sourcegraph/.*/internal">
                             <Icon
                                 aria-label="hover icon for help tooltip"
@@ -288,7 +291,7 @@ export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                             id="filePathPattern"
                             name="filePathPattern"
                             type="text"
-                            placeholder="enterprise/.*"
+                            placeholder={t('enterprise-regex')}
                             onChange={event => setFilePaths(event.target.value)}
                         />
                     </div>
@@ -296,7 +299,7 @@ export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
 
                 <div className="form-group row">
                     <Label id="searchLangLabel" htmlFor="searchLang" className="col-4 col-form-label">
-                        Which programming language?
+                        {t('which-programming-language')}
                         <Tooltip content="Only match files for a given programming language.">
                             <Icon
                                 aria-label="hover icon for help tooltip"
@@ -312,7 +315,7 @@ export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                             name="searchLang"
                             onChange={event => setLanguageFilter(event.target.value)}
                         >
-                            <option hidden={true}>Any</option>
+                            <option hidden={true}>{t('any-language')}</option>
                             {languages.map((lang, idx) => (
                                 <option key={idx} value={lang}>
                                     {lang}
@@ -324,7 +327,7 @@ export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
 
                 <div className="form-group row">
                     <Label htmlFor="searchContext" className="col-4 col-form-label">
-                        Search context
+                        {t('search-context')}
                         <Tooltip content="Only match files inside a search context. A search context is a Sourcegraph entity to provide shareable and repeatable filters, such as common sets of repositories. The global context  will search over all code on Sourcegraph.">
                             <Icon
                                 aria-label="hover icon for help tooltip"
@@ -347,7 +350,7 @@ export const CodeSearchSimpleSearch: FC<SimpleSearchProps> = ({ onSimpleSearchUp
                 <div className="form-group row">
                     <div className="offset-4 col-8">
                         <Button variant="primary" name="submit" type="submit" className="btn btn-primary">
-                            Submit
+                            {t('submit')}
                         </Button>
                     </div>
                 </div>

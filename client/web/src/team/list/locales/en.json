@@ -1,0 +1,12 @@
+{
+  "delete-team": "Delete team",
+  "removing-teams-warning": "Removing teams is irreversible and will cascade to existing child teams.",
+  "cancel-button": "Cancel",
+  "delete-team-label": "Delete team",
+  "teams-title": "Teams",
+  "create-team": " Create team",
+  "team-description": "A team is a set of users. See the <0>Teams documentation</0> for more information about configuring teams.",
+  "teams-header": "Teams",
+  "create-child-team": " Create child team",
+  "search-teams": "Search teams"
+}

@@ -2,6 +2,7 @@ import { type FC, useEffect } from 'react'
 
 import { mdiPlus } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { noop } from 'rxjs'
 
 import { gql, useQuery } from '@sourcegraph/http-client'
@@ -49,6 +50,10 @@ interface DynamicCodeInsightExampleProps
         React.HTMLAttributes<HTMLDivElement> {}
 
 export const DynamicCodeInsightExample: FC<DynamicCodeInsightExampleProps> = props => {
+    const { t } = useTranslation(
+        'enterprise/insights/pages/landing/getting-started/components/dynamic-code-insight-example'
+    )
+
     const { telemetryService, telemetryRecorder, ...otherProps } = props
 
     const { repositoryUrl, loading: repositoryValueLoading } = useExampleRepositoryUrl()
@@ -125,24 +130,24 @@ export const DynamicCodeInsightExample: FC<DynamicCodeInsightExampleProps> = pro
                 />
 
                 <Input
-                    label="Data series search query"
+                    label={t('data-series-search-query')}
                     required={true}
                     as={InsightQueryInput}
                     repoQuery={null}
                     repositories={repositories.input.value}
                     patternType={getQueryPatternTypeFilter(query.input.value, defaultPatternType)}
-                    placeholder="Example: patternType:regexp const\s\w+:\s(React\.)?FunctionComponent"
+                    placeholder={t('example-pattern-type-regexp')}
                     {...getDefaultInputProps(query)}
                     className="mt-3 mb-0"
                 />
 
                 <Label htmlFor="repositories-id" className="mt-3">
-                    Repositories
+                    {t('repositories-label')}
                 </Label>
                 <RepositoriesField
                     id="repositories-id"
-                    description="Find and choose at least 1 repository to run insight"
-                    placeholder="Search repositories..."
+                    description={t('find-choose-repository')}
+                    placeholder={t('search-repositories-placeholder')}
                     status={repositoryValueLoading ? 'loading' : repositoryStatus}
                     {...repositoryProps}
                 />
@@ -152,7 +157,8 @@ export const DynamicCodeInsightExample: FC<DynamicCodeInsightExampleProps> = pro
                 <CodeInsightsDescription />
                 <footer className={styles.footer}>
                     <Button variant="primary" as={Link} to="/insights/create" onClick={handleGetStartedClick}>
-                        <Icon aria-hidden={true} svgPath={mdiPlus} /> Create your first insight
+                        <Icon aria-hidden={true} svgPath={mdiPlus} />
+                        {t('create-first-insight')}
                     </Button>
                 </footer>
                 <CalloutArrow className={styles.calloutBlockHorizontal} />
@@ -163,24 +169,30 @@ export const DynamicCodeInsightExample: FC<DynamicCodeInsightExampleProps> = pro
     )
 }
 
-const CalloutArrow: FC<{ className?: string }> = props => (
-    <Text className={classNames(styles.calloutBlock, props.className)}>
-        <svg
-            width="59"
-            height="41"
-            viewBox="0 0 59 41"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className={styles.calloutArrow}
-        >
-            <path
-                d="M3.23717 0.288488C2.84421 0.157502 2.41947 0.369872 2.28849 0.762829L0.15395 7.16644C0.0229642 7.5594 0.235334 7.98414 0.628292 8.11512C1.02125 8.24611 1.44599 8.03374 1.57698 7.64078L3.47434 1.94868L9.16644 3.84605C9.5594 3.97704 9.98414 3.76467 10.1151 3.37171C10.2461 2.97875 10.0337 2.55401 9.64078 2.42302L3.23717 0.288488ZM57.9254 40.7463C58.3375 40.7875 58.7051 40.4868 58.7463 40.0746C58.7875 39.6625 58.4868 39.2949 58.0746 39.2537L57.9254 40.7463ZM2.32918 1.33541C14.452 25.5811 37.6871 38.7224 57.9254 40.7463L58.0746 39.2537C38.3129 37.2776 15.548 24.4189 3.67082 0.66459L2.32918 1.33541Z"
-                fill="#A6B6D9"
-            />
-        </svg>
-        <span className="text-muted">This insight is interactive! Type any search query or change the repo.</span>
-    </Text>
-)
+const CalloutArrow: FC<{ className?: string }> = props => {
+    const { t } = useTranslation(
+        'enterprise/insights/pages/landing/getting-started/components/dynamic-code-insight-example'
+    )
+
+    return (
+        <Text className={classNames(styles.calloutBlock, props.className)}>
+            <svg
+                width="59"
+                height="41"
+                viewBox="0 0 59 41"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className={styles.calloutArrow}
+            >
+                <path
+                    d="M3.23717 0.288488C2.84421 0.157502 2.41947 0.369872 2.28849 0.762829L0.15395 7.16644C0.0229642 7.5594 0.235334 7.98414 0.628292 8.11512C1.02125 8.24611 1.44599 8.03374 1.57698 7.64078L3.47434 1.94868L9.16644 3.84605C9.5594 3.97704 9.98414 3.76467 10.1151 3.37171C10.2461 2.97875 10.0337 2.55401 9.64078 2.42302L3.23717 0.288488ZM57.9254 40.7463C58.3375 40.7875 58.7051 40.4868 58.7463 40.0746C58.7875 39.6625 58.4868 39.2949 58.0746 39.2537L57.9254 40.7463ZM2.32918 1.33541C14.452 25.5811 37.6871 38.7224 57.9254 40.7463L58.0746 39.2537C38.3129 37.2776 15.548 24.4189 3.67082 0.66459L2.32918 1.33541Z"
+                    fill="#A6B6D9"
+                />
+            </svg>
+            <span className="text-muted">{t('interactive-insight-description')}</span>
+        </Text>
+    )
+}
 
 export const GET_EXAMPLE_REPOSITORY = gql`
     query GetExampleRepository {

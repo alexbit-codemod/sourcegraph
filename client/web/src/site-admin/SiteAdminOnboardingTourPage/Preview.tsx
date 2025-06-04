@@ -1,6 +1,7 @@
 import { type FC, useMemo, useState } from 'react'
 
 import { noop } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { Alert, Checkbox, Text } from '@sourcegraph/wildcard'
 
@@ -23,6 +24,8 @@ function isQuerySuccessful(): Promise<boolean> {
 }
 
 export const TourPreview: FC<{ config: TourConfig }> = ({ config }) => {
+    const { t } = useTranslation('site-admin/SiteAdminOnboardingTourPage')
+
     const [isHorizontal, setIsHorizontal] = useState(true)
 
     const tasks = useMemo(
@@ -46,21 +49,21 @@ export const TourPreview: FC<{ config: TourConfig }> = ({ config }) => {
     return (
         <>
             <Text className="d-flex">
-                View:&nbsp;
+                {t('view-label')}
                 <Checkbox
                     id="TourPreviewVariant"
                     checked={isHorizontal}
                     onChange={event => setIsHorizontal(event.target.checked)}
-                    label="Horizontal"
+                    label={t('horizontal-option')}
                 />
             </Text>
             <ErrorBoundary
                 location={null}
-                render={() => (
-                    <Alert variant="danger">
-                        An error occured while rendering the tour. Make sure the config is valid.
-                    </Alert>
-                )}
+                render={() => {
+                    const { t } = useTranslation('site-admin/SiteAdminOnboardingTourPage')
+
+                    return <Alert variant="danger">{t('error-rendering-tour')}</Alert>
+                }}
             >
                 <TourContext.Provider
                     value={{

@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 
 import { mdiCodeBrackets, mdiFormatLetterCase, mdiRegex } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { SearchPatternType } from '@sourcegraph/shared/src/graphql-operations'
 import type {
@@ -44,6 +45,8 @@ export interface TogglesProps
  * The toggles displayed in the query input.
  */
 export const Toggles: React.FunctionComponent<React.PropsWithChildren<TogglesProps>> = (props: TogglesProps) => {
+    const { t } = useTranslation('../../branded/src/search-ui/input/toggles')
+
     const {
         navbarSearchQuery,
         patternType,
@@ -104,7 +107,7 @@ export const Toggles: React.FunctionComponent<React.PropsWithChildren<TogglesPro
         <div className={classNames(className, styles.toggleContainer)}>
             <>
                 <QueryInputToggle
-                    title="Case sensitivity"
+                    title={t('case-sensitivity')}
                     isActive={caseSensitive}
                     onToggle={toggleCaseSensitivity}
                     iconSvgPath={mdiFormatLetterCase}
@@ -127,7 +130,7 @@ export const Toggles: React.FunctionComponent<React.PropsWithChildren<TogglesPro
                     ]}
                 />
                 <QueryInputToggle
-                    title="Regular expression"
+                    title={t('regular-expression')}
                     isActive={patternType === SearchPatternType.regexp}
                     onToggle={toggleRegexp}
                     iconSvgPath={mdiRegex}
@@ -144,7 +147,7 @@ export const Toggles: React.FunctionComponent<React.PropsWithChildren<TogglesPro
                 <>
                     {!structuralSearchDisabled && (
                         <QueryInputToggle
-                            title="Structural search"
+                            title={t('structural-search')}
                             className={`test-structural-search-toggle ${styles.structuralSearchToggle}`}
                             isActive={patternType === SearchPatternType.structural}
                             onToggle={toggleStructuralSearch}

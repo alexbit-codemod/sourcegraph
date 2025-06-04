@@ -1,0 +1,11 @@
+{
+  "variants": "Variants",
+  "outline": "Outline",
+  "outline-fragment": "Outline",
+  "icons": "Icons",
+  "icons-with-buttons": "We can use icons with our buttons.",
+  "search-fragment": " Search",
+  "smaller": "Smaller",
+  "smaller-buttons": "We can make our buttons smaller.",
+  "smaller-fragment": "Smaller"
+}

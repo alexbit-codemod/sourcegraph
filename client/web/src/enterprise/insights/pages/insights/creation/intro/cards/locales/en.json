@@ -1,0 +1,18 @@
+{
+  "search-insight-card": "Search Insight Card",
+  "language-stats-insight-card": "Language Stats Insight Card",
+  "capture-group-insight-card": "Capture Group Insight Card",
+  "create-action": "Create",
+  "example-use": "Example use",
+  "track-changes": "Track changes",
+  "insight-custom-search-visualization": "Insight <0>based on a custom Sourcegraph search query</0> that creates visualization of the data series you will define <1>manually.</1>",
+  "tracking-architecture-migrations": "Tracking architecture, naming, or language migrations.",
+  "group-results": "Group results",
+  "insight-group-results": "Insight based on a custom Sourcegraph search query that <0>groups results by</0> repository, path, author or date.",
+  "tracking-migration-repository": "Tracking a migration by repository.",
+  "language-usage": "Language usage",
+  "shows-language-usage": "Shows usage of languages in your repository based on number of lines of code.",
+  "detect-track-patterns": "Detect and track patterns",
+  "dynamic-data-series-unique-values": "Data series will be generated dynamically for each unique value from the <0>regular expression capture group</0> included in the search query. Chart will be updated as new values appear in the code base.",
+  "detecting-tracking-versions": "Detecting and tracking language or package versions."
+}

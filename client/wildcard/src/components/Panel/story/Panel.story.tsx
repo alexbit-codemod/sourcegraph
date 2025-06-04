@@ -5,6 +5,7 @@ import { useState } from '@storybook/addons'
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
 import classNames from 'classnames'
 import { upperFirst } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { H1, H2, Tooltip } from '../..'
 import { BrandedStory } from '../../../stories/BrandedStory'
@@ -65,6 +66,8 @@ const PanelBodyContent: React.FunctionComponent<
 )
 
 export const Simple: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Panel/story')
+
     const [position, setPosition] = useState<typeof PANEL_POSITIONS[number]>('left')
 
     const showPanelWithPosition = (postiion: typeof PANEL_POSITIONS[number]) => {
@@ -76,21 +79,21 @@ export const Simple: StoryFn = () => {
             <Grid columnCount={4}>
                 <div />
                 <div>
-                    <H1>Panel</H1>
-                    <H2>Positions</H2>
+                    <H1>{t('panel-title')}</H1>
+                    <H2>{t('positions-title')}</H2>
                     <div className="mb-2">
                         <Button variant="secondary" onClick={() => showPanelWithPosition('left')}>
-                            Show left panel
+                            {t('show-left-panel')}
                         </Button>
                     </div>
                     <div className="mb-2">
                         <Button variant="secondary" onClick={() => showPanelWithPosition('right')}>
-                            Show right panel
+                            {t('show-right-panel')}
                         </Button>
                     </div>
                     <div className="mb-2">
                         <Button variant="secondary" onClick={() => showPanelWithPosition('bottom')}>
-                            Show bottom panel
+                            {t('show-bottom-panel')}
                         </Button>
                     </div>
                 </div>
@@ -106,7 +109,11 @@ export const Simple: StoryFn = () => {
                 ariaLabel="Storybook panel"
             >
                 <PanelBodyContent position={position}>
-                    <b>{position}</b> panel content
+                    <Trans
+                        i18nKey="position-panel-content"
+                        values={{ position: <>{position}</> }}
+                        components={{ '0': <b /> }}
+                    />
                 </PanelBodyContent>
             </Panel>
         </>
@@ -116,6 +123,8 @@ export const Simple: StoryFn = () => {
 // props must be undefined somewhere, and Storybook docs addon causes Storybook to crash.
 // Setting a default parameter is a workaround to this issue
 export const WithChildren: StoryFn = (props = {}) => {
+    const { t } = useTranslation('../../wildcard/src/components/Panel/story')
+
     const [tabIndex, setTabIndex] = React.useState(0)
     const activeTab = panels[tabIndex]
 
@@ -156,16 +165,16 @@ export const WithChildren: StoryFn = (props = {}) => {
                         panels.map(({ id, content }) => (
                             <TabPanel key={id}>
                                 <Grid columnCount={3} spacing={2}>
-                                    {new Array(6).fill(0).map((_value, index) => (
-                                        <div key={index}>
-                                            Content {index + 1} of {content}
-                                        </div>
-                                    ))}
+                                    {new Array(6).fill(0).map((_value, index) => {
+                                        const { t } = useTranslation('../../wildcard/src/components/Panel/story')
+
+                                        return <div key={index}>{t('content-index-view', { index, content })}</div>
+                                    })}
                                 </Grid>
                             </TabPanel>
                         ))
                     ) : (
-                        <div>empty panel view</div>
+                        <div>{t('empty-panel-view')}</div>
                     )}
                 </TabPanels>
             </Tabs>

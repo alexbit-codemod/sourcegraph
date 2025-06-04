@@ -1,6 +1,7 @@
 import { type FC, Fragment, type MouseEventHandler, useCallback, useState } from 'react'
 
 import { mdiPlus } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { Alert, Button, ErrorAlert, H4, Icon, PageHeader, Text } from '@sourcegraph/wildcard'
 
@@ -34,6 +35,8 @@ export const OwnerList: FC<OwnerListProps> = ({
     showAddOwnerButton,
     canAssignOwners,
 }) => {
+    const { t } = useTranslation('repo/blob/own')
+
     const [removeOwnerError, setRemoveOwnerError] = useState<Error | undefined>(undefined)
     const [openAddOwnerModal, setOpenAddOwnerModal] = useState<boolean>(false)
     const onClickAdd = useCallback<MouseEventHandler>(event => {
@@ -47,7 +50,8 @@ export const OwnerList: FC<OwnerListProps> = ({
     const addOwnerButton = (): JSX.Element | undefined =>
         canAssignOwners && showAddOwnerButton ? (
             <Button aria-label="Add an owner" variant="success" onClick={onClickAdd}>
-                <Icon aria-hidden={true} svgPath={mdiPlus} /> Add owner
+                <Icon aria-hidden={true} svgPath={mdiPlus} />
+                {t('add-owner')}
             </Button>
         ) : undefined
     if (data?.nodes?.length) {
@@ -67,17 +71,17 @@ export const OwnerList: FC<OwnerListProps> = ({
                 )}
                 <PageHeader className="mb-3" actions={addOwnerButton()}>
                     <PageHeader.Heading className={styles.heading} as="h4">
-                        Owners
+                        {t('owners-title')}
                     </PageHeader.Heading>
                 </PageHeader>
                 {totalCount === 0 && <NoOwnershipAlert isDirectory={isDirectory} />}
                 <table className={styles.table}>
                     <thead>
                         <tr className="sr-only">
-                            <th>Contact</th>
-                            <th>Owner</th>
-                            <th>Reason</th>
-                            <th>Actions</th>
+                            <th>{t('contact')}</th>
+                            <th>{t('owner')}</th>
+                            <th>{t('reason')}</th>
+                            <th>{t('actions')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -114,10 +118,9 @@ export const OwnerList: FC<OwnerListProps> = ({
                         {nodes.length > totalCount && (
                             <tr>
                                 <th colSpan={3}>
-                                    <H4 className="mt-3 mb-2">Inference signals</H4>
+                                    <H4 className="mt-3 mb-2">{t('inference-signals')}</H4>
                                     <Text className={styles.ownInferenceExplanation}>
-                                        These users have viewed or contributed to this part of the codebase but are not
-                                        registered owners.
+                                        {t('unregistered-owners-notice')}
                                     </Text>
                                 </th>
                             </tr>
@@ -166,7 +169,7 @@ export const OwnerList: FC<OwnerListProps> = ({
         <div className={styles.contents}>
             <PageHeader className="mb-3" actions={addOwnerButton()}>
                 <PageHeader.Heading className={styles.heading} as="h4">
-                    Owners
+                    {t('owners-header')}
                 </PageHeader.Heading>
             </PageHeader>
             <NoOwnershipAlert isDirectory={isDirectory} />

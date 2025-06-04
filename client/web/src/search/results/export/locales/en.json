@@ -1,0 +1,14 @@
+{
+  "export-search-results": "Export search results",
+  "export-search-results-csv": "Your search results will be exported as a CSV file.",
+  "search-not-completed": "Your search has not completed. Please wait for the search to finish.",
+  "search-reached-maximum-results": "Your search reached the maximum number of results that are displayed in the Sourcegraph UI. The search will be re-run to export all results. This may take a while and your exported data may not be in the same order as the original search. A maximum of",
+  "results-exported-limit": " results will be exported.",
+  "search-no-global-type": "Your search does not have a global",
+  "search-type": "type:",
+  "search-or": " or",
+  "search-select": "select:",
+  "exported-results-same-type": " filter. If your search produced results of multiple types, your exported results will only include results of the same type as the first result.",
+  "cancel-export": "Cancel",
+  "export-button": "Export"
+}

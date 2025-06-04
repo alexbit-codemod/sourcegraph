@@ -1,0 +1,17 @@
+{
+  "searching": "Searching",
+  "view-trace": " View trace",
+  "found-more-than": {
+    "true": "more than ",
+    "false": ""
+  },
+  "some-results-skipped": "Some results skipped:",
+  "limit-reached-question": "Why was the limit reached?",
+  "search-again": "Search again:",
+  "modify-and-re-run": "Modify and re-run",
+  "search-again-duplicate": "Search again",
+  "create-search-job": "Create a search job:",
+  "search-jobs-explanation": "Search jobs exhaustively returns all matches of a query. Results can be downloaded in JSON Lines format.",
+  "starting-search-job": " Starting search job",
+  "create-search-job-header": " Create a search job"
+}

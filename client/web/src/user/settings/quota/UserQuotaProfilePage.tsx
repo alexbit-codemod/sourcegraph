@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 // eslint-disable-next-line no-restricted-imports
 import { logger } from '@sourcegraph/common/src/util/logger'
 import { useMutation, useQuery } from '@sourcegraph/http-client'
@@ -20,6 +22,8 @@ interface Props {
 export const UserQuotaProfilePage: React.FunctionComponent<React.PropsWithChildren<Props>> = ({
     user: { id: userID },
 }) => {
+    const { t } = useTranslation('user/settings/quota')
+
     const { data, loading, error } = useQuery(USER_REQUEST_QUOTAS, { variables: { userID } })
     const [quota, setQuota] = useState<string>('')
     const [codeCompletionsQuota, setCodeCompletionsQuota] = useState<string>('')
@@ -105,21 +109,16 @@ export const UserQuotaProfilePage: React.FunctionComponent<React.PropsWithChildr
 
     return (
         <>
-            <PageTitle title="User quotas" />
+            <PageTitle title={t('user-quotas')} />
             <PageHeader
                 path={[{ text: 'Quotas' }]}
                 headingElement="h2"
-                description={
-                    <>
-                        Configure custom quotas for the user. Custom quotas can be used to allow increased load for a
-                        specific user, or to reduce the impact a user can have on the system performance.
-                    </>
-                }
+                description={<>{t('configure-custom-quotas-description')}</>}
                 className="mb-3"
             />
             <Container className="mb-3">
-                <H3>Completions</H3>
-                <Text>Number of requests per day allowed against the completions APIs.</Text>
+                <H3>{t('completions')}</H3>
+                <Text>{t('completions-api-request-limit-description')}</Text>
                 <div className="d-flex justify-content-between align-items-end mb-5">
                     <Input
                         id="completions-quota"
@@ -130,17 +129,18 @@ export const UserQuotaProfilePage: React.FunctionComponent<React.PropsWithChildr
                         spellCheck={false}
                         min={1}
                         disabled={setUserCompletionsQuotaLoading}
-                        placeholder={`Global limit: ${
-                            data?.site.perUserCompletionsQuota === null
-                                ? 'infinite'
-                                : data?.site.perUserCompletionsQuota
-                        }`}
-                        label="Custom completions quota"
+                        placeholder={t('global-completions-limit', {
+                            dataSitePerUserCompletionsQuotaNullInfiniteDataSitePerUserCompletionsQuota:
+                                data?.site.perUserCompletionsQuota === null
+                                    ? 'infinite'
+                                    : data?.site.perUserCompletionsQuota,
+                        })}
+                        label={t('custom-completions-quota')}
                         className="flex-grow-1 mb-0"
                     />
                     <LoaderButton
                         loading={setUserCompletionsQuotaLoading}
-                        label="Save"
+                        label={t('save')}
                         onClick={storeCompletionsQuota}
                         disabled={setUserCompletionsQuotaLoading}
                         variant="primary"
@@ -148,7 +148,7 @@ export const UserQuotaProfilePage: React.FunctionComponent<React.PropsWithChildr
                     />
                 </div>
                 {setUserCompletionsQuotaError && <ErrorAlert error={setUserCompletionsQuotaError} className="mb-0" />}
-                <Text>Number of requests per day allowed against the code completions APIs.</Text>
+                <Text>{t('code-completions-api-request-limit-description')}</Text>
                 <div className="d-flex justify-content-between align-items-end">
                     <Input
                         id="code-completions-quota"
@@ -159,17 +159,18 @@ export const UserQuotaProfilePage: React.FunctionComponent<React.PropsWithChildr
                         spellCheck={false}
                         min={1}
                         disabled={setUserCodeCompletionsQuotaLoading}
-                        placeholder={`Global limit: ${
-                            data?.site.perUserCodeCompletionsQuota === null
-                                ? 'infinite'
-                                : data?.site.perUserCodeCompletionsQuota
-                        }`}
-                        label="Custom code completions quota"
+                        placeholder={t('global-code-completions-limit', {
+                            dataSitePerUserCodeCompletionsQuotaNullInfiniteDataSitePerUserCodeCompletionsQuota:
+                                data?.site.perUserCodeCompletionsQuota === null
+                                    ? 'infinite'
+                                    : data?.site.perUserCodeCompletionsQuota,
+                        })}
+                        label={t('custom-code-completions-quota')}
                         className="flex-grow-1 mb-0"
                     />
                     <LoaderButton
                         loading={setUserCodeCompletionsQuotaLoading}
-                        label="Save"
+                        label={t('save-code-completions')}
                         onClick={storeCodeCompletionsQuota}
                         disabled={setUserCodeCompletionsQuotaLoading}
                         variant="primary"

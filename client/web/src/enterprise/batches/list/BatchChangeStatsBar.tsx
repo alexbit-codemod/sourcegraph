@@ -2,6 +2,7 @@ import React from 'react'
 
 import { mdiInformationOutline } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { pluralize } from '@sourcegraph/common'
 import { useQuery } from '@sourcegraph/http-client'
@@ -21,6 +22,8 @@ interface BatchChangeStatsBarProps {
 }
 
 export const BatchChangeStatsBar: React.FunctionComponent<React.PropsWithChildren<BatchChangeStatsBarProps>> = () => {
+    const { t } = useTranslation('enterprise/batches/list')
+
     const [minSavedPerChangeset = DEFAULT_MINS_SAVED_PER_CHANGESET] =
         useTemporarySetting('batches.minSavedPerChangeset')
 
@@ -46,13 +49,13 @@ export const BatchChangeStatsBar: React.FunctionComponent<React.PropsWithChildre
                 <div className="pr-4">
                     <H3 className="font-weight-bold mb-0">
                         <span className="d-block mb-1">{data.batchChanges.totalCount}</span>
-                        <span className={styles.statLabel}>Batch changes</span>
+                        <span className={styles.statLabel}>{t('batch-changes')}</span>
                     </H3>
                 </div>
                 <div className="pr-4">
                     <H3 className="font-weight-bold mb-0">
                         <span className="d-block mb-1">{data.globalChangesetsStats.merged}</span>
-                        <span className={styles.statLabel}>Changesets merged</span>
+                        <span className={styles.statLabel}>{t('changesets-merged')}</span>
                     </H3>
                 </div>
                 <div className="pr-4">
@@ -60,7 +63,7 @@ export const BatchChangeStatsBar: React.FunctionComponent<React.PropsWithChildre
                         <span className="d-block mb-1">
                             {Math.round((data.globalChangesetsStats.merged * minSavedPerChangeset) / 60).toFixed(2)}
                         </span>
-                        <span className={styles.statLabel}>Hours saved</span>
+                        <span className={styles.statLabel}>{t('hours-saved')}</span>
                         <Tooltip content="Based on multiplier per changeset defined by site admin">
                             <Icon
                                 aria-label="Based on multiplier per changeset defined by site admin"
@@ -83,7 +86,8 @@ export const BatchChangeStatsBar: React.FunctionComponent<React.PropsWithChildre
                                     data.globalChangesetsStats.open
                                 )} open`}
                             >
-                                {data.globalChangesetsStats.open} open
+                                {data.globalChangesetsStats.open}
+                                {t('status-open')}
                             </H4>
                         }
                     />
@@ -99,7 +103,8 @@ export const BatchChangeStatsBar: React.FunctionComponent<React.PropsWithChildre
                                     data.globalChangesetsStats.closed
                                 )} closed`}
                             >
-                                {data.globalChangesetsStats.closed} closed
+                                {data.globalChangesetsStats.closed}
+                                {t('status-closed')}
                             </H4>
                         }
                     />

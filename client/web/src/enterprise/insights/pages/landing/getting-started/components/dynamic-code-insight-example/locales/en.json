@@ -1,0 +1,12 @@
+{
+  "in-line-todo-statements": "In-line TODO statements",
+  "loading-code-insight": "Loading code insight",
+  "chart-preview-instructions": "The chart preview will be shown here once you have filled out the repositories and series fields.",
+  "data-series-search-query": "Data series search query",
+  "example-pattern-type-regexp": "Example: patternType:regexp const\\s\\w+:\\s(React\\.)?FunctionComponent",
+  "repositories-label": "Repositories",
+  "find-choose-repository": "Find and choose at least 1 repository to run insight",
+  "search-repositories-placeholder": "Search repositories...",
+  "create-first-insight": " Create your first insight",
+  "interactive-insight-description": "This insight is interactive! Type any search query or change the repo."
+}

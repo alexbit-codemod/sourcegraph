@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { Card, Grid, H2, H3 } from '@sourcegraph/wildcard'
 import { BrandedStory } from '@sourcegraph/wildcard/src/stories'
@@ -30,22 +31,26 @@ const mockItems: RepoMetadataItem[] = [
 
 export const RepoMetadataStory: StoryFn = () => (
     <BrandedStory>
-        {() => (
-            <Card className="p-3">
-                <Grid columnCount={3}>
-                    <H3 className="mb-0 mr-3 text-no-wrap">Default</H3>
-                    <H2 className="mb-0 mr-3 text-no-wrap">Link</H2>
-                    <H3 className="mb-0 mr-3 text-no-wrap">Delete</H3>
-                    <RepoMetadata items={mockItems} />
-                    <RepoMetadata
-                        items={mockItems}
-                        queryState={{ query: '' }}
-                        buildSearchURLQueryFromQueryState={() => ''}
-                    />
-                    <RepoMetadata items={mockItems} onDelete={key => alert(key)} />
-                </Grid>
-            </Card>
-        )}
+        {() => {
+            const { t } = useTranslation('../../branded/src/search-ui/components')
+
+            return (
+                <Card className="p-3">
+                    <Grid columnCount={3}>
+                        <H3 className="mb-0 mr-3 text-no-wrap">{t('default-message')}</H3>
+                        <H2 className="mb-0 mr-3 text-no-wrap">{t('link-action')}</H2>
+                        <H3 className="mb-0 mr-3 text-no-wrap">{t('delete-action')}</H3>
+                        <RepoMetadata items={mockItems} />
+                        <RepoMetadata
+                            items={mockItems}
+                            queryState={{ query: '' }}
+                            buildSearchURLQueryFromQueryState={() => ''}
+                        />
+                        <RepoMetadata items={mockItems} onDelete={key => alert(key)} />
+                    </Grid>
+                </Card>
+            )
+        }}
     </BrandedStory>
 )
 

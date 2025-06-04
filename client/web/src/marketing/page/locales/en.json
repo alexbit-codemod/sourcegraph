@@ -1,0 +1,10 @@
+{
+  "thanks-message": "Thanks",
+  "thanks-feedback-message": "Thanks for the feedback!",
+  "anything-else-question": "Anything else?",
+  "almost-there-message": "Almost there...",
+  "almost-there-follow-up": "Almost there...",
+  "recommend-sourcegraph-friend": "How likely is it that you would recommend Sourcegraph to a friend?",
+  "submit-button": "Submit",
+  "survey-response-notice": "Your response to this survey will be sent to Sourcegraph, and will be visible to your Sourcegraph site admins."
+}

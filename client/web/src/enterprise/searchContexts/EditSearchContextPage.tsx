@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 
 import { mdiMagnify } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { type Observable, of, throwError } from 'rxjs'
 import { catchError, startWith, switchMap } from 'rxjs/operators'
@@ -35,6 +36,8 @@ export interface EditSearchContextPageProps
 export const AuthenticatedEditSearchContextPage: React.FunctionComponent<
     React.PropsWithChildren<EditSearchContextPageProps>
 > = props => {
+    const { t } = useTranslation('enterprise/searchContexts')
+
     const LOADING = 'loading' as const
 
     const params = useParams()
@@ -84,7 +87,7 @@ export const AuthenticatedEditSearchContextPage: React.FunctionComponent<
         <div className="w-100">
             <Page>
                 <div className="container col-sm-8">
-                    <PageTitle title="Edit context" />
+                    <PageTitle title={t('edit-context')} />
                     <PageHeader
                         className="mb-3"
                         path={[
@@ -112,7 +115,11 @@ export const AuthenticatedEditSearchContextPage: React.FunctionComponent<
                     )}
                     {isErrorLike(searchContextOrError) && (
                         <Alert data-testid="search-contexts-alert-danger" variant="danger">
-                            Error while loading the search context: <strong>{searchContextOrError.message}</strong>
+                            <Trans
+                                i18nKey="error-loading-search-context"
+                                values={{ searchContextOrErrorMessage: <>{searchContextOrError.message}</> }}
+                                components={{ '0': <strong /> }}
+                            />
                         </Alert>
                     )}
                 </div>

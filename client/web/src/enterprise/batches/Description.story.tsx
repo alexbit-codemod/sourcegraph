@@ -1,4 +1,5 @@
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { WebStory } from '../../components/WebStory'
 
@@ -15,11 +16,10 @@ export default config
 
 export const Overview: StoryFn = () => (
     <WebStory>
-        {props => (
-            <Description
-                {...props}
-                description="This is an awesome batch change. It will do great things to your codebase."
-            />
-        )}
+        {props => {
+            const { t } = useTranslation('enterprise/batches')
+
+            return <Description {...props} description={t('awesome-batch-change-impact')} />
+        }}
     </WebStory>
 )

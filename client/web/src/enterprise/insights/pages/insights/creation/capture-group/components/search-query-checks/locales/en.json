@@ -1,0 +1,22 @@
+{
+  "does-not-contain-boolean-operators": "Does not contain boolean operators",
+  "and-operator": "AND",
+  "or-operator": "OR",
+  "and-separator": ", and",
+  "not-operator": "NOT",
+  "does-not-contain-regular-expression-operators": " (regular expression boolean operators can still be used)",
+  "does-not-contain-a": "Does not contain a",
+  "pattern-type-keyword": "patternType:keyword",
+  "standard-pattern": "standard",
+  "literal-pattern": "literal",
+  "or-space": " or",
+  "structural-pattern": "structural",
+  "does-not-contain": "Does not contain",
+  "repo-filter": "repo:",
+  "filter-message": " filter",
+  "rev-filter": "rev:",
+  "commit-pattern": "commit",
+  "diff-pattern": "diff",
+  "search-message": " search",
+  "failed-validation-check": "Failed validation check. {{errorMessage}}"
+}

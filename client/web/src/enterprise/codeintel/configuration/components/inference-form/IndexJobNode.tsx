@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { mdiChevronDown, mdiChevronLeft, mdiClose, mdiPlus } from '@mdi/js'
 import classNames from 'classnames'
 import { uniqueId } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import {
     Button,
@@ -39,13 +40,18 @@ export const IndexJobNode: React.FunctionComponent<IndexJobNodeProps> = ({
     readOnly,
     onChange,
 }) => {
+    const { t } = useTranslation('enterprise/codeintel/configuration/components/inference-form')
+
     const [isOpened, setOpened] = useState(open)
 
     return (
         <Collapse isOpen={isOpened} onOpenChange={() => setOpened(!isOpened)}>
             <CollapseHeader as={H3} focusLocked={true} className={classNames(styles.jobHeader, 'mb-0')}>
                 <span>
-                    Job #{jobNumber}: index {sanitizeRoot(job.root)} with {sanitizeIndexer(job.indexer)}
+                    {t('job-number-index', { jobNumber })}
+                    {sanitizeRoot(job.root)}
+                    {t('with-connector')}
+                    {sanitizeIndexer(job.indexer)}
                 </span>
                 <Icon aria-hidden={true} svgPath={isOpened ? mdiChevronDown : mdiChevronLeft} className="mr-1" />
             </CollapseHeader>
@@ -75,7 +81,7 @@ export const IndexJobNode: React.FunctionComponent<IndexJobNodeProps> = ({
                         <IndexCommandNode
                             commands={job.indexer_args}
                             name="indexer_args"
-                            actionLabel="arg"
+                            actionLabel={t('argument')}
                             readOnly={readOnly}
                             onChange={onChange}
                         />
@@ -87,7 +93,7 @@ export const IndexJobNode: React.FunctionComponent<IndexJobNodeProps> = ({
                         <IndexCommandNode
                             commands={job.requestedEnvVars ?? []}
                             name="requestedEnvVars"
-                            actionLabel="env var"
+                            actionLabel={t('environment-variable')}
                             readOnly={readOnly}
                             onChange={onChange}
                         />
@@ -99,7 +105,7 @@ export const IndexJobNode: React.FunctionComponent<IndexJobNodeProps> = ({
                         <IndexCommandNode
                             commands={job.local_steps}
                             name="local_steps"
-                            actionLabel="local step"
+                            actionLabel={t('local-step')}
                             readOnly={readOnly}
                             onChange={onChange}
                         />
@@ -113,39 +119,43 @@ export const IndexJobNode: React.FunctionComponent<IndexJobNodeProps> = ({
                         />
                     </IndexJobLabel>
                     <Container className={styles.jobStepContainer} as="li">
-                        {job.steps.map((step, index) => (
-                            <div className={styles.jobStep} key={step.meta.id}>
-                                <div className={styles.jobStepHeader}>
-                                    <Tooltip content="A step performed before this index job. Changes are only reflected in the repository directory.">
-                                        <H4 className="mb-0">Step #{index + 1}</H4>
-                                    </Tooltip>
-                                    {!readOnly && (
-                                        <Tooltip content="Remove step">
-                                            <Button
-                                                variant="icon"
-                                                className="ml-2 text-danger"
-                                                onClick={() => {
-                                                    const steps = [...job.steps]
-                                                    steps.splice(index, 1)
-                                                    onChange('steps', steps)
-                                                }}
-                                            >
-                                                <Icon svgPath={mdiClose} aria-hidden={true} />
-                                            </Button>
+                        {job.steps.map((step, index) => {
+                            const { t } = useTranslation('enterprise/codeintel/configuration/components/inference-form')
+
+                            return (
+                                <div className={styles.jobStep} key={step.meta.id}>
+                                    <div className={styles.jobStepHeader}>
+                                        <Tooltip content="A step performed before this index job. Changes are only reflected in the repository directory.">
+                                            <H4 className="mb-0">{t('step-index', { index })}</H4>
                                         </Tooltip>
-                                    )}
+                                        {!readOnly && (
+                                            <Tooltip content="Remove step">
+                                                <Button
+                                                    variant="icon"
+                                                    className="ml-2 text-danger"
+                                                    onClick={() => {
+                                                        const steps = [...job.steps]
+                                                        steps.splice(index, 1)
+                                                        onChange('steps', steps)
+                                                    }}
+                                                >
+                                                    <Icon svgPath={mdiClose} aria-hidden={true} />
+                                                </Button>
+                                            </Tooltip>
+                                        )}
+                                    </div>
+                                    <IndexStepNode
+                                        step={step}
+                                        readOnly={readOnly}
+                                        onChange={(name, value) => {
+                                            const steps = [...job.steps]
+                                            steps[index] = { ...steps[index], [name]: value }
+                                            onChange('steps', steps)
+                                        }}
+                                    />
                                 </div>
-                                <IndexStepNode
-                                    step={step}
-                                    readOnly={readOnly}
-                                    onChange={(name, value) => {
-                                        const steps = [...job.steps]
-                                        steps[index] = { ...steps[index], [name]: value }
-                                        onChange('steps', steps)
-                                    }}
-                                />
-                            </div>
-                        ))}
+                            )
+                        })}
                         {!readOnly && (
                             <Button
                                 variant="secondary"
@@ -158,7 +168,7 @@ export const IndexJobNode: React.FunctionComponent<IndexJobNodeProps> = ({
                                 }}
                             >
                                 <Icon svgPath={mdiPlus} aria-hidden={true} className="mr-1" />
-                                Add step
+                                {t('add-step-button')}
                             </Button>
                         )}
                     </Container>
@@ -174,35 +184,39 @@ interface IndexStepNodeProps {
     onChange: (name: keyof InferenceFormJobStep, value: unknown) => void
 }
 
-const IndexStepNode: React.FunctionComponent<IndexStepNodeProps> = ({ step, readOnly, onChange }) => (
-    <ul className={styles.jobStepContent}>
-        <IndexJobLabel label="Root" tooltip="The working directory within the Docker container.">
-            <Input
-                value={step.root}
-                onChange={event => onChange('root', event.target.value)}
-                readOnly={readOnly}
-                className={styles.jobInput}
-            />
-        </IndexJobLabel>
-        <IndexJobLabel label="Image" tooltip="The docker image to run.">
-            <CommandInput
-                value={step.image}
-                onChange={value => onChange('image', value)}
-                readOnly={readOnly}
-                className={styles.jobInput}
-            />
-        </IndexJobLabel>
-        <IndexJobLabel label="Commands" tooltip="A list of arguments to pass to docker run.">
-            <IndexCommandNode<keyof InferenceFormJobStep>
-                commands={step.commands}
-                name="commands"
-                actionLabel="command"
-                readOnly={readOnly}
-                onChange={onChange}
-            />
-        </IndexJobLabel>
-    </ul>
-)
+const IndexStepNode: React.FunctionComponent<IndexStepNodeProps> = ({ step, readOnly, onChange }) => {
+    const { t } = useTranslation('enterprise/codeintel/configuration/components/inference-form')
+
+    return (
+        <ul className={styles.jobStepContent}>
+            <IndexJobLabel label="Root" tooltip="The working directory within the Docker container.">
+                <Input
+                    value={step.root}
+                    onChange={event => onChange('root', event.target.value)}
+                    readOnly={readOnly}
+                    className={styles.jobInput}
+                />
+            </IndexJobLabel>
+            <IndexJobLabel label="Image" tooltip="The docker image to run.">
+                <CommandInput
+                    value={step.image}
+                    onChange={value => onChange('image', value)}
+                    readOnly={readOnly}
+                    className={styles.jobInput}
+                />
+            </IndexJobLabel>
+            <IndexJobLabel label="Commands" tooltip="A list of arguments to pass to docker run.">
+                <IndexCommandNode<keyof InferenceFormJobStep>
+                    commands={step.commands}
+                    name="commands"
+                    actionLabel={t('command-string')}
+                    readOnly={readOnly}
+                    onChange={onChange}
+                />
+            </IndexJobLabel>
+        </ul>
+    )
+}
 
 interface IndexCommandNodeProps<formKey = keyof InferenceFormJob> {
     name: formKey
@@ -218,56 +232,60 @@ const IndexCommandNode = <formKey,>({
     commands,
     onChange,
     readOnly,
-}: IndexCommandNodeProps<formKey>): JSX.Element | null => (
-    <div className={styles.jobCommandContainer}>
-        {commands.map((command, index) => (
-            <div className={styles.jobCommand} key={command.meta.id}>
-                <CommandInput
-                    value={command.value}
-                    onChange={value => {
-                        const prevCommands = [...commands]
-                        prevCommands[index].value = value
-                        onChange(name, prevCommands)
-                    }}
-                    readOnly={readOnly}
-                    className={styles.jobInput}
-                />
-                {!readOnly && (
-                    <Tooltip content={`Remove ${actionLabel}`}>
-                        <Button
-                            variant="icon"
-                            className="ml-2 text-danger"
-                            onClick={() => {
-                                const prevCommands = [...commands]
-                                prevCommands.splice(index, 1)
-                                onChange(name, prevCommands)
-                            }}
-                        >
-                            <Icon svgPath={mdiClose} aria-hidden={true} />
-                        </Button>
-                    </Tooltip>
-                )}
-            </div>
-        ))}
-        {!readOnly && (
-            <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => {
-                    onChange(name, [
-                        ...commands,
-                        {
-                            value: '',
-                            meta: {
-                                id: uniqueId(),
+}: IndexCommandNodeProps<formKey>): JSX.Element | null => {
+    const { t } = useTranslation('enterprise/codeintel/configuration/components/inference-form')
+
+    return (
+        <div className={styles.jobCommandContainer}>
+            {commands.map((command, index) => (
+                <div className={styles.jobCommand} key={command.meta.id}>
+                    <CommandInput
+                        value={command.value}
+                        onChange={value => {
+                            const prevCommands = [...commands]
+                            prevCommands[index].value = value
+                            onChange(name, prevCommands)
+                        }}
+                        readOnly={readOnly}
+                        className={styles.jobInput}
+                    />
+                    {!readOnly && (
+                        <Tooltip content={`Remove ${actionLabel}`}>
+                            <Button
+                                variant="icon"
+                                className="ml-2 text-danger"
+                                onClick={() => {
+                                    const prevCommands = [...commands]
+                                    prevCommands.splice(index, 1)
+                                    onChange(name, prevCommands)
+                                }}
+                            >
+                                <Icon svgPath={mdiClose} aria-hidden={true} />
+                            </Button>
+                        </Tooltip>
+                    )}
+                </div>
+            ))}
+            {!readOnly && (
+                <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => {
+                        onChange(name, [
+                            ...commands,
+                            {
+                                value: '',
+                                meta: {
+                                    id: uniqueId(),
+                                },
                             },
-                        },
-                    ])
-                }}
-            >
-                <Icon svgPath={mdiPlus} aria-hidden={true} className="mr-1" />
-                Add {actionLabel}
-            </Button>
-        )}
-    </div>
-)
+                        ])
+                    }}
+                >
+                    <Icon svgPath={mdiPlus} aria-hidden={true} className="mr-1" />
+                    {t('add-action-label', { actionLabel })}
+                </Button>
+            )}
+        </div>
+    )
+}

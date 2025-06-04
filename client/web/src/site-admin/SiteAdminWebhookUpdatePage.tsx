@@ -1,6 +1,7 @@
 import { type FC, useEffect } from 'react'
 
 import { mdiWebhook } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -20,6 +21,8 @@ export const SiteAdminWebhookUpdatePage: FC<SiteAdminWebhookUpdatePageProps> = (
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('site-admin')
+
     useEffect(() => {
         telemetryService.logPageView('SiteAdminWebhookUpdatePage')
         telemetryRecorder.recordEvent('admin.webhook.update', 'view')
@@ -33,7 +36,7 @@ export const SiteAdminWebhookUpdatePage: FC<SiteAdminWebhookUpdatePageProps> = (
 
     return (
         <>
-            <PageTitle title="Edit incoming webhook" />
+            <PageTitle title={t('edit-incoming-webhook')} />
             {loading && !data && <ConnectionLoading />}
             {webhook && (
                 <>

@@ -1,5 +1,7 @@
 import React, { useCallback } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { logger } from '@sourcegraph/common'
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { Button, H3, Modal, ErrorAlert } from '@sourcegraph/wildcard'
@@ -26,6 +28,8 @@ export const RemoveTeamMemberModal: React.FunctionComponent<React.PropsWithChild
     afterRemove,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('team/members')
+
     const labelId = 'removeTeamMember'
 
     const [removeMembers, { loading, error }] = useRemoveTeamMembers()
@@ -51,14 +55,16 @@ export const RemoveTeamMemberModal: React.FunctionComponent<React.PropsWithChild
     return (
         <Modal onDismiss={onCancel} aria-labelledby={labelId}>
             <H3 id={labelId}>
-                Remove {member.username} from {teamName}?
+                {t('remove-member-intro')}
+                {member.username}
+                {t('remove-member-confirmation', { teamName })}
             </H3>
 
             {error && <ErrorAlert error={error} />}
 
             <div className="d-flex justify-content-end pt-1">
                 <Button disabled={loading} className="mr-2" onClick={onCancel} outline={true} variant="secondary">
-                    Cancel
+                    {t('cancel-action')}
                 </Button>
                 <LoaderButton
                     disabled={loading}
@@ -66,7 +72,7 @@ export const RemoveTeamMemberModal: React.FunctionComponent<React.PropsWithChild
                     variant="danger"
                     loading={loading}
                     alwaysShowLabel={true}
-                    label="Remove member"
+                    label={t('remove-member-label')}
                 />
             </div>
         </Modal>

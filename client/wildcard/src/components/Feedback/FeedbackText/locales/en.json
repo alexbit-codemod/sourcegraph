@@ -1,0 +1,7 @@
+{
+  "contact-us-questions-feedback": "{{headerTextQuestionsFeedback}} Contact us at <0>@sourcegraph</0>  or <1>support@sourcegraph.com</1> , or file issues on our <2>public issue tracker</2> . {{footerText}}",
+  "feedback-example-with-header": "This is an example of a feedback with a header",
+  "header-text-example": "This is a header text",
+  "feedback-example-with-footer": "This is an example of a feedback with a footer",
+  "footer-text-example": "This is a footer text"
+}

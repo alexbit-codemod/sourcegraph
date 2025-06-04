@@ -1,0 +1,6 @@
+{
+  "storage-limit-reached": "Storage Limit Reached",
+  "chat-history-storage-full": "Cody can’t save your chat history right now because your browser’s storage space is full.",
+  "free-up-storage-space": " Please free up some space by clearing your browser’s storage or deleting chat history, and then give it another try.",
+  "clear-chat-history": "Clear Chat History"
+}

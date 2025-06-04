@@ -13,6 +13,7 @@ import LanguageRubyIcon from 'mdi-react/LanguageRubyIcon'
 import LanguageRustIcon from 'mdi-react/LanguageRustIcon'
 import AzureDevOpsIcon from 'mdi-react/MicrosoftAzureDevopsIcon'
 import NpmIcon from 'mdi-react/NpmIcon'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { PerforceIcon, PhabricatorIcon } from '@sourcegraph/shared/src/components/icons'
 import { Link, Code, Text } from '@sourcegraph/wildcard'
@@ -149,144 +150,195 @@ const Value: React.FunctionComponent<{ children: React.ReactNode | string | stri
     <Code className="hljs-attr">{props.children}</Code>
 )
 
-const GitHubInstructions: React.FunctionComponent<{ isEnterprise: boolean }> = ({ isEnterprise }) => (
-    <div>
-        <ol>
-            {isEnterprise && (
-                <li>
-                    Set <Field>url</Field> to the URL of GitHub Enterprise.
-                </li>
-            )}
-            <li>
-                Create a GitHub access token (
-                <Link
-                    to="https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    instructions
-                </Link>
-                ) with <b>repo</b> scope.
-                <li>
-                    Set the value of the <Field>token</Field> field as your access token, in the configuration below.
-                </li>
-            </li>
-            <li>
-                Specify which repositories Sourcegraph should index using one of the following fields:
-                <ul>
-                    <li>
-                        <Field>orgs</Field>: a list of GitHub organizations.
-                    </li>
-                    <li>
-                        <Field>repositoryQuery</Field>: a list of GitHub search queries.
-                        <br />
-                        For example,
-                        <Value>"org:sourcegraph created:&gt;2019-11-01"</Value> selects all repositories in organization
-                        "sourcegraph" created after November 1, 2019.
-                        <br />
-                        You may also use <Value>"affiliated"</Value> to select all repositories affiliated with the
-                        access token.
-                    </li>
-                    <li>
-                        <Field>repos</Field>: a list of individual repositories.
-                    </li>
-                </ul>
-            </li>
-        </ol>
-        <Text>
-            See{' '}
-            <Link rel="noopener noreferrer" target="_blank" to="/help/admin/code_hosts/github#configuration">
-                the docs for more options
-            </Link>
-            , or try one of the buttons below.
-        </Text>
-    </div>
-)
+const GitHubInstructions: React.FunctionComponent<{ isEnterprise: boolean }> = ({ isEnterprise }) => {
+    const { t } = useTranslation('components/externalServices')
 
-const GitHubAppInstructions: React.FunctionComponent = () => (
-    <div>
-        <ol>
-            <li>
-                Choose a GitHub App to populate the initial JSON configuration in <Code>gitHubAppDetails</Code>.
-            </li>
-            <li>
-                If applicable, choose an associated installation. If your GitHub App has only one installation, this
-                will be pre-populated along with other GitHub App information in <Code>orgs</Code>.
-            </li>
-        </ol>
-        <Text>
-            See {/* TODO: proper docs link here */}
-            <Link rel="noopener noreferrer" target="_blank" to="">
-                the docs for more options
-            </Link>
-            , or try one of the buttons below.
-        </Text>
-    </div>
-)
-
-const GitLabInstructions: React.FunctionComponent<{ isSelfManaged: boolean }> = ({ isSelfManaged }) => (
-    <div>
-        <ol>
-            {isSelfManaged && (
+    return (
+        <div>
+            <ol>
+                {isEnterprise && (
+                    <li>
+                        {t('set-url')}
+                        <Field>{t('url-key')}</Field>
+                        {t('github-enterprise-url-description')}
+                    </li>
+                )}
                 <li>
-                    Set <Field>url</Field> to the URL of GitLab.
+                    <Trans
+                        i18nKey="github-access-token-instructions"
+                        components={{
+                            '0': (
+                                <Link
+                                    to="https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                />
+                            ),
+                            '1': <b />,
+                        }}
+                    />
+                    <li>
+                        {t('set-token-value')}
+                        <Field>{t('token-key')}</Field>
+                        {t('access-token-configuration-description')}
+                    </li>
                 </li>
-            )}
-            <li>
-                Create a GitLab access token (
-                <Link
-                    to="https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#creating-a-personal-access-token"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    instructions
-                </Link>
-                ) with{' '}
-                <b>
-                    <Field>repo</Field>
-                </b>{' '}
-                scope, and set it to be the value of the <Field>token</Field> field in the configuration below.
-            </li>
-            <li>
-                Use the following fields to select projects:
-                <ul>
+                <li>
+                    {t('repositories-indexing-specification')}
+                    <ul>
+                        <li>
+                            <Field>{t('orgs-key')}</Field>
+                            {t('github-organizations-description')}
+                        </li>
+                        <li>
+                            <Field>repositoryQuery</Field>
+                            {t('github-search-queries-description')}
+                            <br />
+                            {t('example-repo-selection')}
+                            <Value>{t('org-sourcegraph-created-query')}</Value>
+                            {t('repo-selection-description')}
+                            <br />
+                            {t('affiliated-repositories-option')}
+                            <Value>{t('affiliated-key')}</Value>
+                            {t('access-token-affiliated-repositories')}
+                        </li>
+                        <li>
+                            <Field>{t('repos-key')}</Field>
+                            {t('individual-repositories-description')}
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+            <Text>
+                <Trans
+                    i18nKey="see-docs-for-more-options"
+                    components={{
+                        '0': (
+                            <Link
+                                rel="noopener noreferrer"
+                                target="_blank"
+                                to="/help/admin/code_hosts/github#configuration"
+                            />
+                        ),
+                    }}
+                />
+            </Text>
+        </div>
+    )
+}
+
+const GitHubAppInstructions: React.FunctionComponent = () => {
+    const { t } = useTranslation('components/externalServices')
+
+    return (
+        <div>
+            <ol>
+                <li>
+                    {t('choose-github-app-configuration')}
+                    <Code>gitHubAppDetails</Code>.
+                </li>
+                <li>
+                    {t('choose-installation-description')}
+                    <Code>{t('orgs-key-github-app')}</Code>.
+                </li>
+            </ol>
+            <Text>
+                {t('see-docs-key')}
+                {/* TODO: proper docs link here */}
+                <Trans
+                    i18nKey="see-docs-for-more-options-gitlab"
+                    components={{ '0': <Link rel="noopener noreferrer" target="_blank" to="" /> }}
+                />
+            </Text>
+        </div>
+    )
+}
+
+const GitLabInstructions: React.FunctionComponent<{ isSelfManaged: boolean }> = ({ isSelfManaged }) => {
+    const { t } = useTranslation('components/externalServices')
+
+    return (
+        <div>
+            <ol>
+                {isSelfManaged && (
                     <li>
-                        <Field>projectQuery</Field> is a list of calls to{' '}
-                        <Link
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            to="https://docs.gitlab.com/ee/api/projects.html"
-                        >
-                            GitLab's REST API
-                        </Link>{' '}
-                        that return a list of projects.
-                        <br />
-                        <Value>"groups/&lt;mygroup&gt;/projects"</Value> selects all projects in a group.
-                        <br />
-                        <Value>"projects?membership=true&archived=no"</Value> selects all unarchived projects of which
-                        the token's user is a member.
-                        <br />
-                        <Value>"search?scope=projects&search=my_search_query"</Value> selects all projects matching a
-                        search query.
+                        {t('set-gitlab-url')}
+                        <Field>{t('gitlab-url-key')}</Field>
+                        {t('gitlab-access-token-description')}
                     </li>
-                    <li>
-                        <Field>projects</Field> is a list of individual projects.
-                    </li>
-                    <li>
-                        <Field>exclude</Field> excludes individual projects.
-                    </li>
-                </ul>
-            </li>
-        </ol>
-        <Text>
-            See{' '}
-            <Link rel="noopener noreferrer" target="_blank" to="/help/admin/code_hosts/gitlab#configuration">
-                the docs for more options
-            </Link>
-            , or try one of the buttons below.
-        </Text>
-    </div>
-)
+                )}
+                <li>
+                    <Trans
+                        i18nKey="gitlab-token-value-instructions"
+                        components={{
+                            '0': (
+                                <Link
+                                    to="https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#creating-a-personal-access-token"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                />
+                            ),
+                            '1': <b />,
+                        }}
+                    />
+                    <Field>{t('token-key-gitlab')}</Field>
+                    {t('project-selection-fields')}
+                </li>
+                <li>
+                    {t('gitlab-api-projects-description')}
+                    <ul>
+                        <li>
+                            <Field>projectQuery</Field>
+                            <Trans
+                                i18nKey="gitlab-api-projects-example"
+                                components={{
+                                    '0': (
+                                        <Link
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            to="https://docs.gitlab.com/ee/api/projects.html"
+                                        />
+                                    ),
+                                }}
+                            />
+                            <br />
+                            <Value>{t('projects-in-group-selection')}</Value>
+                            {t('unarchived-projects-selection')}
+                            <br />
+                            <Value>{t('unarchived-projects-query')}&archived=no"</Value>
+                            {t('search-query-projects-selection')}
+                            <br />
+                            <Value>{t('projects-key')}&search=my_search_query"</Value>
+                            {t('individual-projects-description')}
+                        </li>
+                        <li>
+                            <Field>{t('exclude-projects-key')}</Field>
+                            {t('exclude-individual-projects-description')}
+                        </li>
+                        <li>
+                            <Field>{t('see-docs-for-more-options-gitlab-buttons')}</Field>
+                            {t('see-buttons-description')}
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+            <Text>
+                <Trans
+                    i18nKey="gitlab-docs-options"
+                    components={{
+                        '0': (
+                            <Link
+                                rel="noopener noreferrer"
+                                target="_blank"
+                                to="/help/admin/code_hosts/gitlab#configuration"
+                            />
+                        ),
+                    }}
+                />
+            </Text>
+        </div>
+    )
+}
 
 const githubEditorActions = (isEnterprise: boolean): EditorAction[] => [
     ...(isEnterprise

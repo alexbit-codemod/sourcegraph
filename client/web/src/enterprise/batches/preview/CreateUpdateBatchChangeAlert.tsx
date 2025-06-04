@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useState } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { isErrorLike } from '@sourcegraph/common'
@@ -27,6 +28,8 @@ export interface CreateUpdateBatchChangeAlertProps extends TelemetryProps, Telem
 export const CreateUpdateBatchChangeAlert: React.FunctionComponent<
     React.PropsWithChildren<CreateUpdateBatchChangeAlertProps>
 > = ({ specID, toBeArchived, batchChange, viewerCanAdminister, telemetryService, telemetryRecorder }) => {
+    const { t } = useTranslation('enterprise/batches/preview')
+
     const navigate = useNavigate()
 
     const batchChangeID = batchChange?.id
@@ -100,16 +103,18 @@ export const CreateUpdateBatchChangeAlert: React.FunctionComponent<
                 <div className={classNames(styles.createUpdateBatchChangeAlertCopy, 'flex-grow-1 mr-3')}>
                     {batchChange ? (
                         <>
-                            This operation will update the existing batch change{' '}
-                            <Link to={batchChange.url}>{batchChange.name}</Link>.
+                            <Trans
+                                i18nKey="update-existing-batch-change"
+                                values={{ batchChangeName: <>{batchChange.name}</> }}
+                                components={{ '0': <Link to={batchChange.url} /> }}
+                            />
                         </>
                     ) : (
                         'Review the proposed changesets below.'
-                    )}{' '}
-                    Click 'Apply' or run <Code>src batch apply</Code> against your batch spec to{' '}
-                    {batchChange ? 'update' : 'create'} the batch change and perform the indicated action on each
-                    changeset. Select a changeset and modify the action to customize the publication state of each or
-                    all changesets.
+                    )}
+                    {t('click-apply-or-run')}
+                    <Code>{t('src-batch-apply')}</Code>
+                    {t('batch-change-update-create', { batchChange })}
                 </div>
                 <div className={styles.createUpdateBatchChangeAlertBtn}>
                     <Tooltip content={disabledTooltip()}>
@@ -131,7 +136,7 @@ export const CreateUpdateBatchChangeAlert: React.FunctionComponent<
                             }}
                             disabled={!canApply}
                         >
-                            Apply
+                            {t('apply-button')}
                         </Button>
                     </Tooltip>
                 </div>

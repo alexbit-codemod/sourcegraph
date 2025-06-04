@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { Alert, Text, Link } from '@sourcegraph/wildcard'
 
 import { ExecutorCompatibility } from '../../../graphql-operations'
@@ -12,17 +14,22 @@ export interface ExecutorCompatibilityAlertProps {
 export const ExecutorCompatibilityAlert: React.FunctionComponent<
     React.PropsWithChildren<ExecutorCompatibilityAlertProps>
 > = ({ hostname, compatibility }) => {
+    const { t } = useTranslation('enterprise/executors/instances')
+
     switch (compatibility) {
         case ExecutorCompatibility.OUTDATED: {
             return (
                 <Alert variant="warning" className="mt-3 mb-0">
-                    <Text className="m-0">{hostname} is outdated.</Text>
+                    <Text className="m-0">{t('hostname-outdated', { hostname })}</Text>
                     <Text className="m-0">
-                        Please{' '}
-                        <Link to="/help/admin/executors/deploy_executors" target="_blank" rel="noopener">
-                            upgrade this executor
-                        </Link>{' '}
-                        to a version compatible with your Sourcegraph version.
+                        <Trans
+                            i18nKey="upgrade-executor-link"
+                            components={{
+                                '0': (
+                                    <Link to="/help/admin/executors/deploy_executors" target="_blank" rel="noopener" />
+                                ),
+                            }}
+                        />
                     </Text>
                 </Alert>
             )
@@ -30,17 +37,17 @@ export const ExecutorCompatibilityAlert: React.FunctionComponent<
         case ExecutorCompatibility.VERSION_AHEAD: {
             return (
                 <Alert variant="warning" className="mt-3 mb-0">
-                    <Text className="m-0">Your Sourcegraph instance is out of date.</Text>
+                    <Text className="m-0">{t('sourcegraph-instance-outdated')}</Text>
                     <Text className="m-0">
-                        Please{' '}
-                        <Link to="/help/admin/updates" target="_blank" rel="noopener">
-                            upgrade your Sourcegraph instance
-                        </Link>
-                        or{' '}
-                        <Link to="/help/admin/executors/deploy_executors" target="_blank" rel="noopener">
-                            downgrade this executor
-                        </Link>
-                        .
+                        <Trans
+                            i18nKey="upgrade-or-downgrade-sourcegraph"
+                            components={{
+                                '0': <Link to="/help/admin/updates" target="_blank" rel="noopener" />,
+                                '1': (
+                                    <Link to="/help/admin/executors/deploy_executors" target="_blank" rel="noopener" />
+                                ),
+                            }}
+                        />
                     </Text>
                 </Alert>
             )

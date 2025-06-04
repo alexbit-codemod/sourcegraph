@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Icon } from '@sourcegraph/wildcard'
 
@@ -15,6 +16,8 @@ export interface WebhookInformationProps {
 }
 
 export const WebhookInformation: FC<WebhookInformationProps> = props => {
+    const { t } = useTranslation('site-admin')
+
     const { webhook } = props
 
     const IconComponent = defaultExternalServices[webhook.codeHostKind].icon
@@ -25,28 +28,28 @@ export const WebhookInformation: FC<WebhookInformationProps> = props => {
         <table className={classNames(styles.table, 'table')}>
             <tbody>
                 <tr>
-                    <th className={styles.tableHeader}>Code host</th>
+                    <th className={styles.tableHeader}>{t('code-host')}</th>
                     <td>
                         <Icon inline={true} as={IconComponent} aria-label="Code host logo" className="mr-1" />
                         {codeHostKindName}
                     </td>
                 </tr>
                 <tr>
-                    <th className={styles.tableHeader}>URN</th>
+                    <th className={styles.tableHeader}>{t('urn')}</th>
                     <td>{webhook.codeHostURN}</td>
                 </tr>
                 <tr>
-                    <th className={styles.tableHeader}>Webhook endpoint</th>
+                    <th className={styles.tableHeader}>{t('webhook-endpoint')}</th>
                     <td className={styles.contentCell}>
                         <CopyableText text={webhook.url} size={60} />
                     </td>
                 </tr>
                 <tr>
-                    <th className={styles.tableHeader}>Secret</th>
+                    <th className={styles.tableHeader}>{t('secret')}</th>
                     <td className={styles.contentCell}>
                         {webhook.secret === null ? (
                             <span className="text-muted">
-                                <em>No secret</em>
+                                <em>{t('no-secret')}</em>
                             </span>
                         ) : (
                             <CopyableText text={webhook.secret} secret={true} />

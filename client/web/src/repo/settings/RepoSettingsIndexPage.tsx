@@ -3,6 +3,7 @@ import React from 'react'
 import { mdiAlert, mdiCheckCircle, mdiClockOutline } from '@mdi/js'
 import classNames from 'classnames'
 import prettyBytes from 'pretty-bytes'
+import { useTranslation } from 'react-i18next'
 import { type Observable, Subject, Subscription } from 'rxjs'
 import { map, switchMap, tap } from 'rxjs/operators'
 
@@ -104,6 +105,8 @@ function fetchRepositoryTextSearchIndex(id: Scalars['ID']): Observable<Repositor
 }
 
 const Reindex: React.FunctionComponent<React.PropsWithChildren<{ id: Scalars['ID'] }>> = ({ id }) => {
+    const { t } = useTranslation('repo/settings')
+
     const [error, setError] = React.useState<Error | null>(null)
     const [success, setSuccess] = React.useState<boolean>(false)
     const [loading, setLoading] = React.useState<boolean>(false)
@@ -139,8 +142,8 @@ const Reindex: React.FunctionComponent<React.PropsWithChildren<{ id: Scalars['ID
 
     return (
         <BaseActionContainer
-            title="Trigger Reindex"
-            description={<span>Send a request to Zoekt indexserver and force an immediate reindex.</span>}
+            title={t('trigger-reindex')}
+            description={<span>{t('send-request-zoekt-indexserver')}</span>}
             action={
                 <Button
                     variant="primary"
@@ -151,7 +154,7 @@ const Reindex: React.FunctionComponent<React.PropsWithChildren<{ id: Scalars['ID
                         forceReindex()
                     }}
                 >
-                    Reindex now
+                    {t('reindex-now-button')}
                 </Button>
             }
             details={
@@ -159,12 +162,13 @@ const Reindex: React.FunctionComponent<React.PropsWithChildren<{ id: Scalars['ID
                     {error && <ErrorAlert className="mt-4 mb-0" error={error} />}
                     {loading && (
                         <Alert className="mt-4 mb-0" variant="primary">
-                            <LoadingSpinner /> Triggering reindex ...
+                            <LoadingSpinner />
+                            {t('triggering-reindex-message')}
                         </Alert>
                     )}
                     {success && (
                         <Alert className="mt-4 mb-0" variant="success">
-                            Reindex triggered
+                            {t('reindex-triggered-message')}
                         </Alert>
                     )}
                 </>
@@ -184,6 +188,8 @@ const TextSearchIndexedReference: React.FunctionComponent<
         lastIndexed: string | undefined
     }>
 > = ({ repo, indexedRef, lastIndexed }) => {
+    const { t } = useTranslation('repo/settings')
+
     const isCurrent = indexedRef.indexed && indexedRef.current
 
     const lastIndexTime = !indexedRef.current && lastIndexed && new Date(lastIndexed).getTime()
@@ -225,7 +231,8 @@ const TextSearchIndexedReference: React.FunctionComponent<
                         <span>
                             {', with '}
                             <Link to={'/search?q=' + encodeURIComponent(indexedRef.skippedIndexed.query)}>
-                                {indexedRef.skippedIndexed.count} skipped{' '}
+                                {indexedRef.skippedIndexed.count}
+                                {t('skipped-message')}
                                 {pluralize('file', Number(indexedRef.skippedIndexed.count))}
                             </Link>
                             .
@@ -233,7 +240,7 @@ const TextSearchIndexedReference: React.FunctionComponent<
                     ) : null}
                 </span>
             ) : (
-                <span>queued for initial indexing.</span>
+                <span>{t('queued-initial-indexing-message')}</span>
             )}
         </li>
     )

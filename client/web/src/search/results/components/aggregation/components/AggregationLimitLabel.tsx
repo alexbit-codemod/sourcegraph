@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 
 import { mdiAlertCircle } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { Icon, Tooltip } from '@sourcegraph/wildcard'
 
@@ -9,6 +10,8 @@ interface AggregationLimitLabelProps {
 }
 
 export const AggregationLimitLabel: FC<AggregationLimitLabelProps> = props => {
+    const { t } = useTranslation('search/results/components/aggregation/components')
+
     const { size } = props
 
     const Component = size === 'sm' ? 'small' : 'span'
@@ -17,7 +20,7 @@ export const AggregationLimitLabel: FC<AggregationLimitLabelProps> = props => {
         <Tooltip content="This search exceeded the grouping limit. Results may be incomplete.">
             <Component className="text-muted">
                 <Icon color="var(--warning)" svgPath={mdiAlertCircle} aria-hidden={true} className="mr-1" />
-                Group limit reached
+                {t('group-limit-reached')}
             </Component>
         </Tooltip>
     )

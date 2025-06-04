@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 import { catchError, startWith, tap } from 'rxjs/operators'
 
@@ -18,6 +19,8 @@ const LOADING = 'loading' as const
 export const CreateNotebookPage: React.FunctionComponent<
     React.PropsWithChildren<TelemetryProps & TelemetryV2Props & { authenticatedUser: AuthenticatedUser }>
 > = ({ telemetryService, authenticatedUser, telemetryRecorder }) => {
+    const { t } = useTranslation('notebooks/createPage')
+
     const notebookOrError = useObservable(
         useMemo(
             () =>
@@ -50,7 +53,11 @@ export const CreateNotebookPage: React.FunctionComponent<
             )}
             {isErrorLike(notebookOrError) && (
                 <Alert variant="danger">
-                    Error while creating the notebook: <strong>{notebookOrError.message}</strong>
+                    <Trans
+                        i18nKey="error-creating-notebook"
+                        values={{ notebookOrErrorMessage: <>{notebookOrError.message}</> }}
+                        components={{ '0': <strong /> }}
+                    />
                 </Alert>
             )}
         </Page>

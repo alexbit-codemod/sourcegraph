@@ -1,0 +1,13 @@
+{
+  "permissions-title": "Permissions",
+  "permissions-syncing-info": "Learn more about <0>permissions syncing</0>.",
+  "last-update-permissions": "Last update to permissions",
+  "by-unknown-user": "by",
+  "never-permission-records": "Never",
+  "permissions-timestamp-info": " The timestamp indicates the last update made to the repository permissions of this user. If the value <0>never</0> is displayed, it means we currently do not have any permission records for the user. However, please note that the user may have had permissions stored in Sourcegraph in the past.",
+  "permission-sync-jobs-list": "List of permission sync jobs that fetch which <0>private</0> repositories the user can access on the code host.",
+  "accessible-repositories-list": "List of <0>all</0> repositories the user can access on Sourcegraph.",
+  "search-repositories-placeholder": "Search repositories...",
+  "accessible-repositories-label": "accessible repositories",
+  "unknown-permission-status": "unknown"
+}

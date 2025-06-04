@@ -1,5 +1,7 @@
 import { type FC, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { gql, useQuery } from '@sourcegraph/http-client'
 import { UserAvatar } from '@sourcegraph/shared/src/components/UserAvatar'
 import {
@@ -60,6 +62,8 @@ interface UsersPickerProps {
 }
 
 export const UsersPicker: FC<UsersPickerProps> = props => {
+    const { t } = useTranslation('enterprise/search-jobs')
+
     const { value, onChange } = props
 
     const [searchTerm, setSearchTerm] = useState('')
@@ -94,7 +98,7 @@ export const UsersPicker: FC<UsersPickerProps> = props => {
             <MultiComboboxInput
                 value={searchTerm}
                 status={loading ? 'loading' : 'initial'}
-                placeholder="Filter by users..."
+                placeholder={t('filter-by-users')}
                 autoCorrect="false"
                 autoComplete="off"
                 spellCheck={false}
@@ -105,7 +109,8 @@ export const UsersPicker: FC<UsersPickerProps> = props => {
             <MultiComboboxPopover syncWidth={false} className={styles.popover}>
                 {loading && filteredSuggestions.length === 0 && (
                     <>
-                        <LoadingSpinner /> Fetching users...
+                        <LoadingSpinner />
+                        {t('fetching-users')}
                     </>
                 )}
 
@@ -114,31 +119,33 @@ export const UsersPicker: FC<UsersPickerProps> = props => {
                 {filteredSuggestions.length > 0 && (
                     <MultiComboboxList items={filteredSuggestions}>
                         {users =>
-                            users.map((user, index) => (
-                                <MultiComboboxOption
-                                    key={user.id}
-                                    value={user.username}
-                                    index={index}
-                                    className={styles.item}
-                                >
-                                    <UserAvatar user={user} className={styles.itemAvatar} />
-                                    <span className={styles.itemUsername}>
-                                        <MultiComboboxOptionText />
-                                    </span>
-                                    {user.siteAdmin && <span className={styles.itemRole}>Admin</span>}
+                            users.map((user, index) => {
+                                const { t } = useTranslation('enterprise/search-jobs')
 
-                                    <span className={styles.itemEmail}>
-                                        {user.primaryEmail?.email ?? 'No email set'}
-                                    </span>
-                                </MultiComboboxOption>
-                            ))
+                                return (
+                                    <MultiComboboxOption
+                                        key={user.id}
+                                        value={user.username}
+                                        index={index}
+                                        className={styles.item}
+                                    >
+                                        <UserAvatar user={user} className={styles.itemAvatar} />
+                                        <span className={styles.itemUsername}>
+                                            <MultiComboboxOptionText />
+                                        </span>
+                                        {user.siteAdmin && <span className={styles.itemRole}>{t('admin-label')}</span>}
+
+                                        <span className={styles.itemEmail}>
+                                            {user.primaryEmail?.email ?? 'No email set'}
+                                        </span>
+                                    </MultiComboboxOption>
+                                )
+                            })
                         }
                     </MultiComboboxList>
                 )}
 
-                {hasNextPage && (
-                    <footer className={styles.footer}>The first 15 matches are shown, narrow down you search</footer>
-                )}
+                {hasNextPage && <footer className={styles.footer}>{t('first-15-matches-info')}</footer>}
             </MultiComboboxPopover>
         </MultiCombobox>
     )

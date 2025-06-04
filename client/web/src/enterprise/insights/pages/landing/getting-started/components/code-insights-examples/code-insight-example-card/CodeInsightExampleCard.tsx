@@ -1,5 +1,7 @@
 import { type FunctionComponent, useContext } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { SyntaxHighlightedSearchQuery } from '@sourcegraph/branded'
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
@@ -46,6 +48,10 @@ interface CodeInsightSearchExampleProps extends TelemetryProps, TelemetryV2Props
 }
 
 const CodeInsightSearchExample: FunctionComponent<CodeInsightSearchExampleProps> = props => {
+    const { t } = useTranslation(
+        'enterprise/insights/pages/landing/getting-started/components/code-insights-examples/code-insight-example-card'
+    )
+
     const { templateLink, className, content, telemetryService, telemetryRecorder } = props
     const seriesToggleState = useSeriesToggle()
 
@@ -88,7 +94,7 @@ const CodeInsightSearchExample: FunctionComponent<CodeInsightSearchExampleProps>
                         to={templateLink}
                         onClick={handleTemplateLinkClick}
                     >
-                        Use as template
+                        {t('use-as-template-1')}
                     </Button>
                 )}
             </InsightCardHeader>
@@ -126,6 +132,10 @@ interface CodeInsightCaptureExampleProps extends TelemetryProps, TelemetryV2Prop
 }
 
 const CodeInsightCaptureExample: FunctionComponent<CodeInsightCaptureExampleProps> = props => {
+    const { t } = useTranslation(
+        'enterprise/insights/pages/landing/getting-started/components/code-insights-examples/code-insight-example-card'
+    )
+
     const {
         content: { title, groupSearch, repositories, ...content },
         templateLink,
@@ -169,7 +179,7 @@ const CodeInsightCaptureExample: FunctionComponent<CodeInsightCaptureExampleProp
                         to={templateLink}
                         onClick={handleTemplateLinkClick}
                     >
-                        Use as template
+                        {t('use-as-template-2')}
                     </Button>
                 )}
             </InsightCardHeader>

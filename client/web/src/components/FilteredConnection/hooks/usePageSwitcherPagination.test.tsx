@@ -1,5 +1,6 @@
 import type { MockedResponse } from '@apollo/client/testing'
 import { fireEvent } from '@testing-library/react'
+import { useTranslation } from 'react-i18next'
 import { describe, expect, it } from 'vitest'
 
 import { dataOrThrowErrors, getDocumentNode } from '@sourcegraph/http-client'
@@ -44,6 +45,8 @@ const TEST_PAGINATED_CONNECTION_QUERY = `
 const PAGE_SIZE = 3
 
 const TestComponent = ({ useURL }: { useURL: boolean }) => {
+    const { t } = useTranslation('components/FilteredConnection/hooks')
+
     const { connection, loading, goToNextPage, goToPreviousPage, goToFirstPage, goToLastPage } =
         usePageSwitcherPagination<
             TestPageSwitcherPaginationQueryResult,
@@ -69,23 +72,28 @@ const TestComponent = ({ useURL }: { useURL: boolean }) => {
                     <li key={index.toString()}>{node.description}</li>
                 ))}
             </ul>
-            {loading ? <Text>Loading...</Text> : null}
-            {connection?.totalCount && <Text>Total count: {connection.totalCount}</Text>}
+            {loading ? <Text>{t('loading-message')}</Text> : null}
+            {connection?.totalCount && (
+                <Text>
+                    {t('total-count-label')}
+                    {connection.totalCount}
+                </Text>
+            )}
             <button type="button" onClick={goToFirstPage}>
-                First page
+                {t('first-page-label')}
             </button>
             {connection?.pageInfo?.hasNextPage && (
                 <button type="button" onClick={goToNextPage}>
-                    Next page
+                    {t('next-page-label')}
                 </button>
             )}
             {connection?.pageInfo?.hasPreviousPage && (
                 <button type="button" onClick={goToPreviousPage}>
-                    Previous page
+                    {t('previous-page-label')}
                 </button>
             )}
             <button type="button" onClick={goToLastPage}>
-                Last page
+                {t('last-page-label')}
             </button>
         </>
     )

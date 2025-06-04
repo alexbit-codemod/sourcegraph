@@ -1,0 +1,10 @@
+{
+  "filters-header": "Filters",
+  "single-letter-i": "i",
+  "alias-with-span": "Alias: <0>{{searchReferenceAliasIsFilterInfoSearchReference}}</0>",
+  "negation-with-span_nested_1": ":",
+  "negation-with-span_nested_0": "-",
+  "negation-with-span": "Negation: <0>{$t('negation-with-span_nested_0', {  })}</0><0>{$t('negation-with-span_nested_1', {  })}</0>",
+  "opt-click-filter-reference": "(opt + click filter in reference list)",
+  "examples": "Examples"
+}

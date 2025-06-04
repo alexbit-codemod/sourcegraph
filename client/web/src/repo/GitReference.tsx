@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import type { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
@@ -56,6 +57,8 @@ export const GitReferenceNode: React.FunctionComponent<React.PropsWithChildren<G
     ariaLabel,
     isPackageVersion,
 }) => {
+    const { t } = useTranslation('repo')
+
     const mostRecentSig =
         !isPackageVersion &&
         node.target.commit &&
@@ -86,14 +89,23 @@ export const GitReferenceNode: React.FunctionComponent<React.PropsWithChildren<G
                     </Badge>
                     {mostRecentSig && (
                         <small>
-                            Updated <Timestamp date={mostRecentSig.date} />{' '}
-                            {mostRecentSig.person && <>by {mostRecentSig.person.displayName}</>}
+                            {t('updated-message')}
+                            <Timestamp date={mostRecentSig.date} />{' '}
+                            {mostRecentSig.person && (
+                                <>
+                                    {t('by-identifier')}
+                                    {mostRecentSig.person.displayName}
+                                </>
+                            )}
                         </small>
                     )}
                 </span>
                 {behindAhead && (
                     <small>
-                        {numberWithCommas(behindAhead.behind)} behind, {numberWithCommas(behindAhead.ahead)} ahead
+                        {numberWithCommas(behindAhead.behind)}
+                        {t('behind-message')}
+                        {numberWithCommas(behindAhead.ahead)}
+                        {t('ahead-message')}
                     </small>
                 )}
                 {children}

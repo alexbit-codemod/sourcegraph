@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import AlertCircleIcon from 'mdi-react/AlertCircleIcon'
 import MapSearchIcon from 'mdi-react/MapSearchIcon'
+import { useTranslation } from 'react-i18next'
 import { Route, Routes, useParams } from 'react-router-dom'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -32,9 +33,17 @@ const TeamChildTeamsPage = lazyComponent<TeamChildTeamsPageProps, 'TeamChildTeam
     'TeamChildTeamsPage'
 )
 
-const NotFoundPage: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => (
-    <HeroPage icon={MapSearchIcon} title="404: Not Found" subtitle="Sorry, the requested team was not found." />
-)
+const NotFoundPage: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
+    const { t } = useTranslation('team/area')
+
+    return (
+        <HeroPage
+            icon={MapSearchIcon}
+            title={t('error-404-not-found')}
+            subtitle="Sorry, the requested team was not found."
+        />
+    )
+}
 
 export interface TeamAreaRoute extends RouteV6Descriptor<TeamAreaRouteContext> {}
 
@@ -60,6 +69,8 @@ export interface TeamAreaRouteContext extends TelemetryV2Props {
 }
 
 export const TeamArea: React.FunctionComponent<TeamAreaProps> = ({ authenticatedUser, telemetryRecorder }) => {
+    const { t } = useTranslation('team/area')
+
     const { teamName } = useParams<{ teamName: string }>()
 
     const { data, loading, error, refetch } = useTeam(teamName!)
@@ -68,14 +79,14 @@ export const TeamArea: React.FunctionComponent<TeamAreaProps> = ({ authenticated
         return null
     }
     if (error) {
-        return <HeroPage icon={AlertCircleIcon} title="Error" subtitle={<ErrorMessage error={error} />} />
+        return <HeroPage icon={AlertCircleIcon} title={t('generic-error')} subtitle={<ErrorMessage error={error} />} />
     }
 
     if (!data?.team) {
         return (
             <HeroPage
                 icon={AlertCircleIcon}
-                title="Error"
+                title={t('duplicate-generic-error')}
                 subtitle={<ErrorMessage error={new Error(`Team not found: ${JSON.stringify(teamName)}`)} />}
             />
         )

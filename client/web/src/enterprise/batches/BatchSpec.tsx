@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 
 import { mdiFileDownload } from '@mdi/js'
 import { kebabCase } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -115,10 +116,16 @@ export const BatchSpecMeta: React.FunctionComponent<React.PropsWithChildren<Batc
     createdAt,
     lastApplier,
     lastAppliedAt,
-}) => (
-    <Text className="mb-2">
-        {lastApplier ? <Link to={lastApplier.url}>{lastApplier.username}</Link> : 'A deleted user'}{' '}
-        {createdAt === lastAppliedAt ? 'created' : 'updated'} this batch change{' '}
-        <Timestamp date={lastAppliedAt ?? createdAt} /> by applying the following batch spec:
-    </Text>
-)
+}) => {
+    const { t } = useTranslation('enterprise/batches')
+
+    return (
+        <Text className="mb-2">
+            {lastApplier ? <Link to={lastApplier.url}>{lastApplier.username}</Link> : 'A deleted user'}
+            {t('created-or-updated-batch-change', { createdAtLastAppliedAt: createdAt === lastAppliedAt })}
+
+            <Timestamp date={lastAppliedAt ?? createdAt} />
+            {t('applying-batch-spec')}
+        </Text>
+    )
+}

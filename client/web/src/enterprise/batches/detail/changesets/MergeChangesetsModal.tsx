@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { asError, isErrorLike } from '@sourcegraph/common'
 import { Button, Checkbox, Modal, H3, Text, ErrorAlert, Form } from '@sourcegraph/wildcard'
 
@@ -24,6 +26,8 @@ export const MergeChangesetsModal: React.FunctionComponent<React.PropsWithChildr
     changesetIDs,
     mergeChangesets = _mergeChangesets,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
     const [isLoading, setIsLoading] = useState<boolean | Error>(false)
     const [squash, setSquash] = useState<boolean>(false)
 
@@ -43,8 +47,8 @@ export const MergeChangesetsModal: React.FunctionComponent<React.PropsWithChildr
 
     return (
         <Modal onDismiss={onCancel} aria-labelledby={MODAL_LABEL_ID}>
-            <H3 id={MODAL_LABEL_ID}>Merge changesets</H3>
-            <Text className="mb-4">Are you sure you want to attempt to merge all the selected changesets?</Text>
+            <H3 id={MODAL_LABEL_ID}>{t('merge-changesets')}</H3>
+            <Text className="mb-4">{t('confirm-merge-all-selected-changesets')}</Text>
             <Form>
                 <div className="form-group">
                     <Checkbox
@@ -52,7 +56,7 @@ export const MergeChangesetsModal: React.FunctionComponent<React.PropsWithChildr
                         checked={squash}
                         onChange={onToggleSquash}
                         disabled={isLoading === true}
-                        label="Squash merge all selected changesets."
+                        label={t('squash-merge-selected-changesets')}
                     />
                 </div>
             </Form>
@@ -65,7 +69,7 @@ export const MergeChangesetsModal: React.FunctionComponent<React.PropsWithChildr
                     outline={true}
                     variant="secondary"
                 >
-                    Cancel
+                    {t('cancel-action')}
                 </Button>
                 <LoaderButton
                     onClick={onSubmit}
@@ -73,7 +77,7 @@ export const MergeChangesetsModal: React.FunctionComponent<React.PropsWithChildr
                     variant="primary"
                     loading={isLoading === true}
                     alwaysShowLabel={true}
-                    label="Merge"
+                    label={t('merge-action')}
                 />
             </div>
         </Modal>

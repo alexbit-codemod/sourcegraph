@@ -1,5 +1,6 @@
 import { mdiFileDocumentOutline, mdiOpenInNew } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { logger } from '@sourcegraph/common'
 import { H2, Icon, Link, LoadingSpinner, Text } from '@sourcegraph/wildcard'
@@ -12,6 +13,8 @@ import { humanizeDate, usdCentsToHumanString } from './utils'
 import styles from './InvoiceHistory.module.scss'
 
 export const InvoiceHistory: React.FC = () => {
+    const { t } = useTranslation('cody/management/subscription/manage')
+
     const { isLoading, isError, error, data } = useSubscriptionInvoices()
 
     if (isLoading) {
@@ -30,7 +33,7 @@ export const InvoiceHistory: React.FC = () => {
 
     return (
         <>
-            <H2 className="mb-4">Invoice history</H2>
+            <H2 className="mb-4">{t('invoice-history')}</H2>
 
             <hr className={classNames('w-100', styles.divider)} />
 
@@ -41,39 +44,43 @@ export const InvoiceHistory: React.FC = () => {
                     ))}
                 </ul>
             ) : (
-                <Text>You have no invoices.</Text>
+                <Text>{t('no-invoices-message')}</Text>
             )}
         </>
     )
 }
 
-const InvoiceItem: React.FC<{ invoice: Invoice }> = ({ invoice }) => (
-    <li className="mt-3 d-flex justify-content-between align-items-center">
-        <div className={classNames('d-flex align-items-center text-muted', styles.label)}>
-            <Icon aria-hidden={true} svgPath={mdiFileDocumentOutline} />
-            <Text as="span">{invoice.periodEnd ? humanizeDate(invoice.periodEnd) : '(no date)'}</Text>
-        </div>
+const InvoiceItem: React.FC<{ invoice: Invoice }> = ({ invoice }) => {
+    const { t } = useTranslation('cody/management/subscription/manage')
 
-        <div className={classNames('d-flex align-items-center font-weight-medium', styles.price)}>
-            <Text as="span" className="text-muted">
-                {usdCentsToHumanString(invoice.amountDue)}
-            </Text>
-            <Text as="span" className="text-capitalize">
-                {invoice.status}
-            </Text>
-            {invoice.hostedInvoiceUrl ? (
-                <Link
-                    to={invoice.hostedInvoiceUrl}
-                    target="_blank"
-                    rel="noopener"
-                    className="d-flex align-items-center"
-                >
-                    <Text as="span">Get Invoice</Text>
-                    <Icon aria-hidden={true} svgPath={mdiOpenInNew} className={styles.icon} />
-                </Link>
-            ) : (
-                '-'
-            )}
-        </div>
-    </li>
-)
+    return (
+        <li className="mt-3 d-flex justify-content-between align-items-center">
+            <div className={classNames('d-flex align-items-center text-muted', styles.label)}>
+                <Icon aria-hidden={true} svgPath={mdiFileDocumentOutline} />
+                <Text as="span">{invoice.periodEnd ? humanizeDate(invoice.periodEnd) : '(no date)'}</Text>
+            </div>
+
+            <div className={classNames('d-flex align-items-center font-weight-medium', styles.price)}>
+                <Text as="span" className="text-muted">
+                    {usdCentsToHumanString(invoice.amountDue)}
+                </Text>
+                <Text as="span" className="text-capitalize">
+                    {invoice.status}
+                </Text>
+                {invoice.hostedInvoiceUrl ? (
+                    <Link
+                        to={invoice.hostedInvoiceUrl}
+                        target="_blank"
+                        rel="noopener"
+                        className="d-flex align-items-center"
+                    >
+                        <Text as="span">{t('get-invoice-button')}</Text>
+                        <Icon aria-hidden={true} svgPath={mdiOpenInNew} className={styles.icon} />
+                    </Link>
+                ) : (
+                    '-'
+                )}
+            </div>
+        </li>
+    )
+}

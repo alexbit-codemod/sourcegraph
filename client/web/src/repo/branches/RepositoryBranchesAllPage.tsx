@@ -1,5 +1,6 @@
 import { type FC, useCallback, useEffect } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import type { Observable } from 'rxjs'
 
 import { EVENT_LOGGER } from '@sourcegraph/shared/src/telemetry/web/eventLogger'
@@ -15,6 +16,8 @@ interface Props extends RepositoryBranchesAreaPageProps {}
 
 /** A page that shows all of a repository's branches. */
 export const RepositoryBranchesAllPage: FC<Props> = props => {
+    const { t } = useTranslation('repo/branches')
+
     const { repo, telemetryRecorder } = props
 
     useEffect(() => {
@@ -30,7 +33,7 @@ export const RepositoryBranchesAllPage: FC<Props> = props => {
 
     return (
         <div>
-            <PageTitle title="All branches" />
+            <PageTitle title={t('all-branches')} />
             <FilteredConnection<GitRefFields>
                 inputClassName="w-100"
                 listClassName="list-group list-group-flush"

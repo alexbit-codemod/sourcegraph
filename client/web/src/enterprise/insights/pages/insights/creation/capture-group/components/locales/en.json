@@ -1,0 +1,14 @@
+{
+  "generated-dynamically-for-unique-values": "Generated dynamically for each unique value from the regular expression capture group. <0>Learn more.</0>",
+  "search-query": "Search query",
+  "search-query-formatting-requirements": "Search query must contain a properly formatted regular expression with at least one <0>capture group.</0>  The capture group cannot match file or repository names, it can match only the file contents.",
+  "example-file-regex": "Example: file:\\.pom$ <java\\.version>(.*)</java\\.version>",
+  "data-series-name-and-color-automatic-generation_nested_0": {
+    "true": "20",
+    "false": "10"
+  },
+  "data-series-name-and-color-automatic-generation": "<0>Name</0> and <1>color</1> of each data series will be generated automatically. Chart will display <2>{$t('data-series-name-and-color-automatic-generation_nested_0', { \"licensed\": \"{{licensed}}\" })}</2> data series.",
+  "explore-example-queries-and-learn-more": "Explore <0>example queries</0>  and learn more about <1>automatically generated data series</1>",
+  "title": "Title",
+  "example-migration-to-react-components": "Example: Migration to React function components"
+}

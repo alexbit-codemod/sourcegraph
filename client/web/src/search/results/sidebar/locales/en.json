@@ -1,0 +1,5 @@
+{
+  "unable-to-fetch-repo-revisions": "Unable to fetch repository revisions.",
+  "connection-nodes-length": "{{connectionNodesLength}} of",
+  "show-more-button": "Show more"
+}

@@ -1,0 +1,9 @@
+{
+  "code-ownership-signals-configuration": "Code ownership signals configuration",
+  "list-of-code-ownership-inference-signal-indexers": "List of code ownership inference signal indexers and their configurations. All repositories are included by default.",
+  "exclude-repositories": "Exclude repositories",
+  "code-ownership": "Code ownership",
+  "last-generated": "Last generated:",
+  "data-generation-info": "Data is generated periodically from CODEOWNERS files and repository contents.",
+  "analytics-not-enabled": "Analytics is not enabled, please <0>enable code ownership analytics</0>  job first to see code ownership stats."
+}

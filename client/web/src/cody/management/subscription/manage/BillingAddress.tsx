@@ -4,6 +4,7 @@ import { mdiCheck } from '@mdi/js'
 import { useStripe, useElements, AddressElement, Elements } from '@stripe/react-stripe-js'
 import type { Stripe, StripeElementsOptions } from '@stripe/stripe-js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { useTheme, Theme } from '@sourcegraph/shared/src/theme'
 import { H3, Button, Text, Form } from '@sourcegraph/wildcard'
@@ -103,6 +104,8 @@ const updateSubscriptionMutationErrorText =
     "We couldn't update your credit card info. Please try again. If this happens again, contact support at support@sourcegraph.com."
 
 const BillingAddressForm: React.FC<BillingAddressFormProps> = ({ subscription, onReset, onSubmit }) => {
+    const { t } = useTranslation('cody/management/subscription/manage')
+
     const stripe = useStripe()
     const elements = useElements()
 
@@ -165,7 +168,7 @@ const BillingAddressForm: React.FC<BillingAddressFormProps> = ({ subscription, o
 
     return (
         <>
-            <H3>Billing address</H3>
+            <H3>{t('billing-address')}</H3>
             <Form onSubmit={handleSubmit} onReset={onReset} className={styles.billingAddressForm}>
                 <StripeAddressElement subscription={subscription} onFocus={() => setIsErrorVisible(false)} />
 
@@ -173,7 +176,7 @@ const BillingAddressForm: React.FC<BillingAddressFormProps> = ({ subscription, o
 
                 <div className={classNames('d-flex justify-content-end', styles.billingAddressFormButtonContainer)}>
                     <Button type="reset" variant="secondary" outline={true}>
-                        Cancel
+                        {t('cancel-button')}
                     </Button>
                     <LoadingIconButton
                         type="submit"
@@ -183,7 +186,7 @@ const BillingAddressForm: React.FC<BillingAddressFormProps> = ({ subscription, o
                         isLoading={isLoading}
                         iconSvgPath={mdiCheck}
                     >
-                        Save
+                        {t('save-button')}
                     </LoadingIconButton>
                 </div>
             </Form>

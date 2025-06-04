@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { interval, type Observable } from 'rxjs'
 import { switchMap, filter, take, tap } from 'rxjs/operators'
 
@@ -21,6 +22,8 @@ export const SignInButton: React.FunctionComponent<
         onSignInClose?: () => void
     }>
 > = ({ className, iconClassName, sourcegraphURL, onSignInClose }) => {
+    const { t } = useTranslation('../../browser/src/shared/code-hosts/shared')
+
     const signInUrl = createURLWithUTM(new URL('/sign-in?close=true', sourcegraphURL), {
         utm_source: getPlatformName(),
         utm_campaign: 'sign-in-button',
@@ -50,9 +53,9 @@ export const SignInButton: React.FunctionComponent<
     return (
         <SourcegraphIconButton
             href={signInUrl}
-            label="Sign in to Sourcegraph"
-            title="Sign into Sourcegraph to get hover tooltips, go to definition and more"
-            ariaLabel="Sign into Sourcegraph to get hover tooltips, go to definition and more"
+            label={t('sign-in-to-sourcegraph')}
+            title={t('sign-into-sourcegraph-hover-tooltips')}
+            ariaLabel={t('sign-into-sourcegraph-hover-tooltips-duplicate')}
             className={className}
             iconClassName={iconClassName}
             onClick={nextSignInClick}

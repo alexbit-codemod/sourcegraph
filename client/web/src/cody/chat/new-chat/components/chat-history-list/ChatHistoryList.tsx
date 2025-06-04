@@ -3,6 +3,7 @@ import { type MouseEvent, useMemo } from 'react'
 
 import { mdiDelete, mdiPlus } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Timestamp } from '@sourcegraph/branded/src/components/Timestamp'
 import { Icon, Text, Tooltip, Button } from '@sourcegraph/wildcard'
@@ -32,6 +33,8 @@ interface ChatHistoryListProps {
 }
 
 export const ChatHistoryList: FC<ChatHistoryListProps> = props => {
+    const { t } = useTranslation('cody/chat/new-chat/components/chat-history-list')
+
     const { chats, isSelectedChat, className, onChatSelect, onChatDelete, onChatCreate } = props
 
     const sortedChats = useMemo(() => {
@@ -67,7 +70,7 @@ export const ChatHistoryList: FC<ChatHistoryListProps> = props => {
             ))}
             <footer className={styles.footer}>
                 <Button variant="primary" onClick={() => onChatCreate()} className="w-100">
-                    Start new chat
+                    {t('start-new-chat')}
                     <Icon aria-label="Add chat" svgPath={mdiPlus} />
                 </Button>
             </footer>

@@ -1,6 +1,7 @@
 import React, { type FC } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import type { ExternalServiceKind } from '@sourcegraph/shared/src/graphql-operations'
 import { Icon, Link, LoadingSpinner, Tooltip } from '@sourcegraph/wildcard'
@@ -27,6 +28,8 @@ interface ExternalServiceInformationProps {
 }
 
 export const RateLimiterStateInfo: FC<{ rateLimiterState: RateLimiterState }> = props => {
+    const { t } = useTranslation('components/externalServices')
+
     const { rateLimiterState } = props
     const rateLimiterDebug = Object.entries(rateLimiterState).map(([key, value]) => (
         <div key={key}>
@@ -36,18 +39,22 @@ export const RateLimiterStateInfo: FC<{ rateLimiterState: RateLimiterState }> = 
 
     return (
         <tr>
-            <th className={styles.tableHeader}>Rate limit</th>
+            <th className={styles.tableHeader}>{t('rate-limit')}</th>
             {rateLimiterState.infinite ? (
                 <td>
                     <Tooltip content={rateLimiterDebug}>
-                        <span>No rate limit</span>
+                        <span>{t('no-rate-limit')}</span>
                     </Tooltip>
                 </td>
             ) : (
                 <td>
                     <Tooltip content={rateLimiterDebug}>
                         <span>
-                            {(rateLimiterState.limit / rateLimiterState.interval).toFixed(2)} requests per second
+                            {t('requests-per-second', {
+                                rateLimiterStateLimitRateLimiterStateIntervalToFixed2: (
+                                    rateLimiterState.limit / rateLimiterState.interval
+                                ).toFixed(2),
+                            })}
                         </span>
                     </Tooltip>
                 </td>
@@ -57,13 +64,15 @@ export const RateLimiterStateInfo: FC<{ rateLimiterState: RateLimiterState }> = 
 }
 
 export const ExternalServiceInformation: FC<ExternalServiceInformationProps> = props => {
+    const { t } = useTranslation('components/externalServices')
+
     const { icon, kind, displayName, codeHostID, reposNumber, syncInProgress, gitHubApp, rateLimiterState } = props
 
     return (
         <table className={classNames(styles.table, 'table')}>
             <tbody>
                 <tr>
-                    <th className={styles.tableHeader}>Code host kind</th>
+                    <th className={styles.tableHeader}>{t('code-host-kind')}</th>
                     <td>
                         <Icon inline={true} as={icon} aria-label="Code host logo" className="mr-2" />
                         {kind}
@@ -71,7 +80,7 @@ export const ExternalServiceInformation: FC<ExternalServiceInformationProps> = p
                 </tr>
                 {gitHubApp && (
                     <tr>
-                        <th className={styles.tableHeader}>GitHub App</th>
+                        <th className={styles.tableHeader}>{t('github-app')}</th>
                         <td>
                             <Link to={`/site-admin/github-apps/${encodeURIComponent(gitHubApp.id)}`}>
                                 {gitHubApp.name}
@@ -80,11 +89,11 @@ export const ExternalServiceInformation: FC<ExternalServiceInformationProps> = p
                     </tr>
                 )}
                 <tr>
-                    <th className={styles.tableHeader}>Display name</th>
+                    <th className={styles.tableHeader}>{t('display-name')}</th>
                     <td>{displayName}</td>
                 </tr>
                 <tr>
-                    <th className={styles.tableHeader}>Repositories</th>
+                    <th className={styles.tableHeader}>{t('repositories')}</th>
                     <td>
                         <Tooltip content="Click to see the list of repositories">
                             <Link to={`/site-admin/repositories?codeHost=${encodeURIComponent(codeHostID)}`}>
@@ -93,7 +102,7 @@ export const ExternalServiceInformation: FC<ExternalServiceInformationProps> = p
                         </Tooltip>
                         {syncInProgress && (
                             <span className="text-muted font-italic ml-2">
-                                Syncing list of repositories from code host...
+                                {t('syncing-repositories-message')}
                                 <LoadingSpinner inline={true} />
                             </span>
                         )}

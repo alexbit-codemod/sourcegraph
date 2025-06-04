@@ -1,4 +1,5 @@
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { H1, H2, H3, Text, Input } from '..'
 import { BrandedStory } from '../../stories/BrandedStory'
@@ -19,71 +20,65 @@ const config: Meta = {
 
 export default config
 
-export const Overview: StoryFn = () => (
-    <>
-        <Alert variant="info">
-            <Text>
-                A container is meant to group content semantically together. Every page using it should have a header,
-                optionally a description for the page and the container itself. Depending on the scope of a button, it
-                should live inside or outside of the container.
-            </Text>
-            <Text>If the button</Text>
-            <ul className="mb-0">
-                <li>
-                    affects everything inside the container (ie. saves all form fields within the container), it should
-                    live outside of the container. See example 1
-                </li>
-                <li>
-                    affects just a subset of content inside the container (ie. submits one of multiple forms), it should
-                    live inside of the container, next to the content it is modifying. See example 2
-                </li>
-            </ul>
-        </Alert>
-        <hr />
-        <H1>Example 1</H1>
-        <H2>Some page explanation</H2>
-        <Text className="text-muted">Optional: Add some descriptive text about what this page does.</Text>
-        <Container className="mb-3">
-            <H3>Section I</H3>
-            <Text>Here you change the username.</Text>
-            <div className="form-group">
-                <Input />
+export const Overview: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Container')
+
+    return (
+        <>
+            <Alert variant="info">
+                <Text>{t('container-grouping-content')}</Text>
+                <Text>{t('button-context')}</Text>
+                <ul className="mb-0">
+                    <li>{t('button-outside-container')}</li>
+                    <li>{t('button-inside-container')}</li>
+                </ul>
+            </Alert>
+            <hr />
+            <H1>{t('example-1')}</H1>
+            <H2>{t('page-explanation')}</H2>
+            <Text className="text-muted">{t('optional-page-description')}</Text>
+            <Container className="mb-3">
+                <H3>{t('section-i')}</H3>
+                <Text>{t('change-username')}</Text>
+                <div className="form-group">
+                    <Input />
+                </div>
+                <H3>{t('section-ii')}</H3>
+                <Text>{t('change-email')}</Text>
+                <div className="form-group mb-0">
+                    <Input type="email" />
+                </div>
+            </Container>
+            <div className="mb-3">
+                <Button variant="primary" className="mr-2">
+                    {t('save-button')}
+                </Button>
+                <Button variant="secondary">{t('cancel-button')}</Button>
             </div>
-            <H3>Section II</H3>
-            <Text>Here you change your email.</Text>
-            <div className="form-group mb-0">
-                <Input type="email" />
-            </div>
-        </Container>
-        <div className="mb-3">
-            <Button variant="primary" className="mr-2">
-                Save
-            </Button>
-            <Button variant="secondary">Cancel</Button>
-        </div>
-        <hr />
-        <H1>Example 2</H1>
-        <H2>Some page explanation</H2>
-        <Text className="text-muted">Optional: Add some descriptive text about what this page does.</Text>
-        <Container className="mb-3">
-            <H3>Section I</H3>
-            <Text>Here you change the username.</Text>
-            <div className="form-group">
-                <Input />
-            </div>
-            <Button className="mb-2" variant="secondary">
-                Save
-            </Button>
-            <hr className="mb-2" />
-            <H3>Section II</H3>
-            <Text>Here you change your email.</Text>
-            <div className="form-group">
-                <Input type="email" />
-            </div>
-            <Button variant="secondary">Save</Button>
-        </Container>
-    </>
-)
+            <hr />
+            <H1>{t('example-2')}</H1>
+            <H2>{t('page-explanation-2')}</H2>
+            <Text className="text-muted">{t('optional-page-description-2')}</Text>
+            <Container className="mb-3">
+                <H3>{t('section-i-2')}</H3>
+                <Text>{t('change-username-2')}</Text>
+                <div className="form-group">
+                    <Input />
+                </div>
+                <Button className="mb-2" variant="secondary">
+                    {t('save-button-2')}
+                </Button>
+                <hr className="mb-2" />
+                <H3>{t('section-ii-2')}</H3>
+                <Text>{t('change-email-2')}</Text>
+                <div className="form-group">
+                    <Input type="email" />
+                </div>
+                <Button variant="secondary">{t('save-button-3')}</Button>
+            </Container>
+        </>
+    )
+}
 
 Overview.parameters = {
     chromatic: {

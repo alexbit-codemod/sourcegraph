@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { lowerCase, upperFirst } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Input, Select, Form } from '@sourcegraph/wildcard'
@@ -25,6 +26,8 @@ interface WorkspaceFilterRowProps {
 export const WorkspaceFilterRow: React.FunctionComponent<React.PropsWithChildren<WorkspaceFilterRowProps>> = ({
     onFiltersChange,
 }) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/execute/workspaces')
+
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -76,13 +79,13 @@ export const WorkspaceFilterRow: React.FunctionComponent<React.PropsWithChildren
                     type="search"
                     ref={searchElement}
                     defaultValue={search}
-                    placeholder="Search repository name"
+                    placeholder={t('search-repository-name')}
                     aria-label="Search repository name"
                 />
             </Form>
             <WorkspaceFilter<BatchSpecWorkspaceState>
                 values={STATES_WITHOUT_PENDING}
-                label="State"
+                label={t('state')}
                 selected={state}
                 onChange={setState}
                 className="m-0"

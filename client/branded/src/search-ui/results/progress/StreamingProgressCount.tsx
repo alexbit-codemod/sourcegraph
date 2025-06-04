@@ -3,6 +3,7 @@ import * as React from 'react'
 import { mdiInformationOutline } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { pluralize } from '@sourcegraph/common'
 import { Icon, Tooltip } from '@sourcegraph/wildcard'
@@ -17,12 +18,14 @@ export const StreamingProgressCount: React.FunctionComponent<
         Pick<StreamingProgressProps, 'progress' | 'state'> & { className?: string; hideIcon?: boolean }
     >
 > = ({ progress, state, className = '', hideIcon = false }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/results/progress')
+
     const isLoading = state === 'loading'
     const progressText = getProgressText(progress)
 
     return (
         <>
-            {isLoading && <VisuallyHidden aria-live="polite">Searching</VisuallyHidden>}
+            {isLoading && <VisuallyHidden aria-live="polite">{t('searching')}</VisuallyHidden>}
             <small
                 className={classNames(
                     'd-flex align-items-center',

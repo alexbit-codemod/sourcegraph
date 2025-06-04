@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react'
 
 import { mdiPlus } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 import { Subject } from 'rxjs'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -27,6 +28,8 @@ export const SiteAdminTokensPage: React.FunctionComponent<React.PropsWithChildre
     telemetryService,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('site-admin')
+
     useMemo(() => {
         telemetryService.logViewEvent('SiteAdminTokens')
         telemetryRecorder.recordEvent('admin.tokens', 'view')
@@ -36,16 +39,11 @@ export const SiteAdminTokensPage: React.FunctionComponent<React.PropsWithChildre
     const accessTokensEnabled = window.context.accessTokensAllow !== 'none'
     return (
         <div className="user-settings-tokens-page">
-            <PageTitle title="Access tokens - Admin" />
+            <PageTitle title={t('access-tokens-admin')} />
             <PageHeader
                 path={[{ text: 'Access tokens' }]}
                 headingElement="h2"
-                description={
-                    <>
-                        Tokens may be used to access the Sourcegraph API with the full privileges of the token's
-                        creator.
-                    </>
-                }
+                description={<>{t('tokens-access-sourcegraph-api')}</>}
                 actions={
                     <>
                         {accessTokensEnabled && (
@@ -54,13 +52,15 @@ export const SiteAdminTokensPage: React.FunctionComponent<React.PropsWithChildre
                                 className="ml-2"
                                 to={`${authenticatedUser.settingsURL!}/tokens/new`}
                             >
-                                <Icon aria-hidden={true} svgPath={mdiPlus} /> Generate new token
+                                <Icon aria-hidden={true} svgPath={mdiPlus} />
+                                {t('generate-new-token-1')}
                             </ButtonLink>
                         )}
                         {!accessTokensEnabled && (
                             <Tooltip content="Access token creation is disabled in site configuration">
                                 <Button variant="primary" className="ml-2" disabled={true}>
-                                    <Icon aria-hidden={true} svgPath={mdiPlus} /> Generate new token
+                                    <Icon aria-hidden={true} svgPath={mdiPlus} />
+                                    {t('generate-new-token-2')}
                                 </Button>
                             </Tooltip>
                         )}

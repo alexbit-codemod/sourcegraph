@@ -1,0 +1,18 @@
+{
+  "card-number": "Card number",
+  "expiry-date": "Expiry date",
+  "cvc-code": "CVC",
+  "active-credit-card": "Active credit card",
+  "edit-button": " Edit",
+  "expires-label": "Expires",
+  "no-payment-method": "No payment method is available",
+  "add-button": " Add",
+  "billing-address": "Billing address",
+  "full-name-label": "Full name",
+  "country-region-label": "Country or region",
+  "address-line-1-label": "Address line 1",
+  "address-line-2-label": "Address line 2",
+  "city-label": "City",
+  "state-label": "State",
+  "postal-code-label": "Postal code"
+}

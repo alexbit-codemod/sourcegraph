@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { Button, Grid, Code, Text, Input } from '..'
 import { BrandedStory } from '../../stories/BrandedStory'
@@ -33,21 +34,27 @@ const config: Meta = {
 
 export default config
 
-export const Basic: StoryFn = () => (
-    <Text>
-        You can{' '}
-        <Tooltip content="Tooltip 1">
-            <strong>hover me</strong>
-        </Tooltip>{' '}
-        or{' '}
-        <Tooltip content="Tooltip 2">
-            <strong>me</strong>
-        </Tooltip>
-        .
-    </Text>
-)
+export const Basic: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Tooltip')
+
+    return (
+        <Text>
+            {t('you-can')}
+            <Tooltip content="Tooltip 1">
+                <strong>{t('hover-me')}</strong>
+            </Tooltip>
+            {t('or')}
+            <Tooltip content="Tooltip 2">
+                <strong>{t('me')}</strong>
+            </Tooltip>
+            .
+        </Text>
+    )
+}
 
 export const Conditional: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Tooltip')
+
     const [clicked, setClicked] = useState<boolean>(false)
 
     function onClick() {
@@ -60,39 +67,47 @@ export const Conditional: StoryFn = () => {
             <div>
                 <Tooltip content={clicked ? "Now there's a Tooltip!" : null}>
                     <Button variant="primary" onClick={onClick}>
-                        Click Me to See a Tooltip!
+                        {t('click-me-tooltip')}
                     </Button>
                 </Tooltip>
             </div>
 
             <Text>
-                A Tooltip can be conditionally shown by alternating between passing <Code>null</Code> and a{' '}
-                <Code>string</Code> in as <Code>content</Code>.
+                {t('tooltip-conditional-display')}
+                <Code>{t('null-value')}</Code>
+                {t('and-a')}
+                <Code>{t('string-value')}</Code>
+                {t('in-as')}
+                <Code>{t('content-key')}</Code>.
             </Text>
         </Grid>
     )
 }
 
-export const DefaultOpen: StoryFn = () => (
-    <Grid columnCount={1}>
-        <div>
-            <Tooltip content="Click me!" defaultOpen={true}>
-                <Button variant="primary">Example</Button>
-            </Tooltip>
+export const DefaultOpen: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Tooltip')
 
-            <Tooltip content="Click me too!" defaultOpen={true}>
-                <Button variant="primary" style={{ position: 'absolute', right: '1rem' }}>
-                    Absolutely positioned example
-                </Button>
-            </Tooltip>
-        </div>
+    return (
+        <Grid columnCount={1}>
+            <div>
+                <Tooltip content="Click me!" defaultOpen={true}>
+                    <Button variant="primary">{t('example-tooltip')}</Button>
+                </Tooltip>
 
-        <Text>
-            A pinned tooltip is shown on initial render (no user input required) by setting{' '}
-            <Code>defaultOpen={'{true}'}</Code>.
-        </Text>
-    </Grid>
-)
+                <Tooltip content="Click me too!" defaultOpen={true}>
+                    <Button variant="primary" style={{ position: 'absolute', right: '1rem' }}>
+                        {t('absolutely-positioned-example')}
+                    </Button>
+                </Tooltip>
+            </div>
+
+            <Text>
+                {t('pinned-tooltip-initial-render')}
+                <Code>{t('default-open-true')}</Code>.
+            </Text>
+        </Grid>
+    )
+}
 
 DefaultOpen.storyName = 'Default Open (Pinned)'
 DefaultOpen.parameters = {
@@ -102,88 +117,107 @@ DefaultOpen.parameters = {
     },
 }
 
-export const DisabledTrigger: StoryFn = () => (
-    <Grid columnCount={1}>
-        <div>
-            <Tooltip content="Tooltip still works properly" placement="right">
-                <Button variant="primary" disabled={true}>
-                    Disabled Button 🚫
-                </Button>
-            </Tooltip>
-        </div>
+export const DisabledTrigger: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Tooltip')
 
-        <div>
-            <Tooltip content="Tooltip still works properly" placement="right">
-                <Input placeholder="Disabled Input 🚫" disabled={true} style={{ width: '300px' }} />
-            </Tooltip>
-        </div>
-
-        <Text>
-            Disabled <Code>{'<Button>'}</Code> and <Code>{'<Input>'}</Code> elements should work without any additional
-            modifications needed.
-        </Text>
-    </Grid>
-)
-
-export const LongContent: StoryFn = () => (
-    <Grid columnCount={1}>
-        <div>
-            <Tooltip
-                content="Nulla porttitor accumsan tincidunt. IAmVeryLongTextWithNoBreaksAndIWantToBeWrappedInMultipleLines. Proin eget tortor risus. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Donec rutrum congue leo eget malesuada."
-                placement="bottom"
-            >
-                <Button variant="primary">Example</Button>
-            </Tooltip>
-        </div>
-
-        <Text>
-            Tooltips with long text will not exceed the width specified by <Code>--tooltip-max-width</Code>.
-        </Text>
-    </Grid>
-)
-
-export const PlacementOptions: StoryFn = () => (
-    <>
-        <Grid columnCount={5}>
+    return (
+        <Grid columnCount={1}>
             <div>
-                <Tooltip content="Tooltip on top" placement="top">
-                    <Button variant="primary">top</Button>
+                <Tooltip content="Tooltip still works properly" placement="right">
+                    <Button variant="primary" disabled={true}>
+                        {t('disabled-button')}
+                    </Button>
                 </Tooltip>
             </div>
 
             <div>
-                <Tooltip content="Tooltip on right" placement="right">
-                    <Button variant="primary">right</Button>
+                <Tooltip content="Tooltip still works properly" placement="right">
+                    <Input placeholder={t('disabled-input')} disabled={true} style={{ width: '300px' }} />
                 </Tooltip>
             </div>
 
-            <div>
-                <Tooltip content="Tooltip on bottom" placement="bottom">
-                    <Button variant="primary">bottom</Button>
-                </Tooltip>
-            </div>
-
-            <div>
-                <Tooltip content="Tooltip on left" placement="left">
-                    <Button variant="primary">left</Button>
-                </Tooltip>
-            </div>
-
-            <div>
-                <Tooltip content="Default Tooltip placement">
-                    <Button variant="primary">(default)</Button>
-                </Tooltip>
-            </div>
+            <Text>
+                {t('disabled-elements')}
+                <Code>{'<Button>'}</Code>
+                {t('and')}
+                <Code>{'<Input>'}</Code>
+                {t('no-additional-modifications')}
+            </Text>
         </Grid>
+    )
+}
 
-        <Text>
-            The Tooltip will use the specified <Code>placement</Code> unless a viewport collision is detected, in which
-            case it will be mirrored.
-        </Text>
-    </>
-)
+export const LongContent: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Tooltip')
+
+    return (
+        <Grid columnCount={1}>
+            <div>
+                <Tooltip
+                    content="Nulla porttitor accumsan tincidunt. IAmVeryLongTextWithNoBreaksAndIWantToBeWrappedInMultipleLines. Proin eget tortor risus. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Donec rutrum congue leo eget malesuada."
+                    placement="bottom"
+                >
+                    <Button variant="primary">{t('example-tooltip-2')}</Button>
+                </Tooltip>
+            </div>
+
+            <Text>
+                {t('tooltips-long-text')}
+                <Code>--tooltip-max-width</Code>.
+            </Text>
+        </Grid>
+    )
+}
+
+export const PlacementOptions: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Tooltip')
+
+    return (
+        <>
+            <Grid columnCount={5}>
+                <div>
+                    <Tooltip content="Tooltip on top" placement="top">
+                        <Button variant="primary">{t('top-placement')}</Button>
+                    </Tooltip>
+                </div>
+
+                <div>
+                    <Tooltip content="Tooltip on right" placement="right">
+                        <Button variant="primary">{t('right-placement')}</Button>
+                    </Tooltip>
+                </div>
+
+                <div>
+                    <Tooltip content="Tooltip on bottom" placement="bottom">
+                        <Button variant="primary">{t('bottom-placement')}</Button>
+                    </Tooltip>
+                </div>
+
+                <div>
+                    <Tooltip content="Tooltip on left" placement="left">
+                        <Button variant="primary">{t('left-placement')}</Button>
+                    </Tooltip>
+                </div>
+
+                <div>
+                    <Tooltip content="Default Tooltip placement">
+                        <Button variant="primary">{t('default-placement')}</Button>
+                    </Tooltip>
+                </div>
+            </Grid>
+
+            <Text>
+                {t('tooltip-specified-placement')}
+                <Code>{t('placement-key')}</Code>
+                {t('viewport-collision-mirror')}
+            </Text>
+        </>
+    )
+}
 
 export const UpdateContent: StoryFn = () => {
+    const { t } = useTranslation('../../wildcard/src/components/Tooltip')
+
     const [clicked, setClicked] = useState<boolean>(false)
 
     function onClick() {
@@ -196,14 +230,15 @@ export const UpdateContent: StoryFn = () => {
             <div>
                 <Tooltip content={clicked ? 'New message!' : 'Click to change the message.'} placement="right">
                     <Button variant="primary" onClick={onClick}>
-                        Click Me
+                        {t('click-me')}
                     </Button>
                 </Tooltip>
             </div>
 
             <Text>
-                The string passed in as <Code>content</Code> can be modified without any controlled or forced updates
-                required.
+                {t('string-passed-as-content')}
+                <Code>{t('content-modification')}</Code>
+                {t('no-controlled-updates-required')}
             </Text>
         </Grid>
     )

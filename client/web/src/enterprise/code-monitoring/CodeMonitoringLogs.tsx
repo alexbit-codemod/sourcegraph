@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { dataOrThrowErrors, gql } from '@sourcegraph/http-client'
 import { Card, Text } from '@sourcegraph/wildcard'
@@ -116,6 +117,8 @@ export const CodeMonitoringLogs: React.FunctionComponent<
     now,
     _testStartOpen = false, // For testing purposes only; force everything to start expanded
 }) => {
+    const { t } = useTranslation('enterprise/code-monitoring')
+
     const pageSize = 20
     const runPageSize = 20
 
@@ -140,10 +143,7 @@ export const CodeMonitoringLogs: React.FunctionComponent<
 
     return (
         <div>
-            <Text>
-                Use these logs to troubleshoot issues with code monitor notifications. Only the {runPageSize} most
-                recent runs are shown. Old runs are deleted periodically.
-            </Text>
+            <Text>{t('troubleshoot-code-monitor-logs', { runPageSize })}</Text>
             <Card className="p-3">
                 <ConnectionContainer>
                     {error && <ConnectionError errors={[error.message]} />}
@@ -163,9 +163,7 @@ export const CodeMonitoringLogs: React.FunctionComponent<
                                 noun="monitor"
                                 pluralNoun="monitors"
                                 hasNextPage={hasNextPage}
-                                emptyElement={
-                                    <div className={styles.empty}>No code monitors have been created yet.</div>
-                                }
+                                emptyElement={<div className={styles.empty}>{t('no-code-monitors-created')}</div>}
                             />
                             {hasNextPage && <ShowMoreButton onClick={fetchMore} />}
                         </SummaryContainer>

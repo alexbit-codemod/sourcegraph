@@ -5,6 +5,7 @@ import classNames from 'classnames'
 import { timeFormat } from 'd3-time-format'
 import { upperFirst } from 'lodash'
 import LayersSearchOutlineIcon from 'mdi-react/LayersSearchOutlineIcon'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { BaseCodeMirrorQueryInput } from '@sourcegraph/branded/src/search-ui/input/BaseCodeMirrorQueryInput'
 import { dataOrThrowErrors, gql } from '@sourcegraph/http-client'
@@ -126,6 +127,8 @@ interface SearchJobsPageProps extends TelemetryProps, TelemetryV2Props {
 }
 
 export const SearchJobsPage: FC<SearchJobsPageProps> = props => {
+    const { t } = useTranslation('enterprise/search-jobs')
+
     const { isAdmin, telemetryService, telemetryRecorder } = props
 
     const [searchTerm, setSearchTerm] = useState<string>('')
@@ -181,17 +184,24 @@ export const SearchJobsPage: FC<SearchJobsPageProps> = props => {
 
     return (
         <Page>
-            <PageTitle title="Search jobs" />
+            <PageTitle title={t('search-jobs')} />
             <PageHeader
                 annotation={<FeedbackBadge status="beta" feedback={{ mailto: 'support@sourcegraph.com' }} />}
                 path={[{ icon: LayersSearchOutlineIcon, text: 'Search Jobs' }]}
                 description={
                     <>
-                        Manage Sourcegraph queries that have been run exhaustively to return all results.{' '}
-                        <Link to="/help/code_search/how-to/search-jobs" target="_blank" rel="noopener noreferrer">
-                            Learn more
-                        </Link>{' '}
-                        about search jobs.
+                        <Trans
+                            i18nKey="manage-sourcegraph-queries-description"
+                            components={{
+                                '0': (
+                                    <Link
+                                        to="/help/code_search/how-to/search-jobs"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    />
+                                ),
+                            }}
+                        />
                     </>
                 }
             />
@@ -200,7 +210,7 @@ export const SearchJobsPage: FC<SearchJobsPageProps> = props => {
                 <header className={styles.header}>
                     <Input
                         value={searchTerm}
-                        placeholder="Search jobs by query..."
+                        placeholder={t('search-jobs-by-query-placeholder')}
                         className={styles.search}
                         inputClassName={styles.searchInput}
                         onChange={event => setSearchTerm(event.target.value)}
@@ -214,7 +224,7 @@ export const SearchJobsPage: FC<SearchJobsPageProps> = props => {
                         className={styles.filters}
                     >
                         <MultiComboboxInput
-                            placeholder="Filter by search status..."
+                            placeholder={t('filter-by-search-status-placeholder')}
                             value={searchStateTerm}
                             autoCorrect="false"
                             autoComplete="off"
@@ -246,9 +256,9 @@ export const SearchJobsPage: FC<SearchJobsPageProps> = props => {
                         className={styles.sort}
                         selectClassName={styles.sortSelect}
                     >
-                        <option value={SearchJobsOrderBy.CREATED_AT}>Sort by Created date</option>
-                        <option value={SearchJobsOrderBy.QUERY}>Sort by Query</option>
-                        <option value={SearchJobsOrderBy.STATE}>Sort by Status</option>
+                        <option value={SearchJobsOrderBy.CREATED_AT}>{t('sort-by-created-date')}</option>
+                        <option value={SearchJobsOrderBy.QUERY}>{t('sort-by-query')}</option>
+                        <option value={SearchJobsOrderBy.STATE}>{t('sort-by-status')}</option>
                     </Select>
                 </header>
 
@@ -256,7 +266,8 @@ export const SearchJobsPage: FC<SearchJobsPageProps> = props => {
 
                 {!error && loading && !connection && (
                     <div>
-                        <LoadingSpinner /> Fetching search jobs list
+                        <LoadingSpinner />
+                        {t('fetching-search-jobs-list')}
                     </div>
                 )}
 
@@ -291,7 +302,7 @@ export const SearchJobsPage: FC<SearchJobsPageProps> = props => {
                             {...paginationProps}
                             className="mt-3"
                             totalCount={connection?.totalCount ?? null}
-                            totalLabel="search jobs"
+                            totalLabel={t('search-jobs-lowercase')}
                         />
                     </footer>
                 )}
@@ -329,6 +340,8 @@ const SyntaxHighlightedSearchQueryCodeMirror: FC<{ query: string; patternType?: 
 )
 
 const SearchJob: FC<SearchJobProps> = props => {
+    const { t } = useTranslation('enterprise/search-jobs')
+
     const { job, withCreatorColumn, telemetryService, telemetryRecorder, onRerun, onCancel, onDelete } = props
     const { repoStats } = job
 
@@ -347,7 +360,10 @@ const SearchJob: FC<SearchJobProps> = props => {
             <span className={styles.jobQuery}>
                 {job.state !== SearchJobState.COMPLETED && (
                     <Text className="m-0 text-muted">
-                        {repoStats.completed} out of {repoStats.total} tasks
+                        {repoStats.completed}
+                        {t('out-of')}
+                        {repoStats.total}
+                        {t('tasks')}
                     </Text>
                 )}
 
@@ -373,7 +389,7 @@ const SearchJob: FC<SearchJobProps> = props => {
                         telemetryRecorder.recordEvent('searchJobs.result.viewLogs', 'click')
                     }}
                 >
-                    View logs
+                    {t('view-logs-button')}
                 </DownloadFileButton>
             </Tooltip>
 
@@ -429,7 +445,7 @@ const SearchJob: FC<SearchJobProps> = props => {
                     }}
                 >
                     <Icon svgPath={mdiDownload} aria-hidden={true} />
-                    Download
+                    {t('download-button')}
                 </DownloadFileButton>
             </Tooltip>
         </li>
@@ -452,50 +468,58 @@ const SearchJobsZeroState: FC<SearchJobsZeroStateProps> = props => {
     )
 }
 
-const SearchJobsWithFiltersZeroState: FC = () => (
-    <ListPageZeroState
-        title="No search jobs found"
-        subTitle="Reset filters to see all search jobs."
-        withIllustration={false}
-        className={styles.zeroStateWithFilters}
-    />
-)
+const SearchJobsWithFiltersZeroState: FC = () => {
+    const { t } = useTranslation('enterprise/search-jobs')
+
+    return (
+        <ListPageZeroState
+            title={t('no-search-jobs-found')}
+            subTitle={t('reset-filters-message')}
+            withIllustration={false}
+            className={styles.zeroStateWithFilters}
+        />
+    )
+}
 
 interface SearchJobsInitialZeroStateProps {
     className?: string
 }
 
 const SearchJobsInitialZeroState: FC<SearchJobsInitialZeroStateProps> = props => {
+    const { t } = useTranslation('enterprise/search-jobs')
+
     const isLightTheme = useIsLightTheme()
     const assetsRoot = window.context?.assetsRoot || ''
 
     return (
         <div className={classNames(props.className, styles.initialZeroState)}>
             <img
-                alt="Search jobs creation button UI"
+                alt={t('search-jobs-creation-button-ui')}
                 width={384}
                 height={267}
                 src={`${assetsRoot}/img/no-jobs-state-${isLightTheme ? 'light' : 'dark'}.png`}
                 className={styles.initialZeroStateImage}
             />
             <div className={styles.initialZeroStateText}>
-                <H2 className={styles.initialZeroStateHeading}>No search jobs found</H2>
+                <H2 className={styles.initialZeroStateHeading}>{t('no-search-jobs-found-message')}</H2>
+
+                <Text>{t('search-jobs-description')}</Text>
+
+                <Text>{t('trigger-search-job-description')}</Text>
 
                 <Text>
-                    Search jobs are long running searches that will exhaustively return all results for widely scoped
-                    queries.
-                </Text>
-
-                <Text>
-                    You can trigger a search job from the results information panel when a normal search hits a result
-                    limit.
-                </Text>
-
-                <Text>
-                    Learn more in the search jobs{' '}
-                    <Link to="/help/code_search/how-to/search-jobs" target="_blank" rel="noopener noreferrer">
-                        documentation page
-                    </Link>
+                    <Trans
+                        i18nKey="learn-more-search-jobs-documentation"
+                        components={{
+                            '0': (
+                                <Link
+                                    to="/help/code_search/how-to/search-jobs"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                />
+                            ),
+                        }}
+                    />
                 </Text>
             </div>
         </div>

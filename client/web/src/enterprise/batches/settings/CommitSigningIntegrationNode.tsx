@@ -2,6 +2,7 @@ import React from 'react'
 
 import { mdiCheckboxBlankCircleOutline, mdiCheckCircleOutline } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { H3, Icon, Text } from '@sourcegraph/wildcard'
 
@@ -66,10 +67,12 @@ interface ReadOnlyAppDetailsProps {
     config: BatchChangesCodeHostFields['commitSigningConfiguration']
 }
 
-const ReadOnlyAppDetails: React.FunctionComponent<ReadOnlyAppDetailsProps> = ({ config }) =>
-    config ? (
+const ReadOnlyAppDetails: React.FunctionComponent<ReadOnlyAppDetailsProps> = ({ config }) => {
+    const { t } = useTranslation('enterprise/batches/settings')
+
+    return config ? (
         <div className={styles.readonlyAppDetails}>
-            <img className={styles.appLogo} src={config.logo} alt="app logo" aria-hidden={true} />
+            <img className={styles.appLogo} src={config.logo} alt={t('app-logo')} aria-hidden={true} />
             <Text size="small" className="font-weight-bold m-0">
                 {config.name}
             </Text>
@@ -77,7 +80,8 @@ const ReadOnlyAppDetails: React.FunctionComponent<ReadOnlyAppDetailsProps> = ({ 
     ) : (
         <div className={styles.readonlyAppDetails}>
             <Text size="small" className="m-0">
-                No App configured
+                {t('no-app-configured')}
             </Text>
         </div>
     )
+}

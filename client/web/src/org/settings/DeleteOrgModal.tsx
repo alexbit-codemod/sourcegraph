@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 
 import { gql, useMutation } from '@apollo/client'
 import { mdiClose } from '@mdi/js'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { EVENT_LOGGER } from '@sourcegraph/shared/src/telemetry/web/eventLogger'
@@ -25,6 +26,8 @@ const DELETE_ORG_MUTATION = gql`
 const deleteLabelId = 'deleteOrgId'
 
 export const DeleteOrgModal: React.FunctionComponent<React.PropsWithChildren<DeleteOrgModalProps>> = props => {
+    const { t } = useTranslation('org/settings')
+
     const { org, isOpen, toggleDeleteModal, telemetryRecorder } = props
 
     const navigate = useNavigate()
@@ -69,7 +72,7 @@ export const DeleteOrgModal: React.FunctionComponent<React.PropsWithChildren<Del
         >
             <div>
                 <H3 className="text-danger" id={deleteLabelId}>
-                    Delete organization?
+                    {t('delete-organization-confirmation')}
                 </H3>
                 <Icon
                     className="position-absolute cursor-pointer"
@@ -79,13 +82,10 @@ export const DeleteOrgModal: React.FunctionComponent<React.PropsWithChildren<Del
                     svgPath={mdiClose}
                 />
                 <Text className="pt-3">
-                    <strong>You are going to delete {org.name} from Sourcegraph.</strong>
-                    This cannot be undone. Deleting an organization will remove all of its synced repositories from
-                    Sourcegraph, along with the organization’s code insights, batch changes, code monitors and other
-                    resources.
+                    <Trans i18nKey="delete-organization-warning" components={{ '0': <strong /> }} />
                 </Text>
                 <Input
-                    label="Please type the organization’s name to continue"
+                    label={t('type-organization-name-to-confirm')}
                     autoFocus={true}
                     value={orgNameInput}
                     placeholder={org.name}
@@ -100,7 +100,7 @@ export const DeleteOrgModal: React.FunctionComponent<React.PropsWithChildren<Del
                         disabled={!orgNamesMatch || loading === true}
                     >
                         {loading === true && <LoadingSpinner />}
-                        Delete this organization
+                        {t('delete-this-organization')}
                     </Button>
                 </div>
             </div>

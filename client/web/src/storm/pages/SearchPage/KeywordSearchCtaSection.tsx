@@ -2,6 +2,7 @@ import React from 'react'
 
 import { mdiClose } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { useTemporarySetting } from '@sourcegraph/shared/src/settings/temporary'
 import { Code, H2, Icon, Link, Text } from '@sourcegraph/wildcard'
@@ -17,6 +18,8 @@ interface KeywordSearchCtaSection {
 }
 
 export const KeywordSearchCtaSection: React.FC<KeywordSearchCtaSection> = ({ className }) => {
+    const { t } = useTranslation('storm/pages/SearchPage')
+
     const [isDismissed = true, setIsDismissed] = useTemporarySetting('search.homepage.keywordCta.dismissed', false)
     if (isDismissed) {
         return null
@@ -28,7 +31,7 @@ export const KeywordSearchCtaSection: React.FC<KeywordSearchCtaSection> = ({ cla
             contentClassName={classNames('flex-grow-1 d-flex justify-content-between p-4', styles.card)}
         >
             <div>
-                <H2 className="d-flex align-items-center">New keyword search</H2>
+                <H2 className="d-flex align-items-center">{t('new-keyword-search')}</H2>
                 <div className="d-flex d-flex-column">
                     <div>
                         <KeywordSearchStarsIcon aria-hidden={true} />
@@ -37,25 +40,28 @@ export const KeywordSearchCtaSection: React.FC<KeywordSearchCtaSection> = ({ cla
                         <Text>
                             <ul>
                                 <li>
-                                    The search bar now supports <b>keyword search</b>, where terms match broadly across
-                                    the file contents and path
+                                    <Trans i18nKey="keyword-search-bar-support" components={{ '0': <b /> }} />
                                 </li>
-                                <li>The new behavior ANDs terms together instead of searching literally by default </li>
+                                <li>{t('new-search-behavior-and-terms')}</li>
                                 <li>
-                                    To search literally, wrap the query in quotes like{' '}
-                                    <Code>"Error 101: service failed"</Code>
+                                    {t('literal-search-query-in-quotes')}
+                                    <Code>{t('error-101-service-failed')}</Code>
                                 </li>
                             </ul>
                         </Text>
                         <Text>
-                            <Link
-                                to="https://sourcegraph.com/docs/code-search/queries#keyword-search-default"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                Read the docs
-                            </Link>{' '}
-                            to learn more.
+                            <Trans
+                                i18nKey="read-docs-for-more-info"
+                                components={{
+                                    '0': (
+                                        <Link
+                                            to="https://sourcegraph.com/docs/code-search/queries#keyword-search-default"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        />
+                                    ),
+                                }}
+                            />
                         </Text>
                     </div>
                 </div>

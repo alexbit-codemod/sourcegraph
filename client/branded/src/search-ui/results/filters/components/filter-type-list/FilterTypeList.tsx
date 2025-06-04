@@ -10,6 +10,7 @@ import {
     mdiClose,
 } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import type { Filter } from '@sourcegraph/shared/src/search/stream'
 import { Button, Icon, H4, H2 } from '@sourcegraph/wildcard'
@@ -27,6 +28,8 @@ interface SearchFilterTypesProps {
 }
 
 export const FilterTypeList: FC<SearchFilterTypesProps> = props => {
+    const { t } = useTranslation('../../branded/src/search-ui/results/filters/components/filter-type-list')
+
     const { backendFilters, selectedFilters, onClick } = props
 
     const defaultExhaustive = backendFilters.every(filter => filter.exhaustive)
@@ -55,7 +58,7 @@ export const FilterTypeList: FC<SearchFilterTypesProps> = props => {
     return (
         <div className={styles.typeListContainer}>
             <H4 as={H2} className={styles.heading}>
-                By type
+                {t('by-type')}
             </H4>
             <ul className={styles.typeList}>
                 {mergedFilters.map(({ filter, selected, forceCount }) => (

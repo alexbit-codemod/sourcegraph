@@ -1,4 +1,5 @@
 import type { Decorator, Meta, StoryFn } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@sourcegraph/wildcard'
 
@@ -17,17 +18,21 @@ export default config
 
 export const ReadOnlyBatchSpecAlertStory: StoryFn = () => (
     <WebStory>
-        {props => (
-            <ReadOnlyBatchSpecAlert
-                {...props}
-                className="d-flex align-items-center pr-3"
-                variant="info"
-                header="This spec is read-only"
-                message="We've preserved the original batch spec from this execution for you to inspect."
-            >
-                <Button variant="primary">Edit spec</Button>
-            </ReadOnlyBatchSpecAlert>
-        )}
+        {props => {
+            const { t } = useTranslation('enterprise/batches/batch-spec/execute')
+
+            return (
+                <ReadOnlyBatchSpecAlert
+                    {...props}
+                    className="d-flex align-items-center pr-3"
+                    variant="info"
+                    header="This spec is read-only"
+                    message="We've preserved the original batch spec from this execution for you to inspect."
+                >
+                    <Button variant="primary">{t('edit-spec')}</Button>
+                </ReadOnlyBatchSpecAlert>
+            )
+        }}
     </WebStory>
 )
 

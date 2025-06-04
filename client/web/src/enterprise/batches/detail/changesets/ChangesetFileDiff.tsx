@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { map, tap } from 'rxjs/operators'
 
 import { Alert } from '@sourcegraph/wildcard'
@@ -81,9 +82,12 @@ export const ChangesetFileDiff: React.FunctionComponent<React.PropsWithChildren<
     )
 }
 
-const DiffRenderingNotSupportedAlert: React.FunctionComponent<React.PropsWithChildren<{}>> = () => (
-    <Alert className="mb-0" variant="info">
-        Diffs for processing, merged, closed, read-only, and deleted changesets are currently only available on the code
-        host.
-    </Alert>
-)
+const DiffRenderingNotSupportedAlert: React.FunctionComponent<React.PropsWithChildren<{}>> = () => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
+    return (
+        <Alert className="mb-0" variant="info">
+            {t('diffs-for-processing-merged-closed-read-only-deleted-changesets')}
+        </Alert>
+    )
+}

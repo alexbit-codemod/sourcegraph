@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 
 import classNames from 'classnames'
 import { getYear, parseISO } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 import {
     Area,
     ComposedChart,
@@ -244,18 +245,22 @@ const IncludeArchivedToggle: React.FunctionComponent<
         includeArchived: boolean
         onToggle: () => void
     }>
-> = ({ includeArchived, onToggle }) => (
-    <div className="d-flex align-items-center justify-content-between text-nowrap mb-2 pt-1">
-        <Label htmlFor="include-archived" className="mb-0">
-            Include archived
-        </Label>
-        <Toggle
-            id="include-archived"
-            value={includeArchived}
-            onToggle={onToggle}
-            title="Include archived changesets"
-            className="ml-2"
-            display="inline"
-        />
-    </div>
-)
+> = ({ includeArchived, onToggle }) => {
+    const { t } = useTranslation('enterprise/batches/detail')
+
+    return (
+        <div className="d-flex align-items-center justify-content-between text-nowrap mb-2 pt-1">
+            <Label htmlFor="include-archived" className="mb-0">
+                {t('include-archived')}
+            </Label>
+            <Toggle
+                id="include-archived"
+                value={includeArchived}
+                onToggle={onToggle}
+                title={t('include-archived-changesets')}
+                className="ml-2"
+                display="inline"
+            />
+        </div>
+    )
+}

@@ -5,6 +5,7 @@ import ChevronLeftIcon from 'mdi-react/ChevronLeftIcon'
 import ChevronRightIcon from 'mdi-react/ChevronRightIcon'
 import PageFirstIcon from 'mdi-react/PageFirstIcon'
 import PageLastIcon from 'mdi-react/PageLastIcon'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { Button } from '../Button'
 import { Icon } from '../Icon'
@@ -34,6 +35,8 @@ export interface PageSwitcherProps {
  * is our recommended way of implementing pagination.
  */
 export const PageSwitcher: React.FunctionComponent<React.PropsWithChildren<PageSwitcherProps>> = props => {
+    const { t } = useTranslation('../../wildcard/src/components/PageSwitcher')
+
     const {
         className,
         totalLabel,
@@ -98,7 +101,7 @@ export const PageSwitcher: React.FunctionComponent<React.PropsWithChildren<PageS
                             as={ChevronLeftIcon}
                             className={classNames('mr-1', styles.previousButtonIcon)}
                         />
-                        <span className={styles.previousButtonLabel}>Prev</span>
+                        <span className={styles.previousButtonLabel}>{t('prev-button-label')}</span>
                     </Button>
                 </li>
                 <li>
@@ -110,7 +113,7 @@ export const PageSwitcher: React.FunctionComponent<React.PropsWithChildren<PageS
                         disabled={isNextPageDisabled}
                         onClick={withLoadingPage(goToNextPage)}
                     >
-                        <span className={styles.nextButtonLabel}>Next</span>
+                        <span className={styles.nextButtonLabel}>{t('next-button-label')}</span>
                         <Icon
                             aria-hidden={true}
                             as={ChevronRightIcon}
@@ -136,11 +139,11 @@ export const PageSwitcher: React.FunctionComponent<React.PropsWithChildren<PageS
             {totalCount !== null && totalLabel !== undefined ? (
                 <div className={styles.label}>
                     <Text className="text-muted mb-0" size="small">
-                        Total{' '}
-                        <Text weight="bold" as="strong">
-                            {totalLabel}
-                        </Text>
-                        : {totalCount}
+                        <Trans
+                            i18nKey="total-count-display"
+                            values={{ totalLabel: <>{totalLabel}</>, totalCount }}
+                            components={{ '0': <Text weight="bold" as="strong" /> }}
+                        />
                     </Text>
                 </div>
             ) : null}

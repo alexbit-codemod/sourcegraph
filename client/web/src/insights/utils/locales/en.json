@@ -1,0 +1,5 @@
+{
+  "id-selected": "{{id}} is selected",
+  "id-hovered": "{{id}} is hovered",
+  "selected-series": "Selected series:"
+}

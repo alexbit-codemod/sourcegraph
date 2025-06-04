@@ -3,6 +3,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { mdiChevronDown, mdiChevronRight, mdiSync } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { asError, isErrorLike } from '@sourcegraph/common'
 import { ChangesetState } from '@sourcegraph/shared/src/graphql-operations'
@@ -45,6 +46,8 @@ export const ExternalChangesetNode: React.FunctionComponent<React.PropsWithChild
     queryExternalChangesetWithFileDiffs,
     expandByDefault,
 }) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
     const [node, setNode] = useState(initialNode)
     useEffect(() => {
         setNode(initialNode)
@@ -119,17 +122,17 @@ export const ExternalChangesetNode: React.FunctionComponent<React.PropsWithChild
                 {node.checkState ? (
                     <ChangesetCheckStatusCell checkState={node.checkState} className="mr-3" />
                 ) : (
-                    <VisuallyHidden>No check state available</VisuallyHidden>
+                    <VisuallyHidden>{t('no-check-state-available')}</VisuallyHidden>
                 )}
                 {node.reviewState ? (
                     <ChangesetReviewStatusCell reviewState={node.reviewState} className="mr-3" />
                 ) : (
-                    <VisuallyHidden>No review state available</VisuallyHidden>
+                    <VisuallyHidden>{t('no-review-state-available')}</VisuallyHidden>
                 )}
                 {node.diffStat ? (
                     <DiffStatStack {...node.diffStat} />
                 ) : (
-                    <VisuallyHidden>No diff available</VisuallyHidden>
+                    <VisuallyHidden>{t('no-diff-available')}</VisuallyHidden>
                 )}
             </div>
             <span
@@ -141,7 +144,7 @@ export const ExternalChangesetNode: React.FunctionComponent<React.PropsWithChild
                 {node.checkState ? (
                     <ChangesetCheckStatusCell checkState={node.checkState} />
                 ) : (
-                    <VisuallyHidden>No check state available</VisuallyHidden>
+                    <VisuallyHidden>{t('duplicate-no-check-state-available')}</VisuallyHidden>
                 )}
             </span>
             <span
@@ -153,7 +156,7 @@ export const ExternalChangesetNode: React.FunctionComponent<React.PropsWithChild
                 {node.reviewState ? (
                     <ChangesetReviewStatusCell reviewState={node.reviewState} />
                 ) : (
-                    <VisuallyHidden>No review state available</VisuallyHidden>
+                    <VisuallyHidden>{t('duplicate-no-review-state-available')}</VisuallyHidden>
                 )}
             </span>
             <div
@@ -165,7 +168,7 @@ export const ExternalChangesetNode: React.FunctionComponent<React.PropsWithChild
                 {node.diffStat ? (
                     <DiffStatStack {...node.diffStat} />
                 ) : (
-                    <VisuallyHidden>No diff available</VisuallyHidden>
+                    <VisuallyHidden>{t('duplicate-no-diff-available')}</VisuallyHidden>
                 )}
             </div>
             {/* The button for expanding the information used on xs devices. */}
@@ -178,8 +181,8 @@ export const ExternalChangesetNode: React.FunctionComponent<React.PropsWithChild
                 outline={true}
                 variant="secondary"
             >
-                <Icon aria-hidden={true} svgPath={isExpanded ? mdiChevronDown : mdiChevronRight} />{' '}
-                {isExpanded ? 'Hide' : 'Show'} details
+                <Icon aria-hidden={true} svgPath={isExpanded ? mdiChevronDown : mdiChevronRight} />
+                {t('toggle-details', { isExpanded })}
             </Button>
             {isExpanded && (
                 <>
@@ -219,31 +222,35 @@ export const ExternalChangesetNode: React.FunctionComponent<React.PropsWithChild
     )
 }
 
-const SyncerError: React.FunctionComponent<React.PropsWithChildren<{ syncerError: string }>> = ({ syncerError }) => (
-    <Alert role="alert" variant="danger">
-        <H4 className={classNames(styles.alertHeading)}>
-            Encountered error during last attempt to sync changeset data from code host
-        </H4>
-        <ErrorMessage error={syncerError} />
-        <hr className="my-2" />
-        <Text className="mb-0">
-            <small>This might be an ephemeral error that resolves itself at the next sync.</small>
-        </Text>
-    </Alert>
-)
+const SyncerError: React.FunctionComponent<React.PropsWithChildren<{ syncerError: string }>> = ({ syncerError }) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
+    return (
+        <Alert role="alert" variant="danger">
+            <H4 className={classNames(styles.alertHeading)}>{t('error-syncing-changeset-data')}</H4>
+            <ErrorMessage error={syncerError} />
+            <hr className="my-2" />
+            <Text className="mb-0">
+                <small>{t('ephemeral-sync-error')}</small>
+            </Text>
+        </Alert>
+    )
+}
 
 const ChangesetError: React.FunctionComponent<
     React.PropsWithChildren<{
         node: ExternalChangesetFields
     }>
 > = ({ node }) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
     if (!node.error) {
         return null
     }
 
     return (
         <Alert role="alert" variant="danger">
-            <H4 className={classNames(styles.alertHeading)}>Failed to run operations on changeset</H4>
+            <H4 className={classNames(styles.alertHeading)}>{t('failed-operations-changeset')}</H4>
             <ErrorMessage error={node.error} />
         </Alert>
     )
@@ -256,6 +263,8 @@ const RetryChangesetButton: React.FunctionComponent<
         viewerCanAdminister: boolean
     }>
 > = ({ node, setNode }) => {
+    const { t } = useTranslation('enterprise/batches/detail/changesets')
+
     const [isLoading, setIsLoading] = useState<boolean | Error>(false)
     const onRetry = useCallback(async () => {
         setIsLoading(true)
@@ -278,8 +287,8 @@ const RetryChangesetButton: React.FunctionComponent<
                     aria-hidden={true}
                     className={classNames(isLoading === true && styles.externalChangesetNodeRetrySpinning)}
                     svgPath={mdiSync}
-                />{' '}
-                Retry
+                />
+                {t('retry-operation')}
             </Button>
         </>
     )

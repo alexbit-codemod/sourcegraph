@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { mdiAlert, mdiMagnify } from '@mdi/js'
 import { VisuallyHidden } from '@reach/visually-hidden'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { animated, useSpring } from 'react-spring'
 
 import { CodeSnippet } from '@sourcegraph/branded/src/components/CodeSnippet'
@@ -353,16 +354,22 @@ const CTAInstruction: React.FunctionComponent<React.PropsWithChildren<{ active: 
     )
 }
 
-const CTASizeWarning: React.FunctionComponent = () => (
-    <Alert variant="note" className="mb-2">
-        The experience is currently optimized for batch changes targeting up to {WORKSPACE_WARNING_MIN_TOTAL_COUNT}{' '}
-        workspaces. Break your batch change down into several smaller batch changes for a better experience.
-    </Alert>
-)
+const CTASizeWarning: React.FunctionComponent = () => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/edit/workspaces-preview')
 
-const CTALicenseWarning: React.FunctionComponent<React.PropsWithChildren<{ maxCount: number }>> = ({ maxCount }) => (
-    <Alert variant="note" className="mb-2">
-        Your license only allows for {maxCount} changesets per batch change. If more than {maxCount} changesets are
-        generated, you won't be able to apply the batch change and actually publish the changesets to the code host.
-    </Alert>
-)
+    return (
+        <Alert variant="note" className="mb-2">
+            {t('optimized-batch-changes-workspaces', { WORKSPACE_WARNING_MIN_TOTAL_COUNT })}
+        </Alert>
+    )
+}
+
+const CTALicenseWarning: React.FunctionComponent<React.PropsWithChildren<{ maxCount: number }>> = ({ maxCount }) => {
+    const { t } = useTranslation('enterprise/batches/batch-spec/edit/workspaces-preview')
+
+    return (
+        <Alert variant="note" className="mb-2">
+            {t('license-limit-changesets-per-batch', { maxCount })}
+        </Alert>
+    )
+}

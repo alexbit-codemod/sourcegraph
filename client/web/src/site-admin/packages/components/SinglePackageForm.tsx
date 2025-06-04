@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 
 import { mdiPlus } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { toRepoURL } from '@sourcegraph/shared/src/util/url'
 import {
@@ -50,6 +51,8 @@ export const SinglePackageForm: React.FunctionComponent<SinglePackageFormProps> 
     onDismiss,
     onSave,
 }) => {
+    const { t } = useTranslation('site-admin/packages/components')
+
     const [blockState, setBlockState] = useState<SinglePackageState>(initialState)
 
     const nameQuery = useDebounce(blockState.name, 200)
@@ -90,7 +93,7 @@ export const SinglePackageForm: React.FunctionComponent<SinglePackageFormProps> 
         <Form onSubmit={handleSubmit} className="w-100 mb-3">
             <div>
                 <Label className="mb-2" id="package-name">
-                    Name
+                    {t('name-label')}
                 </Label>
                 <div className={styles.inputRow}>
                     <Select
@@ -123,14 +126,14 @@ export const SinglePackageForm: React.FunctionComponent<SinglePackageFormProps> 
                             onClick={() => setType('multiple')}
                         >
                             <Icon aria-hidden={true} svgPath={mdiPlus} className="mr-1" />
-                            Filter
+                            {t('filter-label')}
                         </Button>
                     </Tooltip>
                 </div>
             </div>
             <div className="mt-3">
                 <Label className="mb-2" id="package-version">
-                    Version
+                    {t('version-label')}
                 </Label>
                 <div className={styles.inputRow}>
                     <Input
@@ -138,7 +141,7 @@ export const SinglePackageForm: React.FunctionComponent<SinglePackageFormProps> 
                         aria-labelledby="package-version"
                         className="mr-2 flex-1"
                         value={blockState.versionFilter || ''}
-                        placeholder="e.g. v1.*"
+                        placeholder={t('example-version')}
                         required={true}
                         onChange={event => setBlockState({ ...blockState, versionFilter: event.target.value })}
                     />
@@ -167,6 +170,8 @@ const VersionFilterSummary: React.FunctionComponent<VersionFilterSummaryProps> =
     versionQuery,
     node,
 }) => {
+    const { t } = useTranslation('site-admin/packages/components')
+
     const [versionFetchLimit, setVersionFetchLimit] = useState(15)
     const { versions, totalCount, loading, error } = useMatchingVersions({
         variables: {
@@ -195,22 +200,33 @@ const VersionFilterSummary: React.FunctionComponent<VersionFilterSummaryProps> =
 
     return (
         <div className="mt-3">
-            <Label className="mb-2">Summary</Label>
+            <Label className="mb-2">{t('summary-title')}</Label>
             <div className="d-flex justify-content-between text-muted">
                 <span>
                     {!node ? (
-                        <>No package currently matches this filter</>
+                        <>{t('no-package-filter-match')}</>
                     ) : (
                         <>
-                            1 package currently matches this filter, across{' '}
-                            {totalCount === 1 ? <>{totalCount} version</> : <>{totalCount} versions</>}
-                            {versions.length < totalCount && <> (showing only {versions.length})</>}
+                            {t('one-package-filter-match')}
+                            {totalCount === 1 ? (
+                                <>{t('total-count-version', { totalCount })}</>
+                            ) : (
+                                <>{t('total-count-versions', { totalCount })}</>
+                            )}
+                            {versions.length < totalCount && (
+                                <>{t('showing-versions', { versionsLength: versions.length })}</>
+                            )}
                         </>
                     )}
                 </span>
                 {versions.length < totalCount && (
                     <Button variant="link" className="p-0 mr-3" onClick={() => setVersionFetchLimit(nextFetchLimit)}>
-                        <>Show {nextFetchLimit === totalCount ? 'all ' : nextFetchLimit.toString()}</>
+                        <>
+                            {t('show-all-or-limited-versions', {
+                                nextFetchLimitToString: nextFetchLimit.toString(),
+                                nextFetchLimitTotalCount: nextFetchLimit === totalCount,
+                            })}
+                        </>
                     </Button>
                 )}
             </div>

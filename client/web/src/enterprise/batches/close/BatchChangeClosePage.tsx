@@ -2,6 +2,7 @@ import React, { useState, useMemo, useCallback } from 'react'
 
 import { subDays } from 'date-fns'
 import AlertCircleIcon from 'mdi-react/AlertCircleIcon'
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import { type ErrorLike, isErrorLike } from '@sourcegraph/common'
@@ -45,6 +46,8 @@ export const BatchChangeClosePage: React.FunctionComponent<React.PropsWithChildr
     queryExternalChangesetWithFileDiffs,
     closeBatchChange,
 }) => {
+    const { t } = useTranslation('enterprise/batches/close')
+
     const { batchChangeName } = useParams()
     const [closeChangesets, setCloseChangesets] = useState<boolean>(false)
     const createdAfter = useMemo(() => subDays(new Date(), 3).toISOString(), [])
@@ -80,12 +83,12 @@ export const BatchChangeClosePage: React.FunctionComponent<React.PropsWithChildr
 
     // Batch change not found.
     if (batchChange === null) {
-        return <HeroPage icon={AlertCircleIcon} title="Batch change not found" />
+        return <HeroPage icon={AlertCircleIcon} title={t('batch-change-not-found')} />
     }
 
     return (
         <>
-            <PageTitle title="Preview close" />
+            <PageTitle title={t('preview-close')} />
             <PageHeader
                 path={[
                     {

@@ -1,6 +1,7 @@
 import { Suspense, type FC } from 'react'
 
 import { mdiClose } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { CodyLogo } from '@sourcegraph/cody-ui'
 import { lazyComponent } from '@sourcegraph/shared/src/util/lazyComponent'
@@ -23,6 +24,8 @@ interface NewCodySidebarProps {
 }
 
 export const NewCodySidebar: FC<NewCodySidebarProps> = props => {
+    const { t } = useTranslation('cody/sidebar/new-cody-sidebar')
+
     const { repository, filePath, isAuthorized, onClose } = props
 
     return (
@@ -30,7 +33,7 @@ export const NewCodySidebar: FC<NewCodySidebarProps> = props => {
             <div className={styles.header}>
                 <div className="d-flex flex-shrink-0 align-items-center">
                     <CodyLogo />
-                    Cody
+                    {t('cody-name')}
                     <div className="ml-2">
                         <ProductStatusBadge status="beta" />
                     </div>
@@ -44,7 +47,8 @@ export const NewCodySidebar: FC<NewCodySidebarProps> = props => {
                 <Suspense
                     fallback={
                         <div className="flex flex-1 align-items-center m-2">
-                            <LoadingSpinner className="mr-2" /> Loading Cody client
+                            <LoadingSpinner className="mr-2" />
+                            {t('loading-cody-client')}
                         </div>
                     }
                 >
@@ -54,8 +58,8 @@ export const NewCodySidebar: FC<NewCodySidebarProps> = props => {
 
             {!isAuthorized && (
                 <Alert variant="info" className="m-3">
-                    <H4>Cody is only available to signed-in users</H4>
-                    Sign in to get access to use Cody
+                    <H4>{t('cody-availability-signed-in-users')}</H4>
+                    {t('sign-in-access-cody')}
                 </Alert>
             )}
         </div>

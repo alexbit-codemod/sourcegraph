@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
 import { mdiDelete, mdiPencil } from '@mdi/js'
+import { useTranslation } from 'react-i18next'
 
 import { logger } from '@sourcegraph/common'
 import { TeamAvatar } from '@sourcegraph/shared/src/components/TeamAvatar'
@@ -31,6 +32,8 @@ export const TeamProfilePage: React.FunctionComponent<TeamProfilePageProps> = ({
     onTeamUpdate,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('team/area')
+
     const [openModal, setOpenModal] = useState<
         'edit-display-name' | 'edit-parent-team' | 'remove-parent-team' | undefined
     >()
@@ -62,25 +65,25 @@ export const TeamProfilePage: React.FunctionComponent<TeamProfilePageProps> = ({
             <Page className="mb-3">
                 <TeamHeader team={team} className="mb-3" />
                 <div className="container">
-                    <H3>Team name</H3>
+                    <H3>{t('team-name')}</H3>
                     <Text>
                         <TeamAvatar team={team} inline={true} className="mr-1" />
                         {team.name}
                     </Text>
-                    <H3>Display Name</H3>
+                    <H3>{t('display-name')}</H3>
                     <Text className="d-flex align-items-center">
                         {team.displayName && <span>{team.displayName}</span>}
-                        {!team.displayName && <span className="text-muted">No display name set</span>}{' '}
+                        {!team.displayName && <span className="text-muted">{t('no-display-name-set')}</span>}{' '}
                         {team.viewerCanAdminister && (
                             <Button variant="link" onClick={onEditDisplayName} className="ml-2" size="sm">
                                 <Icon inline={true} aria-label="Edit team display name" svgPath={mdiPencil} />
                             </Button>
                         )}
                     </Text>
-                    <H3>Parent team</H3>
+                    <H3>{t('parent-team')}</H3>
                     <Text className="d-flex align-items-center">
                         {team.parentTeam && <span>{team.parentTeam?.displayName || team.parentTeam?.name}</span>}
-                        {!team.parentTeam && <span className="text-muted">Root team - no parent</span>}{' '}
+                        {!team.parentTeam && <span className="text-muted">{t('root-team-no-parent')}</span>}{' '}
                         {team.viewerCanAdminister && (
                             <Button variant="link" onClick={onEditParentTeam} className="ml-2" size="sm">
                                 <Icon
@@ -96,7 +99,7 @@ export const TeamProfilePage: React.FunctionComponent<TeamProfilePageProps> = ({
                             </Button>
                         )}
                     </Text>
-                    <H3>Creator</H3>
+                    <H3>{t('creator')}</H3>
                     <Text className="d-flex align-items-center">
                         {team.creator !== null && (
                             <>
@@ -106,7 +109,7 @@ export const TeamProfilePage: React.FunctionComponent<TeamProfilePageProps> = ({
                                 </Link>
                             </>
                         )}
-                        {team.creator === null && <span className="text-muted">Deleted user</span>}
+                        {team.creator === null && <span className="text-muted">{t('deleted-user')}</span>}
                     </Text>
                 </div>
             </Page>
@@ -161,6 +164,8 @@ const EditTeamDisplayNameModal: React.FunctionComponent<React.PropsWithChildren<
     onCancel,
     afterEdit,
 }) => {
+    const { t } = useTranslation('team/area')
+
     const labelId = 'editDisplayName'
 
     const [displayName, setDisplayName] = useState<string>(currentDisplayName ?? '')
@@ -192,17 +197,17 @@ const EditTeamDisplayNameModal: React.FunctionComponent<React.PropsWithChildren<
 
     return (
         <Modal onDismiss={onCancel} aria-labelledby={labelId}>
-            <H3 id={labelId}>Modify team {teamName} display name</H3>
+            <H3 id={labelId}>{t('modify-team-display-name', { teamName })}</H3>
 
             {error && <ErrorAlert error={error} />}
 
             <Form onSubmit={onSubmit}>
                 <Label htmlFor="edit-team--displayname" className="mt-2">
-                    Display name
+                    {t('display-name-label')}
                 </Label>
                 <Input
                     id="edit-team--displayname"
-                    placeholder="Engineering Team"
+                    placeholder={t('engineering-team-name')}
                     maxLength={TEAM_DISPLAY_NAME_MAX_LENGTH}
                     autoCorrect="off"
                     value={displayName}
@@ -212,7 +217,7 @@ const EditTeamDisplayNameModal: React.FunctionComponent<React.PropsWithChildren<
 
                 <div className="d-flex justify-content-end pt-1">
                     <Button disabled={loading} className="mr-2" onClick={onCancel} outline={true} variant="secondary">
-                        Cancel
+                        {t('cancel-button')}
                     </Button>
                     <LoaderButton
                         type="submit"
@@ -220,7 +225,7 @@ const EditTeamDisplayNameModal: React.FunctionComponent<React.PropsWithChildren<
                         loading={loading}
                         disabled={loading}
                         alwaysShowLabel={true}
-                        label="Save"
+                        label={t('save-button')}
                     />
                 </div>
             </Form>

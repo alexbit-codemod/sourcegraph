@@ -1,5 +1,6 @@
 import { type FunctionComponent, useCallback, useState } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
 import type { Subject } from 'rxjs'
 
 import { Alert, Button, ErrorAlert, Input, Label, Link } from '@sourcegraph/wildcard'
@@ -23,6 +24,8 @@ export const EnqueueForm: FunctionComponent<EnqueueFormProps> = ({
     querySubject,
     useEnqueueIndexJob = defaultUseEnqueueIndexJob,
 }) => {
+    const { t } = useTranslation('enterprise/codeintel/indexes/components')
+
     const [revlike, setRevlike] = useState('HEAD')
     const [state, setState] = useState(() => State.Idle)
     const [queueResult, setQueueResult] = useState<number>()
@@ -56,18 +59,21 @@ export const EnqueueForm: FunctionComponent<EnqueueFormProps> = ({
         <>
             {enqueueError && <ErrorAlert prefix="Error enqueueing index job" error={enqueueError} />}
             <div className="mb-3">
-                Provide a{' '}
-                <Link
-                    to="https://git-scm.com/docs/git-rev-parse.html#_specifying_revisions"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                >
-                    Git revspec
-                </Link>{' '}
-                to enqueue a new auto-indexing job.
+                <Trans
+                    i18nKey="provide-git-revspec-for-auto-indexing"
+                    components={{
+                        '0': (
+                            <Link
+                                to="https://git-scm.com/docs/git-rev-parse.html#_specifying_revisions"
+                                rel="noopener noreferrer"
+                                target="_blank"
+                            />
+                        ),
+                    }}
+                />
             </div>
             <div className="form-inline">
-                <Label htmlFor="revlike">Git revspec</Label>
+                <Label htmlFor="revlike">{t('git-revspec')}</Label>
 
                 <Input
                     id="revlike"
@@ -78,13 +84,13 @@ export const EnqueueForm: FunctionComponent<EnqueueFormProps> = ({
 
                 <Button
                     type="button"
-                    title="Enqueue thing"
+                    title={t('enqueue-thing')}
                     disabled={state === State.Queueing}
                     className="ml-2"
                     variant="primary"
                     onClick={enqueue}
                 >
-                    Enqueue
+                    {t('enqueue')}
                 </Button>
             </div>
 
@@ -92,13 +98,13 @@ export const EnqueueForm: FunctionComponent<EnqueueFormProps> = ({
                 queueResult !== undefined &&
                 (queueResult > 0 ? (
                     <Alert className="mt-3 mb-0" variant="success">
-                        {queueResult} auto-indexing jobs enqueued.
+                        {t('auto-indexing-jobs-enqueued', { queueResult })}
                     </Alert>
                 ) : (
                     <Alert className="mt-3 mb-0" variant="info">
-                        Failed to enqueue any auto-indexing jobs.
+                        {t('failed-to-enqueue-auto-indexing-jobs')}
                         <br />
-                        Check if the auto-index configuration is up-to-date.
+                        {t('check-auto-index-configuration')}
                     </Alert>
                 ))}
         </>

@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { H3, Text } from '@sourcegraph/wildcard'
 
@@ -19,6 +21,8 @@ export const ConfirmRemoveModal: React.FunctionComponent<React.PropsWithChildren
     onCancel,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/insights/components/insights-view-grid/components/insight-context-menu')
+
     const { remove, loading } = useRemoveInsightFromDashboard(telemetryRecorder)
 
     return (
@@ -30,10 +34,13 @@ export const ConfirmRemoveModal: React.FunctionComponent<React.PropsWithChildren
             disabled={loading}
             variant="danger"
         >
-            <H3 className="text-danger mb-4">Remove Insight?</H3>
+            <H3 className="text-danger mb-4">{t('remove-insight-confirmation')}</H3>
             <Text className="mb-4">
-                Are you sure you want to remove the insight <strong>{insight.title}</strong> from the dashboard{' '}
-                <strong>{dashboard?.title}</strong>?
+                <Trans
+                    i18nKey="remove-insight-dashboard-confirmation"
+                    values={{ insightTitle: <>{insight.title}</>, dashboardTitle: <>{dashboard?.title}</> }}
+                    components={{ '0': <strong />, '1': <strong /> }}
+                />
             </Text>
         </ConfirmationModal>
     )

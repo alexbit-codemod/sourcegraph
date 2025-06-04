@@ -1,5 +1,7 @@
 import { type FC, useCallback, useEffect, useMemo } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import type { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryService'
 import { Link, PageHeader, useObservable, FORM_ERROR, type FormChangeEvent } from '@sourcegraph/wildcard'
@@ -47,6 +49,8 @@ export interface SearchInsightCreationPageProps extends TelemetryProps, Telemetr
 }
 
 export const SearchInsightCreationPage: FC<SearchInsightCreationPageProps> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/creation/search-insight')
+
     const { backUrl, telemetryService, onInsightCreateRequest, onCancel, onSuccessfulCreation, telemetryRecorder } =
         props
 
@@ -97,7 +101,7 @@ export const SearchInsightCreationPage: FC<SearchInsightCreationPageProps> = pro
 
     return (
         <CodeInsightsPage>
-            <PageTitle title="Create track changes insight - Code Insights" />
+            <PageTitle title={t('create-track-changes-insight-code-insights')} />
 
             <PageHeader
                 className="mb-5"
@@ -108,10 +112,10 @@ export const SearchInsightCreationPage: FC<SearchInsightCreationPageProps> = pro
                 ]}
                 description={
                     <span className="text-muted">
-                        Search-based code insights analyze your code based on any search query.{' '}
-                        <Link to="/help/code_insights" target="_blank" rel="noopener">
-                            Learn more.
-                        </Link>
+                        <Trans
+                            i18nKey="search-based-code-insights-description"
+                            components={{ '0': <Link to="/help/code_insights" target="_blank" rel="noopener" /> }}
+                        />
                     </span>
                 }
             />

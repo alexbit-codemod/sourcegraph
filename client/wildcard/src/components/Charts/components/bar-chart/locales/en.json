@@ -1,0 +1,16 @@
+{
+  "plain-bar-chart": "Plain bar chart",
+  "bar-chart-grouping-description": "By default bar chart uses a bar name as a group name, so in this example, each bar has its own group (each bar is independent). See grouped bar example for bars grouping.",
+  "sorted-bar-chart": "Sorted bar chart",
+  "sorted-bar-chart-description": "This is the default bar chart sorted by descending value.",
+  "grouped-bar-chart": "Grouped bar chart",
+  "grouped-bar-chart-description": "It's possible to group (categories) bars by group name. You can do it with the `getCategory` prop.",
+  "stacked-bar-chart": "Stacked bar chart",
+  "experimental-feature": "Experimental",
+  "stacked-bar-chart-description": " You can stack bars which are placed in one category (group).",
+  "smart-labels-ui": "Smart labels UI",
+  "experimental-feature-2": "Experimental",
+  "chart-resize-description": " Try to resize charts (drag bottom right corner), note that labels rotate if they don't have enough space.",
+  "dimmed-colors": "Dimmed colors",
+  "dimmed-colors-description": "You can specify any dimmed colors for the non-active bars. (see bar chart README.md for more details about chart colours."
+}

@@ -1,5 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { type ErrorLike, isErrorLike, logger } from '@sourcegraph/common'
 import type { PlatformContext } from '@sourcegraph/shared/src/platform/context'
 import { FilterKind, findFilter } from '@sourcegraph/shared/src/search/query/query'
@@ -34,6 +36,8 @@ export const SearchResultsCsvExportModal: React.FunctionComponent<SearchResultsC
     onClose,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('search/results/export')
+
     const searchCompleted = results?.state === 'complete' || results?.state === 'error' // Allow exporting results even if there was an error
 
     const shouldRerunSearch = useMemo(
@@ -101,37 +105,36 @@ export const SearchResultsCsvExportModal: React.FunctionComponent<SearchResultsC
 
     return (
         <Modal aria-labelledby={MODAL_LABEL_ID}>
-            <H3 id={MODAL_LABEL_ID}>Export search results</H3>
+            <H3 id={MODAL_LABEL_ID}>{t('export-search-results')}</H3>
 
-            <Text>Your search results will be exported as a CSV file.</Text>
+            <Text>{t('export-search-results-csv')}</Text>
 
-            {!searchCompleted && (
-                <Alert variant="danger">Your search has not completed. Please wait for the search to finish.</Alert>
-            )}
+            {!searchCompleted && <Alert variant="danger">{t('search-not-completed')}</Alert>}
 
             {shouldRerunSearch && (
                 <Alert variant="warning">
-                    Your search reached the maximum number of results that are displayed in the Sourcegraph UI. The
-                    search will be re-run to export all results. This may take a while and your exported data may not be
-                    in the same order as the original search. A maximum of{' '}
-                    {EXPORT_RESULT_DISPLAY_LIMIT.toLocaleString('en-US')} results will be exported.
+                    {t('search-reached-maximum-results')}
+                    {EXPORT_RESULT_DISPLAY_LIMIT.toLocaleString('en-US')}
+                    {t('results-exported-limit')}
                 </Alert>
             )}
 
             {noTypeFilter && (
                 <Alert variant="warning">
-                    Your search does not have a global <Code>type:</Code> or <Code>select:</Code> filter. If your search
-                    produced results of multiple types, your exported results will only include results of the same type
-                    as the first result.
+                    {t('search-no-global-type')}
+                    <Code>{t('search-type')}</Code>
+                    {t('search-or')}
+                    <Code>{t('search-select')}</Code>
+                    {t('exported-results-same-type')}
                 </Alert>
             )}
 
             <div className="d-flex justify-content-end">
                 <Button disabled={loading} onClick={onClose} variant="secondary" className="mr-2">
-                    Cancel
+                    {t('cancel-export')}
                 </Button>
                 <LoaderButton
-                    label="Export"
+                    label={t('export-button')}
                     onClick={downloadResults}
                     loading={loading}
                     disabled={!searchCompleted || loading}

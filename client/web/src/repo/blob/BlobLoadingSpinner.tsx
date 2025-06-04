@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import { Link, LoadingSpinner } from '@sourcegraph/wildcard'
 
 export function BlobLoadingSpinner(): JSX.Element {
+    const { t } = useTranslation('repo/blob')
+
     const [afterOneSec, setAfterOneSec] = useState(false)
     const [afterThreeSec, setAfterThreeSec] = useState(false)
     const [afterSixSec, setAfterSixSec] = useState(false)
@@ -37,11 +40,10 @@ export function BlobLoadingSpinner(): JSX.Element {
                     <div className="text-muted mt-2">
                         {afterNineSec ? (
                             <>
-                                It’s taking much longer than expected to load this file. Try{' '}
-                                <Link to={location.pathname} onClick={reload}>
-                                    reloading the page
-                                </Link>
-                                .
+                                <Trans
+                                    i18nKey="loading-file-error-retry"
+                                    components={{ '0': <Link to={location.pathname} onClick={reload} /> }}
+                                />
                             </>
                         ) : afterSixSec ? (
                             'Loading a whole lot of bits and bytes here...'

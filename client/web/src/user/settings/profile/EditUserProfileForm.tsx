@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { lastValueFrom } from 'rxjs'
 
@@ -39,6 +40,8 @@ export const EditUserProfileForm: React.FunctionComponent<React.PropsWithChildre
     after,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('user/settings/profile')
+
     const navigate = useNavigate()
     const [updateUser, { data, loading, error }] = useMutation<UpdateUserResult, UpdateUserVariables>(UPDATE_USER, {
         onCompleted: ({ updateUser }) => {
@@ -92,7 +95,7 @@ export const EditUserProfileForm: React.FunctionComponent<React.PropsWithChildre
                     disabled={loading}
                 />
                 <Button type="submit" disabled={loading} id="test-EditUserProfileForm__save" variant="primary">
-                    Save
+                    {t('save-button')}
                 </Button>
                 {error && (
                     <Alert className="mt-3" variant="danger">
@@ -101,7 +104,7 @@ export const EditUserProfileForm: React.FunctionComponent<React.PropsWithChildre
                 )}
                 {data?.updateUser && (
                     <Alert className="mt-3 mb-0 test-EditUserProfileForm__success" variant="success">
-                        User profile updated.
+                        {t('user-profile-updated')}
                     </Alert>
                 )}
                 {after && (

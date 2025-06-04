@@ -1,5 +1,7 @@
 import React, { useCallback } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { logger } from '@sourcegraph/common'
 import { Button, H3, Modal, ErrorAlert } from '@sourcegraph/wildcard'
 
@@ -20,6 +22,8 @@ export const RemoveSecretModal: React.FunctionComponent<React.PropsWithChildren<
     onCancel,
     afterDelete,
 }) => {
+    const { t } = useTranslation('enterprise/executors/secrets')
+
     const labelId = 'removeSecret'
 
     const [deleteExecutorSecret, { loading, error }] = useDeleteExecutorSecret()
@@ -42,15 +46,18 @@ export const RemoveSecretModal: React.FunctionComponent<React.PropsWithChildren<
 
     return (
         <Modal onDismiss={onCancel} aria-labelledby={labelId}>
-            <H3 id={labelId}>Executor secret: {secret.key}</H3>
+            <H3 id={labelId}>
+                {t('executor-secret-label')}
+                {secret.key}
+            </H3>
 
-            <strong className="d-block text-danger my-3">Removing secrets is irreversible.</strong>
+            <strong className="d-block text-danger my-3">{t('removing-secrets-irreversible-warning')}</strong>
 
             {error && <ErrorAlert error={error} />}
 
             <div className="d-flex justify-content-end pt-1">
                 <Button disabled={loading} className="mr-2" onClick={onCancel} outline={true} variant="secondary">
-                    Cancel
+                    {t('cancel-button-label')}
                 </Button>
                 <LoaderButton
                     disabled={loading}
@@ -58,7 +65,7 @@ export const RemoveSecretModal: React.FunctionComponent<React.PropsWithChildren<
                     variant="danger"
                     loading={loading}
                     alwaysShowLabel={true}
-                    label="Remove secret"
+                    label={t('remove-secret-button-label')}
                 />
             </div>
         </Modal>

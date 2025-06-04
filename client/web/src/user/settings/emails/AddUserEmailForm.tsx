@@ -1,6 +1,7 @@
 import React, { type FunctionComponent, useMemo, useState } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { lastValueFrom } from 'rxjs'
 
 import { asError, isErrorLike, type ErrorLike } from '@sourcegraph/common'
@@ -38,6 +39,8 @@ export const AddUserEmailForm: FunctionComponent<React.PropsWithChildren<Props>>
     emails,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('user/settings/emails')
+
     const [statusOrError, setStatusOrError] = useState<Status>()
 
     const [emailState, nextEmailFieldChange, emailInputReference, overrideEmailState] = useInputValidation(
@@ -96,7 +99,7 @@ export const AddUserEmailForm: FunctionComponent<React.PropsWithChildren<Props>>
                     'text-danger font-weight-bold': emailState.kind === 'INVALID',
                 })}
             >
-                Add email address
+                {t('add-email-address')}
             </Label>
             {/* eslint-disable-next-line react/forbid-elements */}
             <form className="form-inline" onSubmit={onSubmit} noValidate={true}>
@@ -121,7 +124,7 @@ export const AddUserEmailForm: FunctionComponent<React.PropsWithChildren<Props>>
                 />
                 <LoaderButton
                     loading={statusOrError === 'loading'}
-                    label="Add"
+                    label={t('add-action')}
                     type="submit"
                     disabled={statusOrError === 'loading' || emailState.kind !== 'VALID' || user.scimControlled}
                     variant="primary"

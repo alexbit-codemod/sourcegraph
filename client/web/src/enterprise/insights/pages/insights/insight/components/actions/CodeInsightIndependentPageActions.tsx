@@ -2,6 +2,7 @@ import { type FunctionComponent, useRef, useState } from 'react'
 
 import { mdiLinkVariant } from '@mdi/js'
 import { escapeRegExp } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
@@ -20,6 +21,8 @@ interface Props extends TelemetryProps, TelemetryV2Props {
 }
 
 export const CodeInsightIndependentPageActions: FunctionComponent<Props> = props => {
+    const { t } = useTranslation('enterprise/insights/pages/insights/insight/components/actions')
+
     const { insight, telemetryService, telemetryRecorder } = props
 
     const navigate = useNavigate()
@@ -57,18 +60,19 @@ export const CodeInsightIndependentPageActions: FunctionComponent<Props> = props
                         fileUrl={`/.api/insights/export/${insight.id}`}
                         variant="secondary"
                     >
-                        Export data as CSV
+                        {t('export-data-as-csv')}
                     </DownloadFileButton>
                 </Tooltip>
             )}
 
             <Tooltip content={isCopied ? 'Copied!' : undefined}>
                 <Button variant="secondary" ref={copyLinkButtonReference} onClick={handleCopyLinkClick}>
-                    <Icon aria-hidden={true} svgPath={mdiLinkVariant} /> Copy link
+                    <Icon aria-hidden={true} svgPath={mdiLinkVariant} />
+                    {t('copy-link')}
                 </Button>
             </Tooltip>
             <Button variant="danger" onClick={handleDeleteClick}>
-                Delete
+                {t('delete-action')}
             </Button>
             <Button
                 variant="primary"
@@ -76,7 +80,7 @@ export const CodeInsightIndependentPageActions: FunctionComponent<Props> = props
                 to={`/insights/edit/${insight.id}?insight=${insight.id}`}
                 onClick={handleEditClick}
             >
-                Edit
+                {t('edit-action')}
             </Button>
 
             <ConfirmDeleteModal

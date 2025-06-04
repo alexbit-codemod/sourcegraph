@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 
 import { mdiHistory } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { Badge, Icon } from '@sourcegraph/wildcard'
 
@@ -71,18 +72,20 @@ export const BatchChangeStatePill: React.FunctionComponent<React.PropsWithChildr
 const StatePill: React.FunctionComponent<React.PropsWithChildren<Pick<BatchChangeStatePillProps, 'state'>>> = ({
     state,
 }) => {
+    const { t } = useTranslation('enterprise/batches/list')
+
     switch (state) {
         case BatchChangeState.OPEN: {
             return (
                 <Badge variant="success" className={styles.statePill} aria-hidden={true}>
-                    Open
+                    {t('status-open')}
                 </Badge>
             )
         }
         case BatchChangeState.CLOSED: {
             return (
                 <Badge variant="danger" className={styles.statePill} aria-hidden={true}>
-                    Closed
+                    {t('status-closed')}
                 </Badge>
             )
         }
@@ -90,7 +93,7 @@ const StatePill: React.FunctionComponent<React.PropsWithChildren<Pick<BatchChang
         default: {
             return (
                 <Badge variant="secondary" className={styles.statePill} aria-hidden={true}>
-                    Draft
+                    {t('status-draft')}
                 </Badge>
             )
         }

@@ -2,6 +2,7 @@ import React from 'react'
 
 import VisuallyHidden from '@reach/visually-hidden'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { displayRepoName } from '@sourcegraph/shared/src/components/RepoLink'
 import type { PlatformContextProps } from '@sourcegraph/shared/src/platform/context'
@@ -35,6 +36,8 @@ export const CommitSearchResult: React.FunctionComponent<Props> = ({
     as,
     index,
 }) => {
+    const { t } = useTranslation('../../branded/src/search-ui/components')
+
     const title = (
         <div className={resultStyles.title}>
             <span className={classNames('test-search-result-label flex-grow-1', resultStyles.titleInner)}>
@@ -51,11 +54,11 @@ export const CommitSearchResult: React.FunctionComponent<Props> = ({
             */}
             <Link to={getCommitMatchUrl(result)} className={classNames('position-relative', resultStyles.titleInner)}>
                 <Code className={styles.commitOid}>
-                    <VisuallyHidden>Commit hash:</VisuallyHidden>
+                    <VisuallyHidden>{t('commit-hash-label')}</VisuallyHidden>
                     {result.oid.slice(0, 7)}
                     <VisuallyHidden>,</VisuallyHidden>
                 </Code>{' '}
-                <VisuallyHidden>Committed</VisuallyHidden>
+                <VisuallyHidden>{t('committed-status')}</VisuallyHidden>
                 {/* Display commit date in UTC to match behavior of before/after filters */}
                 <Timestamp date={result.committerDate} noAbout={true} strict={true} utc={true} />
             </Link>

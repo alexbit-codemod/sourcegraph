@@ -3,6 +3,7 @@ import React, { type ReactElement, useCallback, useMemo, useState } from 'react'
 import { mdiChevronDown, mdiChevronLeft, mdiOpenInNew } from '@mdi/js'
 import classNames from 'classnames'
 import { escapeRegExp } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { renderMarkdown } from '@sourcegraph/common'
 import { SearchPatternType } from '@sourcegraph/shared/src/graphql-operations'
@@ -416,6 +417,8 @@ const SearchReferenceEntry = <T extends SearchReferenceInfo>({
     onClick,
     onExampleClick,
 }: SearchReferenceEntryProps<T>): ReactElement | null => {
+    const { t } = useTranslation('../../branded/src/search-ui/results/sidebar')
+
     const [collapsed, setCollapsed] = useState(true)
     const collapseIcon = collapsed ? mdiChevronLeft : mdiChevronDown
 
@@ -450,7 +453,7 @@ const SearchReferenceEntry = <T extends SearchReferenceInfo>({
                         className={styles.collapseButton}
                         aria-label={collapsed ? 'Show filter description' : 'Hide filter description'}
                     >
-                        <small className="text-monospace">i</small>
+                        <small className="text-monospace">{t('single-letter-i')}</small>
                         <Icon aria-hidden={true} svgPath={collapseIcon} />
                     </CollapseHeader>
                 </span>
@@ -462,17 +465,27 @@ const SearchReferenceEntry = <T extends SearchReferenceInfo>({
                             )}
                             {searchReference.alias && (
                                 <Text>
-                                    Alias:{' '}
-                                    <span className="text-code search-filter-keyword">
-                                        {searchReference.alias}
-                                        {isFilterInfo(searchReference) ? ':' : ''}
-                                    </span>
+                                    <Trans
+                                        i18nKey="alias-with-span"
+                                        values={{
+                                            searchReferenceAliasIsFilterInfoSearchReference: (
+                                                <>
+                                                    {searchReference.alias}
+                                                    {isFilterInfo(searchReference) ? ':' : ''}
+                                                </>
+                                            ),
+                                        }}
+                                        components={{ '0': <span className="text-code search-filter-keyword" /> }}
+                                    />
                                 </Text>
                             )}
                             {isFilterInfo(searchReference) && isNegatableFilter(searchReference.field) && (
                                 <Text>
-                                    Negation:{' '}
-                                    <span className="test-code search-filter-keyword">-{searchReference.field}:</span>
+                                    <Trans
+                                        i18nKey="negation-with-span"
+                                        components={{ '0': <span className="test-code search-filter-keyword" /> }}
+                                    />
+
                                     {searchReference.alias && (
                                         <>
                                             {' '}
@@ -483,12 +496,12 @@ const SearchReferenceEntry = <T extends SearchReferenceInfo>({
                                         </>
                                     )}
                                     <br />
-                                    <span className={styles.placeholder}>(opt + click filter in reference list)</span>
+                                    <span className={styles.placeholder}>{t('opt-click-filter-reference')}</span>
                                 </Text>
                             )}
                             {searchReference.examples && (
                                 <>
-                                    <div className="font-weight-medium">Examples</div>
+                                    <div className="font-weight-medium">{t('examples')}</div>
                                     <div className={classNames('text-code', styles.examples)}>
                                         {searchReference.examples.map(example => (
                                             <Text key={example}>

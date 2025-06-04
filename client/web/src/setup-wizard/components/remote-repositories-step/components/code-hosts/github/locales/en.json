@@ -1,0 +1,14 @@
+{
+  "settings-title": "Settings",
+  "jsonc-editor-title": "JSONC editor",
+  "display-name-label": "Display name",
+  "github-personal-label": "Github (Personal)",
+  "access-token-label": "Access token",
+  "input-access-token-placeholder": "Input your access token",
+  "create-github-access-token-instructions": "Create GitHub access token classic ( <0>instructions</0> ) with <1>repo</1> or <2>public_repo</2> scope.",
+  "add-all-repositories-option": "Add all my repositories",
+  "search-organization": "Search organization",
+  "pick-at-least-one-organization-clone-repositories": "Pick at least one organization and we clone all repositories that this organization has",
+  "search-repository": "Search repository",
+  "pick-at-least-one-repository": "Pick at least one repository"
+}

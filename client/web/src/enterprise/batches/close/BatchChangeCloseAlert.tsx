@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { isErrorLike, asError, pluralize } from '@sourcegraph/common'
@@ -31,6 +32,8 @@ export const BatchChangeCloseAlert: React.FunctionComponent<React.PropsWithChild
     viewerCanAdminister,
     closeBatchChange = _closeBatchChange,
 }) => {
+    const { t } = useTranslation('enterprise/batches/close')
+
     const navigate = useNavigate()
     const onChangeCloseChangesets = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
         event => {
@@ -56,13 +59,11 @@ export const BatchChangeCloseAlert: React.FunctionComponent<React.PropsWithChild
             <Card className="mb-3">
                 <CardBody>
                     <Text>
-                        <strong>
-                            After closing this batch change, it will be read-only and no new batch specs can be applied.
-                        </strong>
+                        <strong>{t('batch-change-read-only-warning')}</strong>
                     </Text>
                     {totalCount > 0 && (
                         <>
-                            <Text>By default, all changesets remain untouched.</Text>
+                            <Text>{t('changesets-untouched-default')}</Text>
                             <Checkbox
                                 wrapperClassName="mb-3"
                                 id="closeChangesets"
@@ -72,7 +73,8 @@ export const BatchChangeCloseAlert: React.FunctionComponent<React.PropsWithChild
                                 disabled={isClosing === true || !viewerCanAdminister}
                                 label={
                                     <>
-                                        Also close {pluralize('the', totalCount, 'all')} {totalCount}{' '}
+                                        {t('also-close')}
+                                        {pluralize('the', totalCount, 'all')} {totalCount}{' '}
                                         {pluralize(
                                             'open changeset on the code host',
                                             totalCount,
@@ -86,11 +88,11 @@ export const BatchChangeCloseAlert: React.FunctionComponent<React.PropsWithChild
                     )}
                     {!viewerCanAdminister && (
                         <Alert variant="warning">
-                            You don't have permission to close this batch change. See{' '}
+                            {t('permission-denied-close-batch-change')}
                             <AlertLink to="/help/batch_changes/explanations/permissions_in_batch_changes">
-                                Permissions in batch changes
-                            </AlertLink>{' '}
-                            for more information about the batch changes permission model.
+                                {t('permissions-in-batch-changes')}
+                            </AlertLink>
+                            {t('batch-changes-permission-info')}
                         </Alert>
                     )}
                     <div className="d-flex justify-content-end">
@@ -100,7 +102,7 @@ export const BatchChangeCloseAlert: React.FunctionComponent<React.PropsWithChild
                             disabled={isClosing === true || !viewerCanAdminister}
                             variant="secondary"
                         >
-                            Cancel
+                            {t('cancel-button')}
                         </Button>
                         <LoaderButton
                             className="test-batches-confirm-close-btn"
@@ -108,7 +110,7 @@ export const BatchChangeCloseAlert: React.FunctionComponent<React.PropsWithChild
                             disabled={isClosing === true || !viewerCanAdminister}
                             variant="danger"
                             loading={isClosing === true}
-                            label="Close batch change"
+                            label={t('close-batch-change-label')}
                             alwaysShowLabel={true}
                         />
                     </div>

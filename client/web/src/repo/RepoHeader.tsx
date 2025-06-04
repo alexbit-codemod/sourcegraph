@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react'
 
 import { mdiDotsVertical } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import type { PlatformContextProps } from '@sourcegraph/shared/src/platform/context'
@@ -221,13 +222,20 @@ export const RepoHeader: React.FunctionComponent<React.PropsWithChildren<Props>>
                 location={location}
                 // To be clear to users that this isn't an error reported by extensions
                 // about e.g. the code they're viewing.
-                render={error => (
-                    <ul className="navbar-nav">
-                        <li className={classNames('nav-item', styles.actionListItem)}>
-                            <span>Component error: {error.message}</span>
-                        </li>
-                    </ul>
-                )}
+                render={error => {
+                    const { t } = useTranslation('repo')
+
+                    return (
+                        <ul className="navbar-nav">
+                            <li className={classNames('nav-item', styles.actionListItem)}>
+                                <span>
+                                    {t('component-error')}
+                                    {error.message}
+                                </span>
+                            </li>
+                        </ul>
+                    )
+                }}
             >
                 {isLarge ? (
                     <ul className={classNames('navbar-nav', styles.actionList)}>

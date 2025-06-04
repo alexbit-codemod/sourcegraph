@@ -2,6 +2,7 @@ import React from 'react'
 
 import { mdiBookOutline, mdiMagnify, mdiPoll, mdiPuzzleOutline, mdiSitemap } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { useQuery } from '@sourcegraph/http-client'
 import { H2, H3, Icon, Link, LoadingSpinner, Text, Tooltip } from '@sourcegraph/wildcard'
@@ -25,6 +26,8 @@ interface DevTimeSavedProps {
 }
 
 export const DevTimeSaved: React.FunctionComponent<DevTimeSavedProps> = ({ showAnnualProjection, dateRange }) => {
+    const { t } = useTranslation('site-admin/analytics/AnalyticsOverviewPage')
+
     const { data, error, loading } = useQuery<OverviewDevTimeSavedResult, OverviewDevTimeSavedVariables>(
         OVERVIEW_DEV_TIME_SAVED,
         {
@@ -118,27 +121,27 @@ export const DevTimeSaved: React.FunctionComponent<DevTimeSavedProps> = ({ showA
 
     return (
         <div>
-            <H3 className="mb-3">Developer time saved</H3>
+            <H3 className="mb-3">{t('developer-time-saved')}</H3>
             <div className={classNames(styles.statsBox, 'p-4 mb-3')}>
                 <div className="d-flex">
                     <ValueLegendItem
                         value={users.activity.summary.totalUniqueUsers}
                         className={classNames('flex-1', styles.borderRight)}
-                        description="Active Users"
+                        description={t('active-users')}
                         color="var(--body-color)"
                         tooltip="Currently registered users using the application in the selected timeframe."
                     />
                     <ValueLegendItem
                         value={totalEvents}
                         className={classNames('flex-1', styles.borderRight)}
-                        description="Events"
+                        description={t('events')}
                         color="var(--body-color)"
                         tooltip="Total number of actions performed in the selected timeframe."
                     />
                     <ValueLegendItem
                         value={totalHoursSaved}
                         className="flex-1"
-                        description="Hours saved"
+                        description={t('hours-saved')}
                         color="var(--purple)"
                         tooltip="Total number of hours saved in the selected timeframe."
                     />
@@ -146,33 +149,34 @@ export const DevTimeSaved: React.FunctionComponent<DevTimeSavedProps> = ({ showA
                 {showAnnualProjection && (
                     <div className="d-flex flex-column align-items-center mt-4">
                         <H2>
-                            Annual projection:{' '}
-                            <span className={styles.purple}>{formatNumber(projectedHoursSaved)} hours</span> saved*
+                            <Trans
+                                i18nKey="annual-projection-hours-saved"
+                                values={{ formatNumberProjectedHoursSaved: formatNumber(projectedHoursSaved) }}
+                                components={{ '0': <span className={styles.purple} /> }}
+                            />
                         </H2>
                         <Text as="span" className="text-muted">
-                            * Based on{' '}
-                            {dateRange === AnalyticsDateRange.LAST_THREE_MONTHS
-                                ? 'last 3 months'
-                                : dateRange === AnalyticsDateRange.LAST_MONTH
-                                ? 'last month'
-                                : 'last week'}{' '}
-                            of data
+                            {t('data-range-description', {
+                                dateRangeAnalyticsDateRangeLastMonth: dateRange === AnalyticsDateRange.LAST_MONTH,
+                                dateRangeAnalyticsDateRangeLastThreeMonths:
+                                    dateRange === AnalyticsDateRange.LAST_THREE_MONTHS,
+                            })}
                         </Text>
                     </div>
                 )}
             </div>
-            <H3 className={classNames('my-3 pb-2', styles.border)}>Hours by feature</H3>
+            <H3 className={classNames('my-3 pb-2', styles.border)}>{t('hours-by-feature')}</H3>
             <table className={styles.hoursTable}>
                 <thead>
                     <tr>
                         <Text as="th" className="text-muted text-left">
-                            EVENT TYPE
+                            {t('event-type-header')}
                         </Text>
                         <Text as="th" className="text-muted">
-                            EVENTS
+                            {t('events-header')}
                         </Text>
                         <Text as="th" className="text-muted">
-                            HOURS SAVED
+                            {t('hours-saved-header')}
                         </Text>
                     </tr>
                 </thead>
@@ -182,7 +186,7 @@ export const DevTimeSaved: React.FunctionComponent<DevTimeSavedProps> = ({ showA
                             <Link to={disableCodeSearchItems ? '/search' : '/site-admin/analytics/search'}>
                                 <Text as="span" className="d-flex align-items-center">
                                     <Icon svgPath={mdiMagnify} size="md" aria-label="Code Search" className="mr-1" />
-                                    Search
+                                    {t('search-feature')}
                                 </Text>
                             </Link>
                         </td>
@@ -203,7 +207,7 @@ export const DevTimeSaved: React.FunctionComponent<DevTimeSavedProps> = ({ showA
                                         aria-label="Code Navigation"
                                         className="mr-1"
                                     />
-                                    Code Navigation
+                                    {t('code-navigation-feature')}
                                 </Text>
                             </Link>
                         </td>
@@ -219,7 +223,7 @@ export const DevTimeSaved: React.FunctionComponent<DevTimeSavedProps> = ({ showA
                             <Link to={disableCodeSearchItems ? '/search' : '/site-admin/analytics/batch-changes'}>
                                 <Text as="span" className="d-flex align-items-center">
                                     <BatchChangesIconNav className="mr-1" />
-                                    Batch Changes
+                                    {t('batch-changes-feature')}
                                 </Text>
                             </Link>
                         </td>
@@ -235,7 +239,7 @@ export const DevTimeSaved: React.FunctionComponent<DevTimeSavedProps> = ({ showA
                             <Link to={disableCodeSearchItems ? '/search' : '/site-admin/analytics/notebooks'}>
                                 <Text as="span" className="d-flex align-items-center">
                                     <Icon svgPath={mdiBookOutline} size="md" aria-label="Notebooks" className="mr-1" />
-                                    Notebooks
+                                    {t('notebooks-feature')}
                                 </Text>
                             </Link>
                         </td>
@@ -256,7 +260,7 @@ export const DevTimeSaved: React.FunctionComponent<DevTimeSavedProps> = ({ showA
                                         aria-label="Extensions"
                                         className="mr-1"
                                     />
-                                    Search extensions
+                                    {t('search-extensions-feature')}
                                 </Text>
                             </Link>
                         </td>
@@ -272,7 +276,7 @@ export const DevTimeSaved: React.FunctionComponent<DevTimeSavedProps> = ({ showA
                             <Link to={disableCodeSearchItems ? '/search' : '/site-admin/analytics/code-insights'}>
                                 <Text as="span" className="d-flex align-items-center">
                                     <Icon svgPath={mdiPoll} size="md" aria-label="Extensions" className="mr-1" />
-                                    Code insights
+                                    {t('code-insights-feature')}
                                 </Text>
                             </Link>
                         </td>

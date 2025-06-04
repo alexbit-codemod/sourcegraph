@@ -1,5 +1,7 @@
 import React, { type FC, useCallback, useState, useEffect } from 'react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 import type { TelemetryV2Props } from '@sourcegraph/shared/src/telemetry'
 import { Button, Container, Link, PageHeader } from '@sourcegraph/wildcard'
 
@@ -34,6 +36,8 @@ import { ExecutorSecretScopeSelector } from './ExecutorSecretScopeSelector'
 export interface GlobalExecutorSecretsListPageProps extends TelemetryV2Props {}
 
 export const GlobalExecutorSecretsListPage: FC<GlobalExecutorSecretsListPageProps> = props => {
+    const { t } = useTranslation('enterprise/executors/secrets')
+
     useEffect(
         () => props.telemetryRecorder.recordEvent('admin.executors.secretsList', 'view'),
         [props.telemetryRecorder]
@@ -46,7 +50,7 @@ export const GlobalExecutorSecretsListPage: FC<GlobalExecutorSecretsListPageProp
         <ExecutorSecretsListPage
             areaType="admin"
             namespaceID={null}
-            headerLine={<>Configure executor secrets that will be available to everyone on the Sourcegraph instance.</>}
+            headerLine={<>{t('configure-executor-secrets-available-to-everyone')}</>}
             connectionLoader={connectionLoader}
             {...props}
         />
@@ -58,6 +62,8 @@ export interface UserExecutorSecretsListPageProps extends GlobalExecutorSecretsL
 }
 
 export const UserExecutorSecretsListPage: FC<UserExecutorSecretsListPageProps> = props => {
+    const { t } = useTranslation('enterprise/executors/secrets')
+
     useEffect(
         () => props.telemetryRecorder.recordEvent('settings.executors.secretsList', 'view'),
         [props.telemetryRecorder]
@@ -72,11 +78,12 @@ export const UserExecutorSecretsListPage: FC<UserExecutorSecretsListPageProps> =
             namespaceID={props.userID}
             headerLine={
                 <>
-                    Configure executor secrets that will only be available to your executions.
+                    {t('configure-executor-secrets-available-to-executions-only')}
                     <br />
-                    Global secrets are available to executions in this namespace. Secrets in this namespace with the
-                    same name as a global secret will overwrite the global secret. Site admins can configure global
-                    secrets <Link to="/admin/executors/secrets">in site admin settings</Link>.
+                    <Trans
+                        i18nKey="global-secrets-available-to-executions-in-namespace"
+                        components={{ '0': <Link to="/admin/executors/secrets" /> }}
+                    />
                 </>
             }
             connectionLoader={connectionLoader}
@@ -90,6 +97,8 @@ export interface OrgExecutorSecretsListPageProps extends GlobalExecutorSecretsLi
 }
 
 export const OrgExecutorSecretsListPage: FC<OrgExecutorSecretsListPageProps> = props => {
+    const { t } = useTranslation('enterprise/executors/secrets')
+
     useEffect(() => props.telemetryRecorder.recordEvent('org.executors.secretsList', 'view'), [props.telemetryRecorder])
     const connectionLoader = useCallback(
         (scope: ExecutorSecretScope) => orgExecutorSecretsConnectionFactory(props.orgID, scope),
@@ -101,11 +110,12 @@ export const OrgExecutorSecretsListPage: FC<OrgExecutorSecretsListPageProps> = p
             namespaceID={props.orgID}
             headerLine={
                 <>
-                    Configure executor secrets that will only be available to executions in this organization.
+                    {t('configure-executor-secrets-available-to-organization')}
                     <br />
-                    Global secrets are available to executions in this namespace. Secrets in this namespace with the
-                    same name as a global secret will overwrite the global secret. Site admins can configure global
-                    secrets <Link to="/admin/executors/secrets">in site admin settings</Link>.
+                    <Trans
+                        i18nKey="global-secrets-overwrite-in-namespace"
+                        components={{ '0': <Link to="/admin/executors/secrets" /> }}
+                    />
                 </>
             }
             connectionLoader={connectionLoader}
@@ -136,6 +146,8 @@ const ExecutorSecretsListPage: FC<ExecutorSecretsListPageProps> = ({
     connectionLoader,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('enterprise/executors/secrets')
+
     const [selectedScope, setSelectedScope] = useState<ExecutorSecretScope>(ExecutorSecretScope.BATCHES)
     const { loading, hasNextPage, fetchMore, connection, error, refetchAll } = connectionLoader(selectedScope)
 
@@ -168,7 +180,7 @@ const ExecutorSecretsListPage: FC<ExecutorSecretsListPageProps> = ({
                 actions={
                     <>
                         <Button onClick={onClickAdd} variant="primary">
-                            Add secret
+                            {t('add-secret')}
                         </Button>
                     </>
                 }

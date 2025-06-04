@@ -2,6 +2,7 @@ import { type FC, useMemo } from 'react'
 
 import { mdiAlertCircle, mdiMapSearch } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Button, H3, Icon } from '@sourcegraph/wildcard'
@@ -29,6 +30,8 @@ export interface LogsProps {
 }
 
 export const Logs: FC<LogsProps> = ({ id }) => {
+    const { t } = useTranslation('site-admin/outbound-webhooks/logs')
+
     const navigate = useNavigate()
     const location = useLocation()
     const params = useMemo(() => new URLSearchParams(location.search), [location.search])
@@ -54,7 +57,7 @@ export const Logs: FC<LogsProps> = ({ id }) => {
                 {error && <ConnectionError errors={[error.message]} />}
                 {loading && !connection && <ConnectionLoading />}
                 <ConnectionList className={styles.logs}>
-                    <SiteAdminWebhookPageHeader middleColumnLabel="Event type" timeLabel="Sent at" />
+                    <SiteAdminWebhookPageHeader middleColumnLabel={t('event-type')} timeLabel={t('sent-at')} />
                     {connection?.nodes?.map(node => {
                         // We're going to thunk OutboundWebhookLogFields into
                         // something close enough to WebhookLogFields for display
@@ -109,16 +112,20 @@ interface HeaderProps {
     onSetOnlyErrors: (onlyErrors: boolean) => void
 }
 
-const Header: FC<HeaderProps> = ({ onlyErrors, onSetOnlyErrors }) => (
-    <div className={styles.header}>
-        <H3>Logs</H3>
-        <Button variant="danger" onClick={() => onSetOnlyErrors(!onlyErrors)} outline={!onlyErrors}>
-            <Icon
-                className={classNames(styles.icon, onlyErrors && styles.enabled)}
-                aria-hidden={true}
-                svgPath={mdiAlertCircle}
-            />
-            <span className="ml-1">Show errors</span>
-        </Button>
-    </div>
-)
+const Header: FC<HeaderProps> = ({ onlyErrors, onSetOnlyErrors }) => {
+    const { t } = useTranslation('site-admin/outbound-webhooks/logs')
+
+    return (
+        <div className={styles.header}>
+            <H3>{t('logs')}</H3>
+            <Button variant="danger" onClick={() => onSetOnlyErrors(!onlyErrors)} outline={!onlyErrors}>
+                <Icon
+                    className={classNames(styles.icon, onlyErrors && styles.enabled)}
+                    aria-hidden={true}
+                    svgPath={mdiAlertCircle}
+                />
+                <span className="ml-1">{t('show-errors')}</span>
+            </Button>
+        </div>
+    )
+}

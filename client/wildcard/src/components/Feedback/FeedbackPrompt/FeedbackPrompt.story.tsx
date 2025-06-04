@@ -1,6 +1,7 @@
 import React from 'react'
 
 import type { Meta, StoryFn, Args } from '@storybook/react'
+import { useTranslation } from 'react-i18next'
 
 import { PopoverTrigger, H1 } from '../..'
 import { BrandedStory } from '../../../stories/BrandedStory'
@@ -67,51 +68,67 @@ const commonProps = (
     productResearchEnabled: props.productResearchEnabled,
 })
 
-export const FeedbackPromptWithSuccessResponse: StoryFn = args => (
-    <>
-        <H1>This is a feedbackPrompt with success response</H1>
-        <FeedbackPrompt onSubmit={handleSuccessSubmit} {...commonProps(args)}>
-            <PopoverTrigger
-                className={styles.feedbackPrompt}
-                as={Button}
-                aria-label="Feedback"
-                variant="secondary"
-                outline={true}
-                size="sm"
-            >
-                <span>Feedback</span>
-            </PopoverTrigger>
-        </FeedbackPrompt>
-    </>
-)
+export const FeedbackPromptWithSuccessResponse: StoryFn = args => {
+    const { t } = useTranslation('../../wildcard/src/components/Feedback/FeedbackPrompt')
 
-export const FeedbackPromptWithErrorResponse: StoryFn = args => (
-    <>
-        <H1>This is a feedbackPrompt with error response</H1>
-        <FeedbackPrompt onSubmit={handleErrorSubmit} {...commonProps(args)}>
-            <PopoverTrigger
-                className={styles.feedbackPrompt}
-                as={Button}
-                aria-label="Feedback"
-                variant="secondary"
-                outline={true}
-                size="sm"
-            >
-                <span>Feedback</span>
-            </PopoverTrigger>
-        </FeedbackPrompt>
-    </>
-)
+    return (
+        <>
+            <H1>{t('feedback-prompt-success-response')}</H1>
+            <FeedbackPrompt onSubmit={handleSuccessSubmit} {...commonProps(args)}>
+                <PopoverTrigger
+                    className={styles.feedbackPrompt}
+                    as={Button}
+                    aria-label="Feedback"
+                    variant="secondary"
+                    outline={true}
+                    size="sm"
+                >
+                    <span>{t('feedback-title')}</span>
+                </PopoverTrigger>
+            </FeedbackPrompt>
+        </>
+    )
+}
 
-export const FeedbackPromptWithInModal: StoryFn = args => (
-    <>
-        <H1>This is a feedbackPrompt in modal</H1>
-        <FeedbackPrompt onSubmit={handleSuccessSubmit} modal={true} {...commonProps(args)}>
-            {({ onClick }) => (
-                <Button onClick={onClick} aria-label="Feedback" variant="secondary" outline={true} size="sm">
-                    <small>Feedback</small>
-                </Button>
-            )}
-        </FeedbackPrompt>
-    </>
-)
+export const FeedbackPromptWithErrorResponse: StoryFn = args => {
+    const { t } = useTranslation('../../wildcard/src/components/Feedback/FeedbackPrompt')
+
+    return (
+        <>
+            <H1>{t('feedback-prompt-error-response')}</H1>
+            <FeedbackPrompt onSubmit={handleErrorSubmit} {...commonProps(args)}>
+                <PopoverTrigger
+                    className={styles.feedbackPrompt}
+                    as={Button}
+                    aria-label="Feedback"
+                    variant="secondary"
+                    outline={true}
+                    size="sm"
+                >
+                    <span>{t('feedback-title-duplicate')}</span>
+                </PopoverTrigger>
+            </FeedbackPrompt>
+        </>
+    )
+}
+
+export const FeedbackPromptWithInModal: StoryFn = args => {
+    const { t } = useTranslation('../../wildcard/src/components/Feedback/FeedbackPrompt')
+
+    return (
+        <>
+            <H1>{t('feedback-prompt-modal')}</H1>
+            <FeedbackPrompt onSubmit={handleSuccessSubmit} modal={true} {...commonProps(args)}>
+                {({ onClick }) => {
+                    const { t } = useTranslation('../../wildcard/src/components/Feedback/FeedbackPrompt')
+
+                    return (
+                        <Button onClick={onClick} aria-label="Feedback" variant="secondary" outline={true} size="sm">
+                            <small>{t('feedback-title-duplicate-2')}</small>
+                        </Button>
+                    )
+                }}
+            </FeedbackPrompt>
+        </>
+    )
+}

@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import type { Observable } from 'rxjs'
 import { mergeMap, startWith, tap, catchError } from 'rxjs/operators'
@@ -23,6 +24,8 @@ interface DeleteSearchContextModalProps
 export const DeleteSearchContextModal: React.FunctionComponent<
     React.PropsWithChildren<DeleteSearchContextModalProps>
 > = ({ isOpen, deleteSearchContext, toggleDeleteModal, searchContext, platformContext }) => {
+    const { t } = useTranslation('enterprise/searchContexts')
+
     const LOADING = 'loading' as const
     const deleteLabelId = 'deleteSearchContextId'
     const navigate = useNavigate()
@@ -55,22 +58,25 @@ export const DeleteSearchContextModal: React.FunctionComponent<
             data-testid="delete-search-context-modal"
         >
             <H3 className="text-danger" id={deleteLabelId}>
-                Delete search context?
+                {t('delete-search-context-confirmation')}
             </H3>
 
             <Text>
-                <strong>This action cannot be undone.</strong>
+                <strong>{t('action-cannot-be-undone')}</strong>
             </Text>
             {(!deleteCompletedOrError || isErrorLike(deleteCompletedOrError)) && (
                 <div className="text-right">
                     <Button className="mr-2" onClick={toggleDeleteModal} outline={true} variant="secondary">
-                        Cancel
+                        {t('cancel-button')}
                     </Button>
                     <Button data-testid="confirm-delete-search-context" onClick={onDelete} variant="danger">
-                        Yes, delete search context
+                        {t('confirm-delete-search-context')}
                     </Button>
                     {isErrorLike(deleteCompletedOrError) && (
-                        <Alert variant="danger">Error deleting search context: {deleteCompletedOrError.message}</Alert>
+                        <Alert variant="danger">
+                            {t('error-deleting-search-context')}
+                            {deleteCompletedOrError.message}
+                        </Alert>
                     )}
                 </div>
             )}

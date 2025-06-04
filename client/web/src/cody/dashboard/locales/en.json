@@ -1,0 +1,13 @@
+{
+  "cody-not-enabled": "Cody is not enabled",
+  "contact-admin-unexpected": "Contact your Sourcegraph admin if this is unexpected.",
+  "get-started-with-cody": "Get started with <0>Cody</0>",
+  "welcome-to-cody": "Hey! 👋 Let’s get started with Cody — your new AI coding assistant.",
+  "use-cody-in-editor": "Use Cody in your editor",
+  "documentation-link": "Documentation",
+  "try-cody-on-web": "... or try it on the web",
+  "cody-web": "Cody Web",
+  "no-access-to-cody": "Your user account doesn't have access to <0>Cody</0>",
+  "enable-cody-for-user": "Ask your Sourcegraph admin to <0>enable Cody for you</0>",
+  "install-cody-on": "Install Cody on"
+}

@@ -1,6 +1,7 @@
 import { type FC, type ReactNode, useMemo, useEffect } from 'react'
 
 import type { Reference } from '@apollo/client'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { useMutation } from '@sourcegraph/http-client'
@@ -50,6 +51,8 @@ const v2CodeHostKind: { [key in ExternalServiceKind]: number } = {
  * "codeHostType" URL param see root component routing logic.
  */
 export const CodeHostCreation: FC<CodeHostCreationProps> = props => {
+    const { t } = useTranslation('setup-wizard/components/remote-repositories-step/components/code-hosts')
+
     const { telemetryService, telemetryRecorder } = props
 
     const { codeHostType } = useParams()
@@ -69,8 +72,8 @@ export const CodeHostCreation: FC<CodeHostCreationProps> = props => {
     if (codeHostKind === null) {
         return (
             <Alert variant="warning">
-                <H4>We either couldn't find "{codeHostType}" code host option or we do not support this</H4>
-                Pick one of supported code host option <Link to="..">here</Link>
+                <H4>{t('code-host-option-not-found', { codeHostType })}</H4>
+                <Trans i18nKey="pick-supported-code-host-option" components={{ '0': <Link to=".." /> }} />
             </Alert>
         )
     }
@@ -83,22 +86,26 @@ export const CodeHostCreation: FC<CodeHostCreationProps> = props => {
             telemetryService={telemetryService}
             telemetryRecorder={telemetryRecorder}
         >
-            {state => (
-                <footer className={styles.footer}>
-                    <LoaderButton
-                        type="submit"
-                        variant="primary"
-                        size="sm"
-                        label={state.submitting ? 'Connecting' : 'Connect'}
-                        alwaysShowLabel={true}
-                        loading={state.submitting}
-                        disabled={state.submitting}
-                    />
-                    <Button as={Link} size="sm" to=".." variant="secondary">
-                        Cancel
-                    </Button>
-                </footer>
-            )}
+            {state => {
+                const { t } = useTranslation('setup-wizard/components/remote-repositories-step/components/code-hosts')
+
+                return (
+                    <footer className={styles.footer}>
+                        <LoaderButton
+                            type="submit"
+                            variant="primary"
+                            size="sm"
+                            label={state.submitting ? 'Connecting' : 'Connect'}
+                            alwaysShowLabel={true}
+                            loading={state.submitting}
+                            disabled={state.submitting}
+                        />
+                        <Button as={Link} size="sm" to=".." variant="secondary">
+                            {t('cancel-action')}
+                        </Button>
+                    </footer>
+                )
+            }}
         </CodeHostCreationView>
     )
 }

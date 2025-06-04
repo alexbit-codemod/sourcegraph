@@ -1,5 +1,7 @@
 import React, { type ReactNode } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { renderMarkdown } from '@sourcegraph/common'
 import type { AggregateStreamingSearchResults } from '@sourcegraph/shared/src/search/stream'
 import { buildSearchURLQuery } from '@sourcegraph/shared/src/util/url'
@@ -21,51 +23,55 @@ export const SearchAlert: React.FunctionComponent<React.PropsWithChildren<Search
     caseSensitive,
     searchContextSpec,
     children,
-}) => (
-    <Alert className="my-2" data-testid="alert-container" variant="info">
-        <H3>{alert.title}</H3>
+}) => {
+    const { t } = useTranslation('search/results/components')
 
-        {alert.description && (
-            <Markdown
-                className="mb-3"
-                dangerousInnerHTML={renderMarkdown(alert.description, {
-                    // Disable autolinks so revision specifications are not rendered as email links
-                    // (for example, "sourcegraph@4.0.1")
-                    disableAutolinks: true,
-                })}
-            />
-        )}
+    return (
+        <Alert className="my-2" data-testid="alert-container" variant="info">
+            <H3>{alert.title}</H3>
 
-        {alert.proposedQueries && (
-            <>
-                <H4>Did you mean:</H4>
-                <ul className="list-unstyled">
-                    {alert.proposedQueries.map(proposedQuery => (
-                        <li key={proposedQuery.query}>
-                            <Button
-                                data-testid="proposed-query-link"
-                                to={
-                                    '/search?' +
-                                    buildSearchURLQuery(
-                                        proposedQuery.query,
-                                        patternType || SearchPatternType.standard,
-                                        caseSensitive,
-                                        searchContextSpec
-                                    )
-                                }
-                                variant="secondary"
-                                size="sm"
-                                as={Link}
-                            >
-                                {proposedQuery.query || proposedQuery.description}
-                            </Button>
-                            {proposedQuery.query && proposedQuery.description && ` — ${proposedQuery.description}`}
-                        </li>
-                    ))}
-                </ul>
-            </>
-        )}
+            {alert.description && (
+                <Markdown
+                    className="mb-3"
+                    dangerousInnerHTML={renderMarkdown(alert.description, {
+                        // Disable autolinks so revision specifications are not rendered as email links
+                        // (for example, "sourcegraph@4.0.1")
+                        disableAutolinks: true,
+                    })}
+                />
+            )}
 
-        {children}
-    </Alert>
-)
+            {alert.proposedQueries && (
+                <>
+                    <H4>{t('did-you-mean')}</H4>
+                    <ul className="list-unstyled">
+                        {alert.proposedQueries.map(proposedQuery => (
+                            <li key={proposedQuery.query}>
+                                <Button
+                                    data-testid="proposed-query-link"
+                                    to={
+                                        '/search?' +
+                                        buildSearchURLQuery(
+                                            proposedQuery.query,
+                                            patternType || SearchPatternType.standard,
+                                            caseSensitive,
+                                            searchContextSpec
+                                        )
+                                    }
+                                    variant="secondary"
+                                    size="sm"
+                                    as={Link}
+                                >
+                                    {proposedQuery.query || proposedQuery.description}
+                                </Button>
+                                {proposedQuery.query && proposedQuery.description && ` — ${proposedQuery.description}`}
+                            </li>
+                        ))}
+                    </ul>
+                </>
+            )}
+
+            {children}
+        </Alert>
+    )
+}

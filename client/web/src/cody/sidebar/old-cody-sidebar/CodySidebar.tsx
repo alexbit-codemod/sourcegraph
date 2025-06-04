@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { mdiClose, mdiHistory, mdiPlus, mdiDelete } from '@mdi/js'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { CodyLogo } from '@sourcegraph/cody-ui'
 import type { AuthenticatedUser } from '@sourcegraph/shared/src/auth'
@@ -22,6 +23,8 @@ interface CodySidebarProps extends TelemetryV2Props {
 }
 
 export const CodySidebar: React.FC<CodySidebarProps> = ({ onClose, authenticatedUser, telemetryRecorder }) => {
+    const { t } = useTranslation('cody/sidebar/old-cody-sidebar')
+
     const codySidebarStore = useCodySidebar()
     const {
         initializeNewChat,
@@ -122,7 +125,7 @@ export const CodySidebar: React.FC<CodySidebarProps> = ({ onClose, authenticated
                             <CodyLogo />
                             {showHistory ? 'Chats' : 'Ask Cody'}
                             <div className="ml-2">
-                                <Badge variant="info">Experimental</Badge>
+                                <Badge variant="info">{t('experimental')}</Badge>
                             </div>
                         </div>
                     </div>

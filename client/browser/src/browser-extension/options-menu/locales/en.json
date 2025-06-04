@@ -1,0 +1,36 @@
+{
+  "all-options-pages": "All Options Pages",
+  "interactive": "Interactive",
+  "url-validation-error": "URL validation error",
+  "advanced-settings": "With advanced settings",
+  "no-url-suggestion": "No previous url suggestion",
+  "sourcegraph-com": " Sourcegraph.com",
+  "permission-request": "Asking for permission",
+  "unsynced-repository": "Not synced repository",
+  "self-hosted-admin-instance": "Self-hosted instance, user is admin",
+  "toggle-extension-status": {
+    "true": "disable",
+    "false": "enable"
+  },
+  "version-info": "v{{version}}",
+  "code-navigation-tooltip-info": "Get code navigation tooltips while browsing and reviewing code on your code host. <0>Learn more</0>  about the extension and compatible code hosts.",
+  "sourcegraph-instance-url-prompt": "Enter the URL of your Sourcegraph instance to use the extension on private code.",
+  "code-privacy-question": "How do we keep your code private?",
+  "toggle-advanced-settings": {
+    "true": "Hide",
+    "false": "Show"
+  },
+  "documentation-link": " Documentation",
+  "grant-permissions-message": "<0>Grant permissions</0> to use the Sourcegraph extension on {{name}}.",
+  "grant-permissions": "Grant permissions",
+  "setup-private-sourcegraph-instance": "You need to setup a <0>private Sourcegraph instance</0>  to use this extension with private repositories.",
+  "add-repository-to-sourcegraph": "<0>Add your repository to Sourcegraph</0>  to use this extension.",
+  "contact-admin-for-repo": "Contact your site administrator to add this repository to Sourcegraph.",
+  "on-sourcegraph-com": " You're on Sourcegraph.com",
+  "browser-extension-not-required": "Naturally, the browser extension is not necessary to browse public code on sourcegraph.com.",
+  "sourcegraph-url": "Sourcegraph URL",
+  "https-prefix": "https://",
+  "checking-status": "Checking...",
+  "authentication-failed-message": "Authentication to Sourcegraph failed. <0>Sign in to your instance</0>  to continue",
+  "looks-good-message": "Looks good!"
+}

@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 
 import { Button, Icon, Link, PageHeader } from '@sourcegraph/wildcard'
@@ -34,6 +35,8 @@ export const OrgHeader: React.FunctionComponent<React.PropsWithChildren<Props>> 
     className = '',
     isSourcegraphDotCom,
 }) => {
+    const { t } = useTranslation('org/area')
+
     const context: OrgAreaHeaderContext = {
         batchChangesEnabled,
         batchChangesExecutionEnabled,
@@ -87,14 +90,14 @@ export const OrgHeader: React.FunctionComponent<React.PropsWithChildren<Props>> 
                             <div className="flex-1" />
                             {org.viewerPendingInvitation?.respondURL && (
                                 <div className="pb-1">
-                                    <small className="mr-2">Join organization:</small>
+                                    <small className="mr-2">{t('join-organization')}</small>
                                     <Button
                                         to={org.viewerPendingInvitation.respondURL}
                                         variant="success"
                                         size="sm"
                                         as={Link}
                                     >
-                                        View invitation
+                                        {t('view-invitation')}
                                     </Button>
                                 </div>
                             )}

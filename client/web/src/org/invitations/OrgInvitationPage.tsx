@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { logger } from '@sourcegraph/common'
@@ -72,6 +73,8 @@ export const OrgInvitationPage: React.FunctionComponent<React.PropsWithChildren<
     className,
     telemetryRecorder,
 }) => {
+    const { t } = useTranslation('org/invitations')
+
     const { token } = useParams<{ token: string }>()
     const navigate = useNavigate()
 
@@ -193,31 +196,42 @@ export const OrgInvitationPage: React.FunctionComponent<React.PropsWithChildren<
 
     return (
         <>
-            <PageTitle title={`Invitation to Organization ${orgName || ''}`} />
+            <PageTitle title={t('invitation-to-organization', { orgName: orgName || '' })} />
             {orgName && sender && (
                 <ModalPage
                     className={classNames(styles.orgInvitationPage, className)}
                     icon={<OrgAvatar org={orgName} className="mt-3 mb-4" size="lg" />}
                 >
                     <Form className="text-center pr-4 pl-4 pb-4">
-                        <H2>You've been invited to join the {orgDisplayName} organization</H2>
+                        <H2>{t('invitation-to-join-organization', { orgDisplayName })}</H2>
                         <div className="mt-4">
                             <UserAvatar className={classNames('mr-2', styles.userAvatar)} user={sender} size={24} />
                             <span>
-                                Invited by{' '}
-                                <Link to={userURL(sender.username)}>{sender.displayName || `@${sender.username}`}</Link>
+                                <Trans
+                                    i18nKey="invited-by-link"
+                                    values={{
+                                        senderDisplayNameSenderUsername: (
+                                            <>{sender.displayName || `@${sender.username}`}</>
+                                        ),
+                                    }}
+                                    components={{ '0': <Link to={userURL(sender.username)} /> }}
+                                />
+
                                 {sender.displayName && <span className="text-muted">(@{sender.username})</span>}
                             </span>
                         </div>
                         {data.isVerifiedEmail === false && data.recipientEmail && (
                             <div className="mt-4 mb-4">
-                                This invite was sent to <strong>{data.recipientEmail}</strong>. Joining the{' '}
-                                {orgDisplayName} organization will add this as a verified email on your account.
+                                <Trans
+                                    i18nKey="invite-sent-to-recipient"
+                                    values={{ dataRecipientEmail: <>{data.recipientEmail}</>, orgDisplayName }}
+                                    components={{ '0': <strong /> }}
+                                />
                             </div>
                         )}
                         <div className="mt-4">
                             <Button className="mr-sm-2" disabled={loading} onClick={acceptInvitation} variant="primary">
-                                Join {orgDisplayName}
+                                {t('join-organization', { orgDisplayName })}
                             </Button>
                             <Button
                                 disabled={loading}
@@ -226,14 +240,14 @@ export const OrgInvitationPage: React.FunctionComponent<React.PropsWithChildren<
                                 variant="secondary"
                                 outline={true}
                             >
-                                Decline
+                                {t('decline-invitation')}
                             </Button>
                         </div>
                         {data.isVerifiedEmail === false && data.recipientEmail && (
                             <small className="mt-4 text-muted d-inline-block">
-                                <AnchorLink to="/-/sign-out">Or sign out and create a new account</AnchorLink>
+                                <AnchorLink to="/-/sign-out">{t('sign-out-create-account')}</AnchorLink>
                                 <br />
-                                to join the {orgDisplayName} organization
+                                {t('join-organization-message', { orgDisplayName })}
                             </small>
                         )}
                     </Form>
@@ -241,9 +255,9 @@ export const OrgInvitationPage: React.FunctionComponent<React.PropsWithChildren<
             )}
             {error && (
                 <ModalPage className={classNames(styles.orgInvitationPage, className, 'p-4')}>
-                    <H3>You've been invited to join an organization.</H3>
+                    <H3>{t('generic-invitation-message')}</H3>
                     <Alert variant="danger" className="mt-3">
-                        Error: {error}
+                        {t('error-message', { error })}
                     </Alert>
                 </ModalPage>
             )}

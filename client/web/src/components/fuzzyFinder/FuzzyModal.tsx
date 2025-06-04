@@ -15,6 +15,7 @@ import type { TabsProps } from '@reach/tabs'
 import classNames from 'classnames'
 import type * as H from 'history'
 import { escapeRegExp } from 'lodash'
+import { useTranslation, Trans } from 'react-i18next'
 
 import { pluralize } from '@sourcegraph/common'
 import { KEYBOARD_SHORTCUTS } from '@sourcegraph/shared/src/keyboardShortcuts/keyboardShortcuts'
@@ -235,6 +236,8 @@ function emptyResults(element: JSX.Element): QueryResult {
  * Similar to "Go to file" in VS Code or the "t" keyboard shortcut on github.com
  */
 export const FuzzyModal: React.FunctionComponent<React.PropsWithChildren<FuzzyModalProps>> = props => {
+    const { t } = useTranslation('components/fuzzyFinder')
+
     const {
         initialMaxResults,
         onClose,
@@ -280,7 +283,12 @@ export const FuzzyModal: React.FunctionComponent<React.PropsWithChildren<FuzzyMo
     const queryResult = useMemo<QueryResult>(() => {
         const fsmErrors = fuzzyErrors(tabs, activeTab, scope)
         if (fsmErrors.length > 0) {
-            return emptyResults(<Text>Error: {JSON.stringify(fsmErrors)}</Text>)
+            return emptyResults(
+                <Text>
+                    {t('error-message')}
+                    {JSON.stringify(fsmErrors)}
+                </Text>
+            )
         }
         return renderFuzzyResults(
             fuzzySearchResult,
@@ -419,7 +427,7 @@ export const FuzzyModal: React.FunctionComponent<React.PropsWithChildren<FuzzyMo
                             ))}
                         </TabList>
                     ) : (
-                        <H3>Find files</H3>
+                        <H3>{t('find-files')}</H3>
                     )}
                     <Badge
                         variant="info"
@@ -427,7 +435,7 @@ export const FuzzyModal: React.FunctionComponent<React.PropsWithChildren<FuzzyMo
                         tooltip="Provide feedback on this experimental feature"
                         className={styles.experimentalBadge}
                     >
-                        Experimental
+                        {t('experimental-notice')}
                     </Badge>
                     <Button variant="icon" onClick={onClose} aria-label="Close" className={styles.closeButton}>
                         <Icon aria-hidden={true} svgPath={mdiClose} />
@@ -447,7 +455,7 @@ export const FuzzyModal: React.FunctionComponent<React.PropsWithChildren<FuzzyMo
                     aria-activedescendant={fuzzyResultId(focusIndex)}
                     onFocus={input => input.target.select()}
                     className={styles.input}
-                    placeholder="Enter a fuzzy query"
+                    placeholder={t('fuzzy-query-prompt')}
                     value={query}
                     onChange={event => {
                         setQuery(event.target.value)
@@ -494,12 +502,15 @@ function plural(what: string, count: number, isComplete: boolean): string {
     return `${count.toLocaleString()}${isComplete ? '' : '+'} ${pluralize(what, count)}`
 }
 
-const ArrowKeyExplanation: React.FunctionComponent = () => (
-    <span className={styles.keyboardExplanation}>
-        Press <kbd>↑</kbd>
-        <kbd>↓</kbd> to navigate through results
-    </span>
-)
+const ArrowKeyExplanation: React.FunctionComponent = () => {
+    const { t } = useTranslation('components/fuzzyFinder')
+
+    return (
+        <span className={styles.keyboardExplanation}>
+            <Trans i18nKey="navigation-instructions" components={{ '0': <kbd />, '1': <kbd /> }} />
+        </span>
+    )
+}
 
 interface ScopeSelectProps {
     activeTab: FuzzyTabKey
@@ -532,33 +543,39 @@ const ScopeSelect: React.FunctionComponent<ScopeSelectProps> = ({
     scope,
     setScope,
     isScopeToggleDisabled,
-}) => (
-    <Select
-        label=""
-        isCustomStyle={true}
-        id="fuzzy-scope"
-        value={scope}
-        selectSize="sm"
-        className={styles.fuzzyScopeSelector}
-        disabled={isScopeToggleDisabled}
-        onChange={value => {
-            switch (value.target.value) {
-                case 'everywhere':
-                case 'repository': {
-                    setScope(value.target.value)
-                    focusFuzzyInput()
+}) => {
+    const { t } = useTranslation('components/fuzzyFinder')
+
+    return (
+        <Select
+            label=""
+            isCustomStyle={true}
+            id="fuzzy-scope"
+            value={scope}
+            selectSize="sm"
+            className={styles.fuzzyScopeSelector}
+            disabled={isScopeToggleDisabled}
+            onChange={value => {
+                switch (value.target.value) {
+                    case 'everywhere':
+                    case 'repository': {
+                        setScope(value.target.value)
+                        focusFuzzyInput()
+                    }
                 }
-            }
-        }}
-    >
-        <option value="everywhere">
-            <ToggleShortcut activeTab={activeTab} /> Searching everywhere
-        </option>
-        <option value="repository">
-            <ToggleShortcut activeTab={activeTab} /> Searching in this repository
-        </option>
-    </Select>
-)
+            }}
+        >
+            <option value="everywhere">
+                <ToggleShortcut activeTab={activeTab} />
+                {t('searching-everywhere')}
+            </option>
+            <option value="repository">
+                <ToggleShortcut activeTab={activeTab} />
+                {t('searching-in-repo')}
+            </option>
+        </Select>
+    )
+}
 
 const SearchQueryLink: React.FunctionComponent<FuzzyState & { onClickItem: () => void }> = props => {
     const { onClickItem, scope } = props
@@ -618,6 +635,8 @@ const FuzzyResultsSummary: React.FunctionComponent<React.PropsWithChildren<Fuzzy
     tabs,
     queryResult,
 }) => {
+    const { t } = useTranslation('components/fuzzyFinder')
+
     let indexedFiles = 0
     let totalFiles = 0
     const downloadingTabs: string[] = []
@@ -636,7 +655,8 @@ const FuzzyResultsSummary: React.FunctionComponent<React.PropsWithChildren<Fuzzy
     }
     return (
         <span data-testid="fuzzy-modal-summary" className={styles.resultCount}>
-            {plural('result', queryResult.resultCount, queryResult.isComplete)} out of{' '}
+            {plural('result', queryResult.resultCount, queryResult.isComplete)}
+            {t('results-count')}
             {plural('total', queryResult.totalFileCount, true)}
             <ProgressBar value={indexedFiles} max={totalFiles} />
             {downloadingTabs.length > 0 && <LoadingSpinner />}
