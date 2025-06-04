@@ -1,3 +1,7 @@
+import { I18nextProvider } from 'react-i18next'
+
+import { i18n } from '.././i18n'
+
 import 'focus-visible'
 
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
@@ -262,32 +266,34 @@ export const SourcegraphWebApp: FC<SourcegraphWebAppProps> = props => {
     }
 
     return (
-        <ComponentsComposer
-            components={[
-                // `ComponentsComposer` provides children via `React.cloneElement`.
-                /* eslint-disable react/no-children-prop, react/jsx-key */
-                <ApolloProvider client={graphqlClient} children={undefined} suspenseCache={suspenseCache} />,
-                <WildcardThemeContext.Provider value={WILDCARD_THEME} />,
-                <SettingsProvider settingsCascade={settingsCascade} />,
-                <ErrorBoundary location={null} />,
-                <TraceSpanProvider name={SharedSpanName.AppMount} />,
-                <FeatureFlagsLocalOverrideAgent />,
-                <ShortcutProvider />,
-                <TemporarySettingsProvider temporarySettingsStorage={temporarySettingsStorage} />,
-                <SearchResultsCacheProvider />,
-                <SearchQueryStateStoreProvider useSearchQueryState={useNavbarQueryState} />,
-                <LegacyRouteContextProvider
-                    context={{
-                        ...staticContext,
-                        ...dynamicContext,
-                        ...props,
-                    }}
-                />,
-                /* eslint-enable react/no-children-prop, react/jsx-key */
-            ]}
-        >
-            <RouterProvider router={router} />
-            <UserSessionStores />
-        </ComponentsComposer>
+        <I18nextProvider i18n={i18n}>
+            <ComponentsComposer
+                components={[
+                    // `ComponentsComposer` provides children via `React.cloneElement`.
+                    /* eslint-disable react/no-children-prop, react/jsx-key */
+                    <ApolloProvider client={graphqlClient} children={undefined} suspenseCache={suspenseCache} />,
+                    <WildcardThemeContext.Provider value={WILDCARD_THEME} />,
+                    <SettingsProvider settingsCascade={settingsCascade} />,
+                    <ErrorBoundary location={null} />,
+                    <TraceSpanProvider name={SharedSpanName.AppMount} />,
+                    <FeatureFlagsLocalOverrideAgent />,
+                    <ShortcutProvider />,
+                    <TemporarySettingsProvider temporarySettingsStorage={temporarySettingsStorage} />,
+                    <SearchResultsCacheProvider />,
+                    <SearchQueryStateStoreProvider useSearchQueryState={useNavbarQueryState} />,
+                    <LegacyRouteContextProvider
+                        context={{
+                            ...staticContext,
+                            ...dynamicContext,
+                            ...props,
+                        }}
+                    />,
+                    /* eslint-enable react/no-children-prop, react/jsx-key */
+                ]}
+            >
+                <RouterProvider router={router} />
+                <UserSessionStores />
+            </ComponentsComposer>
+        </I18nextProvider>
     )
 }

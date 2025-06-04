@@ -14,8 +14,11 @@
     "@mui/icons-material": "^5.14.19",
     "@mui/material": "^5.14.20",
     "classnames": "^2.2.6",
+    "i18next": "^24.1.0",
+    "i18next-browser-languagedetector": "^8.0.2",
     "react": "18.1.0",
     "react-dom": "18.1.0",
+    "react-i18next": "^15.2.0",
     "react-router-dom": "^6.8.1",
     "web-vitals": "2.1.4"
   },
